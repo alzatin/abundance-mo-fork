@@ -11,6 +11,8 @@ import TodoList from "./TodoList.jsx";
 import cadWorker from "./worker.js?worker";
 const cad = wrap(new cadWorker());
 
+const LOCAL_STORAGE_KEY = 'todoApp.todos';
+
 export default function ReplicadApp() {
   const [size, setSize] = useState(5);
 
@@ -25,8 +27,46 @@ export default function ReplicadApp() {
     cad.createMesh(size).then((m) => setMesh(m));
   }, [size]);
 
+  const [todos, setTodos] = useState([]);
+  const todoNameRef = useRef();
+
+  useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem('todos'));
+    if (storedTodos) setTodos();
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
+  }, [todos]);
+
+  function toggleTodo(id) {
+    const newTodos = [...todos];
+    const todo = newTodos.find(todo => todo.id === id);
+    todo.complete = !todo.complete;
+    setTodos(newTodos);
+  }
+
+  function handleAddTodo() {
+    const name = todoNameRef.current.value;
+    todoNameRef.current.value = null;
+    if (name === '') return;
+    setTodos(prevTodos => {
+      return [...prevTodos, {id: uuidv4(), name: name, complete: false}]
+    });
+  }
+
+  function handleClearTodos() {
+    const newTodos = todos.filter(todo => !todo.complete);
+    setTodos(newTodos);
+  }
+
   return (
     <main>
+      <TodoList todos = {todos} toggleTodo = {toggleTodo} />
+      <input ref = {todoNameRef} type = 'text' />
+      <button onClick={handleAddTodo}>Add Todo</button>
+      <button onClick={handleClearTodos}>Clear Complete</button>
+      <div>{todos.filter(todo => !todo.complete).length} left todo</div>
       <h1>
         A{" "}
         <a
