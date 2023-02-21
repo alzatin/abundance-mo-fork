@@ -7,6 +7,7 @@ import { wrap } from "comlink";
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 import TodoList from "./TodoList.jsx";
+import FlowCanvas from './components/flowCanvas.jsx'
 
 import cadWorker from "./worker.js?worker";
 
@@ -32,104 +33,36 @@ export default function ReplicadApp() {
     cad.createMesh(size).then((m) => setMesh(m));
   }, [size]);
 
-  const [todos, setTodos] = useState([]);
-  const todoNameRef = useRef();
-
-  useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem('todos'));
-    if (storedTodos) setTodos();
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
-  }, [todos]);
-
-  function toggleTodo(id) {
-    const newTodos = [...todos];
-    const todo = newTodos.find(todo => todo.id === id);
-    todo.complete = !todo.complete;
-    setTodos(newTodos);
-  }
-
-  function handleAddTodo() {
-    const name = todoNameRef.current.value;
-    todoNameRef.current.value = null;
-    if (name === '') return;
-    setTodos(prevTodos => {
-      return [...prevTodos, {id: uuidv4(), name: name, complete: false}]
-    });
-  }
-
-  function handleClearTodos() {
-    const newTodos = todos.filter(todo => !todo.complete);
-    setTodos(newTodos);
-  }
-
   return (
     <main>
-      <canvas id = "flow-canvas"></canvas>
-      <TodoList todos = {todos} toggleTodo = {toggleTodo} />
-      <input ref = {todoNameRef} type = 'text' />
-      <button onClick={handleAddTodo}>Add Todo</button>
-      <button onClick={handleClearTodos}>Clear Complete</button>
-      <div>{todos.filter(todo => !todo.complete).length} left todo</div>
-      <h1>
-        A{" "}
-        <a
-          href="https://replicad.xyz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Create
-        </a>{" "}
-        sample app
-      </h1>
-      <p>
-        You can find the code for this app{" "}
-        <a
-          href="https://github.com/sgenoud/replicad/tree/main/packages/replicad-app-example"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          on GitHub
-        </a>
-      </p>
-      <section
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <label htmlFor="thicknessInput">Wall</label>
-          <input
-            id="thicknessInput"
-            type="number"
-            step="1"
-            min="1"
-            max="10"
-            value={size}
-            onChange={(v) => {
-              const val = parseInt(v.target.value);
-              if (val > 0 && val <= 10) setSize(val);
-            }}
-          />
+      <FlowCanvas/>
+      <div class='parent flex-parent' id = "lowerHalf">     
+        <div id="viewport">
         </div>
-        <button onClick={downloadModel}>Download STEP</button>
-      </section>
-      <section style={{ height: "300px", width: "300px" }}>
-        {mesh ? (
-          <ThreeContext>
-            <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
-          </ThreeContext>
-        ) : (
-          <div
-            style={{ display: "flex", alignItems: "center", fontSize: "2em" }}
-          >
-            Loading...
+        <div class="jscad-container"> 
+          <section>
+          {mesh ? (
+            <ThreeContext>
+              <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
+            </ThreeContext>
+          ) : (
+            <div
+              style={{ display: "flex", alignItems: "center", fontSize: "2em" }}
+            >
+              Loading...
+            </div>
+          )}
+        </section>
+              <div id="arrow-up-menu" class="arrow-up"></div>
+              <div id="viewer_bar"></div>
+            
           </div>
-        )}
-      </section>
+          <div class="sideBar">
+              Maslow Create
+          </div>
+          <div id="bottom_bar"></div>
+        </div>
+      
     </main>
   );
 }
