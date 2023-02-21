@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
 import FileSaver from "file-saver";
@@ -14,6 +14,7 @@ import cadWorker from "./worker.js?worker";
 import './maslowCreate.css';
 import './menuIcons.css';
 import './login.css';
+import './codemirror.css';
 
 const cad = wrap(new cadWorker());
 
@@ -37,8 +38,6 @@ export default function ReplicadApp() {
     <main>
       <FlowCanvas/>
       <div class='parent flex-parent' id = "lowerHalf">     
-        <div id="viewport">
-        </div>
         <div class="jscad-container"> 
           <section>
           {mesh ? (
