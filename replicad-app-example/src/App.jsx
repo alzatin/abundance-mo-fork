@@ -10,9 +10,9 @@ import TodoList from "./TodoList.jsx";
 
 import cadWorker from "./worker.js?worker";
 
-//import './maslowCreate.css';
-//import './menuIcons.css';
-//import './login.css';
+import './maslowCreate.css';
+import './menuIcons.css';
+import './login.css';
 
 const cad = wrap(new cadWorker());
 
