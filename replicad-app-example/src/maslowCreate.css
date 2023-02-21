@@ -1,0 +1,886 @@
+
+/*
+ * min.css for OpenJSCAD.org viewer
+ */
+
+.jscad-container {
+  margin: 0px 0px 20px 0px; /* not inherited */
+  padding: 0px; /* not inherited */
+  color: Black;
+  font-weight: bold;
+  font-family: Helvetica, Arial, Sans;
+}
+
+.row-flex{
+  display: flex;
+  flex-direction: column;
+}
+
+#headerBar {
+    position: absolute;
+    width: 99%;
+    height: 17px;
+    top: 0px;
+    right: 0px;
+    padding: 5px 0px 5px 5px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+#headerBar p {
+  align-items: center;
+  top:0px;
+  color: white;
+  display:inline-block;
+  font-size: .8em;
+  margin-top:3px;
+  margin-left:5px;
+}
+
+#headerBar_title {
+  font-size: 1em;
+  margin:0;
+  margin-left:3px;
+  margin-right: 10px;
+  display:inline;
+}
+
+#popUp{
+  color:white;
+  width: 1%; 
+  font-family: "Roboto", sans-serif;
+  
+  font-weight: 200;
+  font-size: .7em;
+  padding: 2px 0;
+  height: 10px; 
+  background-color: #4CAF50; 
+  text-align: center; 
+  line-height: 10px; 
+  color: black; 
+  border-radius: 5px;
+
+}
+
+
+#Progress_Status { 
+  position:absolute;
+  width: 200px; 
+  background-color: #ddd; 
+  right:1%;
+  top:40px;
+  border-radius: 5px;
+} 
+
+.thumnail-logo{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  display:inline;
+  padding: 1px;
+}
+
+.disabled{
+  opacity: 0.2;
+}
+
+#top_button_wrap{
+  position: fixed;
+  right: 0;
+  top: 0;
+  display:inline;
+  margin-top:-5px;
+  margin-left:auto;
+  margin-right:10px;
+  padding:3px;
+}
+
+#straight_menu{
+  z-index: 30;
+  opacity:1;
+}
+
+.three-menu{
+      width: 12px;
+    height: 10px;
+    border-radius: 0;
+    display: inline;
+    padding: 1px;
+}
+
+.switch{
+
+  position: fixed;
+  bottom: 50.5%;
+  left: 1%;
+  width: 30px;
+  height: 15px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.sliderAtom {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.sliderAtom:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 0px;
+  bottom: 0px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+
+input:checked + .sliderAtom {
+  background-color: #444;
+}
+
+input:focus + .sliderAtom {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .sliderAtom:before {
+  -webkit-transform: translateX(15px);
+  -ms-transform: translateX(15px);
+  transform: translateX(15px);
+}
+
+/* Rounded sliders */
+.sliderAtom.round {
+  border-radius: 34px;
+}
+
+.sliderAtom.round:before {
+  border-radius: 50%;
+}
+
+.drop{
+  display: none;
+  color: whitesmoke;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  width: 100%;
+  margin-top: -50%;
+  background-color: black;
+  border-radius: 0 0 10px 10px;
+  padding: 15px 0px 10px 0;
+}
+
+.top_buttons:hover {
+  opacity: 1;
+  border: 2px solid black;
+}
+
+.top_buttons:focus {
+  outline: none;
+}
+
+.top_buttons{ 
+    background-color: whitesmoke;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    opacity: 0.9;
+    padding: 0px;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #767b7b;
+    border-radius: 50%;
+}
+ #viewer_bar, .arrow-up{
+  color:black;
+  float:right;
+  position:relative;
+  height:35px; 
+  bottom:35px;
+  left:0px;
+  font-size:.7em;
+}
+.arrow-up{
+  width: 0; 
+  height: 0; 
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent; 
+  border-right:10px solid #e28dde; 
+  margin-right:20px;
+  bottom:30px;
+}
+
+#viewer_bar p, #viewer_bar div{
+  display:inline-block;
+  margin-top:0px;
+  padding:5px;
+}
+
+.slideup, .slidedown {           
+        overflow-y: hidden;    
+        }
+        .slideup {    
+            transform: translateY(0%);
+            transition: .4s ease-in-out;             
+            opacity: 1      
+        }  
+        .slidedown {    
+           transform: translateY(50%);
+           opacity: 0               
+        }    
+
+
+
+#flow-canvas{
+  margin-top: 0;
+  flex-shrink: 2; 
+  padding-bottom: 10px
+}
+
+
+.sideBar {
+    flex: 2;
+    margin: 0px 10px 0px 0.3%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #ffffff;
+    color: #444;
+    overflow: auto;
+    padding: 0px;
+    border: 2px solid #fefefe;
+    border-radius: 5px;
+}
+
+.slider-container {
+    text-align: left;
+    font-size: 12px;
+    padding: 0 20px;
+}
+
+.slider-container label p {
+  text-align: center;
+  color: #b2b2b2;
+  font-size: 10px;
+  margin-top:-10px;
+}
+
+.slider {
+    background-color: #444;
+    color: #444;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 13px;
+    border-radius: 2px;
+    outline: none;
+    opacity: 0.8;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  //border-radius: 50%; 
+  background: #DA70D6;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.sidebar-checkbox{
+  margin:15px;
+}
+
+/* Labels below slider */
+.range-labels {
+  padding: 0;
+  list-style: none;
+  width:100%;
+  display: flex;
+  justify-content: space-between;
+}
+  
+.range-labels li {
+  text-align: center;
+  color: #b2b2b2;
+  font-size: 10px;
+  cursor: pointer;
+  }
+
+#gridDiv, #wireDiv{
+ display: block;
+}
+
+.flex-parent {
+  flex-basis:1;
+  flex-shrink: 2; 
+  display: flex;
+  width:100%;
+  max-height: width/3;
+  margin-bottom:5px;
+
+}
+
+#header {
+  margin: 0px; /* not inherited */
+}
+
+#modelViewer {
+  margin: 0px; /* not inherited */
+  padding: 10px; /* not inherited */
+  padding-top: 0px;
+
+  top: 0px;
+  bottom: 0px;
+  
+  cursor: move; 
+  
+  height: 100%;
+  width: 95%;
+}
+
+canvas { 
+  margin: 0px; /* not inherited */
+  padding: 0px; /* not inherited */
+  display: block;
+
+}
+
+body {
+    font-family: 'Work Sans', sans-serif;
+    background: #787776;
+    overflow: hidden;
+}
+
+#parametersdiv {
+  margin: 0px; /* not inherited */
+  padding: 0px;
+
+  background: white;
+  opacity: 0.8;
+}
+
+#parametersdiv table {
+
+  text-align: left;
+  font-size: 0.8em;
+  font-weight: normal;
+}
+
+#parametersdiv th {
+  margin:  0px; /* not inherited */
+  padding: 0px; /* not inherited */
+
+  font-weight: bold;
+}
+
+#parametersdiv th.caption {
+  text-decoration: underline;
+}
+
+#parametersdiv td.caption {
+  text-align: right;
+  font-weight: bold;
+}
+
+#parametersdiv td {
+  margin:  0px; /* not inherited */
+  padding: 0px; /* not inherited */
+}
+
+#parametersdiv input, #parametersdiv textarea, #parametersdiv select {
+  font-size: 0.9em;
+  background: #fea;
+  border: none;
+}
+
+#updateButton {
+  margin:  0px; /* not inherited */
+  padding: 0px; /* not inherited */
+  background: white;
+
+}
+
+#tail { 
+  margin: 0px; /* not inherited */
+}
+
+#busy {
+  vertical-align: middle;
+}
+
+#box{
+    border: 1px solid #999;
+}
+
+.menu{
+    /* old menu.. keeping for search bar features */
+    display:none;
+    width: 14rem;
+    max-height: 8rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: #f4f4f4;
+    color: #333;
+    border: 1px solid #aaa;
+    box-shadow: 2px 2px 2px #999;
+    border-radius: 0.2rem;
+    list-style: none;
+    position: fixed;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+#canvas_menu{   
+    display: none;
+    max-height: 8rem;
+    overflow-x: hidden;
+    background-color: whitesmoke;
+    color: #333;
+    border: 1px solid #aaa;
+    box-shadow: 2px 2px 2px #999;
+    list-style: none;
+    position: fixed;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 8px;
+    transform: translate(-50%, -50%);
+    transition: opacity .5s ease, transform .3s
+}
+
+.menu_search_canvas{
+    background-color: #e0dcdce8;
+    border: none;
+    margin: auto;
+    text-align: center;
+    border-radius: 2px;
+    height: 1.6rem;
+}
+
+.menu_search_canvas:focus{
+    color: white;
+    outline: none;
+}
+
+.doc-title{
+  font-size: 1.3rem;
+  padding:10px;
+  margin:0;
+  text-align: left;
+}
+
+.menu.off{
+    top: -200%;
+    left: -200%;
+}
+
+.menu-item{
+    border-bottom:1px solid #e0dcdce8;
+    color: black;
+    height: 1.5rem;
+    line-height: 1rem;
+    font-size: .8rem;
+    font-weight: 100;
+    padding: 0 1rem;
+    cursor: pointer;
+}
+.menu-item-mine{
+  background-color:#2ea44f
+}
+
+.menu-item:hover,
+.menu-item:active,
+.menu-item-mine:hover{
+    color: #000;
+    font-weight: 500;
+    background-color: #82c288;
+}
+
+.menu_list{
+    list-style: none;
+    float: left;
+    padding-inline-start: 0px;
+}
+
+input.menu_search:focus {
+    outline-width: 0;
+}
+
+/* Style the tabs in the menu*/
+.tab {
+    float: right;
+    right: 10px;
+    width: 32%;
+    margin-top: -30px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    align-self: flex-end;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+    float: left;
+    vertical-align: middle;
+    border: 0px white solid;
+    outline: none;
+    cursor: pointer;
+    padding: 5px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #f4f2f2;;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+}
+
+.molecule_title {
+    background-color: #f7f6f6;
+    color: black;
+    text-align: right;
+    margin: 0px;
+    padding: 10px;
+    border-bottom: 2px solid #e3e3e3;
+
+}
+
+.atom_description {
+    color: black;
+    text-align: center;
+    margin: 0px;
+    padding: 10px;
+    border-bottom: 2px solid #e3e3e3;
+
+}
+
+.sidebar-list{
+    list-style: none;
+    padding:10px;
+}
+
+.sidebar-item-no-hover{
+    text-align:center;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    font-size: 1rem;
+    font-weight: 100;
+    padding: 0 1rem;
+    cursor: pointer;
+}
+
+.sidebar-item{
+    overflow: visible;
+    height: auto;
+    line-height: 1.5rem;
+    font-size: 1rem;
+    font-weight: 100;
+    padding: 0 1rem;
+    cursor: pointer;
+}
+
+.sidebar-editable-div{
+    text-align:left;
+    padding-bottom:10px;
+}
+.sidebar-editable-div:hover{
+  font-weight: 200;
+}
+
+.editing-item:hover
+.laber-item:active
+.editing-item:active{
+    color: #000;
+    font-weight: 500;
+} 
+
+.sidebar-subitem{
+    display:inline-block;
+}
+
+.sidebar-subitem select{
+    background-color: white;
+    margin-left: 10px;
+    border-style: none;
+    width: 200%;
+    display: inline-block;
+    color: #000;
+    border-radius: 0px;
+    border-width: 0px;
+    height: 110%;
+}
+
+.label-item{
+  display:block;
+  font-size:1.8rem;
+  font-weight: 700;
+  margin-left:0;
+  margin-right: 5px;
+  background: whitesmoke;
+  color: #4d4d4d;
+  border-radius: 5px;
+  padding: 2px;
+  padding-left: 5px;
+  
+}
+
+.noediting-item{
+  display:inline-block;
+  padding-bottom:5px;
+  min-width: 10px;
+  border-radius: 5px;
+ }
+
+.editing-item{
+  overflow: hidden;
+  display:inline;
+  margin-left:5px;
+  padding-bottom:5px;
+  min-width: 10px;
+  max-height: 1.5em;
+  border-radius: 3px;
+ }
+
+.editing-item:hover{
+  background-color: #bfbfbf;
+  color: black;
+  padding: 3px;
+}
+
+.sidebar_button {
+  display:block;
+  margin:auto;
+  background: #444;
+  cursor: pointer;
+  outline:none;
+  border: 2px white solid;
+  border-radius: 0.8rem;
+  width: 100%;
+  padding-bottom:3px;
+}
+.sidebar_button:hover,.form button:active,.form button:focus {
+  background: none; 
+}
+.sidebar_button:hover{
+  /* background: white;  */
+  border: 2px (0, 0, 0, 0.8) solid;
+}
+
+#localMolecules_top{
+  background-color: black;
+}
+
+.available_molecules{
+    width: 100px;
+    position: relative;
+    top: -18px;
+    right: 215px;
+    margin: auto;
+    background-color: whitesmoke;
+    color: #444;
+    padding: 8px;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 5px;
+    max-height: 10rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    list-style: none;
+    z-index: 1;
+}
+
+.available_molecules li {
+  color: #444;
+  padding: 6px 6px;
+  text-decoration: none;
+  display: block;
+  border-bottom:1px solid white;
+}
+
+/*menu new arc*/
+
+/* line 3, ../../sass/circular-menu.scss */
+
+.cn-menu1 {
+          position: absolute;        
+}
+
+.circular-menu {
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", Arial, sans-serif;
+  z-index: 1040;
+  border-radius: 50%;
+  background: transparent;
+  opacity: 0;
+  position: fixed;
+  display: none;
+  transition: opacity .3s ease, transform .3s ease;
+  cursor: default;
+  transform: scale(0.1);
+  pointer-events: none;
+  overflow: hidden;
+  /*cover to prevent extra space of anchors from being clickable*/
+}
+/* line 17, ../../sass/circular-menu.scss */
+.circular-menu.circular-sub-menu {
+  transition: all 0s ease 0s;
+}
+/* line 19, ../../sass/circular-menu.scss */
+.circular-menu.circular-sub-menu:after {
+  display: none;
+}
+/* line 25, ../../sass/circular-menu.scss */
+.circular-menu:after {
+  content: ".";
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  z-index: 10;
+  color: transparent;
+  box-sizing: border-box;
+}
+/* circular-menu.css */
+
+
+.circular-menu.opened-nav {
+  opacity: 1;
+  transition: opacity .5s ease, transform .3s ease;
+  transform: scale(1);
+  pointer-events: auto;
+}
+/* line 43, ../../sass/circular-menu.scss */
+.circular-menu.opened-nav li {
+  transition: all .3s ease .3s;
+  pointer-events: none;
+}
+/* line 46, ../../sass/circular-menu.scss */
+.circular-menu.opened-nav li a {
+  pointer-events: auto;
+}
+/* line 48, ../../sass/circular-menu.scss */
+.circular-menu.opened-nav li a .horizontal {
+  pointer-events: none;
+}
+/* line 55, ../../sass/circular-menu.scss */
+.circular-menu ul {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* line 60, ../../sass/circular-menu.scss */
+.circular-menu ul li {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  overflow: hidden;
+  transition: all .3s ease;
+  border: 1px solid transparent;
+  transform-origin: 100% 100%;
+}
+/* line 69, ../../sass/circular-menu.scss */
+.circular-menu ul li a {
+  box-sizing: border-box;
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  padding-top: 10px;
+  text-align: center;
+  text-decoration: none;
+  backface-visibility: hidden;
+}
+/* line 80, ../../sass/circular-menu.scss */
+.circular-menu ul li a span.cm-icon {
+  display: inline-block;
+  background-size: cover;
+}
+/* line 85, ../../sass/circular-menu.scss */
+.circular-menu ul li a span.text {
+  display: block;
+  background-color: black
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  position: relative;
+  font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", Arial, sans-serif;
+}
+/* line 95, ../../sass/circular-menu.scss */
+.circular-menu ul li a .cn-icon:before {
+  display: table;
+}
+/* line 99, ../../sass/circular-menu.scss */
+.circular-menu ul li a.disabled {
+  -webkit-filter: grayscale(100%);
+  pointer-events: none !important;
+  cursor: default;
+}
+/* line 105, ../../sass/circular-menu.scss */
+.circular-menu ul li a:focus {
+  position: fixed;
+  /* fix the displacement bug in webkit browsers when using tab key */
+}
+
+.tooltip{
+  pointer-events:none;
+  background-color: #C3C3CD;
+  margin:auto;
+  font-size: .7em;
+  color:white;
+  z-index: 1041;
+  position:absolute;
+  -moz-box-shadow: 1px 1px 3px 2px #C3C3CD;
+  -webkit-box-shadow: 1px 1px 3px 2px #C3C3CD;
+  box-shadow:         1px 1px 3px 2px #C3C3CD;
+}

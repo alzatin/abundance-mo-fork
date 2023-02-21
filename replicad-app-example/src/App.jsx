@@ -9,6 +9,11 @@ import ReplicadMesh from "./ReplicadMesh.jsx";
 import TodoList from "./TodoList.jsx";
 
 import cadWorker from "./worker.js?worker";
+
+//import './maslowCreate.css';
+//import './menuIcons.css';
+//import './login.css';
+
 const cad = wrap(new cadWorker());
 
 const LOCAL_STORAGE_KEY = 'todoApp.todos';
@@ -62,6 +67,7 @@ export default function ReplicadApp() {
 
   return (
     <main>
+      <canvas id = "flow-canvas"></canvas>
       <TodoList todos = {todos} toggleTodo = {toggleTodo} />
       <input ref = {todoNameRef} type = 'text' />
       <button onClick={handleAddTodo}>Add Todo</button>

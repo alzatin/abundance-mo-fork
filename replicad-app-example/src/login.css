@@ -1,0 +1,571 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+#welcome{
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 24px;
+    text-align: center;
+}
+.curiousBrowse{
+    display:flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #efecec;
+}
+.curiousBrowse:hover{
+  background: white;
+}
+
+.logo{
+  width:100px;
+  height:100px;
+  border-radius: 50%;
+}
+.logindiv{
+    margin: 10px 10px 0 10px;
+    position: relative;
+    width: 95%;
+    box-sizing: border-box;
+    display: flex;
+    align-content: center;
+    justify-content: space-around;
+    background-color: #f9f6f6;
+    flex-wrap: wrap;
+    align-self: center;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.login-page {
+  margin: auto;
+}
+.liked{
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: whitesmoke;
+    width: 100%;
+    border: 0;
+    color: #444;
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+}
+
+.pullDiv{
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.pullDiv label {
+  margin-right: 10px;
+  margin-left: 5px;
+  width: 100px;
+  text-align: left;
+}
+.pullDiv textarea {
+  overflow: hidden;
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: none;
+  font-size: 0.8em;
+}
+
+.pull-title{
+  display:inline;
+  padding:3px;
+  color:black;
+  background-color: whitesmoke;
+  border:2px solid #f1eeee;
+  margin-bottom:10px;
+}
+.pull-title p{
+  font-size: 0.6em;
+  display:inline;
+  padding:2px;
+  color:black;
+  background-color: whitesmoke;
+  border:2px solid #f1eeee;
+}
+
+.form {
+  background-color: #3e3d3d;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    border-radius: 4px;
+    width: 60%;
+    margin: 0 auto 100px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.runSideBarDiv {
+  background-color: #3e3d3d;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    border-radius: 4px;
+    width: 60%;
+    margin: 0 auto 10px;
+    padding: 5px;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+/*=== Trigger  ===*/
+.animate {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+/*=== Optional Delays, change values here  ===*/
+.one {
+-webkit-animation-delay: 0s;
+-moz-animation-delay: 0s;
+animation-delay: 0s;
+}
+
+/*=== Animations start here  ===*/
+/*==== FADE IN UP ===*/
+@-webkit-keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 15%, 0);
+    transform: translate3d(0, 15%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 10%, 0);
+    transform: translate3d(0, 10%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+}
+
+
+.form input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.form select {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.form button{
+  height:40px;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #444;
+  width: 100%;
+  border: 0;
+  border-radius: 2px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form button:hover,.form button:active,.form button:focus {
+    background: #f1eff1;
+    border: 2px solid #444;
+    color: #444;
+}
+.form .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+.form .message a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+.form .register-form {
+  display: none;
+}
+
+.closeButton{
+    display: block;
+    padding: 0px;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #eef5df;
+    background-color: #ff5248;
+    border-radius: 50%;
+    top: 5px;
+    right:5px;
+}
+.closeButton::before {
+  content: "\2715";
+  color:black;
+  display: none;
+  position:relative;
+  }
+
+.closeButton:hover { cursor: pointer; }
+.closeButton:hover::before{ display: block; }
+
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.container .info {
+  margin: 50px auto;
+  text-align: center;
+}
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: #1a1a1a;
+}
+.container .info span {
+  color: #4d4d4d;
+  font-size: 12px;
+}
+.container .info span a {
+  color: #000000;
+  text-decoration: none;
+}
+.container .info span .fa {
+  color: #EF3B3A;
+}
+
+/* Browse login and open projects styling */
+
+.login-popup{
+
+    padding:2% 0;
+    width: 12rem;
+    box-sizing: border-box;
+    background-color: #f9f6f6;
+    color: #333;
+    border: 1px solid #aaa;
+    box-shadow: 2px 2px 2px #999;
+    border-radius: 0.2rem;
+    list-style: none;
+    position: fixed;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    flex-flow: column;
+    transform: translate(-50%, -50%);
+    z-index:10;
+}
+
+.login-popup.off{
+    top: -200%;
+    left: -200%;
+}
+
+.centered-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.float-left-div-thumb{
+    display: flex;
+    flex-direction: column;
+    margin-top: 0px;
+    width: 100%;
+}
+
+.githubSign{
+    text-align: center;
+    padding: 5px;
+    margin: 0;
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
+
+.github-login-display{
+    width: 50%;
+    height: 90%;
+    border: 1px solid black;
+    text-align: center;
+}
+.topBrowse{
+    margin: 10px;
+    width: 96%;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+#project_search{
+    color: #353232;
+    border: 1px solid #444;
+    padding: 3px;
+    align-self: flex-end;
+    width: 40%;
+    margin-right: 10px;
+    align-self: center;
+    position: relative;
+    }
+
+.middleBrowse{
+    align-self: flex-end;
+    position: relative;
+    right: 10px;
+    display: flex;
+    width: 50%;
+    flex-flow: row;
+    justify-content: flex-end;
+    margin-top: -10px;
+    margin-right: 10px;
+}
+
+.middleBrowse2{
+    margin-top: 8px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.custom-select{
+    position: relative;
+    display: inline-block;
+    margin: 4px 10px 0 5px;
+    width: 45%;
+}
+
+.custom-select select{
+    background: #444;
+    color:white;
+    display:inline-block;
+    width: 100%;
+    height: 30px;
+    cursor: pointer;
+    padding: 10px 15px;
+    outline: 0;
+    border: 1 px solid #444;
+    border-radius: none;
+    background: light-grey
+    color: darkgrey
+    margin: 6px;
+  }
+      
+.select__arrow{
+  position: absolute;
+  top: 16px
+  right: 15px
+  width: 0
+  height: 0
+  pointer-events: none
+  border-style: solid
+  border-width: 8px 5px 0 5px
+}
+
+.browseDisplay {
+    align-self: flex-end;
+    margin-right: 10px;
+    background-color: #ddd;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+}
+.browseColumn{
+  overflow:hidden;
+  text-align: left;
+  width: 150px; 
+  height: 30px;
+  margin-right: 10px;
+
+}
+
+.newProject{
+    position:relative;
+    left:10px;
+    width: 90%;
+    height: 120px;
+  }
+
+.newProjectdiv{
+
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-content: center;
+    justify-content: space-around;
+    background-color: white;
+    flex-wrap: wrap;
+    border: 1px solid #efe7e7;
+
+  }
+  .newProjectdiv:hover, .browseDisplay:hover{
+    background-color: #e6e6ff;
+   
+  }
+
+
+  #titlesDiv{
+    font-size: 13px;
+    display: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #a9a9a91a;
+    padding: 5px 10px;
+    margin: 20px 0 0 0;
+    height: 4%;
+    box-sizing: border-box;
+}
+
+ .browseButton{
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #444;
+    width: 100%;
+    border: 0;
+    color: #FFFFFF;
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+ } 
+
+.browseButton:hover {
+    background: #f1eff1;
+    border: 2px solid #444;
+    color: #444;
+}
+
+.project{
+    margin: 3px;
+    margin-bottom: 10px;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    padding: 10px;
+    font-size:13px;
+    justify-content: flex-start;
+}
+
+.browseDiv{
+
+    padding: 10px 0px;
+    width: 400px;
+    height: 100px;
+    display: inline-flex;
+    font-size: 13px;
+    justify-content: flex-start;
+}
+
+.project:hover{
+    background-color: #82c288;
+}
+
+.mine{
+    background-color : #2ea44f;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 1em;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.page_change{
+  margin-top: 10px;
+  position:relative;
+  bottom:10px;
+  height:25px;
+  width:50px;
+  height: 35px;
+  border: none;
+  background-color: Transparent;
+  font-size: 20px;
+}
+
+}
+
+#back{}
+#forward{}
