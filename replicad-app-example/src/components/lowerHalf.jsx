@@ -2,29 +2,53 @@ import React, {useEffect, useState } from 'react';
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 
-
+function useWindowSize() {
+    // Initialize state with undefined width/height so server and client renders match
+    // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
+    const [windowSize, setWindowSize] = useState({
+      width: undefined,
+      height: undefined,
+    });
+    useEffect(() => {
+      // Handler to call on window resize
+      function handleResize() {
+        // Set window width/height to state
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      }
+      // Add event listener
+      window.addEventListener("resize", handleResize);
+      // Call handler right away so state gets updated with initial window size
+      handleResize();
+      // Remove event listener on cleanup
+      return () => window.removeEventListener("resize", handleResize);
+    }, []); // Empty array ensures that effect is only run on mount
+    return windowSize;
+}
 
 export default function LowerHalf(mesh, setMesh) {
+
+    const size = useWindowSize();
     
-    const onWindowResize = ()=>{
-        const threeView = document.getElementById('threeDView');
-        threeView.width = window.innerWidth;
-        threeView.height = window.innerHeight*.8;
-    }
-
-    useEffect(() => {
-        onWindowResize();
-        window.addEventListener('resize', () => { onWindowResize() }, false)
-      }, []);
-
     return (
         <>
             <div className='parent flex-parent' id = "lowerHalf">     
-                <div className="jscad-container"> 
-                    <section 
-                    id = "threeDView" 
-                    style={{ width: 600 }}
-                    >
+                <div 
+                className="jscad-container"
+                style={{
+                    width: size.width*.6,
+                    height: size.height*.5
+                }}
+                > 
+                <section 
+                id = "threeDView"
+                style={{
+                    width: size.width*.6,
+                    height: size.height*.5
+                }}
+                >
                         {mesh ? (
                             <ThreeContext>
                             <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
@@ -36,7 +60,7 @@ export default function LowerHalf(mesh, setMesh) {
                             Loading...
                             </div>
                         )}
-                    </section>
+                </section>
                         <div id="arrow-up-menu" className="arrow-up"></div>
                         <div id="viewer_bar"></div>
                         
