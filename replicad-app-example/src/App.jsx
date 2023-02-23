@@ -4,10 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 import FileSaver from "file-saver";
 import { wrap } from "comlink";
 
-import ThreeContext from "./ThreeContext.jsx";
-import ReplicadMesh from "./ReplicadMesh.jsx";
+// import ThreeContext from "./components/ThreeContext.jsx";
+// import ReplicadMesh from "./components/ReplicadMesh.jsx";
 import TodoList from "./TodoList.jsx";
-import FlowCanvas from './components/flowCanvas.jsx'
+import FlowCanvas from './components/flowCanvas.jsx';
+import LowerHalf from "./components/lowerHalf.jsx";
 
 import cadWorker from "./worker.js?worker";
 
@@ -37,31 +38,7 @@ export default function ReplicadApp() {
   return (
     <main>
       <FlowCanvas/>
-      <div class='parent flex-parent' id = "lowerHalf">     
-        <div class="jscad-container"> 
-          <section>
-          {mesh ? (
-            <ThreeContext>
-              <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
-            </ThreeContext>
-          ) : (
-            <div
-              style={{ display: "flex", alignItems: "center", fontSize: "2em" }}
-            >
-              Loading...
-            </div>
-          )}
-        </section>
-              <div id="arrow-up-menu" class="arrow-up"></div>
-              <div id="viewer_bar"></div>
-            
-          </div>
-          <div class="sideBar">
-              Maslow Create
-          </div>
-          <div id="bottom_bar"></div>
-        </div>
-      
+      <LowerHalf mesh={mesh} setMesh={setMesh}/>
     </main>
   );
 }
