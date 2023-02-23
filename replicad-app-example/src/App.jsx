@@ -19,8 +19,6 @@ import './codemirror.css';
 
 const cad = wrap(new cadWorker());
 
-const LOCAL_STORAGE_KEY = 'todoApp.todos';
-
 export default function ReplicadApp() {
   const [size, setSize] = useState(5);
 
@@ -38,7 +36,7 @@ export default function ReplicadApp() {
   return (
     <main>
       <FlowCanvas/>
-      <LowerHalf mesh={mesh} setMesh={setMesh}/>
+      <LowerHalf displayProps ={{mesh: mesh, setMesh:setMesh, size:size, cad:cad}}/>
     </main>
   );
 }
