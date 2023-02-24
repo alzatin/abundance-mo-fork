@@ -1,18 +1,25 @@
-import React, {useEffect } from 'react';
+import React, {useEffect, useState } from 'react';
+import GlobalVariables from './js/globalvariables';
+
+var flowCanvas;
 
 function onWindowResize(){
-    const canvas = document.getElementById('flow-canvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight*.4;
+    const flowCanvas = document.getElementById('flow-canvas');
+    flowCanvas.width = window.innerWidth;
+    flowCanvas.height = window.innerHeight*.4;
 }
 
 window.addEventListener('resize', () => { onWindowResize() }, false)
 
+
+
 export default function FlowCanvas() {
+
+    //const [globalVariables, setGlobalVariables] = useState(GlobalVariables);
     
     useEffect(() => {
         onWindowResize();
-      }, []);
+    }, []);
 
     return (
         <canvas id = "flow-canvas"></canvas>

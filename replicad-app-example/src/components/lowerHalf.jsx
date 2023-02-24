@@ -37,8 +37,6 @@ export default function LowerHalf(displayProps) {
     let mesh = displayProps.displayProps.mesh;
 
     const windowSize = useWindowSize();
-    console.log("CAD");
-    console.log(cad);
 
     useEffect(() => {
       cad.createMesh(size).then((m) => setMesh(m));
