@@ -219,7 +219,7 @@ class GlobalVariables{
     */
     widthToPixels(width){
         width = Math.min(width, 1) //Constrain the position to be a max of 1
-        let pixels = this.canvas.width * width
+        let pixels = this.canvas.current.width * width
         return pixels
     }
     /** 
@@ -227,7 +227,7 @@ class GlobalVariables{
     * @param {number} width 0-1 
     */
     pixelsToWidth(pixels){
-        let width = 1 /(this.canvas.width / pixels)
+        let width = 1 /(this.canvas.current.width / pixels)
         return width
     }
     /** 
@@ -236,7 +236,7 @@ class GlobalVariables{
     */
     heightToPixels(height){
         height = Math.min(height, 1) //Constrain the position of the max value to be 1
-        let pixels = this.canvas.height * height
+        let pixels = this.canvas.current.height * height
         return pixels
     }
     /** 

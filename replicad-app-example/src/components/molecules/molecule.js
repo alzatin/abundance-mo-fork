@@ -105,8 +105,8 @@ export default class Molecule extends Atom{
         //Add the molecule's output
         this.placeAtom({
             parentMolecule: this, 
-            x: GlobalVariables.pixelsToWidth(GlobalVariables.canvas.width - 20),
-            y: GlobalVariables.pixelsToHeight(GlobalVariables.canvas.height/2),
+            x: GlobalVariables.pixelsToWidth(GlobalVariables.canvas.current.width - 20),
+            y: .5,
             parent: this,
             name: 'Output',
             atomType: 'Output',

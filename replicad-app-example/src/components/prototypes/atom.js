@@ -589,7 +589,6 @@ export default class Atom {
      * Runs with each frame to draw the atom.
      */ 
     update() {
-        
         this.inputs.forEach(child => {
             child.update()     
         })
