@@ -112,12 +112,6 @@ export default class Output extends Atom {
      */ 
     draw() {
 
-        GlobalVariables.c.clearRect(0, 0, GlobalVariables.c.canvas.width, GlobalVariables.c.canvas.height)
-        GlobalVariables.c.fillStyle = '#000000'
-        GlobalVariables.c.beginPath()
-        GlobalVariables.c.arc(50, 100, 20*Math.sin(20*0.05)**2, 0, 2*Math.PI)
-        GlobalVariables.c.fill()
-
         const xInPixels = GlobalVariables.widthToPixels(this.x)
         const yInPixels = GlobalVariables.heightToPixels(this.y)
         const radiusInPixels = GlobalVariables.widthToPixels(this.radius)
