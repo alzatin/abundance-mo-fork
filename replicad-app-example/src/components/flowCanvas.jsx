@@ -1,6 +1,8 @@
 import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables';
 import Molecule from './molecules/molecule';
+import {createCMenu} from './js/NewMenu.js'
+
 
 var flowCanvas;
 
@@ -17,6 +19,7 @@ window.addEventListener('resize', () => { onWindowResize() }, false)
 export default function FlowCanvas() {
 
     const canvasRef = useRef(null);
+    const circleMenu = useRef(null);
     const [globalVariables, setGlobalVariables] = useState(GlobalVariables);
 
     useEffect(() => {
@@ -161,13 +164,27 @@ export default function FlowCanvas() {
         onWindowResize();
     }, []);
 
+    useEffect(() => {
+        createCMenu(circleMenu);
+    }, []);
+
     return (
-        <canvas 
-        ref={canvasRef} 
-        id = "flow-canvas"
-        onMouseMove={mouseMove}
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        ></canvas>
+        <>
+            <div>
+                <div id="circle-menu1" className="cn-menu1" ref={circleMenu} ></div>
+                <div id="canvas_menu">
+                    <input type="text" id="menuInput" onfocusout="value=''" placeholder="Search for atom.." className = "menu_search_canvas"></input>
+                    <ul id="githubList" className = "menu_list tabcontent">
+                    </ul>
+                </div>
+            </div>
+            <canvas 
+            ref={canvasRef} 
+            id = "flow-canvas"
+            onMouseMove={mouseMove}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            ></canvas>
+        </>
     );
 }
