@@ -101,7 +101,7 @@ export default class Molecule extends Atom{
         this.unitsIndex = 0
         
         this.setValues(values)
-        
+
         //Add the molecule's output
         this.placeAtom({
             parentMolecule: this, 

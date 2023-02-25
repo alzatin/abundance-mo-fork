@@ -288,7 +288,7 @@ class GlobalVariables{
     * @param {number} width 0-1 
     */
     pixelsToHeight(pixels){
-        let height = 1 /(this.canvas.height / pixels)
+        let height = 1 /(this.canvas.current.height / pixels)
         return height
     }
     
