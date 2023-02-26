@@ -768,7 +768,7 @@ export default class Atom {
     sendToRender(){
         //Send code to JSxCAD to render
         try{
-            GlobalVariables.writeToDisplay(this.path)
+            GlobalVariables.writeToDisplay(this.uniqueID)
         }
         catch(err){
             this.setAlert(err)

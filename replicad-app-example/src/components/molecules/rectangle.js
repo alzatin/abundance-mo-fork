@@ -75,8 +75,9 @@ export default class Rectangle extends Atom {
         try{
             var xVal = this.findIOValue('x length')
             var yVal = this.findIOValue('y length')
-            const values = {op: "rectangle", x: xVal, y:yVal, writePath: this.path }
-            this.basicThreadValueProcessing(values)
+
+            GlobalVariables.cad.rectangle(this.uniqueID, xVal, yVal);
+
         }catch(err){this.setAlert(err)}
     }
 }

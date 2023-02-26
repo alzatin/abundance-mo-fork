@@ -127,6 +127,11 @@ class GlobalVariables{
          */
         this.gitHub = new GitHubModule()
         /** 
+         * The replicad object which is used to interact with the replicad worker.
+         * @type {object}
+         */
+         this.cad = null; //Set in flowCanvas
+        /** 
          * A total of the number of atoms in this project
          * @type {integer}
          */
@@ -243,45 +248,8 @@ class GlobalVariables{
     * A function which reads from a path and displays the geometry it contains
     * @param {string} The path to read from
     */
-    writeToDisplay(path, resetView = false){
-        
-        this.displayedPath = path
-        
-        // Cancel the last write to display if there is one active because this one will replace it
-        if(this.displayProcessing){
-            this.cancelLastDisplayWorker()
-            this.displayProcessing = false
-        }
-        
-        const {answer, terminate} = window.ask({ evaluate: "md`hello`", 
-            op: "display", 
-            readPath: path, 
-            triangles: this.displayTriangles, 
-            outline: this.displayEdges, 
-            wireframe: false 
-        })
-        
-        answer.then( result => {
-            
-            this.displayProcessing = false
-            document.getElementById('viewerContext').style.filter="sepia(0%)"
-            
-            if(result && result != -1){
-                window.updateDisplay(result)
-                window.showGrid(this.displayGrid)
-                if(resetView){
-                    window.updateFit()
-                }
-            }
-        }).catch ((e) => console.warn(e))
-        
-        this.displayProcessing = true
-        document.getElementById('viewerContext').style.filter="sepia(100%)"
-        
-        /** 
-        * A function which cancels the worker processing display when called
-        */
-        this.cancelLastDisplayWorker = terminate
+    writeToDisplay(id, resetView = false){
+        console.log("Write to display not set"); //This is a placedholder. It is created in flowCanvas.js
     }
     /** 
     * A function to generate a 0-1 value from pixels for location on screen depending on screen height

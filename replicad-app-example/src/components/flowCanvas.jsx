@@ -25,9 +25,15 @@ export default function FlowCanvas(displayProps) {
     let mesh = displayProps.displayProps.mesh;
 
     useEffect(() => {
-        cad.rectangle("12345", 10,5).then((m) => {
-            cad.generateDisplayMesh("12345").then((m) => setMesh(m));
-        });
+        GlobalVariables.writeToDisplay = (id, resetView = false) => {
+            cad.generateDisplayMesh(id).then((m) => setMesh(m));
+        }
+
+        GlobalVariables.cad = cad;
+
+        // cad.rectangle("12345", 10,5).then((m) => {
+        //     GlobalVariables.writeToDisplay("12345");
+        // });
     });
 
     const canvasRef = useRef(null);
