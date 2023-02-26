@@ -1,4 +1,4 @@
-import { sketchCircle } from "replicad";
+import { sketchCircle, sketchRectangle } from "replicad";
 
 // The replicad code! Not much there!
 export function drawBox(thickness) {
@@ -8,8 +8,12 @@ export function drawBox(thickness) {
 }
 
 export function createCircle(diameter){
-  console.log("CreateCircle ran");
-  const circle = sketchCircle(diameter/2).extrude(.0001);
+  const circle = sketchCircle(diameter/2);
+  return circle;
+}
+
+export function createRectangle(x,y){
+  const circle = sketchRectangle(x,y);
   return circle;
 }
 

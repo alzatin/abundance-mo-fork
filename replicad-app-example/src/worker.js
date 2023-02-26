@@ -4,7 +4,7 @@ import { setOC } from "replicad";
 import { expose } from "comlink";
 
 // We import our model as a simple function
-import { drawBox, createCircle, createExtrude } from "./cad";
+import { drawBox, createCircle, createExtrude, createRectangle } from "./cad";
 
 var library = {};
 
@@ -45,12 +45,17 @@ function createMesh(thickness) {
 }
 
 function circle(id, diameter) {
-  console.log("Called circle function");
   return started.then(() => {
     const cadCircle = createCircle(diameter);
     library[id] = cadCircle;
-    console.log("Library: ");
-    console.log(library);
+    return true
+  });
+}
+
+function rectangle(id, x, y) {
+  return started.then(() => {
+    const cadRect = createRectangle(x,y);
+    library[id] = cadRect;
     return true
   });
 }
@@ -60,19 +65,26 @@ function extrude(id, height) {
 }
 
 function generateDisplayMesh(id) {
-  console.log("UpdateDisplay called");
-  console.log(id);
   return started.then(() => {
-    console.log("UpdateDisplay ran");
-    console.log(library[id]);
-    return {
-      faces: library[id].mesh(),
-      edges: library[id].meshEdges(),
-    };
+
+    //Try extruding if there is no 3d shape
+    if(library[id].mesh == undefined){
+      const threeDShape = library[id].extrude(.0001);
+      return {
+        faces: threeDShape.mesh(),
+        edges: threeDShape.meshEdges(),
+      };
+    }
+    else{
+      return {
+        faces: library[id].mesh(),
+        edges: library[id].meshEdges(),
+      };
+    }
   });
 }
 
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh, circle, generateDisplayMesh });
+expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh });

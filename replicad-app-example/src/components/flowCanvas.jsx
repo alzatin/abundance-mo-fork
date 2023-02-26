@@ -25,10 +25,7 @@ export default function FlowCanvas(displayProps) {
     let mesh = displayProps.displayProps.mesh;
 
     useEffect(() => {
-        console.log("Circle: ");
-        cad.circle("12345", 10).then((m) => {
-            console.log("Circle function returned");
-            console.log(m);
+        cad.rectangle("12345", 10,5).then((m) => {
             cad.generateDisplayMesh("12345").then((m) => setMesh(m));
         });
     });
