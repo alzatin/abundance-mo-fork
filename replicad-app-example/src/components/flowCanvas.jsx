@@ -16,7 +16,17 @@ window.addEventListener('resize', () => { onWindowResize() }, false)
 
 
 
-export default function FlowCanvas() {
+export default function FlowCanvas(displayProps) {
+
+    //Todo this is not very clean
+    let cad = displayProps.displayProps.cad;
+    let size = displayProps.displayProps.size;
+    let setMesh = displayProps.displayProps.setMesh;
+    let mesh = displayProps.displayProps.mesh;
+
+    useEffect(() => {
+        cad.createMesh(size).then((m) => setMesh(m));
+      }, [size]);
 
     const canvasRef = useRef(null);
     const circleMenu = useRef(null);

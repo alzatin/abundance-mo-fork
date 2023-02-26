@@ -29,13 +29,13 @@ export default function ReplicadApp() {
 
   const [mesh, setMesh] = useState(null);
 
-  useEffect(() => {
-    cad.createMesh(size).then((m) => setMesh(m));
-  }, [size]);
+  // useEffect(() => {
+  //   cad.createMesh(size).then((m) => setMesh(m));
+  // }, [size]);
 
   return (
     <main>
-      <FlowCanvas/>
+      <FlowCanvas displayProps ={{mesh: mesh, setMesh:setMesh, size:size, cad:cad}}/>
       <LowerHalf displayProps ={{mesh: mesh, setMesh:setMesh, size:size, cad:cad}}/>
     </main>
   );

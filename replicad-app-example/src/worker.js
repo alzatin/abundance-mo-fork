@@ -4,7 +4,7 @@ import { setOC } from "replicad";
 import { expose } from "comlink";
 
 // We import our model as a simple function
-import { drawBox } from "./cad";
+import { drawBox, createCircle, createExtrude } from "./cad";
 
 // This is the logic to load the web assembly code into replicad
 let loaded = false;
@@ -40,6 +40,22 @@ function createMesh(thickness) {
     };
   });
 }
+
+function circle(diameter) {
+  return createCircle(diameter);
+}
+
+function extrude(geometry, height) {
+  return createExtrude(geometry, height);
+}
+
+function updateDisplay(geometry) {
+  return {
+    faces: geometry.mesh(),
+    edges: geometry.meshEdges(),
+  };
+}
+
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
