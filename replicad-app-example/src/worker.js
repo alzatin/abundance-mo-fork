@@ -6,6 +6,8 @@ import { expose } from "comlink";
 // We import our model as a simple function
 import { drawBox, createCircle, createExtrude } from "./cad";
 
+var library = {};
+
 // This is the logic to load the web assembly code into replicad
 let loaded = false;
 const init = async () => {
@@ -30,6 +32,7 @@ function createBlob(thickness) {
 }
 
 function createMesh(thickness) {
+  console.log("Create mesh ran");
   return started.then(() => {
     const box = drawBox(thickness);
     // This is how you get the data structure that the replica-three-helper
@@ -41,22 +44,35 @@ function createMesh(thickness) {
   });
 }
 
-function circle(diameter) {
-  return createCircle(diameter);
+function circle(id, diameter) {
+  console.log("Called circle function");
+  return started.then(() => {
+    const cadCircle = createCircle(diameter);
+    library[id] = cadCircle;
+    console.log("Library: ");
+    console.log(library);
+    return true
+  });
 }
 
-function extrude(geometry, height) {
-  return createExtrude(geometry, height);
+function extrude(id, height) {
+  return createExtrude(library.id, height);
 }
 
-function updateDisplay(geometry) {
-  return {
-    faces: geometry.mesh(),
-    edges: geometry.meshEdges(),
-  };
+function generateDisplayMesh(id) {
+  console.log("UpdateDisplay called");
+  console.log(id);
+  return started.then(() => {
+    console.log("UpdateDisplay ran");
+    console.log(library[id]);
+    return {
+      faces: library[id].mesh(),
+      edges: library[id].meshEdges(),
+    };
+  });
 }
 
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh });
+expose({ createBlob, createMesh, circle, generateDisplayMesh });

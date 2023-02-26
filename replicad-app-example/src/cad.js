@@ -8,7 +8,9 @@ export function drawBox(thickness) {
 }
 
 export function createCircle(diameter){
-  return sketchCircle(diameter/2);
+  console.log("CreateCircle ran");
+  const circle = sketchCircle(diameter/2);
+  return circle;
 }
 
 export function createExtrude(geometry, height){
