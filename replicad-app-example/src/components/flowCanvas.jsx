@@ -24,14 +24,14 @@ export default function FlowCanvas(displayProps) {
     let setMesh = displayProps.displayProps.setMesh;
     let mesh = displayProps.displayProps.mesh;
 
-    // useEffect(() => {
-    //     console.log("Circle: ");
-    //     cad.circle("12345", 10).then((m) => {
-    //         console.log("Circle function returned");
-    //         console.log(m);
-    //         cad.generateDisplayMesh("12345").then((m) => setMesh(m));
-    //     });
-    // });
+    useEffect(() => {
+        console.log("Circle: ");
+        cad.circle("12345", 10).then((m) => {
+            console.log("Circle function returned");
+            console.log(m);
+            cad.generateDisplayMesh("12345").then((m) => setMesh(m));
+        });
+    });
 
     const canvasRef = useRef(null);
     const circleMenu = useRef(null);
