@@ -46,25 +46,34 @@ function createMesh(thickness) {
 
 function circle(id, diameter) {
   return started.then(() => {
-    const cadCircle = createCircle(diameter);
-    library[id] = cadCircle;
+    library[id] = createCircle(diameter);
     return true
   });
 }
 
 function rectangle(id, x, y) {
   return started.then(() => {
-    const cadRect = createRectangle(x,y);
-    library[id] = cadRect;
+    library[id] = createRectangle(x,y);;
     return true
   });
 }
 
-function extrude(id, height) {
-  return createExtrude(library.id, height);
+function extrude(targetID, inputID, height) {
+  console.log("Extrude called with: ");
+  console.log(targetID)
+  console.log(inputID)
+  console.log(height);
+  return started.then(() => {
+    const extrudedShape =library[inputID].extrude(height);
+    library[targetID] = extrudedShape;
+    return true
+  });
 }
 
 function generateDisplayMesh(id) {
+  console.log("Dispaly mesh: ")
+  console.log(library);
+
   return started.then(() => {
 
     //Try extruding if there is no 3d shape
@@ -87,4 +96,4 @@ function generateDisplayMesh(id) {
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh });
+expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude });

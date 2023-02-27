@@ -191,6 +191,8 @@ export default class Connector {
      */ 
     propogate(){
         //takes the input and passes it to the output
+        console.log("Conector propogate called");
+        console.log(this.attachmentPoint1.getValue());
         if(this.attachmentPoint1.ready){
             this.attachmentPoint2.setValue(this.attachmentPoint1.getValue())
         }

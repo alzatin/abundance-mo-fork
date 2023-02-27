@@ -669,7 +669,7 @@ export default class Atom {
     displayAndPropagate(){
         //If this has an output write to it
         if(this.output){
-            this.output.setValue(this.path)
+            this.output.setValue(this.uniqueID)
             this.output.ready = true
         }
         
@@ -757,9 +757,9 @@ export default class Atom {
             input.loadTree()
         })
         if(this.output){
-            this.output.value = this.path
+            this.output.value = this.uniqueID
         }
-        return this.path
+        return this.uniqueID
     }
     
     /**
@@ -767,6 +767,8 @@ export default class Atom {
      */ 
     sendToRender(){
         //Send code to JSxCAD to render
+        console.log("Send to render ran");
+        console.log(this.uniqueID)
         try{
             GlobalVariables.writeToDisplay(this.uniqueID)
         }
