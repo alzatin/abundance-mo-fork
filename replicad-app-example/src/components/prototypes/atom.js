@@ -698,7 +698,6 @@ export default class Atom {
      * Calls a worker thread to compute the atom's value.
      */ 
     basicThreadValueProcessing(){
-        console.log("Basic thread value processing called");
         //If the inputs are all ready
         var go = true
         this.inputs.forEach(input => {
@@ -708,8 +707,6 @@ export default class Atom {
         })
         if(go){     //Then we update the value
 
-            console.log("Go ran");
-            
             this.waitOnComingInformation() //This sends a chain command through the tree to lock all the inputs which are down stream of this one. It also cancels anything processing if this atom was doing a calculation already.
             
             this.processing = true

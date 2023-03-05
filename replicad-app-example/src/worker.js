@@ -32,7 +32,6 @@ function createBlob(thickness) {
 }
 
 function createMesh(thickness) {
-  console.log("Create mesh ran");
   return started.then(() => {
     const box = drawBox(thickness);
     // This is how you get the data structure that the replica-three-helper
@@ -53,14 +52,14 @@ function circle(id, diameter) {
 
 function rectangle(id, x, y) {
   return started.then(() => {
-    library[id] = createRectangle(x,y).clone();
+    library[id] = createRectangle(x,y);
     return true
   });
 }
 
 function extrude(targetID, inputID, height) {
   return started.then(() => {
-    const extrudedShape =library[inputID].extrude(height);
+    const extrudedShape =library[inputID].clone().extrude(height);
     library[targetID] = extrudedShape;
     return true
   });

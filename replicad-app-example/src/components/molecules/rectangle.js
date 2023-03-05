@@ -76,7 +76,9 @@ export default class Rectangle extends Atom {
             var xVal = this.findIOValue('x length')
             var yVal = this.findIOValue('y length')
 
-            GlobalVariables.cad.rectangle(this.uniqueID, xVal, yVal);
+            GlobalVariables.cad.rectangle(this.uniqueID, xVal, yVal).then(()=> {
+                this.basicThreadValueProcessing()
+            });
 
         }catch(err){this.setAlert(err)}
     }
