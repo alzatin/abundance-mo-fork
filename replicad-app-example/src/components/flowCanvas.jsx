@@ -80,10 +80,112 @@ export default function FlowCanvas(displayProps) {
         })
     }
 
+    const keyDown = (e) => {
+        //Prevents default behavior of the browser on canvas to allow for copy/paste/delete
+        // if(e.srcElement.tagName.toLowerCase() !== ("textarea")
+        //     && e.srcElement.tagName.toLowerCase() !== ("input")
+        //     &&(!e.srcElement.isContentEditable)
+        //     && ['c','v','Backspace'].includes(e.key)){
+        //     e.preventDefault()
+        // }
+    
+        if (e.key == "Backspace" || e.key == "Delete") {
+            GlobalVariables.atomsSelected = []
+            //Adds items to the  array that we will use to delete
+            GlobalVariables.currentMolecule.copy()
+            GlobalVariables.atomsSelected.forEach(item => {
+                GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(nodeOnTheScreen => {
+                    if(nodeOnTheScreen.uniqueID == item.uniqueID){
+                        nodeOnTheScreen.deleteNode()
+                    }
+                })
+            })
+        }    
+
+        /** 
+        * Object containing letters and values used for keyboard shortcuts
+        * @type {object?}
+        */ 
+        var shortCuts = {
+            a: "Assembly",
+            b: "ShrinkWrap",//>
+            c: "Copy",
+            d: "Difference",
+            e: "Extrude",
+            g: "GitHub", // Not working yet
+            i: "Input",
+            j: "Translate", 
+            k: "Rectangle",
+            l: "Circle",
+            m: "Molecule",
+            s: "Save", 
+            v: "Paste",
+            x: "Equation",
+            y: "Code", //is there a more natural code letter? can't seem to prevent command t new tab behavior
+            z: "Undo" //saving this letter 
+        }
+
+        //Copy /paste listeners
+        if (e.key == "Control" || e.key == "Meta") {
+            GlobalVariables.ctrlDown = true
+        }  
+
+        if (GlobalVariables.ctrlDown && shortCuts.hasOwnProperty([e.key])) {
+            
+            e.preventDefault()
+            //Copy & Paste
+            if (e.key == "c") {
+                GlobalVariables.atomsSelected = []
+                GlobalVariables.currentMolecule.copy()
+            }
+            if (e.key == "v") {
+                GlobalVariables.atomsSelected.forEach(item => {
+                    let newAtomID = GlobalVariables.generateUniqueID()
+                    item.uniqueID = newAtomID
+                    GlobalVariables.currentMolecule.placeAtom(item, true)
+                })   
+            }
+            //Save project
+            if (e.key == "s") {
+                GlobalVariables.gitHub.saveProject()
+            }
+            //Opens menu to search for github molecule
+            if (e.key == "g") {
+                showGitHubSearch()
+            }
+            
+            else { 
+
+                GlobalVariables.currentMolecule.placeAtom({
+                    parentMolecule: GlobalVariables.currentMolecule, 
+                    x: 0.5,
+                    y: 0.5,
+                    parent: GlobalVariables.currentMolecule,
+                    atomType: `${shortCuts[e.key]}`,
+                    uniqueID: GlobalVariables.generateUniqueID()
+                }, true)
+            }
+            
+        }
+        //every time a key is pressed
+        GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(molecule => {  
+            molecule.keyPress(e.key)      
+        })
+       
+    }
+    
+    const keyUp = (e) => {
+        if (e.key == "Control" || e.key == "Meta") {
+            GlobalVariables.ctrlDown = false
+        }
+    }
+
+
     /** 
     * Called by mouse down
     */
     const onMouseDown = (event) => {
+        console.log("Mouse down ran")
         
         var isRightMB
         if ("which" in event){  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
@@ -199,9 +301,12 @@ export default function FlowCanvas(displayProps) {
             <canvas 
             ref={canvasRef} 
             id = "flow-canvas"
+            tabIndex={0}
             onMouseMove={mouseMove}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
+            onKeyUp={keyUp}
+            onKeyDown={keyDown}
             ></canvas>
         </>
     );
