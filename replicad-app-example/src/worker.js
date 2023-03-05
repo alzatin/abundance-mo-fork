@@ -73,6 +73,15 @@ function move(targetID, inputID, x, y, z) {
   });
 }
 
+function cut(targetID, input1ID, input2ID) {
+  console.log("Cut called");
+  return started.then(() => {
+    const cutShape =library[input1ID].clone().cut(library[input2ID].clone());
+    library[targetID] = cutShape;
+    return true
+  });
+}
+
 function generateDisplayMesh(id) {
 
   return started.then(() => {
@@ -97,4 +106,4 @@ function generateDisplayMesh(id) {
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move });
+expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move, cut });
