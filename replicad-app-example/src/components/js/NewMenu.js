@@ -7,7 +7,6 @@ import GlobalVariables from './globalvariables.js'
 var ele = null;//document.querySelector('#circle-menu1')
 
 const createCMenu = (targetElement) => {
-    console.log("Creating new menu");
     ele = targetElement;
 
     // /**
@@ -21,7 +20,7 @@ const createCMenu = (targetElement) => {
             var instance = GlobalVariables.availableTypes[key] 
             if(instance.atomCategory === group){
                 var subMenu = new Object()
-                subMenu.title = `${instance.atomType}`
+                subMenu.title = " "//`${instance.atomType}`
                 subMenu.icon = `${instance.atomType}`
                 subMenu.name = instance.atomType
                 subMenu.click = function menuClick(e, title){ 

@@ -850,6 +850,8 @@ input.menu_search:focus {
 .circular-menu ul li a span.cm-icon {
   display: inline-block;
   background-size: cover;
+  width: 50%;
+  height:50%;
 }
 /* line 85, ../../sass/circular-menu.scss */
 .circular-menu ul li a span.text {

@@ -79,7 +79,6 @@ export default class Move extends Atom{
                     this.basicThreadValueProcessing()
                 });
                 
-                this.basicThreadValueProcessing()
             }catch(err){this.setAlert(err)}
         }
     }

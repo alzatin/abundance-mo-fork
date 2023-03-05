@@ -2,9 +2,10 @@ import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC } from "replicad";
 import { expose } from "comlink";
+import { sketchCircle, sketchRectangle } from "replicad";
 
 // We import our model as a simple function
-import { drawBox, createCircle, createExtrude, createRectangle } from "./cad";
+import { drawBox } from "./cad";
 
 var library = {};
 
@@ -45,14 +46,14 @@ function createMesh(thickness) {
 
 function circle(id, diameter) {
   return started.then(() => {
-    library[id] = createCircle(diameter);
+    library[id] = sketchCircle(diameter/2);
     return true
   });
 }
 
 function rectangle(id, x, y) {
   return started.then(() => {
-    library[id] = createRectangle(x,y);
+    library[id] = sketchRectangle(x,y);
     return true
   });
 }

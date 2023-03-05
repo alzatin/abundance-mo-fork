@@ -185,7 +185,6 @@ export default function FlowCanvas(displayProps) {
     * Called by mouse down
     */
     const onMouseDown = (event) => {
-        console.log("Mouse down ran")
         
         var isRightMB
         if ("which" in event){  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
