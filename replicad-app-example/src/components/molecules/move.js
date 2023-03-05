@@ -70,13 +70,16 @@ export default class Move extends Atom{
     updateValue(){
         if(this.inputs.every(x => x.ready)){
             try{
-                var inputPath = this.findIOValue('geometry')
+                var inputID = this.findIOValue('geometry')
                 var x = this.findIOValue('xDist')
                 var y = this.findIOValue('yDist')
                 var z = this.findIOValue('zDist')
-                const values = { op: "move", x:x, y:y, z:z, readPath: inputPath, writePath: this.path }
                 
-                this.basicThreadValueProcessing(values)
+                GlobalVariables.cad.move(this.uniqueID, inputID, x, y, z).then(()=> {
+                    this.basicThreadValueProcessing()
+                });
+                
+                this.basicThreadValueProcessing()
             }catch(err){this.setAlert(err)}
         }
     }

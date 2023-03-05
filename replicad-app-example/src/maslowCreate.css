@@ -3,6 +3,11 @@
  * min.css for OpenJSCAD.org viewer
  */
 
+ body {
+  margin: 0px;
+  padding: 0px;
+}
+
 .jscad-container {
   margin: 0px 0px 20px 0px; /* not inherited */
   padding: 0px; /* not inherited */

@@ -20,3 +20,7 @@ export function createRectangle(x,y){
 export function createExtrude(geometry, height){
   return geometry.extrude(height);
 }
+
+export function createMove(geometry, x, y, z){
+  return geometry.translate([x, y, z]);
+}
