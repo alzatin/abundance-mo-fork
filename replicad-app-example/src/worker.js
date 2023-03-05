@@ -53,16 +53,12 @@ function circle(id, diameter) {
 
 function rectangle(id, x, y) {
   return started.then(() => {
-    library[id] = createRectangle(x,y);;
+    library[id] = createRectangle(x,y).clone();
     return true
   });
 }
 
 function extrude(targetID, inputID, height) {
-  console.log("Extrude called with: ");
-  console.log(targetID)
-  console.log(inputID)
-  console.log(height);
   return started.then(() => {
     const extrudedShape =library[inputID].extrude(height);
     library[targetID] = extrudedShape;
@@ -71,14 +67,12 @@ function extrude(targetID, inputID, height) {
 }
 
 function generateDisplayMesh(id) {
-  console.log("Dispaly mesh: ")
-  console.log(library);
 
   return started.then(() => {
 
     //Try extruding if there is no 3d shape
     if(library[id].mesh == undefined){
-      const threeDShape = library[id].extrude(.0001);
+      const threeDShape = library[id].clone().extrude(.0001);
       return {
         faces: threeDShape.mesh(),
         edges: threeDShape.meshEdges(),

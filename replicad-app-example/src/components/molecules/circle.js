@@ -73,8 +73,11 @@ export default class Circle extends Atom {
         try{
             var diameter = this.findIOValue('diameter')
             
-            GlobalVariables.cad.circle(this.uniqueID, diameter);
-            
+            GlobalVariables.cad.circle(this.uniqueID, diameter).then(()=> {
+                console.log(".then finished");
+                this.basicThreadValueProcessing()
+            });
+
         }catch(err){this.setAlert(err)}
     }
 }
