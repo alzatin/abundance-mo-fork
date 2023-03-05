@@ -37,10 +37,6 @@ export default function LowerHalf(displayProps) {
     let mesh = displayProps.displayProps.mesh;
 
     const windowSize = useWindowSize();
-
-    // useEffect(() => {
-    //   cad.createMesh(size).then((m) => setMesh(m));
-    // }, [size]);
     
     return (
         <>
@@ -49,14 +45,14 @@ export default function LowerHalf(displayProps) {
                 className="jscad-container"
                 style={{
                     width: windowSize.width*.6,
-                    height: windowSize.height*.5
+                    height: windowSize.height*.55
                 }}
                 > 
                 <section 
                 id = "threeDView"
                 style={{
                     width: windowSize.width*.6,
-                    height: windowSize.height*.5
+                    height: windowSize.height*.58
                 }}
                 >
                         {mesh ? (
