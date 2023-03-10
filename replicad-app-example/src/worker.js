@@ -46,39 +46,38 @@ function createMesh(thickness) {
 
 function circle(id, diameter) {
   return started.then(() => {
-    library[id] = sketchCircle(diameter/2);
+    library[id] = {geometry: [sketchCircle(diameter/2)], tags: []};
     return true
   });
 }
 
 function rectangle(id, x, y) {
   return started.then(() => {
-    library[id] = sketchRectangle(x,y);
+    library[id] = {geometry: [sketchRectangle(x,y)], tags: []};
     return true
   });
 }
 
 function extrude(targetID, inputID, height) {
   return started.then(() => {
-    const extrudedShape =library[inputID].clone().extrude(height);
-    library[targetID] = extrudedShape;
+    const extrudedShape =library[inputID].geometry[0].clone().extrude(height);
+    library[targetID] = {geometry: [extrudedShape], tags: library[inputID].tags};
     return true
   });
 }
 
 function move(targetID, inputID, x, y, z) {
   return started.then(() => {
-    const movedShape =library[inputID].clone().translate([x, y, z]);
-    library[targetID] = movedShape;
+    const movedShape =library[inputID].geometry[0].clone().translate([x, y, z]);
+    library[targetID] = {geometry: [movedShape], tags: library[inputID].tags};
     return true
   });
 }
 
 function cut(targetID, input1ID, input2ID) {
-  console.log("Cut called");
   return started.then(() => {
-    const cutShape =library[input1ID].clone().cut(library[input2ID].clone());
-    library[targetID] = cutShape;
+    const cutShape =library[input1ID].geometry[0].clone().cut(library[input2ID].geometry[0].clone());
+    library[targetID] = {geometry: [cutShape], tags: library[input1ID].tags};
     return true
   });
 }
@@ -86,10 +85,14 @@ function cut(targetID, input1ID, input2ID) {
 function generateDisplayMesh(id) {
 
   return started.then(() => {
+    //Extract the geometry from the library
+    const geometry = library[id].geometry[0];
+
+    //Fuse everything if there is an asembly
 
     //Try extruding if there is no 3d shape
-    if(library[id].mesh == undefined){
-      const threeDShape = library[id].clone().extrude(.0001);
+    if(geometry.mesh == undefined){
+      const threeDShape = geometry.clone().extrude(.0001);
       return {
         faces: threeDShape.mesh(),
         edges: threeDShape.meshEdges(),
@@ -97,8 +100,8 @@ function generateDisplayMesh(id) {
     }
     else{
       return {
-        faces: library[id].mesh(),
-        edges: library[id].meshEdges(),
+        faces: geometry.mesh(),
+        edges: geometry.meshEdges(),
       };
     }
   });
