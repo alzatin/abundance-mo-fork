@@ -60,8 +60,12 @@ function rectangle(id, x, y) {
 
 function extrude(targetID, inputID, height) {
   return started.then(() => {
-    const extrudedShape =library[inputID].geometry[0].clone().extrude(height);
-    library[targetID] = {geometry: [extrudedShape], tags: library[inputID].tags};
+    // const extrudedShape =library[inputID].geometry[0].clone().extrude(height);
+    // library[targetID] = {geometry: [extrudedShape], tags: library[inputID].tags};
+    const extrudedShape = actOnLeafs(library[inputID], "extrude", [height]);
+    console.log("Extruded shape:")
+    console.log(extrudedShape)
+    library[targetID] = extrudedShape
     return true
   });
 }
@@ -93,14 +97,32 @@ function assembly(targetID, inputIDs) {
   });
 }
 
+function actOnLeafs(assembly, action, args){
+  console.log("Acting on leafs")
+  //This is a leaf
+  if(assembly.geometry.length == 1 && assembly.geometry[0].geometry == undefined){
+    console.log("This is a leaf");
+    return {geometry: [assembly.geometry[0].clone()[action](...args)], tags: assembly.tags};
+  }
+  //This is a branch
+  else{
+    let transformedAssembly = [];
+    assembly.geometry.forEach(subAssembly => {
+      transformedAssembly.push(actOnLeafs(subAssembly, action))
+    })
+    return {geometry: transformedAssembly, tags: assembly.tags};
+  }
+}
+
 function flattenAssembly(assembly) {
   var flattened = [];
-  if(assembly.geometry.length == 1 && assembly.geometry[0].geometry == undefined ){
+  //This is a leaf
+  if(assembly.geometry.length == 1 && assembly.geometry[0].geometry == undefined){
     flattened.push(assembly.geometry[0])
     return flattened;
   }
+  //This is a branch
   else{
-    console.log(assembly.geometry)
     assembly.geometry.forEach(subAssembly => {
       flattened.push(...flattenAssembly(subAssembly))
     })
