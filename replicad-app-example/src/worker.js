@@ -60,28 +60,30 @@ function rectangle(id, x, y) {
 
 function extrude(targetID, inputID, height) {
   return started.then(() => {
-    // const extrudedShape =library[inputID].geometry[0].clone().extrude(height);
-    // library[targetID] = {geometry: [extrudedShape], tags: library[inputID].tags};
-    const extrudedShape = actOnLeafs(library[inputID], "extrude", [height]);
-    console.log("Extruded shape:")
-    console.log(extrudedShape)
-    library[targetID] = extrudedShape
+    library[targetID] = actOnLeafs(library[inputID], leaf => {
+      return {geometry: [leaf.geometry[0].clone().extrude(height)], tags: leaf.tags} ;
+    });
     return true
   });
 }
 
 function move(targetID, inputID, x, y, z) {
   return started.then(() => {
-    const movedShape =library[inputID].geometry[0].clone().translate([x, y, z]);
-    library[targetID] = {geometry: [movedShape], tags: library[inputID].tags};
+    library[targetID] = actOnLeafs(library[inputID], leaf => {
+      return {geometry: [leaf.geometry[0].clone().translate([x, y, z])], tags: leaf.tags} ;
+    });
     return true
   });
 }
 
 function cut(targetID, input1ID, input2ID) {
   return started.then(() => {
-    const cutShape =library[input1ID].geometry[0].clone().cut(library[input2ID].geometry[0].clone());
-    library[targetID] = {geometry: [cutShape], tags: library[input1ID].tags};
+    //const cutShape =library[input1ID].geometry[0].clone().cut(library[input2ID].geometry[0].clone());
+    //library[targetID] = {geometry: [cutShape], tags: library[input1ID].tags};
+    library[targetID] = actOnLeafs(library[input1ID], leaf => {
+      const cutTemplate = flattenRemove2DandFuse(library[input2ID])
+      return {geometry: [leaf.geometry[0].clone().cut(cutTemplate)], tags: leaf.tags} ;
+    });
     return true
   });
 }
@@ -97,12 +99,12 @@ function assembly(targetID, inputIDs) {
   });
 }
 
-function actOnLeafs(assembly, action, args){
-  console.log("Acting on leafs")
+
+//Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
+function actOnLeafs(assembly, action){
   //This is a leaf
   if(assembly.geometry.length == 1 && assembly.geometry[0].geometry == undefined){
-    console.log("This is a leaf");
-    return {geometry: [assembly.geometry[0].clone()[action](...args)], tags: assembly.tags};
+    return action(assembly);
   }
   //This is a branch
   else{
@@ -139,6 +141,20 @@ function chainFuse(chain){
   return fused
 }
 
+function flattenRemove2DandFuse(chain){
+  let flattened = flattenAssembly(chain);
+
+  //Here we need to remove anything which isn't already 3D
+  let cleanedGeometry = []
+  flattened.forEach(pieceOfGeometry => {
+    if(pieceOfGeometry.mesh != undefined){
+      cleanedGeometry.push(pieceOfGeometry)
+    }
+  })
+
+  return chainFuse(cleanedGeometry);
+}
+
 function generateDisplayMesh(id) {
 
   return started.then(() => {
@@ -146,7 +162,7 @@ function generateDisplayMesh(id) {
     //Flatten the assembly to remove heirarcy
     const flattened = flattenAssembly(library[id]);
 
-    //Here we need to extrude anything which isn't already 3D and clone everything
+    //Here we need to extrude anything which isn't already 3D
     var cleanedGeometry = []
     flattened.forEach(pieceOfGeometry => {
       if(pieceOfGeometry.mesh == undefined){
