@@ -63,12 +63,14 @@ export default class Rotate extends Atom {
      */ 
     updateValue(){
         try{
-            var inputPath = this.findIOValue('geometry')
+            var inputID = this.findIOValue('geometry')
             var x = this.findIOValue('x-axis degrees')
             var y = this.findIOValue('y-axis degrees')
             var z = this.findIOValue('z-axis degrees')
-            const values = { op: "rotate", x:x, y:y, z:z, readPath: inputPath, writePath: this.path }
-            this.basicThreadValueProcessing(values)
+            
+            GlobalVariables.cad.rotate(this.uniqueID, inputID, x, y, z).then(()=> {
+                this.basicThreadValueProcessing()
+            });
         }catch(err){this.setAlert(err)}
     }
 }
