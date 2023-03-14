@@ -109,14 +109,20 @@ function flattenAssembly(assembly) {
 
 }
 
+function chainFuse(chain){
+  let fused = chain[0].clone()
+  for (let i = 1; i < chain.length; i++) {
+    fused = fused.fuse(chain[i])
+  }
+  return fused
+}
+
 function generateDisplayMesh(id) {
 
   return started.then(() => {
 
     //Flatten the assembly to remove heirarcy
     const flattened = flattenAssembly(library[id]);
-
-    console.log(flattened);
 
     //Here we need to extrude anything which isn't already 3D and clone everything
     var cleanedGeometry = []
@@ -129,9 +135,7 @@ function generateDisplayMesh(id) {
       }
     })
 
-    let geometry = cleanedGeometry[0].clone().fuse(...cleanedGeometry);
-    console.log("Geometry: ")
-    console.log(geometry)
+    let geometry = chainFuse(cleanedGeometry);
 
     //Try extruding if there is no 3d shape
     if(geometry.mesh == undefined){
