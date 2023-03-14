@@ -72,11 +72,12 @@ export default class Intersection extends Atom {
      */ 
     updateValue(){
         try{
-            const path1 = this.findIOValue('geometry1')
-            const path2 = this.findIOValue('geometry2')
-            const values = { op: "intersection",readPath1: path1, readPath2: path2, writePath: this.path }
+            const input1ID = this.findIOValue('geometry1')
+            const input2ID = this.findIOValue('geometry2')
             
-            this.basicThreadValueProcessing(values)
+            GlobalVariables.cad.intersect(this.uniqueID, input1ID, input2ID).then(()=> {
+                this.basicThreadValueProcessing()
+            });
         }catch(err){this.setAlert(err)}
     }
 }

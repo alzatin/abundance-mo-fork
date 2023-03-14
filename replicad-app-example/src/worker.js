@@ -90,11 +90,19 @@ function rotate(targetID, inputID, x, y, z){
 
 function cut(targetID, input1ID, input2ID) {
   return started.then(() => {
-    //const cutShape =library[input1ID].geometry[0].clone().cut(library[input2ID].geometry[0].clone());
-    //library[targetID] = {geometry: [cutShape], tags: library[input1ID].tags};
     library[targetID] = actOnLeafs(library[input1ID], leaf => {
       const cutTemplate = flattenRemove2DandFuse(library[input2ID])
       return {geometry: [leaf.geometry[0].clone().cut(cutTemplate)], tags: leaf.tags} ;
+    });
+    return true
+  });
+}
+
+function intersect(targetID, input1ID, input2ID) {
+  return started.then(() => {
+    library[targetID] = actOnLeafs(library[input1ID], leaf => {
+      const shapeToIntersectWith = flattenRemove2DandFuse(library[input2ID])
+      return {geometry: [leaf.geometry[0].clone().intersect(shapeToIntersectWith)], tags: leaf.tags} ;
     });
     return true
   });
@@ -209,4 +217,4 @@ function generateDisplayMesh(id) {
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move, rotate, cut, assembly });
+expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move, rotate, cut, intersect, assembly });
