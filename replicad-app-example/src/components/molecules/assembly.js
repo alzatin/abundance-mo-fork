@@ -114,9 +114,9 @@ export default class Assembly extends Atom{
                     }
                 })
                 
-                const values = { op: "assembly", paths: inputValues, writePath: this.path }
-                this.basicThreadValueProcessing(values)
-                this.clearAlert()
+                GlobalVariables.cad.assembly(this.uniqueID, inputValues).then(()=> {
+                    this.basicThreadValueProcessing()
+                });
             }catch(err){this.setAlert(err)}
             
             //Delete or add ports as needed

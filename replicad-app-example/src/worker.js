@@ -82,13 +82,56 @@ function cut(targetID, input1ID, input2ID) {
   });
 }
 
+function assembly(targetID, inputIDs) {
+  return started.then(() => {
+    const assembly = [];
+    for (let i = 0; i < inputIDs.length; i++) {
+      assembly.push(library[inputIDs[i]]);
+    }
+    library[targetID] = {geometry: assembly, tags: []};
+    return true
+  });
+}
+
+function flattenAssembly(assembly) {
+  var flattened = [];
+  if(assembly.geometry.length == 1 && assembly.geometry[0].geometry == undefined ){
+    flattened.push(assembly.geometry[0])
+    return flattened;
+  }
+  else{
+    console.log(assembly.geometry)
+    assembly.geometry.forEach(subAssembly => {
+      flattened.push(...flattenAssembly(subAssembly))
+    })
+    return flattened;
+  }
+
+}
+
 function generateDisplayMesh(id) {
 
   return started.then(() => {
-    //Extract the geometry from the library
-    const geometry = library[id].geometry[0];
 
-    //Fuse everything if there is an asembly
+    //Flatten the assembly to remove heirarcy
+    const flattened = flattenAssembly(library[id]);
+
+    console.log(flattened);
+
+    //Here we need to extrude anything which isn't already 3D and clone everything
+    var cleanedGeometry = []
+    flattened.forEach(pieceOfGeometry => {
+      if(pieceOfGeometry.mesh == undefined){
+        cleanedGeometry.push(pieceOfGeometry.clone().extrude(.0001));
+      }
+      else{
+        cleanedGeometry.push(pieceOfGeometry)
+      }
+    })
+
+    let geometry = cleanedGeometry[0].clone().fuse(...cleanedGeometry);
+    console.log("Geometry: ")
+    console.log(geometry)
 
     //Try extruding if there is no 3d shape
     if(geometry.mesh == undefined){
@@ -110,4 +153,4 @@ function generateDisplayMesh(id) {
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move, cut });
+expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move, cut, assembly });
