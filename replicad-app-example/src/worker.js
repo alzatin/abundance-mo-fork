@@ -2,7 +2,7 @@ import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC } from "replicad";
 import { expose } from "comlink";
-import { sketchCircle, sketchRectangle } from "replicad";
+import { sketchCircle, sketchRectangle, loft } from "replicad";
 
 // We import our model as a simple function
 import { drawBox } from "./cad";
@@ -54,6 +54,13 @@ function circle(id, diameter) {
 function rectangle(id, x, y) {
   return started.then(() => {
     library[id] = {geometry: [sketchRectangle(x,y)], tags: []};
+    return true
+  });
+}
+
+function loftShapes(targetID, inputID1, inputID2) {
+  return started.then(() => {
+    library[targetID] = loft(library[inputID1].geometry, library[inputID2].geometry);
     return true
   });
 }
@@ -217,4 +224,4 @@ function generateDisplayMesh(id) {
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move, rotate, cut, intersect, assembly });
+expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move, rotate, cut, intersect, assembly, loftShapes });

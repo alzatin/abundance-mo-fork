@@ -247,6 +247,13 @@ export default function FlowCanvas(displayProps) {
         // }
         
     }
+
+    const onDoubleClick = (event) => {
+        console.log("Double click happened")
+        GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(molecule => {
+            molecule.doubleClick(event.clientX,event.clientY)
+        })
+    }
    
     /** 
     * Called by mouse up
@@ -304,6 +311,7 @@ export default function FlowCanvas(displayProps) {
             onMouseMove={mouseMove}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
+            onDoubleClick={onDoubleClick}
             onKeyUp={keyUp}
             onKeyDown={keyDown}
             ></canvas>

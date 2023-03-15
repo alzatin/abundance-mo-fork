@@ -109,8 +109,10 @@ export default class ShrinkWrap extends Atom{
                     }
                 })
                 
-                const values = { op: "hull", paths: inputsList, writePath: this.path }
-                this.basicThreadValueProcessing(values)
+                GlobalVariables.cad.loftShape(this.uniqueID, inputsList[1], inputsList[1]).then(()=> {
+                    this.basicThreadValueProcessing()
+                });
+
             }catch(err){this.setAlert(err)}
             
             //Delete or add ports as needed
