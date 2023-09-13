@@ -102,12 +102,12 @@ const createCMenu = (targetElement) => {
 
     /* Right click to open circular menu -- mouse click and drag*/
     document.getElementById('flow-canvas').addEventListener('mousedown', event => {
+        console.log("the mouse goes down on menu")
         //every time the mouse button goes down
         if (event.detail === 1) {
             doubleClick = false
             // it was a single click
             var isRightMB
-
             if ("which" in event){  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
                 isRightMB = event.which == 3
             }
@@ -117,6 +117,10 @@ const createCMenu = (targetElement) => {
             if(isRightMB){
                 cmenu.show([event.clientX, event.clientY],doubleClick)
                 return
+            }
+            else{
+                //if it's not a right click hide the menu
+                cmenu.hide()
             }
         } else if (event.detail === 2) {
             // it was a double click
