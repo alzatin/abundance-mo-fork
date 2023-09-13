@@ -8,7 +8,6 @@ var ele = null;//document.querySelector('#circle-menu1')
 
 const createCMenu = (targetElement) => {   
     ele = targetElement;
-
     // /**
     //      * Runs to create submenus from Global Variables atomCategories. Populates menu objects
     //      * @param {object} group - Name of the category to find appropriate atoms
@@ -23,6 +22,7 @@ const createCMenu = (targetElement) => {
                 subMenu.title = " "//`${instance.atomType}`
                 subMenu.icon = `${instance.atomType}`
                 subMenu.name = instance.atomType
+                console.log(subMenu)
                 subMenu.click = function menuClick(e, title){ 
                     if (title.icon === 'GitHubMolecule'){
                         showGitHubSearch(e)
@@ -43,20 +43,21 @@ const createCMenu = (targetElement) => {
      */
     var cmenu = CMenu(ele.current)
     .config({
-        totalAngle: 360,//deg,
+        percent: .05,
+        //we don't seem to need to specify these parameters
+        /*totalAngle: 360,//deg,
         spaceDeg: 1,//deg
         background: "#e1e1e1",
         backgroundHover: "#FFFFFF",
-        percent: 0.10,//%
-        diameter: 120,//px
+        percent: .05,//%
+        diameter: 150,//px
         position: 'top',
         horizontal: true,
         //start: -45,//deg
-        animation: "into",
+        animation: "into",*/
         menus: [
             {
                 title: '',
-                //background: '#174657',
                 icon: 'Actions',
                 menus: makeArray('Actions')        
             },
@@ -116,6 +117,7 @@ const createCMenu = (targetElement) => {
                 isRightMB = event.button == 2
             }
             if(isRightMB){
+                console.log(cmenu)
                 cmenu.show([event.clientX, event.clientY],doubleClick)
                 return
             }
