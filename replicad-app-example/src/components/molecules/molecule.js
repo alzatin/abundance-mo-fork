@@ -382,7 +382,6 @@ export default class Molecule extends Atom{
         else if(this.topLevel){
             //If we are the top level molecule
 
-            this.createSegmentSlider(valueList)
 
             const dropdown = document.createElement('div')
             valueList.appendChild(dropdown)
@@ -431,55 +430,6 @@ export default class Molecule extends Atom{
         
     }
 
-    /**
-     * Creates segment length slider and passes value to Global Variables
-     */ 
-    createSegmentSlider(valueList){
-
-        const unitsScalor = this.units[Object.keys(this.units)[this.unitsIndex]]
-
-        //Creates value slider
-        var rangeElement = document.createElement('input')
-        //Div which contains the entire element
-        var div = document.createElement('div')
-        div.setAttribute('class', 'slider-container')
-        valueList.appendChild(div)
-        var rangeLabel = document.createElement('label')
-        rangeLabel.textContent = "Display quality/Length of Segments"
-        div.appendChild(rangeLabel)
-        rangeLabel.appendChild(rangeElement)
-        rangeElement.setAttribute('type', 'range')
-        rangeElement.setAttribute('min', '' + .001/unitsScalor)
-        rangeElement.setAttribute('max', '' + 1/unitsScalor)
-        rangeElement.setAttribute('step', '' + .05/unitsScalor)
-        rangeElement.setAttribute('class', 'slider')
-        rangeElement.setAttribute('value', GlobalVariables.circleSegmentSize)
-            
-        var rangeValueLabel = document.createElement('ul')
-        rangeValueLabel.innerHTML= '<li>Export</li><li>Draft</li> '
-        rangeValueLabel.setAttribute('class', 'range-labels')
-        rangeLabel.appendChild(rangeValueLabel)
-
-        var rangeValue = document.createElement('p')
-        rangeValue.textContent = parseFloat(rangeElement.value).toFixed(5).toString()
-        rangeLabel.appendChild(rangeValue)
-
-
-        //on slider change send value to global variables
-        rangeElement.oninput = function() {
-            rangeValue.textContent = this.value
-            GlobalVariables.circleSegmentSize = this.value
-            
-        }
-        
-        rangeElement.addEventListener('touchend', () => {
-            GlobalVariables.topLevelMolecule.refreshCircles()
-        })
-        
-        rangeElement.addEventListener('mouseup', () => {
-            GlobalVariables.topLevelMolecule.refreshCircles()
-        })
-    }
     
     /**
      * Used to trigger all of the circle atoms within a molecule and all of the molecules within it to update their value. Used when the number of segments changes.
