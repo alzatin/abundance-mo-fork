@@ -223,29 +223,9 @@ export default function FlowCanvas(displayProps) {
             GlobalVariables.currentMolecule.backgroundClick() 
         }
         else{
+            
             GlobalVariables.currentMolecule.selected = false
         }
-        
-        //hide the menu if it is visible
-        // if (!document.querySelector('#circle-menu1').contains(event.target)) {
-        //     cmenu.hide()
-        // }
-        //hide search menu if it is visible
-        // if (!document.querySelector('#canvas_menu').contains(event.target)) {
-        //     const menu = document.querySelector('#canvas_menu')
-        //     menu.classList.add('off')
-        //     menu.style.top = '-200%'
-        //     menu.style.left = '-200%'
-        // }
-        //hide the menu if it is visible
-        // if (!document.querySelector('#straight_menu').contains(event.target)) {
-        //     closeTopMenu()
-        //     let options = document.querySelectorAll('.option')
-        //     Array.prototype.forEach.call(options, a => {
-        //         a.classList.remove("openMenu") 
-        //     })
-        // }
-        
     }
 
     const onDoubleClick = (event) => {
