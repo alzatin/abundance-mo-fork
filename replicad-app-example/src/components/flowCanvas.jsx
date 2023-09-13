@@ -200,10 +200,6 @@ export default function FlowCanvas(displayProps) {
             cmenu.show([event.clientX, event.clientY],doubleClick)
             return
         }
-        //if it's not a right click hide the menu
-        else{
-            cmenu.hide()
-        }
 
         var clickHandledByMolecule = false
 
