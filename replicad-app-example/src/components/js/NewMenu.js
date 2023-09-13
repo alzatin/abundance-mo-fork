@@ -47,7 +47,7 @@ const createCMenu = (targetElement) => {
         spaceDeg: 1,//deg
         background: "#e1e1e1",
         backgroundHover: "#FFFFFF",
-        percent: 0.20,//%
+        percent: 0.10,//%
         diameter: 120,//px
         position: 'top',
         horizontal: true,
