@@ -226,10 +226,19 @@ export default function FlowCanvas(displayProps) {
             
             GlobalVariables.currentMolecule.selected = false
         }
+        
+        
+        //hide search menu if it is visible
+        // if (!document.querySelector('#canvas_menu').contains(event.target)) {
+        //     const menu = document.querySelector('#canvas_menu')
+        //     menu.classList.add('off')
+        //     menu.style.top = '-200%'
+        //     menu.style.left = '-200%'
+        // }
+        
     }
 
     const onDoubleClick = (event) => {
-        console.log("Double click happened")
         GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(molecule => {
             molecule.doubleClick(event.clientX,event.clientY)
         })
