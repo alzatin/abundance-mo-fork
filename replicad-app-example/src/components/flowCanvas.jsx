@@ -196,8 +196,11 @@ export default function FlowCanvas(displayProps) {
         // if it's a right click show the menu
         if(isRightMB){
             var doubleClick = false;
-            console.log('menu being shown')
             cmenu.show([event.clientX, event.clientY],doubleClick)
+            return
+        }
+        else{
+            cmenu.hide()
             return
         }
 
