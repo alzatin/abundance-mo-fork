@@ -121,6 +121,7 @@ const createCMenu = (targetElement) => {
             else{
                 //if it's not a right click hide the menu
                 cmenu.hide()
+                return
             }
         } else if (event.detail === 2) {
             // it was a double click
