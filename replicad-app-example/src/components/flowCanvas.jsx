@@ -201,9 +201,7 @@ export default function FlowCanvas(displayProps) {
         }
         else{
             cmenu.hide()
-            return
-        }
-
+        
         var clickHandledByMolecule = false
 
         GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(molecule => {
@@ -242,7 +240,7 @@ export default function FlowCanvas(displayProps) {
         //     menu.style.top = '-200%'
         //     menu.style.left = '-200%'
         // }
-        
+    }   
     }
 
     const onDoubleClick = (event) => {
