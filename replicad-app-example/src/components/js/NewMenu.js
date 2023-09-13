@@ -6,7 +6,7 @@ import GlobalVariables from './globalvariables.js'
  */    
 var ele = null;//document.querySelector('#circle-menu1')
 
-const createCMenu = (targetElement) => {
+const createCMenu = (targetElement) => {   
     ele = targetElement;
 
     // /**
@@ -56,6 +56,7 @@ const createCMenu = (targetElement) => {
         menus: [
             {
                 title: '',
+                //background: '#174657',
                 icon: 'Actions',
                 menus: makeArray('Actions')        
             },
@@ -127,17 +128,8 @@ const createCMenu = (targetElement) => {
             // it was a double click
             //every time the mouse button goes down
             doubleClick = true
-
-            if ("which" in event){  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
-                isRightMB = event.which == 3
-            }
-            else if ("button" in event){  // IE, Opera 
-                isRightMB = event.button == 2
-            }
-            if(isRightMB){
-                cmenu.show([event.clientX, event.clientY],doubleClick)
-                return
-            }
+            console.log("double click")
+            return
         }
     })
 
