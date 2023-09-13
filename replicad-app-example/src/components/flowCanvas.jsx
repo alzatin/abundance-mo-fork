@@ -1,7 +1,8 @@
 import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables';
 import Molecule from './molecules/molecule';
-import {createCMenu} from './js/NewMenu.js'
+//import CMenu from 'circular-menu';
+import {createCMenu, cmenu} from './js/NewMenu.js'
 
 
 var flowCanvas;
@@ -185,7 +186,6 @@ export default function FlowCanvas(displayProps) {
     * Called by mouse down
     */
     const onMouseDown = (event) => {
-        
         var isRightMB
         if ("which" in event){  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
             isRightMB = event.which == 3
@@ -193,8 +193,16 @@ export default function FlowCanvas(displayProps) {
         else if ("button" in event){  // IE, Opera 
             isRightMB = event.button == 2
         }
+        // if it's a right click show the menu
         if(isRightMB){
+            var doubleClick = false;
+            console.log('menu being shown')
+            cmenu.show([event.clientX, event.clientY],doubleClick)
             return
+        }
+        //if it's not a right click hide the menu
+        else{
+            cmenu.hide()
         }
 
         var clickHandledByMolecule = false

@@ -5,6 +5,7 @@ import GlobalVariables from './globalvariables.js'
  * Html element that contains the circular menu
  */    
 var ele = null;//document.querySelector('#circle-menu1')
+var cmenu 
 
 const createCMenu = (targetElement) => {   
     ele = targetElement;
@@ -19,10 +20,10 @@ const createCMenu = (targetElement) => {
             var instance = GlobalVariables.availableTypes[key] 
             if(instance.atomCategory === group){
                 var subMenu = new Object()
-                subMenu.title = " "//`${instance.atomType}`
+                subMenu.title = `${instance.atomType}`
                 subMenu.icon = `${instance.atomType}`
                 subMenu.name = instance.atomType
-                console.log(subMenu)
+                
                 subMenu.click = function menuClick(e, title){ 
                     if (title.icon === 'GitHubMolecule'){
                         showGitHubSearch(e)
@@ -41,9 +42,9 @@ const createCMenu = (targetElement) => {
     /**
      * This creates a new instance of the circular menu. 
      */
-    var cmenu = CMenu(ele.current)
+    cmenu = CMenu(ele.current)
     .config({
-        percent: .05,
+        //percent: .05,
         //we don't seem to need to specify these parameters
         /*totalAngle: 360,//deg,
         spaceDeg: 1,//deg
@@ -57,33 +58,33 @@ const createCMenu = (targetElement) => {
         animation: "into",*/
         menus: [
             {
-                title: '',
+                title: 'Actions',
                 icon: 'Actions',
                 menus: makeArray('Actions')        
             },
             {
-                title: '',
+                title: 'Inputs',
                 icon: 'Inputs',
                 menus: makeArray('Inputs')        
             },
             {
-                title: '',
+                title: 'Tags',
                 icon: 'Tags',
                 menus: makeArray('Tags')
             },
             {
-                title: '',
+                title: 'Export',
                 icon: 'Export',
                 menus: makeArray('Export')
                                 
             },
             {
-                title: '',
+                title: 'Shapes',
                 icon: 'Shapes',
                 menus: makeArray('Shapes')
             },
             {
-                title: '',
+                title: 'Interactions',
                 icon: 'Interaction',
                 menus: makeArray('Interactions')
             }
@@ -99,41 +100,6 @@ const createCMenu = (targetElement) => {
     ele.current.addEventListener('contextmenu', (e) => {
         e.preventDefault()
     }) 
-
-    var doubleClick
-
-    /* Right click to open circular menu -- mouse click and drag*/
-    document.getElementById('flow-canvas').addEventListener('mousedown', event => {
-        console.log("the mouse goes down on menu")
-        //every time the mouse button goes down
-        if (event.detail === 1) {
-            doubleClick = false
-            // it was a single click
-            var isRightMB
-            if ("which" in event){  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
-                isRightMB = event.which == 3
-            }
-            else if ("button" in event){  // IE, Opera 
-                isRightMB = event.button == 2
-            }
-            if(isRightMB){
-                console.log(cmenu)
-                cmenu.show([event.clientX, event.clientY],doubleClick)
-                return
-            }
-            else{
-                //if it's not a right click hide the menu
-                cmenu.hide()
-                return
-            }
-        } else if (event.detail === 2) {
-            // it was a double click
-            //every time the mouse button goes down
-            doubleClick = true
-            console.log("double click")
-            return
-        }
-    })
 
     // /**
     //      * Runs when a menu option is clicked to place a new atom from the local atoms list.
@@ -267,5 +233,5 @@ const createCMenu = (targetElement) => {
 //     }, true)
 // }
 
-export {createCMenu}//,showGitHubSearch}
+export {createCMenu, cmenu}//,showGitHubSearch}
  
