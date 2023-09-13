@@ -735,7 +735,7 @@ input.menu_search:focus {
 .circular-menu.opened-nav {
   opacity: 1;
   transition: opacity .5s ease, transform .3s ease;
-  transform: scale(1);
+  transform: scale(.5);
   pointer-events: auto;
 }
 /* line 43, ../../sass/circular-menu.scss */
@@ -786,8 +786,7 @@ input.menu_search:focus {
 .circular-menu ul li a span.cm-icon {
   display: inline-block;
   background-size: cover;
-  width: 50%;
-  height:50%;
+  width:100%;
 }
 /* line 85, ../../sass/circular-menu.scss */
 .circular-menu ul li a span.text {
@@ -805,7 +804,7 @@ input.menu_search:focus {
 }
 /* line 99, ../../sass/circular-menu.scss */
 .circular-menu ul li a.disabled {
-  -webkit-filter: grayscale(100%);
+ -webkit-filter: grayscale(100%);
   pointer-events: none !important;
   cursor: default;
 }
