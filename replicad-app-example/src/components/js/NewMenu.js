@@ -45,7 +45,8 @@ const createCMenu = (targetElement) => {
     cmenu = CMenu(ele.current)
     .config({
         hideAfterClick: true,
-        //percent: .05,
+        percent: .045,
+        
         //we don't seem to need to specify these parameters
         /*totalAngle: 360,//deg,
         spaceDeg: 1,//deg

@@ -789,21 +789,17 @@ input.menu_search:focus {
 .circular-menu ul li a span.cm-icon {
   display: inline-block;
   background-size: cover;
-  width:10%;
 }
 /* line 85, ../../sass/circular-menu.scss */
 
-.circular-menu ul li a span.text {
+.circular-menu ul li a span {
   position:relative;
-  top: 0px; 
-  left: 0px;
-  z-index: 30;
   font-size:.9em;
   display: none;
   letter-spacing: 0.1em;
   line-height: 1;
   font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", Arial, sans-serif;
-
+  
 }
 .circular-menu ul li a:hover span {
   display: block;
@@ -824,7 +820,7 @@ input.menu_search:focus {
   position: fixed;
   /* fix the displacement bug in webkit browsers when using tab key */
 }
-/*
+
 .tooltip{
   display:none;
   pointer-events:none;
@@ -837,4 +833,4 @@ input.menu_search:focus {
   -moz-box-shadow: 1px 1px 3px 2px #C3C3CD;
   -webkit-box-shadow: 1px 1px 3px 2px #C3C3CD;
   box-shadow:         1px 1px 3px 2px #C3C3CD;
-}*/
+}
