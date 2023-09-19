@@ -789,17 +789,20 @@ input.menu_search:focus {
   width:100%;
 }
 /* line 85, ../../sass/circular-menu.scss */
-/*
-.circular-menu ul li a span.text {
-  display: block;
-  background-color: black;
-  font-size: 20px;
+
+.circular-menu ul li a span {
+  display: none;
+}
+.circular-menu ul li a:hover span {
+  display: inline-block;
+  pointer-events: crosshair;
+  font-size: 30px;
   letter-spacing: 0.1em;
   line-height: 1;
   position: absolute;
   font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", Arial, sans-serif;
 }
-*/
+
 /* line 95, ../../sass/circular-menu.scss */
 .circular-menu ul li a .cn-icon:before {
   display: table;
@@ -815,8 +818,9 @@ input.menu_search:focus {
   position: fixed;
   /* fix the displacement bug in webkit browsers when using tab key */
 }
-
+/*
 .tooltip{
+  display:none;
   pointer-events:none;
   background-color: #C3C3CD;
   margin:auto;
@@ -827,4 +831,4 @@ input.menu_search:focus {
   -moz-box-shadow: 1px 1px 3px 2px #C3C3CD;
   -webkit-box-shadow: 1px 1px 3px 2px #C3C3CD;
   box-shadow:         1px 1px 3px 2px #C3C3CD;
-}
+}*/
