@@ -3,6 +3,7 @@
  * min.css for OpenJSCAD.org viewer
  */
 
+
  body {
   margin: 0px;
   padding: 0px;
@@ -690,6 +691,8 @@ input.menu_search:focus {
 
 /* line 3, ../../sass/circular-menu.scss */
 
+
+
 .cn-menu1 {
           position: absolute;        
 }
@@ -786,22 +789,25 @@ input.menu_search:focus {
 .circular-menu ul li a span.cm-icon {
   display: inline-block;
   background-size: cover;
-  width:100%;
+  width:10%;
 }
 /* line 85, ../../sass/circular-menu.scss */
 
-.circular-menu ul li a span {
+.circular-menu ul li a span.text {
+  position:relative;
+  top: 0px; 
+  left: 0px;
+  z-index: 30;
+  font-size:.9em;
   display: none;
-}
-.circular-menu ul li a:hover span {
-  display: inline-block;
-  pointer-events: crosshair;
-  font-size: 30px;
   letter-spacing: 0.1em;
   line-height: 1;
-  position: absolute;
   font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", Arial, sans-serif;
+
 }
+.circular-menu ul li a:hover span {
+  display: block;
+  }
 
 /* line 95, ../../sass/circular-menu.scss */
 .circular-menu ul li a .cn-icon:before {
