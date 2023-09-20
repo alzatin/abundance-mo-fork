@@ -793,16 +793,8 @@ input.menu_search:focus {
 /* line 85, ../../sass/circular-menu.scss */
 
 .circular-menu ul li a span {
-  position:relative;
-  font-size:.9em;
   display: none;
-  letter-spacing: 0.1em;
-  line-height: 1;
-  font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", Arial, sans-serif;
 }
-.circular-menu ul li a:hover span {
-  display: block;
-  }
 
 /* line 95, ../../sass/circular-menu.scss */
 .circular-menu ul li a .cn-icon:before {

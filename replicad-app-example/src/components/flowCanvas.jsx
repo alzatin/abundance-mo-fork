@@ -296,9 +296,11 @@ export default function FlowCanvas(displayProps) {
             <div>
                 <div id="circle-menu1" className="cn-menu1" ref={circleMenu} ></div>
     
+                {
                 /* i'd really like to make the tooltip for the circular menu happen with react here. Have not
                 found a way to grab anchor ID from this component yet. 
-                 <div id="tool_tip_circular" className='tooltip'>hello</div>; */
+    <div id="tool_tip_circular" className='tooltip'>hello</div>; */
+    }
 
                 <div id="canvas_menu">
                     <input type="text" id="menuInput" onfocusout="value=''" placeholder="Search for atom.." className = "menu_search_canvas"></input>
