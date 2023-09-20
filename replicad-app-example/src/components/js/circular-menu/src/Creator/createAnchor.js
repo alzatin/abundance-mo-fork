@@ -67,6 +67,7 @@ export default function (parent, data, index) {
         }
     }
 
+    // this is where the tooltip div is created to show names of elements in circular menu
     on(a, 'mouseenter', function () {
         var div = document.createElement('div');
         div.textContent = data.icon
@@ -77,7 +78,6 @@ export default function (parent, data, index) {
         style(div, 'top', self._container.offsetTop + self._calc.radius - 10 + 'px');
         style(div, 'left', self._container.offsetLeft + self._calc.radius - length + 'px');
         });
-
 
     on(a, 'click', clickCallBack, data);
     on(a, 'mouseleave', function () {
