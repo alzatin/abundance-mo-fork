@@ -78,6 +78,7 @@ export default function FlowCanvas(displayProps) {
     const mouseMove = (e) => {
         GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(molecule => {
             molecule.clickMove(event.clientX,event.clientY)
+        
         })
     }
 
@@ -197,6 +198,7 @@ export default function FlowCanvas(displayProps) {
         if(isRightMB){
             var doubleClick = false;
             cmenu.show([event.clientX, event.clientY],doubleClick)
+            console.log(cmenu)
             return
         }
         else{
@@ -285,6 +287,7 @@ export default function FlowCanvas(displayProps) {
     }, []);
 
     useEffect(() => {
+        console.log("use effect")
         createCMenu(circleMenu);
     }, []);
 
@@ -292,6 +295,7 @@ export default function FlowCanvas(displayProps) {
         <>
             <div>
                 <div id="circle-menu1" className="cn-menu1" ref={circleMenu} ></div>
+                <div id="tool_tip_circular" className='tooltip'>hello</div>;
                 <div id="canvas_menu">
                     <input type="text" id="menuInput" onfocusout="value=''" placeholder="Search for atom.." className = "menu_search_canvas"></input>
                     <ul id="githubList" className = "menu_list tabcontent">

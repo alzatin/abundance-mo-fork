@@ -1,4 +1,4 @@
-import CMenu from 'circular-menu'
+import CMenu from "./circular-menu"
 import GlobalVariables from './globalvariables.js'
 
 /**
@@ -31,8 +31,9 @@ const createCMenu = (targetElement) => {
                     else{
                         e.target.id = title.name
                         placeNewNode(e)
-                    }
+                    }   
                 }  
+                
                 menuArray.push(subMenu)
             }
         }
@@ -46,18 +47,6 @@ const createCMenu = (targetElement) => {
     .config({
         hideAfterClick: true,
         percent: .045,
-        
-        //we don't seem to need to specify these parameters
-        /*totalAngle: 360,//deg,
-        spaceDeg: 1,//deg
-        background: "#e1e1e1",
-        backgroundHover: "#FFFFFF",
-        percent: .05,//%
-        diameter: 150,//px
-        position: 'top',
-        horizontal: true,
-        //start: -45,//deg
-        animation: "into",*/
         menus: [
             {
                 title: 'Actions',
@@ -97,6 +86,7 @@ const createCMenu = (targetElement) => {
     document.getElementById('flow-canvas').addEventListener('contextmenu', (e) => {
         e.preventDefault()
     }) 
+    
 
     /*Mask the default context menu on the menu*/
     ele.current.addEventListener('contextmenu', (e) => {

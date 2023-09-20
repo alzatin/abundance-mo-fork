@@ -799,7 +799,6 @@ input.menu_search:focus {
   letter-spacing: 0.1em;
   line-height: 1;
   font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "STHeitiSC-Light", "Microsoft YaHei", Arial, sans-serif;
-  
 }
 .circular-menu ul li a:hover span {
   display: block;
@@ -822,7 +821,7 @@ input.menu_search:focus {
 }
 
 .tooltip{
-  display:none;
+  display:block;
   pointer-events:none;
   background-color: #C3C3CD;
   margin:auto;
@@ -830,6 +829,8 @@ input.menu_search:focus {
   color:white;
   z-index: 1041;
   position:absolute;
+  top:100;
+  right:100;
   -moz-box-shadow: 1px 1px 3px 2px #C3C3CD;
   -webkit-box-shadow: 1px 1px 3px 2px #C3C3CD;
   box-shadow:         1px 1px 3px 2px #C3C3CD;
