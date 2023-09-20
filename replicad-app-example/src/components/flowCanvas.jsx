@@ -2,7 +2,8 @@ import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables';
 import Molecule from './molecules/molecule';
 //import CMenu from 'circular-menu';
-import {createCMenu, cmenu} from './js/NewMenu.js'
+import {createCMenu, cmenu} from './js/NewMenu.js';
+import TopMenu from './TopMenu.jsx';
 
 
 var flowCanvas;
@@ -194,11 +195,10 @@ export default function FlowCanvas(displayProps) {
         else if ("button" in event){  // IE, Opera 
             isRightMB = event.button == 2
         }
-        // if it's a right click show the menu
+        // if it's a right click show the circular menu
         if(isRightMB){
             var doubleClick = false;
             cmenu.show([event.clientX, event.clientY],doubleClick)
-            console.log(cmenu)
             return
         }
         else{
@@ -295,13 +295,7 @@ export default function FlowCanvas(displayProps) {
         <>
             <div>
                 <div id="circle-menu1" className="cn-menu1" ref={circleMenu} ></div>
-    
-                {
-                /* i'd really like to make the tooltip for the circular menu happen with react here. Have not
-                found a way to grab anchor ID from this component yet. 
-    <div id="tool_tip_circular" className='tooltip'>hello</div>; */
-    }
-
+                <TopMenu />
                 <div id="canvas_menu">
                     <input type="text" id="menuInput" onfocusout="value=''" placeholder="Search for atom.." className = "menu_search_canvas"></input>
                     <ul id="githubList" className = "menu_list tabcontent">
@@ -322,3 +316,8 @@ export default function FlowCanvas(displayProps) {
         </>
     );
 }
+
+
+ {/* i'd really like to make the tooltip for the circular menu happen with react here. Have not
+                found a way to grab anchor ID from this component yet. 
+    <div id="tool_tip_circular" className='tooltip'>hello</div>; */}
