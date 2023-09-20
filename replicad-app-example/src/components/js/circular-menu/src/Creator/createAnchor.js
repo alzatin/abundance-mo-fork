@@ -67,7 +67,22 @@ export default function (parent, data, index) {
         }
     }
 
+    on(a, 'mouseenter', function () {
+        var div = document.createElement('div');
+        div.textContent = data.icon
+        div.classList.add("tooltip");
+        div.id = data.icon + "text"
+        const length= div.textContent.length * 2.7 //Correct for text length centering 
+        document.querySelector("body").appendChild(div)
+        style(div, 'top', self._container.offsetTop + self._calc.radius - 10 + 'px');
+        style(div, 'left', self._container.offsetLeft + self._calc.radius - length + 'px');
+        });
+
+
     on(a, 'click', clickCallBack, data);
+    on(a, 'mouseleave', function () {
+            document.getElementById(data.icon + "text").remove()
+            });
 
     parent.appendChild(a);
 
@@ -102,21 +117,7 @@ export default function (parent, data, index) {
             clearTimeout(delayHide);
         });
 
-        on(a, 'mouseenter', function () {
-            console.log("mouse enter ran")
-            var div = document.createElement('div');
-            div.textContent = data.icon
-            div.classList.add("tooltip");
-            div.id = data.icon + "text"
-            const length= div.textContent.length * 2.7 //Correct for text length centering 
-            document.querySelector("body").appendChild(div)
-            style(div, 'top', self._container.offsetTop + self._calc.radius - 10 + 'px');
-            style(div, 'left', self._container.offsetLeft + self._calc.radius - length + 'px');
-            });
-
-        on(a, 'mouseleave', function () {
-            document.getElementById(data.icon + "text").remove()
-            });
+       
 
         on(subMenu._container, 'mouseleave', function (e) {
             if (!a.contains(e.toElement) || e.toElement.children[0] === a) {
