@@ -1,6 +1,6 @@
 
 import React, {useEffect, useState, useRef } from 'react';
-import GlobalVariables from './js/globalvariables';
+import GlobalVariables from './js/globalvariables.js';
 
 function TopMenu() {
     const navItems = [
@@ -12,21 +12,24 @@ function TopMenu() {
       'Share',
       'Save'
     ];
-    /*{if molecule is top then render goUpalEVELBUTTON otherwise dont}*/
+    /*{TO DO ::::make it if molecule is top then render goUpalEVELBUTTON otherwise dont}*/
+   
     const topLevel= <button className="top-buttons" type="button" key="" title="">Go up a level</button>
+    
     /*{nav bar toggle component}*/
     const Navbar = () => {
       const [navbarOpen, setNavbarOpen] = useState(false);
       return (
         <>
           <button className="toggle top-buttons" onClick={() => setNavbarOpen((prev) => !prev)} >
-          {navbarOpen ? 'close' : 'open'}
+          
+          {navbarOpen ? <img className="top-buttons thumnail-logo" src={'/imgs/three-menu.png'} /> : <img className="top-buttons thumnail-logo" src={'/imgs/Save.png'} />}
            </button>
 
           <ul className={`menu-nav${navbarOpen ? ' show-menu' : ''}`}> 
-          
+          <img className="thumnail-logo" src='/imgs/delete-logo.svg'/>
           {navItems.map((item, index) =>(
-            <button className="top-buttons" type="button" key={item} title={item +"-button"} onClick={() => console.log({item})}>{item}</button>
+            <img className="top-buttons thumnail-logo" src={'/imgs/'+item+'.png'} key={item} title={item +"-button"} onClick={() => console.log({item})}/>
         )) } 
     </ul>
         </>
@@ -39,7 +42,6 @@ function TopMenu() {
      <Navbar />
       
     
-
     {/*<div id="top_button_wrap">
     <button className="top_buttons outerbutton" style= "right:40px;" type="button" id = "goup_top" title="Go up a level"> <img className="thumnail-logo" src='/imgs/goup_img.png' alt="Go-up" style="  transform: scale(.67); border-radius: 0px;"/> </button> 
     <button className="top_buttons" type="button" id = "straight_menu" title="" style="background-color: #ededed; border: 2px solid black;"> 
