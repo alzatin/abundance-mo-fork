@@ -804,11 +804,17 @@ button {
   top: -15px;
   width: 0;
   overflow: hidden;
-  max-width: 300px;
+  max-width: 500px;
   z-index: 9;
   transform: translateX(-160px);
   transition: transform ease-in-out 0.1s;
   /* transition: width ease 0.2s; */
+}
+.nav-img, .menu-nav img {
+  padding: 10px;
+}
+.nav-img:hover, .menu-nav img:hover{
+  background-color: #ffffffe1;
 }
 .menu-nav.show-menu {
   width: 100%;

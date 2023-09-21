@@ -12,11 +12,11 @@ function TopMenu() {
       'Share',
       'Save',
       'Pull Request',
-      'Open projects',
+      'Open',
     ];
     /*{TO DO ::::make it if molecule is top then render goUpalEVELBUTTON otherwise dont}*/
    
-    const topLevel= <img className="thumnail-logo" src={'/imgs/goup_img.png'} key="" title="" />
+    const topLevel= <img className="thumnail-logo nav-img" src={'/imgs/goup_img.png'} key="" title="" />
     
     /*{nav bar toggle component}*/
     const Navbar = () => {
@@ -41,13 +41,13 @@ function TopMenu() {
       return (
         <>
         <nav ref={ref} className="navbar">
-          <button className="toggle" onClick={() => setNavbarOpen((prev) => !prev)} >
+          <button className="toggle nav-img" onClick={() => setNavbarOpen((prev) => !prev)} >
           {navbarOpen ? <img className= "thumnail-logo" src={'/imgs/three-menu.png'} /> : <img className= "thumnail-logo" src={'/imgs/Save.png'} />}
            </button>
 
           <ul className={`menu-nav${navbarOpen ? ' show-menu' : ''}`}> 
           {navItems.map((item, index) =>(
-            <img className=" thumnail-logo" src={'/imgs/'+item+'.png'} key={item} title={item +"-button"} onClick={() => console.log({item})}/>
+            <img className=" thumnail-logo" src={'/imgs/'+item+'.svg'} key={item} title={item +"-button"} onClick={() => console.log({item})}/>
         )) } 
     </ul>
     </nav>
