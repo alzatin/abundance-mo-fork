@@ -16,16 +16,33 @@ function TopMenu() {
     ];
     /*{TO DO ::::make it if molecule is top then render goUpalEVELBUTTON otherwise dont}*/
    
-    const topLevel= <img className="thumnail-logo top-buttons" src={'/imgs/goup_img.png'} key="" title="" />
+    const topLevel= <img className="thumnail-logo" src={'/imgs/goup_img.png'} key="" title="" />
     
     /*{nav bar toggle component}*/
     const Navbar = () => {
       const [navbarOpen, setNavbarOpen] = useState(false);
+      const ref = useRef();
+      useEffect(() => {
+        const handler = (event) => {
+          if (
+            navbarOpen &&
+            ref.current &&
+            !ref.current.contains(event.target)
+          ) {
+            setNavbarOpen(false);
+          }
+        };
+        document.addEventListener('mousedown', handler);
+        return () => {
+          // Cleanup the event listener
+          document.removeEventListener('mousedown', handler);
+        };
+      }, [navbarOpen]);
       return (
         <>
-          <button className="toggle top-buttons" onClick={() => setNavbarOpen((prev) => !prev)} >
-          
-          {navbarOpen ? <img className="top-buttons thumnail-logo" src={'/imgs/three-menu.png'} /> : <img className="top-buttons thumnail-logo" src={'/imgs/Save.png'} />}
+        <nav ref={ref} className="navbar">
+          <button className="toggle" onClick={() => setNavbarOpen((prev) => !prev)} >
+          {navbarOpen ? <img className= "thumnail-logo" src={'/imgs/three-menu.png'} /> : <img className= "thumnail-logo" src={'/imgs/Save.png'} />}
            </button>
 
           <ul className={`menu-nav${navbarOpen ? ' show-menu' : ''}`}> 
@@ -33,6 +50,7 @@ function TopMenu() {
             <img className=" thumnail-logo" src={'/imgs/'+item+'.png'} key={item} title={item +"-button"} onClick={() => console.log({item})}/>
         )) } 
     </ul>
+    </nav>
         </>
       );
     };

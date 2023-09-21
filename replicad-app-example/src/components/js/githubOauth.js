@@ -99,7 +99,7 @@ export default function GitHubModule(){
         }
 
         //Close button (Mac style)
-        if(GlobalVariables.topLevelMolecule && GlobalVariables.topLevelMolecule.name != "Maslow Create"){ //Only offer a close button if there is a project to go back to
+        if(GlobalVariables.topLevelMolecule && GlobalVariables.topLevelMolecule.name != "top level - fix close button"){ //Only offer a close button if there is a project to go back to
             var closeButton = document.createElement("button")
             closeButton.setAttribute("class", "closeButton")
             closeButton.addEventListener("click", () => {

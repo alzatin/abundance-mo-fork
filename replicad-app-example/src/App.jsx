@@ -35,6 +35,10 @@ export default function ReplicadApp() {
 
   return (
     <main>
+      <div id= "headerBar">
+      <p> Maslow Create</p> 
+      <img className="thumnail-logo" src='/imgs/maslow-logo.png' alt="logo"/>
+      </div>
       <FlowCanvas displayProps ={{mesh: mesh, setMesh:setMesh, size:size, cad:cad}}/>
       <LowerHalf displayProps ={{mesh: mesh, setMesh:setMesh, size:size, cad:cad}}/>
     </main>

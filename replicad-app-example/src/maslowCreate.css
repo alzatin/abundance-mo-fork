@@ -24,31 +24,23 @@
 
 #headerBar {
     position: absolute;
-    width: 99%;
-    height: 17px;
-    top: 0px;
-    right: 0px;
-    padding: 5px 0px 5px 5px;
-    display: flex;
-    justify-content: flex-start;
+    bottom: 0px;
+    right: 30px;
+    z-index:1000;
 }
 
 #headerBar p {
   align-items: center;
-  top:0px;
-  color: white;
+  color: rgb(9, 9, 9);
   display:inline-block;
-  font-size: .8em;
+  font-size: 0.8em;
   margin-top:3px;
-  margin-left:5px;
+  margin-right:5px;
 }
-
-#headerBar_title {
-  font-size: 1em;
-  margin:0;
-  margin-left:3px;
-  margin-right: 10px;
-  display:inline;
+#headerBar img {
+ padding:0;
+ width:60px;
+ height:60px;
 }
 
 #popUp{
