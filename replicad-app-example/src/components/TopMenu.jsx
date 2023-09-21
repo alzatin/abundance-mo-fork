@@ -16,7 +16,7 @@ function TopMenu() {
     ];
     /*{TO DO ::::make it if molecule is top then render goUpalEVELBUTTON otherwise dont}*/
    
-    const topLevel= <img className="thumnail-logo nav-img" src={'/imgs/goup_img.png'} key="" title="" />
+    const topLevel= <img className="thumnail-logo navbar nav-img" src={'/imgs/goup_img.png'} key="" title="" />
     
     /*{nav bar toggle component}*/
     const Navbar = () => {

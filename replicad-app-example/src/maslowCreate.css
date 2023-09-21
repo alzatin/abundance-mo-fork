@@ -781,27 +781,18 @@ input.menu_search:focus {
 /*==========================
 Sidebar navigation
 ========================*/
-.navbar {
-  position: relative;
-}
-button {
-  cursor: pointer;
-  background: transparent;;
-  border: none;
-  font-size: 20px;
-}
-.navbar .toggle {
+.toggle {
   position: fixed;
-  left: 30px;
-  top: 40px;
+  left: 40px;
+  top:0;
   cursor: pointer;
   border: none;
 }
 .menu-nav {
+  position:absolute;
+  left:70px;
+  top:-20px;
   list-style: none;
-  position: absolute;
-  left: 70px;
-  top: -15px;
   width: 0;
   overflow: hidden;
   max-width: 500px;
