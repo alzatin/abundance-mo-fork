@@ -79,9 +79,8 @@
 } 
 
 .thumnail-logo{
-  width:20px;
-  height:20px;
-  border-radius:50%;
+  width:30px;
+  height:30px;
   display:inline;
   padding: 1px;
 }
@@ -99,19 +98,6 @@
   margin-left:auto;
   margin-right:10px;
   padding:3px;
-}
-
-#straight_menu{
-  z-index: 30;
-  opacity:1;
-}
-
-.three-menu{
-      width: 12px;
-    height: 10px;
-    border-radius: 0;
-    display: inline;
-    padding: 1px;
 }
 
 .switch{
@@ -191,27 +177,7 @@ input:checked + .sliderAtom:before {
   padding: 15px 0px 10px 0;
 }
 
-.top_buttons:hover {
-  opacity: 1;
-  border: 2px solid black;
-}
 
-.top_buttons:focus {
-  outline: none;
-}
-
-.top_buttons{ 
-    background-color: whitesmoke;
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    opacity: 0.9;
-    padding: 0px;
-    width: 25px;
-    height: 25px;
-    border: 1px solid #767b7b;
-    border-radius: 50%;
-}
  #viewer_bar, .arrow-up{
   color:black;
   float:right;
