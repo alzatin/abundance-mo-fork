@@ -36,7 +36,7 @@ function TopMenu() {
         document.addEventListener('mousedown', handler);
         return () => {
           // Cleanup the event listener
-          console.log(GlobalVariables.currentMolecule.topLevel)
+          console.log(GlobalVariables.currentMolecule)
           document.removeEventListener('mousedown', handler);
         };
       }, [navbarOpen]);
