@@ -788,6 +788,15 @@ Sidebar navigation
   cursor: pointer;
   border: none;
 }
+
+.rotati{
+  transform: rotate(90deg);
+}
+.menu-nav-button{
+  background-color: transparent;
+  border: none;
+  padding:0;
+}
 .menu-nav {
   position:absolute;
   left:70px;
@@ -804,7 +813,7 @@ Sidebar navigation
 .nav-img, .menu-nav img {
   padding: 10px;
 }
-.nav-img:hover, .menu-nav img:hover{
+.menu-nav img:hover{
   background-color: #ffffffe1;
 }
 .menu-nav.show-menu {
