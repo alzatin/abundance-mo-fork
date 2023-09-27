@@ -15,10 +15,27 @@ function TopMenu() {
       'Pull Request',
       'Delete Project'
     ];
-    /*{TO DO ::::make it if molecule is top then render goUpalEVELBUTTON otherwise dont}*/
-   
-    const topLevel= <img className="nav-img nav-bar thumnail-logo" src={'/imgs/Go Up.svg'} key="" title="" />
+    /*{show button if this is not top molecule  ::::
+      i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way
+      }*/
+  
+    const TopLevel= () =>{
+      const [currentMoleculeTop, setTop] = useState(false);
+      const ref = useRef();
+      useEffect(() => {
+          if (GlobalVariables.currentMolecule.topLevel !== undefined
+          && GlobalVariables.currentMolecule.topLevel) {
+            setTop(false);
+          }
+      }, [currentMoleculeTop]);
+      return (
+        <>
+        {currentMoleculeTop && <img className="nav-img nav-bar thumnail-logo" src={'/imgs/Go Up.svg'} key="" title="" /> }
+        </>
+        )
+      }
     
+
     /*{nav bar toggle component}*/
     const Navbar = () => {
       const [navbarOpen, setNavbarOpen] = useState(false);
@@ -36,7 +53,6 @@ function TopMenu() {
         document.addEventListener('mousedown', handler);
         return () => {
           // Cleanup the event listener
-          console.log(GlobalVariables.currentMolecule)
           document.removeEventListener('mousedown', handler);
         };
       }, [navbarOpen]);
@@ -61,7 +77,7 @@ function TopMenu() {
 
     return (
       <>
-     <>{topLevel}</> 
+     <TopLevel/> 
      <Navbar />
 </>
  )
