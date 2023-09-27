@@ -1,6 +1,8 @@
 
 import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables.js';
+import GitHubModule from './js/githubOauth.js'
+
 
 function TopMenu() {
     const navItems = [
@@ -34,6 +36,7 @@ function TopMenu() {
         document.addEventListener('mousedown', handler);
         return () => {
           // Cleanup the event listener
+          console.log(GlobalVariables.currentMolecule.topLevel)
           document.removeEventListener('mousedown', handler);
         };
       }, [navbarOpen]);
