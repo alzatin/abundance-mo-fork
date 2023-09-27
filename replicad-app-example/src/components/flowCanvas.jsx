@@ -67,7 +67,7 @@ export default function FlowCanvas(displayProps) {
         })
 
     }, []);
-
+    //there's an error message for the width 
     const draw = () => {
         GlobalVariables.c.clearRect(0, 0, GlobalVariables.canvas.current.width, GlobalVariables.canvas.current.height)
         GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(atom => {

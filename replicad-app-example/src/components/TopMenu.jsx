@@ -2,8 +2,6 @@
 import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables.js';
 
-
-
 function TopMenu() {
     const navItems = [
       'Open',
@@ -22,9 +20,9 @@ function TopMenu() {
       const [currentMoleculeTop, setTop] = useState(false);
       const ref = useRef();
       useEffect(() => {
-          if (GlobalVariables.currentMolecule.topLevel !== undefined
-          && GlobalVariables.currentMolecule.topLevel) {
+          if (GlobalVariables.currentMolecule.topLevel !== undefined && GlobalVariables.currentMolecule.topLevel) {
             setTop(false);
+            
           }
       }, [currentMoleculeTop]);
       return (
