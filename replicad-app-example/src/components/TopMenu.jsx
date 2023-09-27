@@ -1,7 +1,7 @@
 
 import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables.js';
-import GitHubModule from './js/githubOauth.js'
+
 
 
 function TopMenu() {
@@ -15,10 +15,9 @@ function TopMenu() {
       'Pull Request',
       'Delete Project'
     ];
-    /*{show button if this is not top molecule  ::::
-      i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way
+    /*{checks for top level variable and show go-up button if this is not top molecule  ::::
+      i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way that doesn't use Useeffect()
       }*/
-  
     const TopLevel= () =>{
       const [currentMoleculeTop, setTop] = useState(false);
       const ref = useRef();
@@ -34,7 +33,6 @@ function TopMenu() {
         </>
         )
       }
-    
 
     /*{nav bar toggle component}*/
     const Navbar = () => {
@@ -74,7 +72,7 @@ function TopMenu() {
         </>
       );
     };
-
+  
     return (
       <>
      <TopLevel/> 

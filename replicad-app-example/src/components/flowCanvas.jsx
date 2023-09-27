@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables';
 import Molecule from './molecules/molecule';
-//import CMenu from 'circular-menu';
 import {createCMenu, cmenu} from './js/NewMenu.js';
 import TopMenu from './TopMenu.jsx';
 
@@ -287,7 +286,6 @@ export default function FlowCanvas(displayProps) {
     }, []);
 
     useEffect(() => {
-        console.log("use effect")
         createCMenu(circleMenu);
     }, []);
 

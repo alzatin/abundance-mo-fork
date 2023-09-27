@@ -4,7 +4,6 @@ import styleSheet from "./styleSheet";
 import on from "../on";
 
 export default function(){
-    console.log("does this get called?")
     var p = this._container;
 
     classed(p, 'circular-menu', true);
