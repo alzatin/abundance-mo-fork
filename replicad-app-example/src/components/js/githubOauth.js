@@ -4,6 +4,7 @@ import { licenses } from './licenseOptions.js'
 import { extractBomTags, convertLinks } from './BOM.js'
 import { OAuth } from 'oauthio-web'
 import { Octokit} from "https://esm.sh/octokit@2.0.19"
+import { re } from 'mathjs'
 //import createOAuthUserAuth from "@octokit/auth-oauth-user"
 
 /**
@@ -66,6 +67,23 @@ export default function GitHubModule(){
      */
     this.tryLogin = function(){
         
+        function testList(){
+
+           
+            console.log(octokit)
+            octokit.request('GET /search/repositories', { 
+                q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
+                per_page: 50,
+                headers: {
+                    accept: 'application/vnd.github.mercy-preview+json'
+                }
+            }).then(result => {
+                result.data.items.forEach(repo => {
+                   return console.log(repo.name)
+                })
+                
+            }) 
+        }
         // Initialize with OAuth.io app public key
         if(window.location.href.includes('private')){
             OAuth.initialize('6CQQE8MMCBFjdWEjevnTBMCQpsw') //app public key for repo scope
@@ -85,14 +103,16 @@ export default function GitHubModule(){
             octokit = new Octokit({
                 auth: github.access_token
             })
-
+            //getting current user post authetication
             octokit.request('GET /user', {
               }).then(response => {
-                currentUser = response.data.login
-                this.showProjectsToLoad()
+                console.log(response.data)
+                currentUser = response.data.login;
+                testList();
+                
               })
                 
-              
+
         })
     }
     
