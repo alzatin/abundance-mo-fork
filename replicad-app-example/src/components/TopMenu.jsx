@@ -15,12 +15,13 @@ function TopMenu() {
     ];
     /*{checks for top level variable and show go-up button if this is not top molecule  ::::
       i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way that doesn't use Useeffect()
-      }*/
+      } (CAN'T FIGURE OUT HOW TO MAKE IT WAIT FOR GLOBALVARIABLES)*/
     const TopLevel= () =>{
       const [currentMoleculeTop, setTop] = useState(false);
+     
       const ref = useRef();
       useEffect(() => {
-          if (GlobalVariables.currentMolecule.topLevel !== undefined && GlobalVariables.currentMolecule.topLevel) {
+          if ( false) {
             setTop(false);
             
           }

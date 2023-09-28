@@ -295,7 +295,7 @@ export default function FlowCanvas(displayProps) {
                 <div id="circle-menu1" className="cn-menu1" ref={circleMenu} ></div>
                 <TopMenu />
                 <div id="canvas_menu">
-                    <input type="text" id="menuInput" onfocusout="value=''" placeholder="Search for atom.." className = "menu_search_canvas"></input>
+                    <input type="text" id="menuInput" onBlur="value=''" placeholder="Search for atom.." className = "menu_search_canvas"></input>
                     <ul id="githubList" className = "menu_list tabcontent">
                     </ul>
                 </div>

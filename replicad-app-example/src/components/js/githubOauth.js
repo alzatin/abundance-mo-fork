@@ -3,6 +3,8 @@ import GlobalVariables from './globalvariables.js'
 import { licenses } from './licenseOptions.js'
 import { extractBomTags, convertLinks } from './BOM.js'
 import { OAuth } from 'oauthio-web'
+import { Octokit} from "https://esm.sh/octokit@2.0.19"
+//import createOAuthUserAuth from "@octokit/auth-oauth-user"
 
 /**
  * This function works like a class to sandbox interaction with GitHub.
@@ -14,6 +16,7 @@ export default function GitHubModule(){
      * @type {object}
      */
     var octokit = null//new Octokit()
+    
     /** 
      * The HTML element which is the popup.
      * @type {object}
@@ -70,22 +73,26 @@ export default function GitHubModule(){
         else{
             OAuth.initialize('BYP9iFpD7aTV9SDhnalvhZ4fwD8') //app public key for public_repo scope
         }
+        
         // Use popup for oauth
         OAuth.popup('github').then(github => {
-        
+            console.log(github)
             /** 
              * Oktokit object to access github
              * @type {object}
              */
+           
             octokit = new Octokit({
                 auth: github.access_token
             })
-            
-            //Test the authentication 
-            octokit.users.getAuthenticated({}).then(result => {
-                currentUser = result.data.login
+
+            octokit.request('GET /user', {
+              }).then(response => {
+                currentUser = response.data.login
                 this.showProjectsToLoad()
-            })
+              })
+                
+              
         })
     }
     
