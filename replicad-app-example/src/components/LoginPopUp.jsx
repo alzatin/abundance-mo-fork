@@ -2,6 +2,7 @@ import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables.js';
 import { OAuth } from 'oauthio-web'
 import { Octokit} from "https://esm.sh/octokit@2.0.19"
+import Molecule from './molecules/molecule.js'
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
 //var PopUpState = true;
@@ -12,7 +13,78 @@ import { Octokit} from "https://esm.sh/octokit@2.0.19"
 var octokit = null
 var currentUser = null
 
+/** 
+     * Loads a project from github by name.
+     */
+const loadProject = function(project){
+        
+    console.log(project)
 
+    GlobalVariables.gitHub.totalAtomCount = 0
+    GlobalVariables.gitHub.numberOfAtomsToLoad = 0
+
+    GlobalVariables.startTime = new Date().getTime()
+    
+   /* if(typeof intervalTimer != undefined){
+        clearInterval(intervalTimer) //Turn off auto saving
+    }*/
+
+    //Clear and hide the popup
+   /* while (popup.firstChild) {
+        popup.removeChild(popup.firstChild)
+    }
+    popup.classList.add('off')
+    */
+    const currentRepoName = project.name
+    //Load a blank project
+    GlobalVariables.topLevelMolecule = new Molecule({
+        x: 0, 
+        y: 0, 
+        topLevel: true, 
+        atomType: "Molecule"
+    })
+    
+    GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule
+    
+    octokit.request('GET /repos/{owner}/{repo}/contents', {
+        owner: project.owner,
+        repo: project.name,
+    }).then(response => {
+      console.log(response)
+    })  
+    /*octokit.repos.getContent({
+        owner: currentUser,
+        repo: projectName,
+        path: 'project.maslowcreate'
+    }).then(result => {
+        //content will be base64 encoded
+        let rawFile = JSON.parse(atob(result.data.content))
+        
+        if(rawFile.circleSegmentSize){
+            GlobalVariables.circleSegmentSize = rawFile.circleSegmentSize
+        }
+        
+        if(rawFile.filetypeVersion == 1){
+            GlobalVariables.topLevelMolecule.deserialize(rawFile)
+        }
+        else{
+            GlobalVariables.topLevelMolecule.deserialize(this.convertFromOldFormat(rawFile))
+        }
+    })*/
+    /*octokit.repos.get({
+        owner: currentUser,
+        repo: currentRepoName
+    }).then(result => {
+        GlobalVariables.fork = result.data.fork
+        if(!GlobalVariables.fork){
+            document.getElementById("pull_top").style.display = "none"
+        }
+        else{
+            document.getElementById("pull_top").style.display = "inline"
+        }
+    })*/
+    
+}
 
 // initial pop up construction with github login button
 const InitialLog= ({tryLogin}) =>{
@@ -49,7 +121,7 @@ const InitialLog= ({tryLogin}) =>{
 const ShowProjects=(props) =>{
     const [nodes, setNodes] = useState([]);
     const [projectsLoaded, setStateLoaded] = React.useState(false);
-    //if there's a user make initial project query 
+    //if there's a user make initial project query // only make API call if user changes
     useEffect(() => {
     octokit.request('GET /search/repositories', { 
         q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
@@ -73,9 +145,9 @@ const ShowProjects=(props) =>{
     const AddProject = () => {
         //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"       
         return nodes.map(node => (       
-            <div className="project" id={node.name}>
+            <div className="project" id={node.name} onClick={(e) => loadProject(node, e)}>
                 <li>{node.name}</li>
-                <img src="/defaultThumbnail.svg"></img></div>       
+                <img src='/imgs/maslow-logo.png'></img></div>       
           ))
     }
 

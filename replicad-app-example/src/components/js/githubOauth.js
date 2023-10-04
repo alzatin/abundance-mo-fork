@@ -417,7 +417,7 @@ export default function GitHubModule(){
         //create a project element to display
         if (document.getElementById("thumb").classList.contains("active_filter")){
             
-            projectPicture.setAttribute("style", "width: 100%; height: 80%;")
+            //projectPicture.setAttribute("style", "width: 100%; height: 80%;")
             project.appendChild(document.createElement("BR"))
 
             var shortProjectName
@@ -1000,8 +1000,10 @@ export default function GitHubModule(){
     /** 
      * Loads a project from github by name.
      */
-    this.loadProject = async function(projectName){
+    this.loadProject = async function(project){
         
+        console.log(project)
+
         this.totalAtomCount = 0
         this.numberOfAtomsToLoad = 0
 
@@ -1012,13 +1014,12 @@ export default function GitHubModule(){
         }
 
         //Clear and hide the popup
-        while (popup.firstChild) {
+       /* while (popup.firstChild) {
             popup.removeChild(popup.firstChild)
         }
         popup.classList.add('off')
-        
-        currentRepoName = projectName
-        
+        */
+        currentRepoName = project.name
         //Load a blank project
         GlobalVariables.topLevelMolecule = new Molecule({
             x: 0, 
@@ -1029,7 +1030,13 @@ export default function GitHubModule(){
         
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule
         
-        octokit.repos.getContent({
+        octokit.request('GET /repos/{owner}/{repo}/content', {
+            owner: project.owner,
+            repo: project.name,
+        }).then(response => {
+          console.log(response)
+        })  
+        /*octokit.repos.getContent({
             owner: currentUser,
             repo: projectName,
             path: 'project.maslowcreate'
@@ -1047,8 +1054,8 @@ export default function GitHubModule(){
             else{
                 GlobalVariables.topLevelMolecule.deserialize(this.convertFromOldFormat(rawFile))
             }
-        })
-        octokit.repos.get({
+        })*/
+        /*octokit.repos.get({
             owner: currentUser,
             repo: currentRepoName
         }).then(result => {
@@ -1059,7 +1066,7 @@ export default function GitHubModule(){
             else{
                 document.getElementById("pull_top").style.display = "inline"
             }
-        })
+        })*/
         
     }
     
