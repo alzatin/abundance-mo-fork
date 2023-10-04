@@ -12,6 +12,8 @@ import { Octokit} from "https://esm.sh/octokit@2.0.19"
 var octokit = null
 var currentUser = null
 
+
+
 // initial pop up construction with github login button
 const InitialLog= ({tryLogin}) =>{
      /** 
@@ -42,11 +44,13 @@ const InitialLog= ({tryLogin}) =>{
     
     )
 }
+
 /* to add: if current user is null show this next part */
 const ShowProjects=(props) =>{
     const [nodes, setNodes] = useState([]);
     const [projectsLoaded, setStateLoaded] = React.useState(false);
     //if there's a user make initial project query 
+    useEffect(() => {
     octokit.request('GET /search/repositories', { 
         q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
         per_page: 50,
@@ -54,16 +58,26 @@ const ShowProjects=(props) =>{
             accept: 'application/vnd.github.mercy-preview+json'
         }
     }).then(result => {
-        var repo_names =[]
+        var userRepos =[]
         result.data.items.forEach(repo => {
-            repo_names.push(repo.name)
+            //this.addProject(repo.name, repo.id, repo.owner.login, repo.created_at, repo.updated_at, owned, thumbnailPath)
+                userRepos.push(repo)
         })
         setNodes([
-            ...repo_names
+            ...userRepos
           ]);
         setStateLoaded(true);
     }) 
+},[currentUser])
 
+    const AddProject = () => {
+        //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"       
+        return nodes.map(node => (       
+            <div className="project" id={node.name}>
+                <li>{node.name}</li>
+                <img src="/defaultThumbnail.svg"></img></div>       
+          ))
+    }
 
     const openInNewTab = (url) => {
         window.open(url, "_blank", "noreferrer");
@@ -71,11 +85,6 @@ const ShowProjects=(props) =>{
     return(
     <>
     <div className='login-popup'id="projects-popup" style={{padding: "0",textAlign: "center", backgroundColor: "#f9f6f6", border:"10px solid #3e3d3d"}}>
-    <ul> {projectsLoaded ?  <ul>
-        {nodes.map(node => (
-          <li>{node}</li>
-        ))}
-      </ul>: "no"}</ul>
     <div className='middleBrowse' style={{marginTop:"25px"}}>   
     <div id="welcome" style={{display:"flex",margin:"10px",alignItems:"center"}}> 
         <img src='/imgs/maslow-logo.png' alt="logo" style={{width:"25px", height: "25px",borderRadius: "50%"}}/>
@@ -94,7 +103,9 @@ const ShowProjects=(props) =>{
     <div className="browseDisplay active_filter" id="thumb">
       <img src="/imgs/thumb_icon.png" style={{height: "80%",padding: "3px"}}/>
     </div>
-    
+    <div><ul> {projectsLoaded ?  <ul>
+        <AddProject/>
+      </ul>: "no"}</ul></div>
     </div>
     </>
     )
