@@ -44,12 +44,9 @@ const InitialLog= ({tryLogin}) =>{
 }
 /* to add: if current user is null show this next part */
 const ShowProjects=(props) =>{
-    //is there a user?
-    const isUser = true;
-
-    if (isUser) {
-        //if there's a user make initial project query 
-        const searchUserProjects= function(){
+    
+    //if there's a user make initial project query 
+    const searchUserProjects= function(){
     octokit.request('GET /search/repositories', { 
         q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
         per_page: 50,
@@ -65,7 +62,8 @@ const ShowProjects=(props) =>{
         return console.log(repo_names)
     }) 
 }
-    }
+    searchUserProjects();
+
     const openInNewTab = (url) => {
         window.open(url, "_blank", "noreferrer");
       };
@@ -132,7 +130,7 @@ function LoginPopUp() {
   const [isloggedIn, setIsLoggedIn] = React.useState(false);
   let popUpContent;
   if (isloggedIn) {
-    popUpContent = <ShowProjects isUser={true}/>;
+    popUpContent = <ShowProjects user={currentUser}/>;
   } else {
     popUpContent = <InitialLog tryLogin={tryLogin}/>;
   }
