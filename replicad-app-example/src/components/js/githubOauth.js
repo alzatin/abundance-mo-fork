@@ -61,29 +61,30 @@ export default function GitHubModule(){
     // document.getElementById("loginButton").addEventListener("mousedown", () => {
     //     this.tryLogin()
     // })
+
+    // makes initial call to search for user projects
+    this.searchUserProjects= function(){
+        octokit.request('GET /search/repositories', { 
+            q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
+            per_page: 50,
+            headers: {
+                accept: 'application/vnd.github.mercy-preview+json'
+            }
+        }).then(result => {
+            var repo_names =[]
+            result.data.items.forEach(repo => {
+                repo_names.push(repo.name)
+                
+            })
+            return repo_names
+        }) 
+    }
     
     /** 
      * Try to login using the oauth popup.
      */
     this.tryLogin = function(){
         
-        function testList(){
-
-           
-            console.log(octokit)
-            octokit.request('GET /search/repositories', { 
-                q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
-                per_page: 50,
-                headers: {
-                    accept: 'application/vnd.github.mercy-preview+json'
-                }
-            }).then(result => {
-                result.data.items.forEach(repo => {
-                   return console.log(repo.name)
-                })
-                
-            }) 
-        }
         // Initialize with OAuth.io app public key
         if(window.location.href.includes('private')){
             OAuth.initialize('6CQQE8MMCBFjdWEjevnTBMCQpsw') //app public key for repo scope
@@ -94,7 +95,6 @@ export default function GitHubModule(){
         
         // Use popup for oauth
         OAuth.popup('github').then(github => {
-            console.log(github)
             /** 
              * Oktokit object to access github
              * @type {object}
@@ -106,13 +106,11 @@ export default function GitHubModule(){
             //getting current user post authetication
             octokit.request('GET /user', {
               }).then(response => {
-                console.log(response.data)
                 currentUser = response.data.login;
-                testList();
                 
-              })
+                this.searchUserProjects()
                 
-
+              })      
         })
     }
     
@@ -124,8 +122,8 @@ export default function GitHubModule(){
         while (popup.firstChild) {
             popup.removeChild(popup.firstChild)
         }
-
-        //Close button (Mac style)
+        /*
+        //Close button (Mac style) - 
         if(GlobalVariables.topLevelMolecule && GlobalVariables.topLevelMolecule.name != "top level - fix close button"){ //Only offer a close button if there is a project to go back to
             var closeButton = document.createElement("button")
             closeButton.setAttribute("class", "closeButton")
@@ -134,6 +132,7 @@ export default function GitHubModule(){
             })
             popup.appendChild(closeButton)
         }
+        */
         //Welcome title
         var welcome = document.createElement("div")
         welcome.setAttribute("style", " display: flex; margin: 10px; align-items: center;")

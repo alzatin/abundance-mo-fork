@@ -1,10 +1,22 @@
 import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables.js';
-
+import { OAuth } from 'oauthio-web'
+import { Octokit} from "https://esm.sh/octokit@2.0.19"
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
 //var PopUpState = true;
-const InitialLog= () =>{
+
+//Login pop up component logic: pop up appears introducing logo and github login button, 
+// if user gets authenticated in the tryLogin function, then the pop up disappears and the projects appear, if they do notget authenticated, then the pop up stays and the user can browse projects
+
+var octokit = null
+var currentUser = null
+
+// initial pop up construction with github login button
+const InitialLog= ({tryLogin}) =>{
+     /** 
+     * Try to login using the oauth popup.
+     */
     return (
         <div className='login-popup'id="projects-popup">
         <div className="login-page">
@@ -14,7 +26,7 @@ const InitialLog= () =>{
                 <div id="welcome"><img src='/imgs/maslowcreate.svg' alt="logo" style={{width: "300px",padding: "10px", margin: "0"}}/></div>
                 <p style= {{padding: "0 20px"}}>Maslow Create projects are stored through GitHub. You control your files. </p>
                 <form className="login-form">
-                  <button type="button" id = "loginButton" onClick={GlobalVariables.gitHub.tryLogin} style ={{height: "40px"}}>Login With GitHub</button>
+                  <button type="button" id = "loginButton" onClick={tryLogin} style ={{height: "40px"}}>Login With GitHub</button>
                   <p className="message">Don't have an account? <a href="https://github.com/join">Create a free account</a></p>
                 </form>
         </div>     
@@ -31,7 +43,29 @@ const InitialLog= () =>{
     )
 }
 /* to add: if current user is null show this next part */
-const NoUserLog=() =>{
+const ShowProjects=(props) =>{
+    //is there a user?
+    const isUser = true;
+
+    if (isUser) {
+        //if there's a user make initial project query 
+        const searchUserProjects= function(){
+    octokit.request('GET /search/repositories', { 
+        q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
+        per_page: 50,
+        headers: {
+            accept: 'application/vnd.github.mercy-preview+json'
+        }
+    }).then(result => {
+        var repo_names =[]
+        result.data.items.forEach(repo => {
+            repo_names.push(repo.name)
+            
+        })
+        return console.log(repo_names)
+    }) 
+}
+    }
     const openInNewTab = (url) => {
         window.open(url, "_blank", "noreferrer");
       };
@@ -49,7 +83,7 @@ const NoUserLog=() =>{
     </div>
     <div id="welcome" style={{justifyContent: "flex-start", display: "inline", width: "100%", fontSize: "18px"}}>Maslow Create User Projects</div>
     <div id="tabButtons" className="tab"></div>
-    <input type="text" contentEditable="true" placeholder="Search for project.." class="menu_search" id="project_search"/>
+    <input type="text" contentEditable="true" placeholder="Search for project.." className="menu_search" id="project_search"/>
     <div className="browseDisplay">
      <img src="/imgs/list-with-dots.svg" style={{height:"75%",padding: "3px"}}/>
     </div>
@@ -60,90 +94,51 @@ const NoUserLog=() =>{
     </>
     )
 }
-//make a state (if authenticated, show projects, if not, show login)
-//const LoginFill = <>{PopUpState ? <InitialLog/>: <WelcomeLog/>}</>
 
 function LoginPopUp() {
-   
-    return (
-    <>  
-    <InitialLog/>
-    </>)
+
+    const tryLogin = function(props){
+    
+    
+        // Initialize with OAuth.io app public key
+        if(window.location.href.includes('private')){
+            OAuth.initialize('6CQQE8MMCBFjdWEjevnTBMCQpsw') //app public key for repo scope
+        }
+        else{
+            OAuth.initialize('BYP9iFpD7aTV9SDhnalvhZ4fwD8') //app public key for public_repo scope
+        }
+        
+        // Use popup for oauth
+        OAuth.popup('github').then(github => {
+            /** 
+             * Oktokit object to access github
+             * @type {object}
+             */
+           
+            octokit = new Octokit({
+                auth: github.access_token
+            })
+            //getting current user post authetication
+            octokit.request('GET /user', {
+              }).then(response => {
+                currentUser = response.data.login;
+                if (currentUser){
+                    setIsLoggedIn(true);
+                }
+              })      
+        })
+    }   
+
+  const [isloggedIn, setIsLoggedIn] = React.useState(false);
+  let popUpContent;
+  if (isloggedIn) {
+    popUpContent = <ShowProjects isUser={true}/>;
+  } else {
+    popUpContent = <InitialLog tryLogin={tryLogin}/>;
+  }
+  return <div>{popUpContent}</div>;
   }
 
   export default LoginPopUp;
 
-  /*
-/** 
- * 
- * 
- * 
- * 
-     * Display projects which can be loaded in the popup.
-     
-    this.showProjectsToLoad = function(){
-    
-    var middleBrowseDiv = document.createElement("div")
-    if (currentUser == null){
-        githubSign.addEventListener("mousedown", () => {
-            this.tryLogin()
-        })
-    }
-
-    popup.classList.remove('off')
-
-    //Input to search for projects
-
-    searchBar.addEventListener('keydown', (e) => {
-        
-        this.loadProjectsBySearch("yoursButton",e, searchBar.value, "updated")
-        this.loadProjectsBySearch("githubButton",e, searchBar.value, "stars") // updated just sorts content by most recently updated
-    })
-    
-
-    this.projectsSpaceDiv = document.createElement("DIV")
-    this.projectsSpaceDiv.setAttribute("class", "float-left-div")
-    this.projectsSpaceDiv.setAttribute("style", "overflow-x: hidden; margin-top: 10px;")
-    popup.appendChild(this.projectsSpaceDiv)
-    
-    const pageChange = document.createElement("div")
-    const pageBack = document.createElement("button")
-    pageBack.setAttribute("id", "back")
-    pageBack.setAttribute("class", "page_change")
-    pageBack.innerHTML = "&#8249;"
-
-    const pageForward = document.createElement("button")
-    pageChange.appendChild(pageBack)
-    pageChange.appendChild(pageForward)
-    pageForward.setAttribute("id", "forward")
-    pageForward.setAttribute("class", "page_change")
-    pageForward.innerHTML = "&#8250;"
-
-    popup.appendChild(pageChange)
-
-    
-    this.openTab(page)
-
-    //Event listeners 
-
-    browseDisplay1.addEventListener("click", () => {
-        // titlesDiv.style.display = "flex"
-        browseDisplay2.classList.remove("active_filter")
-        this.openTab(page)
-    })
-    browseDisplay2.addEventListener("click", () => {
-        // titlesDiv.style.display = "none"
-        browseDisplay2.classList.add("active_filter")
-        this.openTab(page)
-    })
-    pageForward.addEventListener("click", () => {
-        if (page >=1){ page +=1 }
-        this.openTab(page)
-    })
-    pageBack.addEventListener("click", () => {
-        if (page >1){page -=1}
-        this.openTab(page)
-    })
-
-}
-  */
+// if current user is undefined show initial log
