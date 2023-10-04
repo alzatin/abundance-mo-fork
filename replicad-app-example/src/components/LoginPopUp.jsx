@@ -44,9 +44,9 @@ const InitialLog= ({tryLogin}) =>{
 }
 /* to add: if current user is null show this next part */
 const ShowProjects=(props) =>{
-    
+    const [nodes, setNodes] = useState([]);
+    const [projectsLoaded, setStateLoaded] = React.useState(false);
     //if there's a user make initial project query 
-    const searchUserProjects= function(){
     octokit.request('GET /search/repositories', { 
         q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
         per_page: 50,
@@ -57,12 +57,13 @@ const ShowProjects=(props) =>{
         var repo_names =[]
         result.data.items.forEach(repo => {
             repo_names.push(repo.name)
-            
         })
-        return console.log(repo_names)
+        setNodes([
+            ...repo_names
+          ]);
+        setStateLoaded(true);
     }) 
-}
-    searchUserProjects();
+
 
     const openInNewTab = (url) => {
         window.open(url, "_blank", "noreferrer");
@@ -70,6 +71,11 @@ const ShowProjects=(props) =>{
     return(
     <>
     <div className='login-popup'id="projects-popup" style={{padding: "0",textAlign: "center", backgroundColor: "#f9f6f6", border:"10px solid #3e3d3d"}}>
+    <ul> {projectsLoaded ?  <ul>
+        {nodes.map(node => (
+          <li>{node}</li>
+        ))}
+      </ul>: "no"}</ul>
     <div className='middleBrowse' style={{marginTop:"25px"}}>   
     <div id="welcome" style={{display:"flex",margin:"10px",alignItems:"center"}}> 
         <img src='/imgs/maslow-logo.png' alt="logo" style={{width:"25px", height: "25px",borderRadius: "50%"}}/>
@@ -88,6 +94,7 @@ const ShowProjects=(props) =>{
     <div className="browseDisplay active_filter" id="thumb">
       <img src="/imgs/thumb_icon.png" style={{height: "80%",padding: "3px"}}/>
     </div>
+    
     </div>
     </>
     )
@@ -138,5 +145,3 @@ function LoginPopUp() {
   }
 
   export default LoginPopUp;
-
-// if current user is undefined show initial log
