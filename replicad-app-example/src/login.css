@@ -233,28 +233,43 @@ animation-delay: 0s;
   display: none;
 }
 
-.closeButton{
-    display: block;
-    padding: 0px;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #eef5df;
-    background-color: #ff5248;
-    border-radius: 50%;
-    top: 5px;
-    right:5px;
+.closeButton {
+	overflow: hidden;
+	position: absolute;
+  margin-bottom: 50px;
+  top: 5px;
+  right:5px;
+	border: none;
+	padding: 0;
+	width: 2em; height: 2em;
+	border-radius: 50%;
+	background: transparent;
+	color: #434445;
+	font: inherit;
+	text-indent: 100%;
+	cursor: pointer;
+	
+	&:focus {
+		outline: solid 0 transparent;
+		box-shadow: 0 0 0 2px #b2b2b3
+	}
+	
+	&:hover {
+		background: rgba(29, 161, 142, .1)
+	}
+	
+	&:before, &:after {
+		position: absolute;
+		top: 15%; left: calc(50% - .0625em);
+		width: .125em; height: 70%;
+		border-radius: .125em;
+		transform: rotate(45deg);
+		background: currentcolor;
+		content: ''
+	}
+	
+	&:after { transform: rotate(-45deg); }
 }
-.closeButton::before {
-  content: "\2715";
-  color:black;
-  display: none;
-  position:relative;
-  }
-
-.closeButton:hover { cursor: pointer; }
-.closeButton:hover::before{ display: block; }
-
 
 .container {
   position: relative;

@@ -92,7 +92,7 @@ const InitialLog= ({tryLogin}) =>{
      * Try to login using the oauth popup.
      */
     return (
-        <div className='login-popup'id="projects-popup">
+        
         <div className="login-page">
         <div className="form animate fadeInUp one">
         <div id="gitSide" className="logindiv">
@@ -112,7 +112,7 @@ const InitialLog= ({tryLogin}) =>{
                  </div>    
         </div>
         </div>
-        </div>
+        
     
     )
 }
@@ -120,6 +120,7 @@ const InitialLog= ({tryLogin}) =>{
 /* to add: if current user is null show this next part */
 const ShowProjects=(props) =>{
     const [nodes, setNodes] = useState([]);
+    
     const [projectsLoaded, setStateLoaded] = React.useState(false);
     //if there's a user make initial project query // only make API call if user changes
     useEffect(() => {
@@ -156,8 +157,7 @@ const ShowProjects=(props) =>{
       };
     return(
     <>
-    <div className='login-popup'id="projects-popup" style={{padding: "0",backgroundColor: "#f9f6f6", border:"10px solid #3e3d3d"}}>
-    <div className='middleBrowse' style={{marginTop:"25px"}}>   
+     <div className='middleBrowse' style={{marginTop:"35px"}}>   
     <div id="welcome" style={{display:"flex",margin:"10px",alignItems:"center"}}> 
         <img src='/imgs/maslow-logo.png' alt="logo" style={{width:"25px", height: "25px",borderRadius: "50%"}}/>
         <img src='/imgs/maslowcreate.svg' alt="logo" style={{height: "20px",padding: "10px"}}/>
@@ -165,9 +165,9 @@ const ShowProjects=(props) =>{
         <button className="form browseButton githubSign" onClick={()=>openInNewTab('https://github.com/join')} style={{width: "130px", fontSize: ".7rem", marginLeft: "5px"}}>Create an Account</button>
     </div> 
     <div className="search-bar-div">
-        <input type="text" contentEditable="true" placeholder="Search for project.." className="menu_search" id="project_search"/>
-        <img src='/imgs/search_icon.svg' alt="search" style={{width:"20px",color: "white", right:"3px", opacity:"0.5"}}/>
-    </div>
+        <input type="text" contentEditable="true" placeholder="Search for project.." className="menu_search browseButton" id="project_search"/>
+         <img src='/imgs/search_icon.svg' alt="search" style={{width:"20px",color: "white", marginRight:"5px", opacity:"0.5"}}/>
+          </div>
     <div id="tabButtons" className="tab"></div>
     <div className="browseDisplay">
          <img src="/imgs/list-with-dots.svg" style={{height:"75%",padding: "3px"}}/>
@@ -180,7 +180,7 @@ const ShowProjects=(props) =>{
     <div className='project-item-div'><ul> {projectsLoaded ?  <ul>
         <AddProject/>
       </ul>: "no"}</ul></div>
-    </div>
+    
     </>
     )
 }
@@ -218,15 +218,21 @@ function LoginPopUp() {
               })      
         })
     }   
+    const [closed, setTop] = useState(false);  
+    const [isloggedIn, setIsLoggedIn] = React.useState(false);
 
-  const [isloggedIn, setIsLoggedIn] = React.useState(false);
   let popUpContent;
-  if (isloggedIn) {
-    popUpContent = <ShowProjects user={currentUser}/>;
-  } else {
-    popUpContent = <InitialLog tryLogin={tryLogin}/>;
+  if (!closed) {
+    if (isloggedIn) {
+        popUpContent = <ShowProjects user={currentUser}/>;
+      } else {
+        popUpContent = <InitialLog tryLogin={tryLogin}/>;
+      }
+      return <div className='login-popup'id="projects-popup" style={{padding: "0",backgroundColor: "#f9f6f6", border:"10px solid #3e3d3d"}}>
+            <div> <button className='closeButton' onClick={() => setTop(true)}><img></img></button>  </div>
+            {popUpContent}
+            </div>;
+      }
   }
-  return <div>{popUpContent}</div>;
-  }
-
+  
   export default LoginPopUp;
