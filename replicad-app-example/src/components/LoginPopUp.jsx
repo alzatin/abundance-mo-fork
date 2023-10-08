@@ -177,10 +177,7 @@ const ShowProjects=(props) =>{
     </div>
     </div>
     
-    
-    
-    
-    <div><ul> {projectsLoaded ?  <ul>
+    <div className='project-item-div'><ul> {projectsLoaded ?  <ul>
         <AddProject/>
       </ul>: "no"}</ul></div>
     </div>
