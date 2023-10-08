@@ -151,9 +151,95 @@ const InitialLog = ({ tryLogin }) => {
 /* to add: if current user is null show this next part */
 const ShowProjects = (props) => {
   const [nodes, setNodes] = useState([]);
-
   const [projectsLoaded, setStateLoaded] = React.useState(false);
+  const [projectPopUp, setNewProjectPopUp] = useState(false);
   //if there's a user make initial project query // only make API call if user changes
+
+  //replaces the loaded projects if the user clicks on new project button
+  const NewProjectPopUp = () => {
+    return (
+      <>
+        <div>
+          <div className="form" style={{ color: "whitesmoke" }}>
+            <h1 style={{ fontSize: "1em" }}>Create a new project</h1>
+            <form className="login-form" action="#">
+              <div className="form-row">
+                <div className="input-data">
+                  <input id="project-name" type="text" required></input>
+                  <div className="underline"></div>
+                  <label for="">Project Name</label>
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="input-data">
+                  <input type="text" required></input>
+                  <div className="underline"></div>
+                  <label for="">Tags</label>
+                </div>
+              </div>
+              <select id="license-options"></select>
+              <div className="form-row">
+                <div className="input-data textarea">
+                  <textarea rows="8" cols="80"></textarea>
+                  <br />
+                  <div className="underline"></div>
+                  <label for="">Project Description</label>
+                  <br />
+
+                  <div className="submit-btn">
+                    <div className="input-data">
+                      <div className="inner"></div>
+                      <input type="Create" value="Create"></input>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </>
+    );
+  };
+  const ClassicBrowse = () => {
+    return (
+      <>
+        <div className="top_browse_menu">
+          <div
+            onClick={() => {
+              setNewProjectPopUp(true);
+            }}
+            className="newProjectDiv"
+          >
+            <span style={{ alignSelf: "center" }}>Start a new project</span>
+            <img
+              src="/imgs/defaultThumbnail.svg"
+              style={{ height: "80%", float: "left" }}
+            ></img>
+          </div>
+          <div className="newProjectDiv">
+            <span style={{ alignSelf: "center" }}>Browse Other Projects</span>
+            <img
+              src="/imgs/defaultThumbnail.svg"
+              style={{ height: "80%", float: "right" }}
+            ></img>
+          </div>
+        </div>
+
+        <div className="project-item-div">
+          <ul>
+            {projectsLoaded ? (
+              <ul>
+                <AddProject />
+              </ul>
+            ) : (
+              "no"
+            )}
+          </ul>
+        </div>
+      </>
+    );
+  };
+
   useEffect(() => {
     octokit
       .request("GET /search/repositories", {
@@ -191,6 +277,7 @@ const ShowProjects = (props) => {
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
   };
+
   return (
     <>
       <div className="middleBrowse" style={{ marginTop: "35px" }}>
@@ -242,48 +329,8 @@ const ShowProjects = (props) => {
             }}
           />
         </div>
-        <div id="tabButtons" className="tab"></div>
-        <div className="browseDisplay">
-          <img
-            src="/imgs/list-with-dots.svg"
-            style={{ height: "75%", padding: "3px" }}
-          />
-          <div className="browseDisplay active_filter" id="thumb">
-            <img
-              src="/imgs/thumb_icon.png"
-              style={{ height: "80%", padding: "3px" }}
-            />
-          </div>
-        </div>
       </div>
-      <div className="top_browse_menu">
-        <div className="newProjectDiv">
-          <span style={{ alignSelf: "center" }}>Start a new project</span>
-          <img
-            src="/imgs/defaultThumbnail.svg"
-            style={{ height: "80%", float: "left" }}
-          ></img>
-        </div>
-        <div className="newProjectDiv">
-          <span style={{ alignSelf: "center" }}>Browse Other Projects</span>
-          <img
-            src="/imgs/defaultThumbnail.svg"
-            style={{ height: "80%", float: "right" }}
-          ></img>
-        </div>
-      </div>
-
-      <div className="project-item-div">
-        <ul>
-          {projectsLoaded ? (
-            <ul>
-              <AddProject />
-            </ul>
-          ) : (
-            "no"
-          )}
-        </ul>
-      </div>
+      {projectPopUp ? <NewProjectPopUp /> : <ClassicBrowse />}
     </>
   );
 };

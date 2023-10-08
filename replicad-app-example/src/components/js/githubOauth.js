@@ -515,31 +515,7 @@ export default function GitHubModule(){
         var createNewProjectDiv = document.createElement("DIV")
         createNewProjectDiv.setAttribute("class", "form")
         createNewProjectDiv.setAttribute("style", "color:whitesmoke")
-        
-        //Add a title
-        var header = document.createElement("H1")
-        var title = document.createTextNode("Create a new project")
-        header.appendChild(title)
-        createNewProjectDiv.appendChild(header)
-        
-        //Create the form object
-        var form = document.createElement("form")
-        form.setAttribute("class", "login-form")
-        createNewProjectDiv.appendChild(form)
-        
-        //Create the name field
-        var name = document.createElement("input")
-        name.setAttribute("id","project-name")
-        name.setAttribute("type","text")
-        name.setAttribute("placeholder","Project name")
-        form.appendChild(name)
-        
-        //Add the description field
-        var description = document.createElement("input")
-        description.setAttribute("id", "project-description")
-        description.setAttribute("type", "text")
-        description.setAttribute("placeholder", "Project description")
-        form.appendChild(description)
+
         
         //Grab all of the available licenses
         var licenseOptions = document.createElement('select')

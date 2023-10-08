@@ -99,19 +99,26 @@
 }
 
 .form {
-  background-color: #3e3d3d;
+  background-color: #4c4b4b;
   display: flex;
   flex-direction: column;
   position: relative;
   z-index: 1;
   border-radius: 4px;
-  width: 60%;
+  width: 90%;
   margin: 0 auto 100px;
   padding: 30px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
-
+.input-data label {
+  position: relative;
+  top: -45px;
+  color: #00000078;
+}
+.form-row .submit-btn {
+  width: 40%;
+}
 .runSideBarDiv {
   background-color: #3e3d3d;
   display: flex;
@@ -198,7 +205,8 @@
   box-sizing: border-box;
   font-size: 14px;
 }
-.form button {
+.form button,
+.submit-btn {
   height: 40px;
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
@@ -215,7 +223,8 @@
 }
 .form button:hover,
 .form button:active,
-.form button:focus {
+.form button:focus,
+.submit-btn:hover {
   background: #f1eff1;
   border: 2px solid #444;
   color: #444;
@@ -395,6 +404,8 @@
 .project-item-div {
   overflow: scroll;
   margin-top: 10px;
+  width: 100%;
+  padding: 20px;
 }
 
 .middleBrowse {
@@ -478,19 +489,23 @@
 
 .top_browse_menu {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
 }
 
 .newProjectDiv {
-  width: 50%;
+  display: flex;
+  margin: 10px;
+  width: 40%;
   height: 120px;
   align-content: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
   background-color: white;
   flex-wrap: wrap;
   border: 1px solid #efe7e7;
 }
-.newProjectdiv:hover,
+.newProjectDiv:hover,
 .browseDisplay:hover {
   background-color: #e6e6ff;
 }
