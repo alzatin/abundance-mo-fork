@@ -147,7 +147,7 @@ const ShowProjects=(props) =>{
         return nodes.map(node => (       
             <div className="project" id={node.name} onClick={(e) => loadProject(node, e)}>
                 <li>{node.name}</li>
-                <img src='/imgs/maslow-logo.png'></img></div>       
+                <img className="project_image" src='/imgs/maslow-logo.png'></img></div>       
           ))
     }
 
@@ -156,25 +156,30 @@ const ShowProjects=(props) =>{
       };
     return(
     <>
-    <div className='login-popup'id="projects-popup" style={{padding: "0",textAlign: "center", backgroundColor: "#f9f6f6", border:"10px solid #3e3d3d"}}>
+    <div className='login-popup'id="projects-popup" style={{padding: "0",backgroundColor: "#f9f6f6", border:"10px solid #3e3d3d"}}>
     <div className='middleBrowse' style={{marginTop:"25px"}}>   
     <div id="welcome" style={{display:"flex",margin:"10px",alignItems:"center"}}> 
         <img src='/imgs/maslow-logo.png' alt="logo" style={{width:"25px", height: "25px",borderRadius: "50%"}}/>
         <img src='/imgs/maslowcreate.svg' alt="logo" style={{height: "20px",padding: "10px"}}/>
         <button className="form browseButton githubSign" id="loginButton2" style={{width: "90px", fontSize:".7rem", marginLeft: "auto"}}>Login</button>
         <button className="form browseButton githubSign" onClick={()=>openInNewTab('https://github.com/join')} style={{width: "130px", fontSize: ".7rem", marginLeft: "5px"}}>Create an Account</button>
-        </div> 
-        <img src='/imgs/search_icon.svg' alt="search" style={{width:"20px", float: "right",color: "white",position:"relative", right:"3px", opacity:"0.5"}}/>
+    </div> 
+    <div className="search-bar-div">
+        <input type="text" contentEditable="true" placeholder="Search for project.." className="menu_search" id="project_search"/>
+        <img src='/imgs/search_icon.svg' alt="search" style={{width:"20px",color: "white", right:"3px", opacity:"0.5"}}/>
     </div>
-    <div id="welcome" style={{justifyContent: "flex-start", display: "inline", width: "100%", fontSize: "18px"}}>Maslow Create User Projects</div>
     <div id="tabButtons" className="tab"></div>
-    <input type="text" contentEditable="true" placeholder="Search for project.." className="menu_search" id="project_search"/>
     <div className="browseDisplay">
-     <img src="/imgs/list-with-dots.svg" style={{height:"75%",padding: "3px"}}/>
+         <img src="/imgs/list-with-dots.svg" style={{height:"75%",padding: "3px"}}/>
+            <div className="browseDisplay active_filter" id="thumb">
+         <img src="/imgs/thumb_icon.png" style={{height: "80%",padding: "3px"}}/>
+        </div>
     </div>
-    <div className="browseDisplay active_filter" id="thumb">
-      <img src="/imgs/thumb_icon.png" style={{height: "80%",padding: "3px"}}/>
     </div>
+    
+    
+    
+    
     <div><ul> {projectsLoaded ?  <ul>
         <AddProject/>
       </ul>: "no"}</ul></div>

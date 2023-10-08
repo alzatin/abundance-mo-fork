@@ -2,10 +2,11 @@
 
 #welcome{
     display: block;
-    width: 100%;
-    margin-top: 10px;
+    margin: 5px;
     font-size: 24px;
-    text-align: center;
+    font-family: Helvetica;
+    width: 100%;
+  
 }
 .curiousBrowse{
     display:flex;
@@ -363,14 +364,13 @@ animation-delay: 0s;
     box-sizing: border-box;
 }
 #project_search{
-    color: #353232;
-    border: 1px solid #444;
-    padding: 3px;
-    align-self: flex-end;
-    width: 40%;
-    margin-right: 10px;
-    align-self: center;
-    position: relative;
+  width: 85%;
+  margin-right: 10px;
+  border: 3px solid #353232;;
+  
+  border-radius: 5px 5px;
+  outline: none;
+  align-self: flex-end;
     }
 
 .middleBrowse{
@@ -378,8 +378,8 @@ animation-delay: 0s;
     position: relative;
     right: 10px;
     display: flex;
-    width: 50%;
-    flex-flow: row;
+    width: 95%;
+    flex-direction: column;
     justify-content: flex-end;
     margin-top: -10px;
     margin-right: 10px;
@@ -393,6 +393,16 @@ animation-delay: 0s;
     justify-content: flex-end;
 }
 
+/* Style the tabs in the menu*/
+.tab {
+  
+}
+
+.search-bar-div{
+  align-self: flex-end ;
+  width: 40%;
+  height:50px;
+}
 .custom-select{
     position: relative;
     display: inline-block;
@@ -428,10 +438,10 @@ animation-delay: 0s;
 }
 
 .browseDisplay {
+    display:flex;
     align-self: flex-end;
-    margin-right: 10px;
+    margin:30px 30px 0 0;
     background-color: #ddd;
-    display: inline-block;
     width: 30px;
     height: 30px;
 }
@@ -513,6 +523,12 @@ animation-delay: 0s;
     font-size:13px;
     justify-content: flex-start;
 }
+
+.project_image {
+  padding:0;
+  width:60px;
+  height:60px;
+ }
 
 .browseDiv{
 
