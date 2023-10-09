@@ -3,6 +3,9 @@ import GlobalVariables from './globalvariables.js'
 import { licenses } from './licenseOptions.js'
 import { extractBomTags, convertLinks } from './BOM.js'
 import { OAuth } from 'oauthio-web'
+import { Octokit} from "https://esm.sh/octokit@2.0.19"
+import { re } from 'mathjs'
+//import createOAuthUserAuth from "@octokit/auth-oauth-user"
 
 /**
  * This function works like a class to sandbox interaction with GitHub.
@@ -14,6 +17,7 @@ export default function GitHubModule(){
      * @type {object}
      */
     var octokit = null//new Octokit()
+    
     /** 
      * The HTML element which is the popup.
      * @type {object}
@@ -57,6 +61,24 @@ export default function GitHubModule(){
     // document.getElementById("loginButton").addEventListener("mousedown", () => {
     //     this.tryLogin()
     // })
+
+    // makes initial call to search for user projects
+    this.searchUserProjects= function(){
+        octokit.request('GET /search/repositories', { 
+            q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
+            per_page: 50,
+            headers: {
+                accept: 'application/vnd.github.mercy-preview+json'
+            }
+        }).then(result => {
+            var repo_names =[]
+            result.data.items.forEach(repo => {
+                repo_names.push(repo.name)
+                
+            })
+            return repo_names
+        }) 
+    }
     
     /** 
      * Try to login using the oauth popup.
@@ -70,22 +92,25 @@ export default function GitHubModule(){
         else{
             OAuth.initialize('BYP9iFpD7aTV9SDhnalvhZ4fwD8') //app public key for public_repo scope
         }
+        
         // Use popup for oauth
         OAuth.popup('github').then(github => {
-        
             /** 
              * Oktokit object to access github
              * @type {object}
              */
+           
             octokit = new Octokit({
                 auth: github.access_token
             })
-            
-            //Test the authentication 
-            octokit.users.getAuthenticated({}).then(result => {
-                currentUser = result.data.login
-                this.showProjectsToLoad()
-            })
+            //getting current user post authetication
+            octokit.request('GET /user', {
+              }).then(response => {
+                currentUser = response.data.login;
+                
+                this.searchUserProjects()
+                
+              })      
         })
     }
     
@@ -97,8 +122,8 @@ export default function GitHubModule(){
         while (popup.firstChild) {
             popup.removeChild(popup.firstChild)
         }
-
-        //Close button (Mac style)
+        /*
+        //Close button (Mac style) - 
         if(GlobalVariables.topLevelMolecule && GlobalVariables.topLevelMolecule.name != "top level - fix close button"){ //Only offer a close button if there is a project to go back to
             var closeButton = document.createElement("button")
             closeButton.setAttribute("class", "closeButton")
@@ -107,6 +132,7 @@ export default function GitHubModule(){
             })
             popup.appendChild(closeButton)
         }
+        */
         //Welcome title
         var welcome = document.createElement("div")
         welcome.setAttribute("style", " display: flex; margin: 10px; align-items: center;")
@@ -391,7 +417,7 @@ export default function GitHubModule(){
         //create a project element to display
         if (document.getElementById("thumb").classList.contains("active_filter")){
             
-            projectPicture.setAttribute("style", "width: 100%; height: 80%;")
+            //projectPicture.setAttribute("style", "width: 100%; height: 80%;")
             project.appendChild(document.createElement("BR"))
 
             var shortProjectName
@@ -489,31 +515,7 @@ export default function GitHubModule(){
         var createNewProjectDiv = document.createElement("DIV")
         createNewProjectDiv.setAttribute("class", "form")
         createNewProjectDiv.setAttribute("style", "color:whitesmoke")
-        
-        //Add a title
-        var header = document.createElement("H1")
-        var title = document.createTextNode("Create a new project")
-        header.appendChild(title)
-        createNewProjectDiv.appendChild(header)
-        
-        //Create the form object
-        var form = document.createElement("form")
-        form.setAttribute("class", "login-form")
-        createNewProjectDiv.appendChild(form)
-        
-        //Create the name field
-        var name = document.createElement("input")
-        name.setAttribute("id","project-name")
-        name.setAttribute("type","text")
-        name.setAttribute("placeholder","Project name")
-        form.appendChild(name)
-        
-        //Add the description field
-        var description = document.createElement("input")
-        description.setAttribute("id", "project-description")
-        description.setAttribute("type", "text")
-        description.setAttribute("placeholder", "Project description")
-        form.appendChild(description)
+
         
         //Grab all of the available licenses
         var licenseOptions = document.createElement('select')
@@ -974,8 +976,10 @@ export default function GitHubModule(){
     /** 
      * Loads a project from github by name.
      */
-    this.loadProject = async function(projectName){
+    this.loadProject = async function(project){
         
+        console.log(project)
+
         this.totalAtomCount = 0
         this.numberOfAtomsToLoad = 0
 
@@ -986,13 +990,12 @@ export default function GitHubModule(){
         }
 
         //Clear and hide the popup
-        while (popup.firstChild) {
+       /* while (popup.firstChild) {
             popup.removeChild(popup.firstChild)
         }
         popup.classList.add('off')
-        
-        currentRepoName = projectName
-        
+        */
+        currentRepoName = project.name
         //Load a blank project
         GlobalVariables.topLevelMolecule = new Molecule({
             x: 0, 
@@ -1003,7 +1006,13 @@ export default function GitHubModule(){
         
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule
         
-        octokit.repos.getContent({
+        octokit.request('GET /repos/{owner}/{repo}/content', {
+            owner: project.owner,
+            repo: project.name,
+        }).then(response => {
+          console.log(response)
+        })  
+        /*octokit.repos.getContent({
             owner: currentUser,
             repo: projectName,
             path: 'project.maslowcreate'
@@ -1021,8 +1030,8 @@ export default function GitHubModule(){
             else{
                 GlobalVariables.topLevelMolecule.deserialize(this.convertFromOldFormat(rawFile))
             }
-        })
-        octokit.repos.get({
+        })*/
+        /*octokit.repos.get({
             owner: currentUser,
             repo: currentRepoName
         }).then(result => {
@@ -1033,7 +1042,7 @@ export default function GitHubModule(){
             else{
                 document.getElementById("pull_top").style.display = "inline"
             }
-        })
+        })*/
         
     }
     

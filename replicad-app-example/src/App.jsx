@@ -9,6 +9,7 @@ import { wrap } from "comlink";
 import TodoList from "./TodoList.jsx";
 import FlowCanvas from './components/flowCanvas.jsx';
 import LowerHalf from "./components/lowerHalf.jsx";
+import LoginPopUp from "./components/LoginPopUp.jsx";
 
 import cadWorker from "./worker.js?worker";
 
@@ -38,6 +39,7 @@ export default function ReplicadApp() {
       <div id= "headerBar">
       <p> Maslow Create</p> 
       <img className="thumnail-logo" src='/imgs/maslow-logo.png' alt="logo"/>
+      <LoginPopUp/>
       </div>
       <FlowCanvas displayProps ={{mesh: mesh, setMesh:setMesh, size:size, cad:cad}}/>
       <LowerHalf displayProps ={{mesh: mesh, setMesh:setMesh, size:size, cad:cad}}/>

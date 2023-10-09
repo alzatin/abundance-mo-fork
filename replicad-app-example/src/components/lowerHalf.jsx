@@ -44,14 +44,14 @@ export default function LowerHalf(displayProps) {
                 <div 
                 className="jscad-container"
                 style={{
-                    width: windowSize.width*.6,
+                    //width: windowSize.width*.6,
                     height: windowSize.height*.55
                 }}
                 > 
                 <section 
                 id = "threeDView"
                 style={{
-                    width: windowSize.width*.6,
+                   // width: windowSize.width*.6,
                     height: windowSize.height*.58
                 }}
                 >

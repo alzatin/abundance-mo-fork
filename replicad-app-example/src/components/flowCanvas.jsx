@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useRef } from 'react';
 import GlobalVariables from './js/globalvariables';
 import Molecule from './molecules/molecule';
-//import CMenu from 'circular-menu';
 import {createCMenu, cmenu} from './js/NewMenu.js';
 import TopMenu from './TopMenu.jsx';
 
@@ -68,7 +67,7 @@ export default function FlowCanvas(displayProps) {
         })
 
     }, []);
-
+    //there's an error message for the width 
     const draw = () => {
         GlobalVariables.c.clearRect(0, 0, GlobalVariables.canvas.current.width, GlobalVariables.canvas.current.height)
         GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(atom => {
@@ -287,7 +286,6 @@ export default function FlowCanvas(displayProps) {
     }, []);
 
     useEffect(() => {
-        console.log("use effect")
         createCMenu(circleMenu);
     }, []);
 
@@ -297,7 +295,7 @@ export default function FlowCanvas(displayProps) {
                 <div id="circle-menu1" className="cn-menu1" ref={circleMenu} ></div>
                 <TopMenu />
                 <div id="canvas_menu">
-                    <input type="text" id="menuInput" onfocusout="value=''" placeholder="Search for atom.." className = "menu_search_canvas"></input>
+                    <input type="text" id="menuInput" onBlur="value=''" placeholder="Search for atom.." className = "menu_search_canvas"></input>
                     <ul id="githubList" className = "menu_list tabcontent">
                     </ul>
                 </div>
