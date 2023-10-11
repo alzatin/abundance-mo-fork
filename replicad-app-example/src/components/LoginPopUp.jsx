@@ -241,12 +241,13 @@ const ShowProjects = (props) => {
       </>
     );
   };
-
-  useEffect(() => {
+  if (props.user == "") {
+    console.log("no user");
+    octokit = new Octokit();
     octokit
       .request("GET /search/repositories", {
-        q: " " + "fork:true user:" + currentUser + " topic:maslowcreate",
-        per_page: 50,
+        q: "topic:maslowcreate",
+        per_page: 100,
         headers: {
           accept: "application/vnd.github.mercy-preview+json",
         },
@@ -254,13 +255,31 @@ const ShowProjects = (props) => {
       .then((result) => {
         var userRepos = [];
         result.data.items.forEach((repo) => {
-          //this.addProject(repo.name, repo.id, repo.owner.login, repo.created_at, repo.updated_at, owned, thumbnailPath)
           userRepos.push(repo);
         });
         setNodes([...userRepos]);
         setStateLoaded(true);
       });
-  }, [currentUser]);
+  } else {
+    useEffect(() => {
+      octokit
+        .request("GET /search/repositories", {
+          q: " " + "fork:true user:" + props.user + " topic:maslowcreate",
+          per_page: 50,
+          headers: {
+            accept: "application/vnd.github.mercy-preview+json",
+          },
+        })
+        .then((result) => {
+          var userRepos = [];
+          result.data.items.forEach((repo) => {
+            userRepos.push(repo);
+          });
+          setNodes([...userRepos]);
+          setStateLoaded(true);
+        });
+    }, [props.user]);
+  }
 
   const AddProject = () => {
     //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"
@@ -338,24 +357,9 @@ const ShowProjects = (props) => {
 };
 
 function LoginPopUp() {
+  // is called when user clicks on browse projects button to change state of userbrowsing
   const tryNoAuth = function () {
-    octokit = new Octokit();
-    //getting current user post authetication
-    octokit
-      .request("GET /search/repositories", {
-        q: "topic:maslowcreate",
-        per_page: 50,
-        headers: {
-          accept: "application/vnd.github.mercy-preview+json",
-        },
-      })
-      .then((result) => {
-        var noUserRepos = [];
-        result.data.items.forEach((repo) => {
-          noUserRepos.push(repo);
-        });
-        console.log(noUserRepos);
-      });
+    setBrowsing(true);
   };
 
   const tryLogin = function (props) {
@@ -386,12 +390,15 @@ function LoginPopUp() {
     });
   };
   const [closed, setTop] = useState(false);
-  const [isloggedIn, setIsLoggedIn] = React.useState(false);
+  const [userBrowsing, setBrowsing] = useState(false);
+  const [isloggedIn, setIsLoggedIn] = useState(false);
 
   let popUpContent;
   if (!closed) {
     if (isloggedIn) {
       popUpContent = <ShowProjects user={currentUser} />;
+    } else if (userBrowsing) {
+      popUpContent = <ShowProjects user={""} />;
     } else {
       popUpContent = <InitialLog tryLogin={tryLogin} tryNoAuth={tryNoAuth} />;
     }
