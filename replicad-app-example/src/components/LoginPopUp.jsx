@@ -44,15 +44,29 @@ const loadProject = function (project) {
   });
 
   GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+  console.log(project.owner.login);
+  console.log(project.name);
 
   octokit
-    .request("GET /repos/{owner}/{repo}/contents", {
-      owner: project.owner,
+    .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
+      owner: project.owner.login,
       repo: project.name,
     })
     .then((response) => {
       console.log(response);
+
+      //content will be base64 encoded
+      let rawFile = JSON.parse(atob(response.data.content));
+
+      if (rawFile.filetypeVersion == 1) {
+        GlobalVariables.topLevelMolecule.deserialize(rawFile);
+      } else {
+        GlobalVariables.topLevelMolecule.deserialize(
+          this.convertFromOldFormat(rawFile)
+        );
+      }
     });
+
   /*octokit.repos.getContent({
         owner: currentUser,
         repo: projectName,
@@ -243,23 +257,25 @@ const ShowProjects = (props) => {
   };
   if (props.user == "") {
     console.log("no user");
-    octokit = new Octokit();
-    octokit
-      .request("GET /search/repositories", {
-        q: "topic:maslowcreate",
-        per_page: 100,
-        headers: {
-          accept: "application/vnd.github.mercy-preview+json",
-        },
-      })
-      .then((result) => {
-        var userRepos = [];
-        result.data.items.forEach((repo) => {
-          userRepos.push(repo);
+    useEffect(() => {
+      octokit = new Octokit();
+      octokit
+        .request("GET /search/repositories", {
+          q: "topic:maslowcreate",
+          per_page: 100,
+          headers: {
+            accept: "application/vnd.github.mercy-preview+json",
+          },
+        })
+        .then((result) => {
+          var userRepos = [];
+          result.data.items.forEach((repo) => {
+            userRepos.push(repo);
+          });
+          setNodes([...userRepos]);
+          setStateLoaded(true);
         });
-        setNodes([...userRepos]);
-        setStateLoaded(true);
-      });
+    }, []);
   } else {
     useEffect(() => {
       octokit

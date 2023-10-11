@@ -978,7 +978,7 @@ export default function GitHubModule(){
      */
     this.loadProject = async function(project){
         
-        console.log(project)
+        console.log("project clicked: "+ project)
 
         this.totalAtomCount = 0
         this.numberOfAtomsToLoad = 0
@@ -1006,10 +1006,12 @@ export default function GitHubModule(){
         
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule
         
-        octokit.request('GET /repos/{owner}/{repo}/content', {
+        octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
             owner: project.owner,
             repo: project.name,
+            path: 'project.maslowcreate'
         }).then(response => {
+          console.log("Response: ")
           console.log(response)
         })  
         /*octokit.repos.getContent({
