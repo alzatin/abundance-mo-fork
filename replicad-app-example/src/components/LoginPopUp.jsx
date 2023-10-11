@@ -87,7 +87,7 @@ const loadProject = function (project) {
 };
 
 // initial pop up construction with github login button
-const InitialLog = ({ tryLogin }) => {
+const InitialLog = ({ tryLogin, tryNoAuth }) => {
   /**
    * Try to login using the oauth popup.
    */
@@ -127,7 +127,6 @@ const InitialLog = ({ tryLogin }) => {
             style={{
               justifyContent: "flex-start",
               display: "inline",
-              width: "80%",
             }}
           >
             Check out what others have designed in Maslow Create
@@ -135,7 +134,10 @@ const InitialLog = ({ tryLogin }) => {
           <form className="login-form">
             <button
               type="button"
-              className="browseButton"
+              className="submit-btn browseButton"
+              onClick={() => {
+                tryNoAuth();
+              }}
               id="browseNonGit"
               style={{ padding: "0 30px" }}
             >
@@ -336,6 +338,26 @@ const ShowProjects = (props) => {
 };
 
 function LoginPopUp() {
+  const tryNoAuth = function () {
+    octokit = new Octokit();
+    //getting current user post authetication
+    octokit
+      .request("GET /search/repositories", {
+        q: "topic:maslowcreate",
+        per_page: 50,
+        headers: {
+          accept: "application/vnd.github.mercy-preview+json",
+        },
+      })
+      .then((result) => {
+        var noUserRepos = [];
+        result.data.items.forEach((repo) => {
+          noUserRepos.push(repo);
+        });
+        console.log(noUserRepos);
+      });
+  };
+
   const tryLogin = function (props) {
     // Initialize with OAuth.io app public key
     if (window.location.href.includes("private")) {
@@ -371,7 +393,7 @@ function LoginPopUp() {
     if (isloggedIn) {
       popUpContent = <ShowProjects user={currentUser} />;
     } else {
-      popUpContent = <InitialLog tryLogin={tryLogin} />;
+      popUpContent = <InitialLog tryLogin={tryLogin} tryNoAuth={tryNoAuth} />;
     }
     return (
       <div
