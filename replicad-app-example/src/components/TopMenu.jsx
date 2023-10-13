@@ -64,7 +64,8 @@ function TopMenu(props) {
     {
       id: "Delete Project",
       buttonFunc: () => {
-        props.setPopUpOpen(true);
+        var url = GlobalVariables.currentRepo.html_url + "/settings";
+        window.open(url);
       },
       icon: "Open.svg",
     },
