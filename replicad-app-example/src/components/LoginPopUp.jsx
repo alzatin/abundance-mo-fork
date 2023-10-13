@@ -133,7 +133,7 @@ const ShowProjects = (props) => {
       </>
     );
   };
-  // show projects in list/ if username show user projects if not show all projects
+  // browse display
   const ClassicBrowse = () => {
     return (
       <>
@@ -173,23 +173,13 @@ const ShowProjects = (props) => {
       </>
     );
   };
-  // loads project when clicked in browse
+  // loads project when clicked in browse mode
   const loadProject = function (project) {
     GlobalVariables.gitHub.totalAtomCount = 0;
     GlobalVariables.gitHub.numberOfAtomsToLoad = 0;
 
     GlobalVariables.startTime = new Date().getTime();
 
-    /* if(typeof intervalTimer != undefined){
-          clearInterval(intervalTimer) //Turn off auto saving
-      }*/
-
-    //Clear and hide the popup
-    /* while (popup.firstChild) {
-          popup.removeChild(popup.firstChild)
-      }
-      popup.classList.add('off')
-      */
     const currentRepoName = project.name;
     //Load a blank project
     GlobalVariables.topLevelMolecule = new Molecule({
@@ -219,6 +209,7 @@ const ShowProjects = (props) => {
         }
       });
   };
+  // conditional show all maslow projects if no user name or owned if username
   if (props.user == "") {
     console.log("no user");
     useEffect(() => {
@@ -260,7 +251,7 @@ const ShowProjects = (props) => {
         });
     }, [props.user]);
   }
-
+  // adds individual projects after API call
   const AddProject = () => {
     //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"
     return nodes.map((node) => (
