@@ -13,28 +13,43 @@ function TopMenu(props) {
     {
       id: "GitHub",
       buttonFunc: () => {
-        window.open("https://github.com/join");
+        window.open(GlobalVariables.currentRepo.html_url);
       },
       icon: "GitHub.svg",
     },
     {
+      /**
+       * Open a new tab with the README page for the project.
+       */
       id: "Read Me",
       buttonFunc: () => {
-        props.setPopUpOpen(true);
+        var url =
+          GlobalVariables.currentRepo.html_url + "/blob/master/README.md";
+        window.open(url);
       },
       icon: "Open.svg",
     },
     {
+      /**
+       * Open a new tab with the Bill Of Materials page for the project.
+       */
       id: "Bill of Materials",
       buttonFunc: () => {
-        props.setPopUpOpen(true);
+        var url =
+          GlobalVariables.currentRepo.html_url +
+          "/blob/master/BillOfMaterials.md";
+        window.open(url);
       },
       icon: "Open.svg",
     },
     {
+      /**
+       * Open a new tab with a sharable copy of the project.
+       */
       id: "Share",
       buttonFunc: () => {
-        props.setPopUpOpen(true);
+        var ID = GlobalVariables.currentRepo.id;
+        window.open("/run?" + ID);
       },
       icon: "Open.svg",
     },
@@ -46,6 +61,9 @@ function TopMenu(props) {
       icon: "Open.svg",
     },
     {
+      /**
+       * Open pull request if it's a forked project.
+       */
       id: "Pull Request",
       buttonFunc: () => {
         window.open(
@@ -62,6 +80,9 @@ function TopMenu(props) {
       icon: "Open.svg",
     },
     {
+      /**
+       * Send user to GitHub settings page to delete project.
+       */
       id: "Delete Project",
       buttonFunc: () => {
         var url = GlobalVariables.currentRepo.html_url + "/settings";
@@ -70,6 +91,7 @@ function TopMenu(props) {
       icon: "Open.svg",
     },
   ];
+
   /*{checks for top level variable and show go-up button if this is not top molecule  ::::
       i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way that doesn't use Useeffect()
       } (CAN'T FIGURE OUT HOW TO MAKE IT WAIT FOR GLOBALVARIABLES)*/
