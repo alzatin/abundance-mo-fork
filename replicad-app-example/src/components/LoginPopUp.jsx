@@ -258,6 +258,7 @@ const ShowProjects = (props) => {
     return nodes.map((node) => (
       <div
         className="project"
+        key={node.name}
         id={node.name}
         onClick={(e) => loadProject(node, e)}
       >

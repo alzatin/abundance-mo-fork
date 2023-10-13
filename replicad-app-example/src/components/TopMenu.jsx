@@ -124,7 +124,7 @@ function TopMenu(props) {
 
           <ul className={`menu-nav${navbarOpen ? " show-menu" : ""}`}>
             {navItems.map((item, index) => (
-              <button className="menu-nav-button">
+              <button key={item.id} className="menu-nav-button">
                 <img
                   className=" thumnail-logo"
                   alt={item}
