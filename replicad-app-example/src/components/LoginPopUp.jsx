@@ -197,6 +197,7 @@ const ShowProjects = (props) => {
       })
       .then((response) => {
         props.closePopUp();
+        console.log(GlobalVariables.currentUser);
         //content will be base64 encoded
         let rawFile = JSON.parse(atob(response.data.content));
 
@@ -357,6 +358,7 @@ function LoginPopUp() {
       //getting current user post authetication
       octokit.request("GET /user", {}).then((response) => {
         currentUser = response.data.login;
+        GlobalVariables.currentUser = currentUser;
         if (currentUser) {
           setIsLoggedIn(true);
         }

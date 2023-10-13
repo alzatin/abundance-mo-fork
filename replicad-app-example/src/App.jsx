@@ -10,6 +10,7 @@ import TodoList from "./TodoList.jsx";
 import FlowCanvas from "./components/flowCanvas.jsx";
 import LowerHalf from "./components/lowerHalf.jsx";
 import LoginPopUp from "./components/LoginPopUp.jsx";
+import TopMenu from "./components/TopMenu.jsx";
 
 import cadWorker from "./worker.js?worker";
 
@@ -36,6 +37,7 @@ export default function ReplicadApp() {
 
   return (
     <main>
+      <TopMenu />
       <div id="headerBar">
         <p> Maslow Create</p>
         <img className="thumnail-logo" src="/imgs/maslow-logo.png" alt="logo" />
