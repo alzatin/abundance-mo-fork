@@ -371,7 +371,7 @@ function LoginPopUp(props) {
 
   let popUpContent;
   if (!closed) {
-    if (isloggedIn) {
+    if (GlobalVariables.currentUser !== undefined) {
       popUpContent = (
         <ShowProjects user={currentUser} closePopUp={closePopUp} />
       );
