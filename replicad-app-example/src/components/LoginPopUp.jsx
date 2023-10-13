@@ -174,13 +174,30 @@ const ShowProjects = (props) => {
               style={{ height: "80%", float: "left" }}
             ></img>
           </div>
-          <div className="newProjectDiv" onClick={props.tryNoAuth}>
-            <span style={{ alignSelf: "center" }}>Browse Other Projects</span>
-            <img
-              src="/imgs/defaultThumbnail.svg"
-              style={{ height: "80%", float: "right" }}
-            ></img>
-          </div>
+
+          {!props.userBrowsing ? (
+            <div
+              className="newProjectDiv"
+              onClick={() => props.setBrowsing(true)}
+            >
+              <span style={{ alignSelf: "center" }}>Browse Other Projects</span>
+              <img
+                src="/imgs/defaultThumbnail.svg"
+                style={{ height: "80%", float: "right" }}
+              ></img>
+            </div>
+          ) : (
+            <div
+              className="newProjectDiv"
+              onClick={() => props.setBrowsing(false)}
+            >
+              <span style={{ alignSelf: "center" }}>Return to my Projects</span>
+              <img
+                src="/imgs/defaultThumbnail.svg"
+                style={{ height: "80%", float: "right" }}
+              ></img>
+            </div>
+          )}
         </div>
 
         <div className="project-item-div">
@@ -365,6 +382,7 @@ function LoginPopUp(props) {
           closePopUp={closePopUp}
           tryNoAuth={tryNoAuth}
           userBrowsing={userBrowsing}
+          setBrowsing={setBrowsing}
         />
       );
     } else if (userBrowsing) {
@@ -373,6 +391,7 @@ function LoginPopUp(props) {
           user={""}
           closePopUp={closePopUp}
           userBrowsing={userBrowsing}
+          setBrowsing={setBrowsing}
         />
       );
     } else {
