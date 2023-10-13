@@ -18,7 +18,7 @@ var currentUser = null;
  */
 
 // initial pop up construction with github login button
-const InitialLog = ({ tryLogin, tryNoAuth }) => {
+const InitialLog = (props) => {
   /**
    * Try to login using the oauth popup.
    */
@@ -42,7 +42,7 @@ const InitialLog = ({ tryLogin, tryNoAuth }) => {
             <button
               type="button"
               id="loginButton"
-              onClick={tryLogin}
+              onClick={props.tryLogin}
               style={{ height: "40px" }}
             >
               Login With GitHub
@@ -66,9 +66,7 @@ const InitialLog = ({ tryLogin, tryNoAuth }) => {
             <button
               type="button"
               className="submit-btn browseButton"
-              onClick={() => {
-                tryNoAuth();
-              }}
+              onClick={props.tryNoAuth}
               id="browseNonGit"
               style={{ padding: "0 30px" }}
             >
@@ -90,7 +88,7 @@ const ShowProjects = (props) => {
   // conditional show all maslow projects if no user name or owned if username
   useEffect(() => {
     var query;
-    if (props.user == "") {
+    if (props.user == "" || props.userBrowsing) {
       query = "topic:maslowcreate";
     } else {
       query = " " + "fork:true user:" + props.user + " topic:maslowcreate";
@@ -112,7 +110,7 @@ const ShowProjects = (props) => {
         setNodes([...userRepos]);
         setStateLoaded(true);
       });
-  }, []);
+  }, [props.userBrowsing]);
 
   //Replaces the loaded projects if the user clicks on new project button
   const NewProjectPopUp = () => {
@@ -176,7 +174,7 @@ const ShowProjects = (props) => {
               style={{ height: "80%", float: "left" }}
             ></img>
           </div>
-          <div className="newProjectDiv">
+          <div className="newProjectDiv" onClick={props.tryNoAuth}>
             <span style={{ alignSelf: "center" }}>Browse Other Projects</span>
             <img
               src="/imgs/defaultThumbnail.svg"
@@ -319,6 +317,7 @@ const ShowProjects = (props) => {
 function LoginPopUp(props) {
   // is called when user clicks on browse projects button to change state of userbrowsing
   const tryNoAuth = function () {
+    console.log("trynoauth");
     setBrowsing(true);
   };
   const closePopUp = function () {
@@ -359,12 +358,23 @@ function LoginPopUp(props) {
 
   let popUpContent;
   if (!closed) {
-    if (GlobalVariables.currentUser !== undefined) {
+    if (GlobalVariables.currentUser !== undefined && !userBrowsing) {
       popUpContent = (
-        <ShowProjects user={currentUser} closePopUp={closePopUp} />
+        <ShowProjects
+          user={currentUser}
+          closePopUp={closePopUp}
+          tryNoAuth={tryNoAuth}
+          userBrowsing={userBrowsing}
+        />
       );
     } else if (userBrowsing) {
-      popUpContent = <ShowProjects user={""} closePopUp={closePopUp} />;
+      popUpContent = (
+        <ShowProjects
+          user={""}
+          closePopUp={closePopUp}
+          userBrowsing={userBrowsing}
+        />
+      );
     } else {
       popUpContent = <InitialLog tryLogin={tryLogin} tryNoAuth={tryNoAuth} />;
     }
