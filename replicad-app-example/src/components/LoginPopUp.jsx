@@ -86,9 +86,35 @@ const ShowProjects = (props) => {
   const [nodes, setNodes] = useState([]);
   const [projectsLoaded, setStateLoaded] = React.useState(false);
   const [projectPopUp, setNewProjectPopUp] = useState(false);
-  //if there's a user make initial project query // only make API call if user changes
 
-  //replaces the loaded projects if the user clicks on new project button
+  // conditional show all maslow projects if no user name or owned if username
+  useEffect(() => {
+    var query;
+    if (props.user == "") {
+      query = "topic:maslowcreate";
+    } else {
+      query = " " + "fork:true user:" + props.user + " topic:maslowcreate";
+    }
+    octokit = new Octokit();
+    octokit
+      .request("GET /search/repositories", {
+        q: query,
+        per_page: 100,
+        headers: {
+          accept: "application/vnd.github.mercy-preview+json",
+        },
+      })
+      .then((result) => {
+        var userRepos = [];
+        result.data.items.forEach((repo) => {
+          userRepos.push(repo);
+        });
+        setNodes([...userRepos]);
+        setStateLoaded(true);
+      });
+  }, []);
+
+  //Replaces the loaded projects if the user clicks on new project button
   const NewProjectPopUp = () => {
     return (
       <>
@@ -133,7 +159,7 @@ const ShowProjects = (props) => {
       </>
     );
   };
-  // browse display
+  // Browse display
   const ClassicBrowse = () => {
     return (
       <>
@@ -173,7 +199,7 @@ const ShowProjects = (props) => {
       </>
     );
   };
-  // loads project when clicked in browse mode
+  // Loads project when clicked in browse mode
   const loadProject = function (project) {
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
@@ -212,55 +238,14 @@ const ShowProjects = (props) => {
         }
       });
   };
-  // conditional show all maslow projects if no user name or owned if username
-  if (props.user == "") {
-    console.log("no user");
-    useEffect(() => {
-      octokit = new Octokit();
-      octokit
-        .request("GET /search/repositories", {
-          q: "topic:maslowcreate",
-          per_page: 100,
-          headers: {
-            accept: "application/vnd.github.mercy-preview+json",
-          },
-        })
-        .then((result) => {
-          var userRepos = [];
-          result.data.items.forEach((repo) => {
-            userRepos.push(repo);
-          });
-          setNodes([...userRepos]);
-          setStateLoaded(true);
-        });
-    }, []);
-  } else {
-    useEffect(() => {
-      octokit
-        .request("GET /search/repositories", {
-          q: " " + "fork:true user:" + props.user + " topic:maslowcreate",
-          per_page: 50,
-          headers: {
-            accept: "application/vnd.github.mercy-preview+json",
-          },
-        })
-        .then((result) => {
-          var userRepos = [];
-          result.data.items.forEach((repo) => {
-            userRepos.push(repo);
-          });
-          setNodes([...userRepos]);
-          setStateLoaded(true);
-        });
-    }, [props.user]);
-  }
+
   // adds individual projects after API call
   const AddProject = () => {
     //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"
     return nodes.map((node) => (
       <div
         className="project"
-        key={node.name}
+        key={node.id}
         id={node.name}
         onClick={(e) => loadProject(node, e)}
       >
