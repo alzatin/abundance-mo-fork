@@ -122,17 +122,7 @@ export default function GitHubModule(){
         while (popup.firstChild) {
             popup.removeChild(popup.firstChild)
         }
-        /*
-        //Close button (Mac style) - 
-        if(GlobalVariables.topLevelMolecule && GlobalVariables.topLevelMolecule.name != "top level - fix close button"){ //Only offer a close button if there is a project to go back to
-            var closeButton = document.createElement("button")
-            closeButton.setAttribute("class", "closeButton")
-            closeButton.addEventListener("click", () => {
-                popup.classList.add('off')
-            })
-            popup.appendChild(closeButton)
-        }
-        */
+       
         //Welcome title
         var welcome = document.createElement("div")
         welcome.setAttribute("style", " display: flex; margin: 10px; align-items: center;")
@@ -784,18 +774,17 @@ export default function GitHubModule(){
      * Save the current project to github.
      */
     this.saveProject = function(){
-        
         //Save the current project into the github repo
-        if(currentRepoName != null){
+        if(GlobalVariables.currentRepoName != null){
             
             //Store the target repo incase a new project is loaded during the save
-            const saveRepoName = currentRepoName
-            const saveUser = currentUser
+            const saveRepoName = GlobalVariables.currentRepoName
+            const saveUser = GlobalVariables.currentUser
             
             if(typeof intervalTimer != undefined){
                 clearInterval(intervalTimer) //Turn off auto saving to prevent it from saving again during this save
             }
-            this.progressSave(0)
+            //this.progressSave(0)
             // var shape = null
 
             // if(GlobalVariables.topLevelMolecule.value != null && typeof GlobalVariables.topLevelMolecule.value != 'number'){
@@ -806,7 +795,7 @@ export default function GitHubModule(){
                 const values = {op: "svg", readPath: GlobalVariables.topLevelMolecule.path}
                 const {answer} = window.ask(values)
                 answer.then( answer => {
-                    this.progressSave(10)
+                    //this.progressSave(10)
                     
                     var contentSvg = answer //Would compute the svg picture here
                     
@@ -906,14 +895,14 @@ export default function GitHubModule(){
      * Create a commit as part of the saving process.
      */
     this.createCommit = async function(octokit, { owner, repo, base, changes }) {
-        this.progressSave(30)
+        //this.progressSave(30)
         let response
         
         if (!base) {
             response = await octokit.repos.get({ owner, repo })
             base = response.data.default_branch
         }
-        this.progressSave(40)
+       //this.progressSave(40)
         
         response = await octokit.repos.listCommits({
             owner,
@@ -924,7 +913,7 @@ export default function GitHubModule(){
         
         let latestCommitSha = response.data[0].sha
         const treeSha = response.data[0].commit.tree.sha
-        this.progressSave(60)
+        //this.progressSave(60)
       
         response = await octokit.git.createTree({
             owner,
@@ -948,7 +937,7 @@ export default function GitHubModule(){
             })
         })
         const newTreeSha = response.data.sha
-        this.progressSave(80)
+        //this.progressSave(80)
 
         response = await octokit.git.createCommit({
             owner,
@@ -959,7 +948,7 @@ export default function GitHubModule(){
         })
         latestCommitSha = response.data.sha
 
-        this.progressSave(90)
+        //this.progressSave(90)
       
         await octokit.git.updateRef({
             owner,
@@ -968,7 +957,7 @@ export default function GitHubModule(){
             ref: "heads/" + base,
             force: true
         })
-        this.progressSave(100)
+        //this.progressSave(100)
         console.warn("Project saved")
        
     }

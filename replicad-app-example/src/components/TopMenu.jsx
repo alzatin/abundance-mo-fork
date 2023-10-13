@@ -13,9 +13,9 @@ function TopMenu(props) {
     {
       id: "GitHub",
       buttonFunc: () => {
-        props.setPopUpOpen(true);
+        window.open("https://github.com/join");
       },
-      icon: "Open.svg",
+      icon: "GitHub.svg",
     },
     {
       id: "Read Me",
@@ -41,7 +41,7 @@ function TopMenu(props) {
     {
       id: "Save Project",
       buttonFunc: () => {
-        props.setPopUpOpen(true);
+        GlobalVariables.gitHub.saveProject();
       },
       icon: "Open.svg",
     },
