@@ -328,13 +328,13 @@ const ShowProjects = (props) => {
   );
 };
 
-function LoginPopUp() {
+function LoginPopUp(props) {
   // is called when user clicks on browse projects button to change state of userbrowsing
   const tryNoAuth = function () {
     setBrowsing(true);
   };
   const closePopUp = function () {
-    setTop(true);
+    props.setPopUpOpen(false);
   };
 
   const tryLogin = function (props) {
@@ -392,7 +392,10 @@ function LoginPopUp() {
       >
         <div>
           {" "}
-          <button className="closeButton" onClick={() => setTop(true)}>
+          <button
+            className="closeButton"
+            onClick={() => props.setPopUpOpen(false)}
+          >
             <img></img>
           </button>{" "}
         </div>

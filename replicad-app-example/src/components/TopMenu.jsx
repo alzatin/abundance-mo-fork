@@ -1,16 +1,64 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 
-function TopMenu() {
+function TopMenu(props) {
   const navItems = [
-    "Open",
-    "GitHub",
-    "Read Me",
-    "Bill of Materials",
-    "Share",
-    "Save Project",
-    "Pull Request",
-    "Delete Project",
+    {
+      id: "Open",
+      buttonFunc: () => {
+        props.setPopUpOpen(true);
+      },
+      icon: "Open.svg",
+    },
+    {
+      id: "GitHub",
+      buttonFunc: () => {
+        props.setPopUpOpen(true);
+      },
+      icon: "Open.svg",
+    },
+    {
+      id: "Read Me",
+      buttonFunc: () => {
+        props.setPopUpOpen(true);
+      },
+      icon: "Open.svg",
+    },
+    {
+      id: "Bill of Materials",
+      buttonFunc: () => {
+        props.setPopUpOpen(true);
+      },
+      icon: "Open.svg",
+    },
+    {
+      id: "Share",
+      buttonFunc: () => {
+        props.setPopUpOpen(true);
+      },
+      icon: "Open.svg",
+    },
+    {
+      id: "Save Project",
+      buttonFunc: () => {
+        props.setPopUpOpen(true);
+      },
+      icon: "Open.svg",
+    },
+    {
+      id: "Pull Request",
+      buttonFunc: () => {
+        props.setPopUpOpen(true);
+      },
+      icon: "Open.svg",
+    },
+    {
+      id: "Delete Project",
+      buttonFunc: () => {
+        props.setPopUpOpen(true);
+      },
+      icon: "Open.svg",
+    },
   ];
   /*{checks for top level variable and show go-up button if this is not top molecule  ::::
       i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way that doesn't use Useeffect()
@@ -80,10 +128,10 @@ function TopMenu() {
                 <img
                   className=" thumnail-logo"
                   alt={item}
-                  src={"/imgs/" + item + ".svg"}
-                  key={item}
-                  title={item + "-button"}
-                  onClick={() => console.log({ item })}
+                  src={"/imgs/" + item.id + ".svg"}
+                  key={item.id}
+                  title={item.id + "-button"}
+                  onClick={item.buttonFunc}
                 />
               </button>
             ))}

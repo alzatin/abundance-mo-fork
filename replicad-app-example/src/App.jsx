@@ -35,13 +35,15 @@ export default function ReplicadApp() {
     cad.createMesh(size).then((m) => setMesh(m));
   }, [size]);
 
+  const [popUpOpen, setPopUpOpen] = useState(true);
+
   return (
     <main>
-      <TopMenu />
+      <TopMenu setPopUpOpen={setPopUpOpen} />
       <div id="headerBar">
         <p> Maslow Create</p>
         <img className="thumnail-logo" src="/imgs/maslow-logo.png" alt="logo" />
-        <LoginPopUp />
+        {popUpOpen ? <LoginPopUp setPopUpOpen={setPopUpOpen} /> : null}
       </div>
       <FlowCanvas
         displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
