@@ -16,89 +16,6 @@ var currentUser = null;
 /**
  * Loads a project from github by name.
  */
-const loadProject = function (project) {
-  console.log(project);
-
-  GlobalVariables.gitHub.totalAtomCount = 0;
-  GlobalVariables.gitHub.numberOfAtomsToLoad = 0;
-
-  GlobalVariables.startTime = new Date().getTime();
-
-  /* if(typeof intervalTimer != undefined){
-        clearInterval(intervalTimer) //Turn off auto saving
-    }*/
-
-  //Clear and hide the popup
-  /* while (popup.firstChild) {
-        popup.removeChild(popup.firstChild)
-    }
-    popup.classList.add('off')
-    */
-  const currentRepoName = project.name;
-  //Load a blank project
-  GlobalVariables.topLevelMolecule = new Molecule({
-    x: 0,
-    y: 0,
-    topLevel: true,
-    atomType: "Molecule",
-  });
-
-  GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-  console.log(project.owner.login);
-  console.log(project.name);
-
-  octokit
-    .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
-      owner: project.owner.login,
-      repo: project.name,
-    })
-    .then((response) => {
-      console.log(response);
-
-      //content will be base64 encoded
-      let rawFile = JSON.parse(atob(response.data.content));
-
-      if (rawFile.filetypeVersion == 1) {
-        GlobalVariables.topLevelMolecule.deserialize(rawFile);
-      } else {
-        GlobalVariables.topLevelMolecule.deserialize(
-          this.convertFromOldFormat(rawFile)
-        );
-      }
-    });
-
-  /*octokit.repos.getContent({
-        owner: currentUser,
-        repo: projectName,
-        path: 'project.maslowcreate'
-    }).then(result => {
-        //content will be base64 encoded
-        let rawFile = JSON.parse(atob(result.data.content))
-        
-        if(rawFile.circleSegmentSize){
-            GlobalVariables.circleSegmentSize = rawFile.circleSegmentSize
-        }
-        
-        if(rawFile.filetypeVersion == 1){
-            GlobalVariables.topLevelMolecule.deserialize(rawFile)
-        }
-        else{
-            GlobalVariables.topLevelMolecule.deserialize(this.convertFromOldFormat(rawFile))
-        }
-    })*/
-  /*octokit.repos.get({
-        owner: currentUser,
-        repo: currentRepoName
-    }).then(result => {
-        GlobalVariables.fork = result.data.fork
-        if(!GlobalVariables.fork){
-            document.getElementById("pull_top").style.display = "none"
-        }
-        else{
-            document.getElementById("pull_top").style.display = "inline"
-        }
-    })*/
-};
 
 // initial pop up construction with github login button
 const InitialLog = ({ tryLogin, tryNoAuth }) => {
@@ -216,6 +133,7 @@ const ShowProjects = (props) => {
       </>
     );
   };
+  // show projects in list/ if username show user projects if not show all projects
   const ClassicBrowse = () => {
     return (
       <>
@@ -254,6 +172,52 @@ const ShowProjects = (props) => {
         </div>
       </>
     );
+  };
+  // loads project when clicked in browse
+  const loadProject = function (project) {
+    GlobalVariables.gitHub.totalAtomCount = 0;
+    GlobalVariables.gitHub.numberOfAtomsToLoad = 0;
+
+    GlobalVariables.startTime = new Date().getTime();
+
+    /* if(typeof intervalTimer != undefined){
+          clearInterval(intervalTimer) //Turn off auto saving
+      }*/
+
+    //Clear and hide the popup
+    /* while (popup.firstChild) {
+          popup.removeChild(popup.firstChild)
+      }
+      popup.classList.add('off')
+      */
+    const currentRepoName = project.name;
+    //Load a blank project
+    GlobalVariables.topLevelMolecule = new Molecule({
+      x: 0,
+      y: 0,
+      topLevel: true,
+      atomType: "Molecule",
+    });
+
+    GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+    octokit
+      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
+        owner: project.owner.login,
+        repo: project.name,
+      })
+      .then((response) => {
+        props.closePopUp();
+        //content will be base64 encoded
+        let rawFile = JSON.parse(atob(response.data.content));
+
+        if (rawFile.filetypeVersion == 1) {
+          GlobalVariables.topLevelMolecule.deserialize(rawFile);
+        } else {
+          GlobalVariables.topLevelMolecule.deserialize(
+            this.convertFromOldFormat(rawFile)
+          );
+        }
+      });
   };
   if (props.user == "") {
     console.log("no user");
@@ -377,6 +341,9 @@ function LoginPopUp() {
   const tryNoAuth = function () {
     setBrowsing(true);
   };
+  const closePopUp = function () {
+    setTop(true);
+  };
 
   const tryLogin = function (props) {
     // Initialize with OAuth.io app public key
@@ -412,9 +379,11 @@ function LoginPopUp() {
   let popUpContent;
   if (!closed) {
     if (isloggedIn) {
-      popUpContent = <ShowProjects user={currentUser} />;
+      popUpContent = (
+        <ShowProjects user={currentUser} closePopUp={closePopUp} />
+      );
     } else if (userBrowsing) {
-      popUpContent = <ShowProjects user={""} />;
+      popUpContent = <ShowProjects user={""} closePopUp={closePopUp} />;
     } else {
       popUpContent = <InitialLog tryLogin={tryLogin} tryNoAuth={tryNoAuth} />;
     }
