@@ -48,7 +48,6 @@ function TopMenu(props) {
     {
       id: "Pull Request",
       buttonFunc: () => {
-        console.log(GlobalVariables.currentRepo.default_branch);
         window.open(
           "https://github.com/" +
             GlobalVariables.currentRepo.full_name +
