@@ -176,6 +176,7 @@ const ShowProjects = (props) => {
   // loads project when clicked in browse mode
   const loadProject = function (project) {
     GlobalVariables.currentRepoName = project.name;
+    GlobalVariables.currentRepo = project;
     GlobalVariables.gitHub.totalAtomCount = 0;
     GlobalVariables.gitHub.numberOfAtomsToLoad = 0;
 

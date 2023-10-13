@@ -48,7 +48,17 @@ function TopMenu(props) {
     {
       id: "Pull Request",
       buttonFunc: () => {
-        props.setPopUpOpen(true);
+        console.log(GlobalVariables.currentRepo.default_branch);
+        window.open(
+          "https://github.com/" +
+            GlobalVariables.currentRepo.full_name +
+            "/compare/" +
+            GlobalVariables.currentRepo.default_branch +
+            "..." +
+            GlobalVariables.currentRepo.owner.login +
+            ":" +
+            GlobalVariables.currentRepo.default_branch
+        );
       },
       icon: "Open.svg",
     },
