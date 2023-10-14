@@ -371,7 +371,7 @@ function LoginPopUp(props) {
     props.setPopUpOpen(false);
   };
 
-  const tryLogin = function (props) {
+  const tryLogin = function () {
     // Initialize with OAuth.io app public key
     if (window.location.href.includes("private")) {
       OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
@@ -394,14 +394,14 @@ function LoginPopUp(props) {
         currentUser = response.data.login;
         GlobalVariables.currentUser = currentUser;
         if (currentUser) {
-          setIsLoggedIn(true);
+          props.setIsLoggedIn(true);
         }
       });
     });
   };
   const [closed, setTop] = useState(false);
   const [userBrowsing, setBrowsing] = useState(false);
-  const [isloggedIn, setIsLoggedIn] = useState(false);
+  var isloggedIn = props.isloggedIn;
 
   let popUpContent;
   if (!closed) {

@@ -6,6 +6,9 @@ function TopMenu(props) {
     {
       id: "Open",
       buttonFunc: () => {
+        if (GlobalVariables.currentUser != undefined) {
+          props.setIsLoggedIn(true);
+        }
         props.setPopUpOpen(true);
       },
       icon: "Open.svg",

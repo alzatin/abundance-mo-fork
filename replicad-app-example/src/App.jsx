@@ -36,14 +36,21 @@ export default function ReplicadApp() {
   }, [size]);
 
   const [popUpOpen, setPopUpOpen] = useState(true);
+  const [isloggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <main>
-      <TopMenu setPopUpOpen={setPopUpOpen} />
+      <TopMenu setPopUpOpen={setPopUpOpen} setIsLoggedIn={setIsLoggedIn} />
       <div id="headerBar">
         <p> Maslow Create</p>
         <img className="thumnail-logo" src="/imgs/maslow-logo.png" alt="logo" />
-        {popUpOpen ? <LoginPopUp setPopUpOpen={setPopUpOpen} /> : null}
+        {popUpOpen ? (
+          <LoginPopUp
+            setIsLoggedIn={setIsLoggedIn}
+            isloggedIn={isloggedIn}
+            setPopUpOpen={setPopUpOpen}
+          />
+        ) : null}
       </div>
       <FlowCanvas
         displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
