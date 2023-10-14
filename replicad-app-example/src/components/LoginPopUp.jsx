@@ -161,44 +161,50 @@ const ShowProjects = (props) => {
   const ClassicBrowse = () => {
     return (
       <>
-        <div className="top_browse_menu">
-          <div
-            onClick={() => {
-              setNewProjectPopUp(true);
-            }}
-            className="newProjectDiv"
-          >
-            <span style={{ alignSelf: "center" }}>Start a new project</span>
-            <img
-              src="/imgs/defaultThumbnail.svg"
-              style={{ height: "80%", float: "left" }}
-            ></img>
-          </div>
+        {props.isloggedIn ? (
+          <div className="top_browse_menu">
+            <div
+              onClick={() => {
+                setNewProjectPopUp(true);
+              }}
+              className="newProjectDiv"
+            >
+              <span style={{ alignSelf: "center" }}>Start a new project</span>
+              <img
+                src="/imgs/defaultThumbnail.svg"
+                style={{ height: "80%", float: "left" }}
+              ></img>
+            </div>
 
-          {!props.userBrowsing ? (
-            <div
-              className="newProjectDiv"
-              onClick={() => props.setBrowsing(true)}
-            >
-              <span style={{ alignSelf: "center" }}>Browse Other Projects</span>
-              <img
-                src="/imgs/defaultThumbnail.svg"
-                style={{ height: "80%", float: "right" }}
-              ></img>
-            </div>
-          ) : (
-            <div
-              className="newProjectDiv"
-              onClick={() => props.setBrowsing(false)}
-            >
-              <span style={{ alignSelf: "center" }}>Return to my Projects</span>
-              <img
-                src="/imgs/defaultThumbnail.svg"
-                style={{ height: "80%", float: "right" }}
-              ></img>
-            </div>
-          )}
-        </div>
+            {!props.userBrowsing ? (
+              <div
+                className="newProjectDiv"
+                onClick={() => props.setBrowsing(true)}
+              >
+                <span style={{ alignSelf: "center" }}>
+                  Browse Other Projects
+                </span>
+                <img
+                  src="/imgs/defaultThumbnail.svg"
+                  style={{ height: "80%", float: "right" }}
+                ></img>
+              </div>
+            ) : (
+              <div
+                className="newProjectDiv"
+                onClick={() => props.setBrowsing(false)}
+              >
+                <span style={{ alignSelf: "center" }}>
+                  Return to my Projects
+                </span>
+                <img
+                  src="/imgs/defaultThumbnail.svg"
+                  style={{ height: "80%", float: "right" }}
+                ></img>
+              </div>
+            )}
+          </div>
+        ) : null}
 
         <div className="project-item-div">
           <ul>
@@ -291,20 +297,25 @@ const ShowProjects = (props) => {
             alt="logo"
             style={{ height: "20px", padding: "10px" }}
           />
-          <button
-            className="form browseButton githubSign"
-            id="loginButton2"
-            style={{ width: "90px", fontSize: ".7rem", marginLeft: "auto" }}
-          >
-            Login
-          </button>
-          <button
-            className="form browseButton githubSign"
-            onClick={() => openInNewTab("https://github.com/join")}
-            style={{ width: "130px", fontSize: ".7rem", marginLeft: "5px" }}
-          >
-            Create an Account
-          </button>
+          {!props.isloggedIn ? (
+            <>
+              <button
+                className="form browseButton githubSign"
+                id="loginButton2"
+                onClick={props.tryLogin}
+                style={{ width: "90px", fontSize: ".7rem", marginLeft: "auto" }}
+              >
+                Login
+              </button>
+              <button
+                className="form browseButton githubSign"
+                onClick={() => openInNewTab("https://github.com/join")}
+                style={{ width: "130px", fontSize: ".7rem", marginLeft: "5px" }}
+              >
+                Create an Account
+              </button>
+            </>
+          ) : null}
         </div>
         <div className="search-bar-div">
           <input
@@ -383,6 +394,7 @@ function LoginPopUp(props) {
           tryNoAuth={tryNoAuth}
           userBrowsing={userBrowsing}
           setBrowsing={setBrowsing}
+          isloggedIn={isloggedIn}
         />
       );
     } else if (userBrowsing) {
@@ -392,6 +404,8 @@ function LoginPopUp(props) {
           closePopUp={closePopUp}
           userBrowsing={userBrowsing}
           setBrowsing={setBrowsing}
+          isloggedIn={isloggedIn}
+          tryLogin={tryLogin}
         />
       );
     } else {
