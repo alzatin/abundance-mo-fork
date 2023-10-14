@@ -84,14 +84,16 @@ const ShowProjects = (props) => {
   const [nodes, setNodes] = useState([]);
   const [projectsLoaded, setStateLoaded] = React.useState(false);
   const [projectPopUp, setNewProjectPopUp] = useState(false);
+  const [searchBarValue, setSearchBarValue] = useState("");
 
-  // conditional show all maslow projects if no user name or owned if username
+  // conditional query for maslow projects
   useEffect(() => {
     var query;
     if (props.user == "" || props.userBrowsing) {
-      query = "topic:maslowcreate";
+      query = searchBarValue + " topic:maslowcreate";
     } else {
-      query = " " + "fork:true user:" + props.user + " topic:maslowcreate";
+      query =
+        searchBarValue + "fork:true user:" + props.user + " topic:maslowcreate";
     }
     octokit = new Octokit();
     octokit
@@ -110,7 +112,7 @@ const ShowProjects = (props) => {
         setNodes([...userRepos]);
         setStateLoaded(true);
       });
-  }, [props.userBrowsing]);
+  }, [props.userBrowsing, searchBarValue]);
 
   //Replaces the loaded projects if the user clicks on new project button
   const NewProjectPopUp = () => {
@@ -246,7 +248,6 @@ const ShowProjects = (props) => {
       })
       .then((response) => {
         props.closePopUp();
-        console.log(GlobalVariables.currentUser);
         //content will be base64 encoded
         let rawFile = JSON.parse(atob(response.data.content));
 
@@ -278,6 +279,11 @@ const ShowProjects = (props) => {
 
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchBarValue(e.target.value);
+    console.log(searchBarValue);
   };
 
   return (
@@ -321,6 +327,8 @@ const ShowProjects = (props) => {
           <input
             type="text"
             contentEditable="true"
+            value={searchBarValue}
+            onChange={handleSearchChange}
             placeholder="Search for project.."
             className="menu_search browseButton"
             id="project_search"

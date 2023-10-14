@@ -188,6 +188,7 @@ export default function GitHubModule(){
         searchBar.setAttribute("class", "menu_search")
         searchBar.setAttribute("id", "project_search")
         middleBrowseDiv.appendChild(searchBar)
+        
 
         //Display option buttons
         var browseDisplay1 = document.createElement("div")
