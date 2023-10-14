@@ -66,7 +66,9 @@ const InitialLog = (props) => {
             <button
               type="button"
               className="submit-btn browseButton"
-              onClick={props.tryNoAuth}
+              onClick={() => {
+                props.setBrowsing(true);
+              }}
               id="browseNonGit"
               style={{ padding: "0 30px" }}
             >
@@ -99,7 +101,7 @@ const ShowProjects = (props) => {
     octokit
       .request("GET /search/repositories", {
         q: query,
-        per_page: 100,
+        per_page: 50,
         headers: {
           accept: "application/vnd.github.mercy-preview+json",
         },
@@ -283,7 +285,6 @@ const ShowProjects = (props) => {
 
   const handleSearchChange = (e) => {
     setSearchBarValue(e.target.value);
-    console.log(searchBarValue);
   };
 
   return (
@@ -351,11 +352,6 @@ const ShowProjects = (props) => {
 };
 
 function LoginPopUp(props) {
-  // is called when user clicks on browse projects button to change state of userbrowsing
-  const tryNoAuth = function () {
-    console.log("trynoauth");
-    setBrowsing(true);
-  };
   const closePopUp = function () {
     props.setPopUpOpen(false);
   };
@@ -417,7 +413,9 @@ function LoginPopUp(props) {
         />
       );
     } else {
-      popUpContent = <InitialLog tryLogin={tryLogin} tryNoAuth={tryNoAuth} />;
+      popUpContent = (
+        <InitialLog tryLogin={tryLogin} setBrowsing={setBrowsing} />
+      );
     }
     return (
       <div
