@@ -313,10 +313,6 @@ body {
   vertical-align: middle;
 }
 
-#box {
-  border: 1px solid #999;
-}
-
 .menu {
   /* old menu.. keeping for search bar features */
   display: none;

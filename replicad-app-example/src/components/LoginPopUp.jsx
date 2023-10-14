@@ -211,21 +211,14 @@ const ShowProjects = (props) => {
         ) : null}
 
         <div className="project-item-div">
-          <ul>
-            {projectsLoaded ? (
-              <ul>
-                <AddProject />
-              </ul>
-            ) : (
-              "no"
-            )}
-          </ul>
+          {projectsLoaded ? <AddProject /> : "no"}
         </div>
       </>
     );
   };
   // Loads project when clicked in browse mode
   const loadProject = function (project) {
+    console.log(project);
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
     GlobalVariables.gitHub.totalAtomCount = 0;
@@ -273,8 +266,29 @@ const ShowProjects = (props) => {
         id={node.name}
         onClick={(e) => loadProject(node, e)}
       >
-        <li>{node.name}</li>
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "80%",
+          }}
+        >
+          {node.name}
+        </p>
         <img className="project_image" src="/imgs/defaultThumbnail.svg"></img>
+        <div style={{ display: "flex" }}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ transform: "scale(.7)" }}
+            width="16"
+            height="16"
+          >
+            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+          </svg>
+          <p>{node.stargazers_count}</p>
+        </div>
       </div>
     ));
   };
@@ -395,7 +409,6 @@ function LoginPopUp(props) {
         <ShowProjects
           user={currentUser}
           closePopUp={closePopUp}
-          tryNoAuth={tryNoAuth}
           userBrowsing={userBrowsing}
           setBrowsing={setBrowsing}
           isloggedIn={isloggedIn}
@@ -423,7 +436,6 @@ function LoginPopUp(props) {
         id="projects-popup"
         style={{
           padding: "0",
-          backgroundColor: "#f9f6f6",
           border: "10px solid #3e3d3d",
         }}
       >
