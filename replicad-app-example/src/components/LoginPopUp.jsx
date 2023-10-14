@@ -3,6 +3,7 @@ import GlobalVariables from "./js/globalvariables.js";
 import { OAuth } from "oauthio-web";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
+import { nullDependencies } from "mathjs";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
 //var PopUpState = true;
@@ -211,7 +212,7 @@ const ShowProjects = (props) => {
         ) : null}
 
         <div className="project-item-div">
-          {projectsLoaded ? <AddProject /> : "no"}
+          {projectsLoaded ? <AddProject /> : null}
         </div>
       </>
     );
