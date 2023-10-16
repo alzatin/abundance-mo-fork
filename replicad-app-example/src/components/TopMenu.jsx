@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 
 function TopMenu(props) {
-  const [currentMoleculeTop, setTop] = useState(true);
+  const [currentMoleculeTop, setTop] = useState(false);
   // objects for navigation items in the top menu
   const navItems = [
     {
