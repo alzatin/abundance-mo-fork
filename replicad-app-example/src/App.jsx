@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import FileSaver from "file-saver";
 import { wrap } from "comlink";
@@ -7,16 +7,17 @@ import { wrap } from "comlink";
 // import ThreeContext from "./components/ThreeContext.jsx";
 // import ReplicadMesh from "./components/ReplicadMesh.jsx";
 import TodoList from "./TodoList.jsx";
-import FlowCanvas from './components/flowCanvas.jsx';
+import FlowCanvas from "./components/flowCanvas.jsx";
 import LowerHalf from "./components/lowerHalf.jsx";
 import LoginPopUp from "./components/LoginPopUp.jsx";
+import TopMenu from "./components/TopMenu.jsx";
 
 import cadWorker from "./worker.js?worker";
 
-import './maslowCreate.css';
-import './menuIcons.css';
-import './login.css';
-import './codemirror.css';
+import "./maslowCreate.css";
+import "./menuIcons.css";
+import "./login.css";
+import "./codemirror.css";
 
 const cad = wrap(new cadWorker());
 
@@ -34,15 +35,29 @@ export default function ReplicadApp() {
     cad.createMesh(size).then((m) => setMesh(m));
   }, [size]);
 
+  const [popUpOpen, setPopUpOpen] = useState(true);
+  const [isloggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <main>
-      <div id= "headerBar">
-      <p> Maslow Create</p> 
-      <img className="thumnail-logo" src='/imgs/maslow-logo.png' alt="logo"/>
-      <LoginPopUp/>
+      <TopMenu setPopUpOpen={setPopUpOpen} setIsLoggedIn={setIsLoggedIn} />
+      <div id="headerBar">
+        <p> Maslow Create</p>
+        <img className="thumnail-logo" src="/imgs/maslow-logo.png" alt="logo" />
+        {popUpOpen ? (
+          <LoginPopUp
+            setIsLoggedIn={setIsLoggedIn}
+            isloggedIn={isloggedIn}
+            setPopUpOpen={setPopUpOpen}
+          />
+        ) : null}
       </div>
-      <FlowCanvas displayProps ={{mesh: mesh, setMesh:setMesh, size:size, cad:cad}}/>
-      <LowerHalf displayProps ={{mesh: mesh, setMesh:setMesh, size:size, cad:cad}}/>
+      <FlowCanvas
+        displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
+      />
+      <LowerHalf
+        displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
+      />
     </main>
   );
 }

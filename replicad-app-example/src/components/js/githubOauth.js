@@ -57,63 +57,7 @@ export default function GitHubModule(){
      */
     var page = 1
 
-    //Github pop up event listeners
-    // document.getElementById("loginButton").addEventListener("mousedown", () => {
-    //     this.tryLogin()
-    // })
 
-    // makes initial call to search for user projects
-    this.searchUserProjects= function(){
-        octokit.request('GET /search/repositories', { 
-            q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
-            per_page: 50,
-            headers: {
-                accept: 'application/vnd.github.mercy-preview+json'
-            }
-        }).then(result => {
-            var repo_names =[]
-            result.data.items.forEach(repo => {
-                repo_names.push(repo.name)
-                
-            })
-            return repo_names
-        }) 
-    }
-    
-    /** 
-     * Try to login using the oauth popup.
-     */
-    this.tryLogin = function(){
-        
-        // Initialize with OAuth.io app public key
-        if(window.location.href.includes('private')){
-            OAuth.initialize('6CQQE8MMCBFjdWEjevnTBMCQpsw') //app public key for repo scope
-        }
-        else{
-            OAuth.initialize('BYP9iFpD7aTV9SDhnalvhZ4fwD8') //app public key for public_repo scope
-        }
-        
-        // Use popup for oauth
-        OAuth.popup('github').then(github => {
-            /** 
-             * Oktokit object to access github
-             * @type {object}
-             */
-           
-            octokit = new Octokit({
-                auth: github.access_token
-            })
-            //getting current user post authetication
-            octokit.request('GET /user', {
-              }).then(response => {
-                currentUser = response.data.login;
-                
-                this.searchUserProjects()
-                
-              })      
-        })
-    }
-    
     /** 
      * Display projects which can be loaded in the popup.
      */
@@ -122,17 +66,7 @@ export default function GitHubModule(){
         while (popup.firstChild) {
             popup.removeChild(popup.firstChild)
         }
-        /*
-        //Close button (Mac style) - 
-        if(GlobalVariables.topLevelMolecule && GlobalVariables.topLevelMolecule.name != "top level - fix close button"){ //Only offer a close button if there is a project to go back to
-            var closeButton = document.createElement("button")
-            closeButton.setAttribute("class", "closeButton")
-            closeButton.addEventListener("click", () => {
-                popup.classList.add('off')
-            })
-            popup.appendChild(closeButton)
-        }
-        */
+       
         //Welcome title
         var welcome = document.createElement("div")
         welcome.setAttribute("style", " display: flex; margin: 10px; align-items: center;")
@@ -198,6 +132,7 @@ export default function GitHubModule(){
         searchBar.setAttribute("class", "menu_search")
         searchBar.setAttribute("id", "project_search")
         middleBrowseDiv.appendChild(searchBar)
+
 
         //Display option buttons
         var browseDisplay1 = document.createElement("div")
@@ -343,11 +278,7 @@ export default function GitHubModule(){
                 owned = false
                 query = searchString + ' topic:maslowcreate -user:' + currentUser
             }
-            
-            //Figure out how many repos this user has, search will throw an error if they have 0;
-            // octokit.repos.list({
-            // affiliation: 'owner',
-            // })
+
             
             return octokit.search.repos({
                 q: query,
@@ -575,34 +506,6 @@ export default function GitHubModule(){
     }
     
     /** 
-     * Open a new tab with the README page for the project.
-     */
-    this.openREADMEPage = function(){
-        //Open the github page for the current project in a new tab
-        octokit.repos.get({
-            owner: currentUser,
-            repo: currentRepoName
-        }).then(result => {
-            var url = result.data.html_url + '/blob/master/README.md'
-            window.open(url)
-        })
-    }
-    
-    /** 
-     * Open a new tab with the Bill Of Materials page for the project.
-     */
-    this.openBillOfMaterialsPage = function(){
-        //Open the github page for the current project in a new tab
-        octokit.repos.get({
-            owner: currentUser,
-            repo: currentRepoName
-        }).then(result => {
-            var url = result.data.html_url + '/blob/master/BillOfMaterials.md'
-            window.open(url)
-        })
-    }
-    
-    /** 
      * Search github for projects which match a string.
      */
     this.searchGithub = async (searchString,owned) => {
@@ -627,36 +530,8 @@ export default function GitHubModule(){
         })
     }
     
-    /** 
-     * Send user to GitHub settings page to delete project.
-     */
-    this.deleteProject = function(){
-        //Open the github page for the current project in a new tab
-        octokit.repos.get({
-            owner: currentUser,
-            repo: currentRepoName
-        }).then(result => {
-            var url = result.data.html_url + '/settings'
-            window.open(url)
-        })
-    }
-
-    /** 
-     * Open pull request if it's a forked project.
-     */
-    this.makePullRequest = function(){
-      
-        //Open the github page for making a pull request to the current project in a new tab
-        octokit.repos.get({
-            owner: currentUser,
-            repo: currentRepoName
-        }).then(result => {
-            
-            const webString = "https://github.com/" + result.data.parent.full_name + "/compare/" + result.data.parent.default_branch + "..." + result.data.owner.login + ":" + result.data.default_branch
-            
-            window.open(webString)
-        })
-    }
+   
+  
     
     /** 
      * Creates a new blank project.
@@ -784,18 +659,17 @@ export default function GitHubModule(){
      * Save the current project to github.
      */
     this.saveProject = function(){
-        
         //Save the current project into the github repo
-        if(currentRepoName != null){
+        if(GlobalVariables.currentRepoName != null){
             
             //Store the target repo incase a new project is loaded during the save
-            const saveRepoName = currentRepoName
-            const saveUser = currentUser
+            const saveRepoName = GlobalVariables.currentRepoName
+            const saveUser = GlobalVariables.currentUser
             
             if(typeof intervalTimer != undefined){
                 clearInterval(intervalTimer) //Turn off auto saving to prevent it from saving again during this save
             }
-            this.progressSave(0)
+            //this.progressSave(0)
             // var shape = null
 
             // if(GlobalVariables.topLevelMolecule.value != null && typeof GlobalVariables.topLevelMolecule.value != 'number'){
@@ -806,7 +680,7 @@ export default function GitHubModule(){
                 const values = {op: "svg", readPath: GlobalVariables.topLevelMolecule.path}
                 const {answer} = window.ask(values)
                 answer.then( answer => {
-                    this.progressSave(10)
+                    //this.progressSave(10)
                     
                     var contentSvg = answer //Would compute the svg picture here
                     
@@ -906,14 +780,14 @@ export default function GitHubModule(){
      * Create a commit as part of the saving process.
      */
     this.createCommit = async function(octokit, { owner, repo, base, changes }) {
-        this.progressSave(30)
+        //this.progressSave(30)
         let response
         
         if (!base) {
             response = await octokit.repos.get({ owner, repo })
             base = response.data.default_branch
         }
-        this.progressSave(40)
+       //this.progressSave(40)
         
         response = await octokit.repos.listCommits({
             owner,
@@ -924,7 +798,7 @@ export default function GitHubModule(){
         
         let latestCommitSha = response.data[0].sha
         const treeSha = response.data[0].commit.tree.sha
-        this.progressSave(60)
+        //this.progressSave(60)
       
         response = await octokit.git.createTree({
             owner,
@@ -948,7 +822,7 @@ export default function GitHubModule(){
             })
         })
         const newTreeSha = response.data.sha
-        this.progressSave(80)
+        //this.progressSave(80)
 
         response = await octokit.git.createCommit({
             owner,
@@ -959,7 +833,7 @@ export default function GitHubModule(){
         })
         latestCommitSha = response.data.sha
 
-        this.progressSave(90)
+        //this.progressSave(90)
       
         await octokit.git.updateRef({
             owner,
@@ -968,7 +842,7 @@ export default function GitHubModule(){
             ref: "heads/" + base,
             force: true
         })
-        this.progressSave(100)
+        //this.progressSave(100)
         console.warn("Project saved")
        
     }
@@ -978,7 +852,7 @@ export default function GitHubModule(){
      */
     this.loadProject = async function(project){
         
-        console.log(project)
+        console.log("project clicked: "+ project)
 
         this.totalAtomCount = 0
         this.numberOfAtomsToLoad = 0
@@ -1006,10 +880,12 @@ export default function GitHubModule(){
         
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule
         
-        octokit.request('GET /repos/{owner}/{repo}/content', {
+        octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
             owner: project.owner,
             repo: project.name,
+            path: 'project.maslowcreate'
         }).then(response => {
+          console.log("Response: ")
           console.log(response)
         })  
         /*octokit.repos.getContent({

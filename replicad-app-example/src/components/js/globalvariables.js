@@ -107,6 +107,22 @@ class GlobalVariables{
          */
         this.currentMolecule
         /** 
+         * A reference to logged in authenticated.
+         * @type {string}
+         */
+        this.currentUser
+        /** 
+          /** 
+         * A reference to the selected repository authenticated.
+         * @type {string}
+         */
+        this.currentRepoName
+           /** 
+         * A reference to the selected repository authenticated.
+         * @type {string}
+         */
+           this.currentRepo
+        /** 
          * A reference to the top level molecule of the project.
          * @type {object}
          */
