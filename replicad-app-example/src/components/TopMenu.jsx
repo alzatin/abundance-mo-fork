@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 
 function TopMenu(props) {
+  const [currentMoleculeTop, setTop] = useState(true);
   // objects for navigation items in the top menu
   const navItems = [
     {
@@ -99,19 +100,19 @@ function TopMenu(props) {
   /*{checks for top level variable and show go-up button if this is not top molecule  ::::
       i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way that doesn't use Useeffect()
       } (CAN'T FIGURE OUT HOW TO MAKE IT WAIT FOR GLOBALVARIABLES)*/
-  const TopLevel = () => {
-    const [currentMoleculeTop, setTop] = useState(false);
-
+  const TopLevel = (props) => {
     const ref = useRef();
     // if (GlobalVariables.currentMolecule.topLevel) changes check if it's still a top level molecule to display goUp button
     useEffect(() => {
-      if (!GlobalVariables.currentMolecule.topLevel) {
-        setTop(true);
+      if (GlobalVariables.currentMolecule !== undefined) {
+        if (!GlobalVariables.currentMolecule.topLevel) {
+          props.setTop(true);
+        }
       }
-    }, [GlobalVariables.currentMolecule.topLevel]);
+    }, []);
     return (
       <>
-        {currentMoleculeTop && (
+        {props.currentMoleculeTop && (
           <img
             className="nav-img nav-bar thumnail-logo"
             src={"/imgs/Go Up.svg"}
@@ -124,7 +125,7 @@ function TopMenu(props) {
   };
 
   /*{nav bar toggle component}*/
-  const Navbar = () => {
+  const Navbar = (props) => {
     const [navbarOpen, setNavbarOpen] = useState(false);
     const ref = useRef();
     useEffect(() => {
@@ -148,12 +149,16 @@ function TopMenu(props) {
           >
             {navbarOpen ? (
               <img
-                className="thumnail-logo nav-img"
+                className={`thumnail-logo nav-img ${
+                  !props.currentMoleculeTop ? " rotati-right" : ""
+                }`}
                 src={"/imgs/three-menu.svg"}
               />
             ) : (
               <img
-                className="thumnail-logo nav-img rotati"
+                className={`thumnail-logo nav-img  ${
+                  !props.currentMoleculeTop ? " rotati-plus " : "rotati"
+                }`}
                 src={"/imgs/three-menu.svg"}
               />
             )}
@@ -180,8 +185,8 @@ function TopMenu(props) {
 
   return (
     <>
-      <TopLevel />
-      <Navbar />
+      <TopLevel currentMoleculeTop={currentMoleculeTop} setTop={setTop} />
+      <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>
   );
 }
