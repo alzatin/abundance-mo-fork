@@ -57,63 +57,7 @@ export default function GitHubModule(){
      */
     var page = 1
 
-    //Github pop up event listeners
-    // document.getElementById("loginButton").addEventListener("mousedown", () => {
-    //     this.tryLogin()
-    // })
 
-    // makes initial call to search for user projects
-    this.searchUserProjects= function(){
-        octokit.request('GET /search/repositories', { 
-            q: ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate',
-            per_page: 50,
-            headers: {
-                accept: 'application/vnd.github.mercy-preview+json'
-            }
-        }).then(result => {
-            var repo_names =[]
-            result.data.items.forEach(repo => {
-                repo_names.push(repo.name)
-                
-            })
-            return repo_names
-        }) 
-    }
-    
-    /** 
-     * Try to login using the oauth popup.
-     */
-    this.tryLogin = function(){
-        
-        // Initialize with OAuth.io app public key
-        if(window.location.href.includes('private')){
-            OAuth.initialize('6CQQE8MMCBFjdWEjevnTBMCQpsw') //app public key for repo scope
-        }
-        else{
-            OAuth.initialize('BYP9iFpD7aTV9SDhnalvhZ4fwD8') //app public key for public_repo scope
-        }
-        
-        // Use popup for oauth
-        OAuth.popup('github').then(github => {
-            /** 
-             * Oktokit object to access github
-             * @type {object}
-             */
-           
-            octokit = new Octokit({
-                auth: github.access_token
-            })
-            //getting current user post authetication
-            octokit.request('GET /user', {
-              }).then(response => {
-                currentUser = response.data.login;
-                
-                this.searchUserProjects()
-                
-              })      
-        })
-    }
-    
     /** 
      * Display projects which can be loaded in the popup.
      */
@@ -188,7 +132,7 @@ export default function GitHubModule(){
         searchBar.setAttribute("class", "menu_search")
         searchBar.setAttribute("id", "project_search")
         middleBrowseDiv.appendChild(searchBar)
-        
+
 
         //Display option buttons
         var browseDisplay1 = document.createElement("div")
@@ -334,11 +278,7 @@ export default function GitHubModule(){
                 owned = false
                 query = searchString + ' topic:maslowcreate -user:' + currentUser
             }
-            
-            //Figure out how many repos this user has, search will throw an error if they have 0;
-            // octokit.repos.list({
-            // affiliation: 'owner',
-            // })
+
             
             return octokit.search.repos({
                 q: query,
