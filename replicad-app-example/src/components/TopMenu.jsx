@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 
 function TopMenu(props) {
+  // objects for navigation items in the top menu
   const navItems = [
     {
       id: "Open",
@@ -102,11 +103,12 @@ function TopMenu(props) {
     const [currentMoleculeTop, setTop] = useState(false);
 
     const ref = useRef();
+    // if (GlobalVariables.currentMolecule.topLevel) changes check if it's still a top level molecule to display goUp button
     useEffect(() => {
-      if (false) {
-        setTop(false);
+      if (!GlobalVariables.currentMolecule.topLevel) {
+        setTop(true);
       }
-    }, [currentMoleculeTop]);
+    }, [GlobalVariables.currentMolecule.topLevel]);
     return (
       <>
         {currentMoleculeTop && (
