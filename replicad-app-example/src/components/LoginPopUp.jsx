@@ -4,6 +4,7 @@ import { OAuth } from "oauthio-web";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
 import { nullDependencies } from "mathjs";
+import { licenses } from "./js/licenseOptions.js";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
 //var PopUpState = true;
@@ -119,6 +120,11 @@ const ShowProjects = (props) => {
 
   //Replaces the loaded projects if the user clicks on new project button
   const NewProjectPopUp = () => {
+    const keys_ar = [];
+    Object.keys(licenses).forEach((key) => {
+      keys_ar.push(key);
+    });
+
     return (
       <>
         <div>
@@ -139,7 +145,12 @@ const ShowProjects = (props) => {
                   <label for="">Tags</label>
                 </div>
               </div>
-              <select id="license-options"></select>
+
+              <select id="license-options">
+                {keys_ar.map((opt) => {
+                  return <option>{opt}</option>;
+                })}
+              </select>
               <div className="form-row">
                 <div className="input-data textarea">
                   <textarea rows="8" cols="80"></textarea>
@@ -147,11 +158,11 @@ const ShowProjects = (props) => {
                   <div className="underline"></div>
                   <label for="">Project Description</label>
                   <br />
-
                   <div className="submit-btn">
                     <div className="input-data">
                       <div className="inner"></div>
-                      <input type="Create" value="Create"></input>
+
+                      <input type="Submit"></input>
                     </div>
                   </div>
                 </div>
@@ -219,7 +230,7 @@ const ShowProjects = (props) => {
   };
   // Loads project when clicked in browse mode
   const loadProject = function (project) {
-    console.log(project);
+    //should non owners get a different load ?  window.open("/run?" + project.id);
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
     GlobalVariables.gitHub.totalAtomCount = 0;
