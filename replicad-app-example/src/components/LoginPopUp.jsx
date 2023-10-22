@@ -30,139 +30,28 @@ var readmeHeader =
  * @type {object}
  */
 var intervalTimer;
-
-var octokit = null;
-var currentUser = null;
-var authorizedUserOcto = null;
-var currentRepoName = null;
-
-const createProject = async () => {
-  const name = document.getElementById("project-name").value;
-  const description = document.getElementById("project-description").value;
-  const licenseText =
-    licenses[document.getElementById("license-options").value];
-
-  //Load a blank project
-  GlobalVariables.topLevelMolecule = new Molecule({
-    x: 0,
-    y: 0,
-    topLevel: true,
-    name: name,
-    atomType: "Molecule",
-    uniqueID: GlobalVariables.generateUniqueID(),
-  });
-
-  GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-  await authorizedUserOcto
-    .request("POST /user/repos", {
-      name: name,
-      description: description,
-      headers: {
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-    })
-    .then((result) => {
-      console.log(result);
-      //Once we have created the new repo we need to create a file within it to store the project in
-      currentRepoName = result.data.name;
-      var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
-      jsonRepOfProject.filetypeVersion = 1;
-      jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
-      const projectContent = window.btoa(
-        JSON.stringify(jsonRepOfProject, null, 4)
-      );
-
-      authorizedUserOcto.rest.repos
-        .createOrUpdateFileContents({
-          owner: currentUser,
-          repo: currentRepoName,
-          path: "project.maslowcreate",
-          message: "initialize repo",
-          content: projectContent,
-        })
-        .then(() => {
-          //Then create the BOM file
-          var content = window.btoa(bomHeader); // create a file with just the header in it and base64 encode it
-          authorizedUserOcto.rest.repos
-            .createOrUpdateFileContents({
-              owner: currentUser,
-              repo: currentRepoName,
-              path: "BillOfMaterials.md",
-              message: "initialize BOM",
-              content: content,
-            })
-            .then(() => {
-              //Then create the README file
-              content = window.btoa(readmeHeader); // create a file with just the word "init" in it and base64 encode it
-              authorizedUserOcto.rest.repos
-                .createOrUpdateFileContents({
-                  owner: currentUser,
-                  repo: currentRepoName,
-                  path: "README.md",
-                  message: "initialize README",
-                  content: content,
-                })
-                .then(() => {
-                  authorizedUserOcto.rest.repos
-                    .createOrUpdateFileContents({
-                      owner: currentUser,
-                      repo: currentRepoName,
-                      path: "project.svg",
-                      message: "SVG Picture",
-                      content: "",
-                    })
-                    .then(() => {
-                      authorizedUserOcto.rest.repos
-                        .createOrUpdateFileContents({
-                          owner: currentUser,
-                          repo: currentRepoName,
-                          path: ".gitattributes",
-                          message: "Create gitattributes",
-                          content: window.btoa("data binary"),
-                        })
-                        .then(() => {
-                          authorizedUserOcto.rest.repos
-                            .createOrUpdateFileContents({
-                              owner: currentUser,
-                              repo: currentRepoName,
-                              path: "data.json",
-                              message: "Data file",
-                              content: "",
-                            })
-                            .then(() => {
-                              authorizedUserOcto.rest.repos
-                                .createOrUpdateFileContents({
-                                  owner: currentUser,
-                                  repo: currentRepoName,
-                                  path: "LICENSE.txt",
-                                  message: "Establish license",
-                                  content: window.btoa(licenseText),
-                                })
-                                .then(() => {
-                                  intervalTimer = setInterval(() => {
-                                    this.saveProject();
-                                  }, 1200000); //Save the project regularly
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
-
-      //Update the project topics
-      authorizedUserOcto.rest.repos.replaceAllTopics({
-        owner: currentUser,
-        repo: currentRepoName,
-        names: ["maslowcreate", "maslowcreate-project"],
-        headers: {
-          accept: "application/vnd.github.mercy-preview+json",
-        },
-      });
-    });
-};
 /**
- * Loads a project from github by name.
+ * The octokit instance which allows interaction with GitHub.
+ * @type {object}
+ */
+var octokit = null;
+/**
+ * The name of the current user.
+ * @type {string}
+ */
+var currentUser = null;
+/**
+ * The octokit instance which allows authenticated interaction with GitHub.
+ * @type {object}
+ */
+var authorizedUserOcto = null;
+/**
+ * The name of the current repo.
+ * @type {string}
+ */
+var currentRepoName = null;
+/**
+ * Creates a new blank project.
  */
 
 // initial pop up construction with github login button
@@ -264,6 +153,131 @@ const ShowProjects = (props) => {
       });
   }, [props.userBrowsing, searchBarValue]);
 
+  const createProject = async () => {
+    const name = document.getElementById("project-name").value;
+    const description = document.getElementById("project-description").value;
+    const licenseText =
+      licenses[document.getElementById("license-options").value];
+
+    //Load a blank project
+    GlobalVariables.topLevelMolecule = new Molecule({
+      x: 0,
+      y: 0,
+      topLevel: true,
+      name: name,
+      atomType: "Molecule",
+      uniqueID: GlobalVariables.generateUniqueID(),
+    });
+
+    GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+    await authorizedUserOcto
+      .request("POST /user/repos", {
+        name: name,
+        description: description,
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      })
+      .then((result) => {
+        //Once we have created the new repo we need to create a file within it to store the project in
+        currentRepoName = result.data.name;
+        var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
+        jsonRepOfProject.filetypeVersion = 1;
+        jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
+        const projectContent = window.btoa(
+          JSON.stringify(jsonRepOfProject, null, 4)
+        );
+
+        authorizedUserOcto.rest.repos
+          .createOrUpdateFileContents({
+            owner: currentUser,
+            repo: currentRepoName,
+            path: "project.maslowcreate",
+            message: "initialize repo",
+            content: projectContent,
+          })
+          .then(() => {
+            //Then create the BOM file
+            var content = window.btoa(bomHeader); // create a file with just the header in it and base64 encode it
+            authorizedUserOcto.rest.repos
+              .createOrUpdateFileContents({
+                owner: currentUser,
+                repo: currentRepoName,
+                path: "BillOfMaterials.md",
+                message: "initialize BOM",
+                content: content,
+              })
+              .then(() => {
+                //Then create the README file
+                content = window.btoa(readmeHeader); // create a file with just the word "init" in it and base64 encode it
+                authorizedUserOcto.rest.repos
+                  .createOrUpdateFileContents({
+                    owner: currentUser,
+                    repo: currentRepoName,
+                    path: "README.md",
+                    message: "initialize README",
+                    content: content,
+                  })
+                  .then(() => {
+                    authorizedUserOcto.rest.repos
+                      .createOrUpdateFileContents({
+                        owner: currentUser,
+                        repo: currentRepoName,
+                        path: "project.svg",
+                        message: "SVG Picture",
+                        content: "",
+                      })
+                      .then(() => {
+                        authorizedUserOcto.rest.repos
+                          .createOrUpdateFileContents({
+                            owner: currentUser,
+                            repo: currentRepoName,
+                            path: ".gitattributes",
+                            message: "Create gitattributes",
+                            content: window.btoa("data binary"),
+                          })
+                          .then(() => {
+                            authorizedUserOcto.rest.repos
+                              .createOrUpdateFileContents({
+                                owner: currentUser,
+                                repo: currentRepoName,
+                                path: "data.json",
+                                message: "Data file",
+                                content: "",
+                              })
+                              .then(() => {
+                                authorizedUserOcto.rest.repos
+                                  .createOrUpdateFileContents({
+                                    owner: currentUser,
+                                    repo: currentRepoName,
+                                    path: "LICENSE.txt",
+                                    message: "Establish license",
+                                    content: window.btoa(licenseText),
+                                  })
+                                  .then(() => {
+                                    loadProject(result.data);
+                                    intervalTimer = setInterval(() => {
+                                      this.saveProject();
+                                    }, 1200000); //Save the project regularly
+                                  });
+                              });
+                          });
+                      });
+                  });
+              });
+          });
+
+        //Update the project topics
+        authorizedUserOcto.rest.repos.replaceAllTopics({
+          owner: currentUser,
+          repo: currentRepoName,
+          names: ["maslowcreate", "maslowcreate-project"],
+          headers: {
+            accept: "application/vnd.github.mercy-preview+json",
+          },
+        });
+      });
+  };
   //Replaces the loaded projects if the user clicks on new project button
   const NewProjectPopUp = () => {
     const keys_ar = [];
@@ -545,6 +559,8 @@ function LoginPopUp(props) {
     props.setPopUpOpen(false);
   };
 
+  /* I think this authorization either needs to happen at a higher level or the variable of the authorized github
+   token needs to be saved to global so we don't keep making oauth calls if we need authorization for pull requests and such*/
   const tryLogin = function () {
     // Initialize with OAuth.io app public key
     if (window.location.href.includes("private")) {
