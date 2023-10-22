@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
+import { OAuth } from "oauthio-web";
+import { Octokit } from "https://esm.sh/octokit@2.0.19";
 
 function TopMenu(props) {
   const [currentMoleculeTop, setTop] = useState(false);
@@ -92,10 +94,41 @@ function TopMenu(props) {
       buttonFunc: () => {
         var url = GlobalVariables.currentRepo.html_url + "/settings";
         window.open(url);
+        //tryDelete();
       },
       icon: "Open.svg",
     },
   ];
+
+  var authorizedUserOcto;
+
+  //can't figure out right now but i want to switch the delete button from just going to github to actually authorizing delete
+  const tryDelete = () => {
+    // Initialize with OAuth.io app public key
+    if (window.location.href.includes("private")) {
+      OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
+    } else {
+      OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
+    }
+
+    // Use popup for oauth
+    OAuth.popup("github").then((github) => {
+      /**
+       * Oktokit object to access github
+       * @type {object}
+       */
+      authorizedUserOcto = new Octokit({
+        auth: github.access_token,
+      });
+      var owner = GlobalVariables.currentUser;
+      var repo = GlobalVariables.currentRepo;
+      //getting current user post authetication
+      authorizedUserOcto.rest.repos.delete({
+        owner,
+        repo,
+      });
+    });
+  };
 
   /*{checks for top level variable and show go-up button if this is not top molecule  ::::
       i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way that doesn't use Useeffect()
