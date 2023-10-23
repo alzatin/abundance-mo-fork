@@ -301,7 +301,7 @@ export default function FlowCanvas(displayProps) {
           <input
             type="text"
             id="menuInput"
-            onBlur="value=''"
+            //onBlur="value=''"
             placeholder="Search for atom.."
             className="menu_search_canvas"
           ></input>

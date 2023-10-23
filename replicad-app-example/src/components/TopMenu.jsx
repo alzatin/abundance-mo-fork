@@ -63,7 +63,7 @@ function TopMenu(props) {
     {
       id: "Save Project",
       buttonFunc: () => {
-        GlobalVariables.gitHub.saveProject();
+        saveProject();
       },
       icon: "Open.svg",
     },
@@ -99,6 +99,54 @@ function TopMenu(props) {
       icon: "Open.svg",
     },
   ];
+
+  const saveProject = async () => {
+    var authorizedUserOcto;
+    console.log(GlobalVariables.topLevelMolecule.path);
+
+    var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
+    jsonRepOfProject.filetypeVersion = 1;
+    jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
+    const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
+    console.log(projectContent);
+
+    // Initialize with OAuth.io app public key
+    if (window.location.href.includes("private")) {
+      OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
+    } else {
+      OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
+    }
+    var owner = GlobalVariables.currentUser;
+    var repo = GlobalVariables.currentRepo;
+    // Use popup for oauth
+    OAuth.popup("github")
+      .then((github) => {
+        authorizedUserOcto = new Octokit({
+          auth: github.access_token,
+        });
+      })
+      .then(() => {
+        authorizedUserOcto.rest.git.createCommit({
+          owner: owner,
+          repo: repo,
+          changes: {
+            files: {
+              "BillOfMaterials.md": "",
+              "README.md": "",
+              "project.svg": "",
+              "project.maslowcreate": projectContent,
+              "data.json": projectContent,
+            },
+            headers: {
+              accept: "application/vnd.github.mercy-preview+json",
+              "Access-Control-Allow-Origin": "*",
+            },
+
+            commit: "Autosave",
+          },
+        });
+      });
+  };
 
   var authorizedUserOcto;
 

@@ -433,6 +433,7 @@ const ShowProjects = (props) => {
       .then((response) => {
         props.closePopUp();
         //content will be base64 encoded
+        console.log();
         let rawFile = JSON.parse(atob(response.data.content));
 
         if (rawFile.filetypeVersion == 1) {
