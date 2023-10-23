@@ -100,15 +100,97 @@ function TopMenu(props) {
     },
   ];
 
+  /**
+   * Create a commit as part of the saving process.
+   */
+  const createCommit = async function (
+    octokit,
+    { owner, repo, base, changes }
+  ) {
+    //this.progressSave(30)
+    let response;
+    console.log(octokit);
+    if (!base) {
+      octokit
+        .request("GET /repos/{owner}/{repo}", {
+          owner: owner,
+          repo: repo,
+        })
+        .then((response) => {
+          console.log(response);
+          console.log(response.data.default_branch);
+          base = response.data.default_branch;
+          octokit.rest.repos
+            .listCommits({
+              owner,
+              repo,
+              sha: base,
+              per_page: 1,
+            })
+            .then((response) => {
+              let latestCommitSha = response.data[0].sha;
+              const treeSha = response.data[0].commit.tree.sha;
+              octokit.rest.git
+                .createTree({
+                  owner,
+                  repo,
+                  base_tree: treeSha,
+                  tree: Object.keys(changes.files).map((path) => {
+                    if (changes.files[path] != null) {
+                      return {
+                        path,
+                        mode: "100644",
+                        content: changes.files[path],
+                      };
+                    } else {
+                      return {
+                        path,
+                        mode: "100644",
+                        sha: null,
+                      };
+                    }
+                  }),
+                })
+                .then((response) => {
+                  const newTreeSha = response.data.sha;
+                  octokit.rest.git
+                    .createCommit({
+                      owner,
+                      repo,
+                      message: changes.commit,
+                      tree: newTreeSha,
+                      parents: [latestCommitSha],
+                    })
+                    .then((response) => {
+                      latestCommitSha = response.data.sha;
+                      octokit.rest.git
+                        .updateRef({
+                          owner,
+                          repo,
+                          sha: latestCommitSha,
+                          ref: "heads/" + base,
+                          force: true,
+                        })
+                        .then((response) => {
+                          console.warn("Project saved");
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+    //this.progressSave(90)
+
+    //this.progressSave(100)
+  };
   const saveProject = async () => {
     var authorizedUserOcto;
-    console.log(GlobalVariables.topLevelMolecule.path);
 
     var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
     jsonRepOfProject.filetypeVersion = 1;
     jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
     const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
-    console.log(projectContent);
 
     // Initialize with OAuth.io app public key
     if (window.location.href.includes("private")) {
@@ -117,7 +199,6 @@ function TopMenu(props) {
       OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
     }
     var currentUser;
-    var repo;
     // Use popup for oauth
     OAuth.popup("github").then((github) => {
       authorizedUserOcto = new Octokit({
@@ -130,34 +211,22 @@ function TopMenu(props) {
           GlobalVariables.currentUser = currentUser;
         })
         .then(() => {
-          authorizedUserOcto
-            .request("POST /repos/{owner}/{repo}/git/commits", {
-              owner: GlobalVariables.currentUser,
-              repo: GlobalVariables.currentRepo,
-            })
-            .then(() => {
-              console.log(authorizedUserOcto);
-              authorizedUserOcto.rest.git.createCommit({
-                owner: GlobalVariables.currentUser,
-                repo: GlobalVariables.currentRepo,
-                changes: {
-                  files: {
-                    "BillOfMaterials.md": "",
-                    "README.md": "",
-                    "project.svg": "",
-                    "project.maslowcreate": projectContent,
-                    "data.json": projectContent,
-                  },
-
-                  commit: "Autosave",
-                },
-              });
-            });
+          createCommit(authorizedUserOcto, {
+            owner: GlobalVariables.currentUser,
+            repo: GlobalVariables.currentRepo.name,
+            changes: {
+              files: {
+                "BillOfMaterials.md": "bom",
+                "README.md": "readme",
+                "project.svg": "finalSVG",
+                "project.maslowcreate": projectContent,
+              },
+              commit: "Autosave",
+            },
+          });
         });
     });
   };
-
-  var authorizedUserOcto;
 
   //can't figure out right now but i want to switch the delete button from just going to github to actually authorizing delete
   const tryDelete = () => {

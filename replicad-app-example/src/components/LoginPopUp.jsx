@@ -406,6 +406,7 @@ const ShowProjects = (props) => {
   };
   // Loads project when clicked in browse mode
   const loadProject = function (project) {
+    console.log(project);
     //should non owners get a different load ?  window.open("/run?" + project.id);
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;

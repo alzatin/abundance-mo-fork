@@ -400,8 +400,7 @@ export default function GitHubModule(){
                                     'BillOfMaterials.md': bomContent,
                                     'README.md': readmeContent,
                                     'project.svg': finalSVG,
-                                    'project.maslowcreate': projectContent,
-                                    'data.json': JSONData
+                                    'project.maslowcreate': projectContent,   
                                 },
                                 commit: 'Autosave'
                             }
