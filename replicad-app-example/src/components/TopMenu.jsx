@@ -116,36 +116,49 @@ function TopMenu(props) {
     } else {
       OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
     }
-    var owner = GlobalVariables.currentUser;
-    var repo = GlobalVariables.currentRepo;
+    var currentUser;
+    var repo;
     // Use popup for oauth
-    OAuth.popup("github")
-      .then((github) => {
-        authorizedUserOcto = new Octokit({
-          auth: github.access_token,
-        });
-      })
-      .then(() => {
-        authorizedUserOcto.rest.git.createCommit({
-          owner: owner,
-          repo: repo,
-          changes: {
-            files: {
-              "BillOfMaterials.md": "",
-              "README.md": "",
-              "project.svg": "",
-              "project.maslowcreate": projectContent,
-              "data.json": projectContent,
-            },
-            headers: {
-              accept: "application/vnd.github.mercy-preview+json",
-              "Access-Control-Allow-Origin": "*",
-            },
-
-            commit: "Autosave",
-          },
-        });
+    OAuth.popup("github").then((github) => {
+      authorizedUserOcto = new Octokit({
+        auth: github.access_token,
       });
+      authorizedUserOcto
+        .request("GET /user", {})
+        .then((response) => {
+          currentUser = response.data.login;
+          GlobalVariables.currentUser = currentUser;
+        })
+        .then(() => {
+          console.log(currentUser + "" + GlobalVariables.currentRepoName);
+          authorizedUserOcto
+            .request("POST /repos/{owner}/{repo}/git/commit", {
+              owner: GlobalVariables.currentUser,
+              repo: GlobalVariables.currentRepo,
+            })
+            .then(() => {
+              authorizedUserOcto.rest.git.createCommit({
+                owner: GlobalVariables.currentUser,
+                repo: GlobalVariables.currentRepo,
+                changes: {
+                  files: {
+                    "BillOfMaterials.md": "",
+                    "README.md": "",
+                    "project.svg": "",
+                    "project.maslowcreate": projectContent,
+                    "data.json": projectContent,
+                  },
+                  headers: {
+                    accept: "application/vnd.github.mercy-preview+json",
+                    "Access-Control-Allow-Origin": "*",
+                  },
+
+                  commit: "Autosave",
+                },
+              });
+            });
+        });
+    });
   };
 
   var authorizedUserOcto;

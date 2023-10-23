@@ -272,7 +272,7 @@ const ShowProjects = (props) => {
           owner: currentUser,
           repo: currentRepoName,
           names: ["maslowcreate", "maslowcreate-project"],
-          headers: {
+          s: {
             accept: "application/vnd.github.mercy-preview+json",
           },
         });
@@ -357,7 +357,7 @@ const ShowProjects = (props) => {
           <div className="top_browse_menu">
             <div
               onClick={() => {
-                setNewProjectPopUp(true);
+                setjectPopUp(true);
               }}
               className="newProjectDiv"
             >
