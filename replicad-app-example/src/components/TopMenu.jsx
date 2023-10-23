@@ -130,13 +130,13 @@ function TopMenu(props) {
           GlobalVariables.currentUser = currentUser;
         })
         .then(() => {
-          console.log(currentUser + "" + GlobalVariables.currentRepoName);
           authorizedUserOcto
-            .request("POST /repos/{owner}/{repo}/git/commit", {
+            .request("POST /repos/{owner}/{repo}/git/commits", {
               owner: GlobalVariables.currentUser,
               repo: GlobalVariables.currentRepo,
             })
             .then(() => {
+              console.log(authorizedUserOcto);
               authorizedUserOcto.rest.git.createCommit({
                 owner: GlobalVariables.currentUser,
                 repo: GlobalVariables.currentRepo,
@@ -147,10 +147,6 @@ function TopMenu(props) {
                     "project.svg": "",
                     "project.maslowcreate": projectContent,
                     "data.json": projectContent,
-                  },
-                  headers: {
-                    accept: "application/vnd.github.mercy-preview+json",
-                    "Access-Control-Allow-Origin": "*",
                   },
 
                   commit: "Autosave",
