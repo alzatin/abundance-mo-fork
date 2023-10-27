@@ -5,6 +5,8 @@ import { Octokit } from "https://esm.sh/octokit@2.0.19";
 
 function TopMenu(props) {
   const [currentMoleculeTop, setTop] = useState(false);
+  const [saveState, setSaveState] = useState(0);
+  const [savePopUp, setSavePopUp] = useState(false);
   // objects for navigation items in the top menu
   const navItems = [
     {
@@ -63,7 +65,8 @@ function TopMenu(props) {
     {
       id: "Save Project",
       buttonFunc: () => {
-        saveProject();
+        setSavePopUp(true);
+        saveProject(setSaveState);
       },
       icon: "Open.svg",
     },
@@ -105,11 +108,10 @@ function TopMenu(props) {
    */
   const createCommit = async function (
     octokit,
-    { owner, repo, base, changes }
+    { owner, repo, base, changes },
+    setState
   ) {
-    //this.progressSave(30)
-    let response;
-    console.log(octokit);
+    setState(20);
     if (!base) {
       octokit
         .request("GET /repos/{owner}/{repo}", {
@@ -117,6 +119,7 @@ function TopMenu(props) {
           repo: repo,
         })
         .then((response) => {
+          setState(30);
           console.log(response);
           console.log(response.data.default_branch);
           base = response.data.default_branch;
@@ -128,6 +131,7 @@ function TopMenu(props) {
               per_page: 1,
             })
             .then((response) => {
+              setState(40);
               let latestCommitSha = response.data[0].sha;
               const treeSha = response.data[0].commit.tree.sha;
               octokit.rest.git
@@ -152,6 +156,7 @@ function TopMenu(props) {
                   }),
                 })
                 .then((response) => {
+                  setState(50);
                   const newTreeSha = response.data.sha;
                   octokit.rest.git
                     .createCommit({
@@ -162,6 +167,7 @@ function TopMenu(props) {
                       parents: [latestCommitSha],
                     })
                     .then((response) => {
+                      setState(80);
                       latestCommitSha = response.data.sha;
                       octokit.rest.git
                         .updateRef({
@@ -172,19 +178,21 @@ function TopMenu(props) {
                           force: true,
                         })
                         .then((response) => {
+                          setState(90);
                           console.warn("Project saved");
+                          setState(100);
                         });
                     });
                 });
             });
         });
     }
-
-    //this.progressSave(90)
-
-    //this.progressSave(100)
   };
-  const saveProject = async () => {
+  /**
+   * Saves project by making a commit to the Github repository.
+   */
+  const saveProject = async (setState) => {
+    setState(5);
     var authorizedUserOcto;
 
     var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
@@ -198,7 +206,7 @@ function TopMenu(props) {
     } else {
       OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
     }
-    var currentUser;
+
     // Use popup for oauth
     OAuth.popup("github").then((github) => {
       authorizedUserOcto = new Octokit({
@@ -207,61 +215,33 @@ function TopMenu(props) {
       authorizedUserOcto
         .request("GET /user", {})
         .then((response) => {
-          currentUser = response.data.login;
-          GlobalVariables.currentUser = currentUser;
+          GlobalVariables.currentUser = response.data.login;
         })
         .then(() => {
-          createCommit(authorizedUserOcto, {
-            owner: GlobalVariables.currentUser,
-            repo: GlobalVariables.currentRepo.name,
-            changes: {
-              files: {
-                "BillOfMaterials.md": "bom",
-                "README.md": "readme",
-                "project.svg": "finalSVG",
-                "project.maslowcreate": projectContent,
+          setState(10);
+          createCommit(
+            authorizedUserOcto,
+            {
+              owner: GlobalVariables.currentUser,
+              repo: GlobalVariables.currentRepo.name,
+              changes: {
+                files: {
+                  "BillOfMaterials.md": "bom",
+                  "README.md": "readme",
+                  "project.svg": "finalSVG",
+                  "project.maslowcreate": projectContent,
+                },
+                commit: "Autosave",
               },
-              commit: "Autosave",
             },
-          });
+            setState
+          );
         });
     });
   };
-
-  //can't figure out right now but i want to switch the delete button from just going to github to actually authorizing delete
-  const tryDelete = () => {
-    // Initialize with OAuth.io app public key
-    if (window.location.href.includes("private")) {
-      OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
-    } else {
-      OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
-    }
-
-    // Use popup for oauth
-    OAuth.popup("github").then((github) => {
-      /**
-       * Oktokit object to access github
-       * @type {object}
-       */
-      authorizedUserOcto = new Octokit({
-        auth: github.access_token,
-      });
-      var owner = GlobalVariables.currentUser;
-      var repo = GlobalVariables.currentRepo;
-      //getting current user post authetication
-      authorizedUserOcto.rest.repos.delete({
-        owner,
-        repo,
-      });
-    });
-  };
-
-  /*{checks for top level variable and show go-up button if this is not top molecule  ::::
-      i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way that doesn't use Useeffect()
-      } (CAN'T FIGURE OUT HOW TO MAKE IT WAIT FOR GLOBALVARIABLES)*/
+  //{checks for top level variable and show go-up button if this is not top molecule
   const TopLevel = (props) => {
     const ref = useRef();
-    // if (GlobalVariables.currentMolecule.topLevel) changes check if it's still a top level molecule to display goUp button
     useEffect(() => {
       if (GlobalVariables.currentMolecule !== undefined) {
         if (!GlobalVariables.currentMolecule.topLevel) {
@@ -279,6 +259,34 @@ function TopMenu(props) {
             title=""
           />
         )}
+      </>
+    );
+  };
+
+  const SaveBar = (props) => {
+    if (props.saveState === 100) {
+      // delay and then set savepopupstate to false
+      var delayInMilliseconds = 2000; //1 second
+      setTimeout(function () {
+        props.setSavePopUp(false);
+      }, delayInMilliseconds);
+    }
+    return (
+      <>
+        <div class="save-bar">
+          <h1>Saving</h1>
+          <div class="progress">
+            <div
+              class="progress-done"
+              data-done="70"
+              style={{ width: props.saveState + "%", opacity: "1" }}
+            >
+              {props.saveState !== 100
+                ? props.saveState + "%"
+                : "Project Saved"}
+            </div>
+          </div>
+        </div>
       </>
     );
   };
@@ -344,6 +352,13 @@ function TopMenu(props) {
 
   return (
     <>
+      {savePopUp ? (
+        <SaveBar
+          saveState={saveState}
+          savePopUp={savePopUp}
+          setSavePopUp={setSavePopUp}
+        />
+      ) : null}
       <TopLevel currentMoleculeTop={currentMoleculeTop} setTop={setTop} />
       <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>
