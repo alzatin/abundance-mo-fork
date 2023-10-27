@@ -120,8 +120,6 @@ function TopMenu(props) {
         })
         .then((response) => {
           setState(30);
-          console.log(response);
-          console.log(response.data.default_branch);
           base = response.data.default_branch;
           octokit.rest.repos
             .listCommits({
@@ -156,7 +154,7 @@ function TopMenu(props) {
                   }),
                 })
                 .then((response) => {
-                  setState(50);
+                  setState(60);
                   const newTreeSha = response.data.sha;
                   octokit.rest.git
                     .createCommit({
