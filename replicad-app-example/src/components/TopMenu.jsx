@@ -1,7 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
+import { OAuth } from "oauthio-web";
+import { Octokit } from "https://esm.sh/octokit@2.0.19";
 
 function TopMenu(props) {
+  const [currentMoleculeTop, setTop] = useState(false);
+  const [saveState, setSaveState] = useState(0);
+  const [savePopUp, setSavePopUp] = useState(false);
+  // objects for navigation items in the top menu
   const navItems = [
     {
       id: "Open",
@@ -59,7 +65,8 @@ function TopMenu(props) {
     {
       id: "Save Project",
       buttonFunc: () => {
-        GlobalVariables.gitHub.saveProject();
+        setSavePopUp(true);
+        saveProject(setSaveState);
       },
       icon: "Open.svg",
     },
@@ -90,26 +97,159 @@ function TopMenu(props) {
       buttonFunc: () => {
         var url = GlobalVariables.currentRepo.html_url + "/settings";
         window.open(url);
+        //tryDelete();
       },
       icon: "Open.svg",
     },
   ];
 
-  /*{checks for top level variable and show go-up button if this is not top molecule  ::::
-      i think this is the way of checking for molecule.toplevel but i'm wondering if there's a more efficient way that doesn't use Useeffect()
-      } (CAN'T FIGURE OUT HOW TO MAKE IT WAIT FOR GLOBALVARIABLES)*/
-  const TopLevel = () => {
-    const [currentMoleculeTop, setTop] = useState(false);
+  /**
+   * Create a commit as part of the saving process.
+   */
+  const createCommit = async function (
+    octokit,
+    { owner, repo, base, changes },
+    setState
+  ) {
+    setState(20);
+    if (!base) {
+      octokit
+        .request("GET /repos/{owner}/{repo}", {
+          owner: owner,
+          repo: repo,
+        })
+        .then((response) => {
+          setState(30);
+          base = response.data.default_branch;
+          octokit.rest.repos
+            .listCommits({
+              owner,
+              repo,
+              sha: base,
+              per_page: 1,
+            })
+            .then((response) => {
+              setState(40);
+              let latestCommitSha = response.data[0].sha;
+              const treeSha = response.data[0].commit.tree.sha;
+              octokit.rest.git
+                .createTree({
+                  owner,
+                  repo,
+                  base_tree: treeSha,
+                  tree: Object.keys(changes.files).map((path) => {
+                    if (changes.files[path] != null) {
+                      return {
+                        path,
+                        mode: "100644",
+                        content: changes.files[path],
+                      };
+                    } else {
+                      return {
+                        path,
+                        mode: "100644",
+                        sha: null,
+                      };
+                    }
+                  }),
+                })
+                .then((response) => {
+                  setState(60);
+                  const newTreeSha = response.data.sha;
+                  octokit.rest.git
+                    .createCommit({
+                      owner,
+                      repo,
+                      message: changes.commit,
+                      tree: newTreeSha,
+                      parents: [latestCommitSha],
+                    })
+                    .then((response) => {
+                      setState(80);
+                      latestCommitSha = response.data.sha;
+                      octokit.rest.git
+                        .updateRef({
+                          owner,
+                          repo,
+                          sha: latestCommitSha,
+                          ref: "heads/" + base,
+                          force: true,
+                        })
+                        .then((response) => {
+                          setState(90);
+                          console.warn("Project saved");
+                          setState(100);
+                        });
+                    });
+                });
+            });
+        });
+    }
+  };
+  /**
+   * Saves project by making a commit to the Github repository.
+   */
+  const saveProject = async (setState) => {
+    setState(5);
+    var authorizedUserOcto;
 
+    var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
+    jsonRepOfProject.filetypeVersion = 1;
+    jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
+    const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
+
+    // Initialize with OAuth.io app public key
+    if (window.location.href.includes("private")) {
+      OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
+    } else {
+      OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
+    }
+
+    // Use popup for oauth
+    OAuth.popup("github").then((github) => {
+      authorizedUserOcto = new Octokit({
+        auth: github.access_token,
+      });
+      authorizedUserOcto
+        .request("GET /user", {})
+        .then((response) => {
+          GlobalVariables.currentUser = response.data.login;
+        })
+        .then(() => {
+          setState(10);
+          createCommit(
+            authorizedUserOcto,
+            {
+              owner: GlobalVariables.currentUser,
+              repo: GlobalVariables.currentRepo.name,
+              changes: {
+                files: {
+                  "BillOfMaterials.md": "bom",
+                  "README.md": "readme",
+                  "project.svg": "finalSVG",
+                  "project.maslowcreate": projectContent,
+                },
+                commit: "Autosave",
+              },
+            },
+            setState
+          );
+        });
+    });
+  };
+  //{checks for top level variable and show go-up button if this is not top molecule
+  const TopLevel = (props) => {
     const ref = useRef();
     useEffect(() => {
-      if (false) {
-        setTop(false);
+      if (GlobalVariables.currentMolecule !== undefined) {
+        if (!GlobalVariables.currentMolecule.topLevel) {
+          props.setTop(true);
+        }
       }
-    }, [currentMoleculeTop]);
+    }, []);
     return (
       <>
-        {currentMoleculeTop && (
+        {props.currentMoleculeTop && (
           <img
             className="nav-img nav-bar thumnail-logo"
             src={"/imgs/Go Up.svg"}
@@ -121,8 +261,36 @@ function TopMenu(props) {
     );
   };
 
+  const SaveBar = (props) => {
+    if (props.saveState === 100) {
+      // delay and then set savepopupstate to false
+      var delayInMilliseconds = 2000; //1 second
+      setTimeout(function () {
+        props.setSavePopUp(false);
+      }, delayInMilliseconds);
+    }
+    return (
+      <>
+        <div class="save-bar">
+          <h1>Saving</h1>
+          <div class="progress">
+            <div
+              class="progress-done"
+              data-done="70"
+              style={{ width: props.saveState + "%", opacity: "1" }}
+            >
+              {props.saveState !== 100
+                ? props.saveState + "%"
+                : "Project Saved"}
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
   /*{nav bar toggle component}*/
-  const Navbar = () => {
+  const Navbar = (props) => {
     const [navbarOpen, setNavbarOpen] = useState(false);
     const ref = useRef();
     useEffect(() => {
@@ -146,12 +314,16 @@ function TopMenu(props) {
           >
             {navbarOpen ? (
               <img
-                className="thumnail-logo nav-img"
+                className={`thumnail-logo nav-img ${
+                  !props.currentMoleculeTop ? " rotati-right" : ""
+                }`}
                 src={"/imgs/three-menu.svg"}
               />
             ) : (
               <img
-                className="thumnail-logo nav-img rotati"
+                className={`thumnail-logo nav-img  ${
+                  !props.currentMoleculeTop ? " rotati-plus " : "rotati"
+                }`}
                 src={"/imgs/three-menu.svg"}
               />
             )}
@@ -178,8 +350,15 @@ function TopMenu(props) {
 
   return (
     <>
-      <TopLevel />
-      <Navbar />
+      {savePopUp ? (
+        <SaveBar
+          saveState={saveState}
+          savePopUp={savePopUp}
+          setSavePopUp={setSavePopUp}
+        />
+      ) : null}
+      <TopLevel currentMoleculeTop={currentMoleculeTop} setTop={setTop} />
+      <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>
   );
 }

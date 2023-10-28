@@ -56,349 +56,8 @@ export default function GitHubModule(){
      * @type {object}
      */
     var page = 1
-
-
-    /** 
-     * Display projects which can be loaded in the popup.
-     */
-    this.showProjectsToLoad = function(){
-        //Remove everything in the popup now
-        while (popup.firstChild) {
-            popup.removeChild(popup.firstChild)
-        }
-       
-        //Welcome title
-        var welcome = document.createElement("div")
-        welcome.setAttribute("style", " display: flex; margin: 10px; align-items: center;")
-        popup.appendChild(welcome)
-
-        var welcome1 = document.createElement("IMG")
-        welcome1.setAttribute("src", "/imgs/maslow-logo.png" )
-        welcome1.setAttribute("style", " height:25px; border-radius:50%;")
-        welcome.appendChild(welcome1)
-        var welcome2 = document.createElement("IMG")
-        welcome2.setAttribute("src", "/imgs/maslowcreate.svg" )
-        welcome2.setAttribute("style", "height:20px; padding: 10px;")
-        welcome.appendChild(welcome2)
-        var middleBrowseDiv = document.createElement("div")
-        if (currentUser == null){
-
-            var githubSign = document.createElement("button")
-            githubSign.setAttribute("id", "loginButton2" )
-            githubSign.setAttribute("class", "form browseButton githubSign")
-            githubSign.setAttribute("style", "width: 90px; font-size: .7rem; margin-left: auto;")
-            githubSign.textContent = "Login"
-            welcome.appendChild(githubSign)   
-
-            var githubSignUp = document.createElement("button")
-            githubSignUp.setAttribute("class", "form browseButton githubSign")
-            githubSignUp.setAttribute("onclick", "window.open('https://github.com/join')")
-            githubSignUp.setAttribute("style", "width: 130px; font-size: .7rem;margin-left: 5px;")
-            githubSignUp.textContent = "Create an account"
-            welcome.appendChild(githubSignUp)  
-
-            //Welcome title
-            var welcome3 = document.createElement("div")
-            welcome3.innerHTML = "Maslow Create User Projects"
-            welcome3.setAttribute("style", "justify-content: flex-start; display: inline; width: 100%; font-size: 18px;")
-            popup.appendChild(welcome3)
-
-            middleBrowseDiv.setAttribute("style","margin-top:25px")
-
-            githubSign.addEventListener("mousedown", () => {
-                this.tryLogin()
-            })
-        }
-        
-        popup.classList.remove('off')
-        popup.setAttribute("style", "padding: 0;text-align: center; background-color: #f9f6f6; border: 10px solid #3e3d3d;")
-       
-        var tabButtons = document.createElement("DIV")
-        tabButtons.setAttribute("class", "tab")
-        popup.appendChild(tabButtons)
-     
-        middleBrowseDiv.setAttribute("class", "middleBrowse")
-        popup.appendChild(middleBrowseDiv)
-
-        var searchIcon = document.createElement("IMG")
-        searchIcon.setAttribute("src", '/imgs/search_icon.svg')
-        searchIcon.setAttribute("style", "width: 20px; float: right; color: white; position: relative;right: 3px; opacity: 0.5;")
-        middleBrowseDiv.appendChild(searchIcon)
-
-        var searchBar = document.createElement("input")
-        searchBar.setAttribute("type", "text")
-        searchBar.setAttribute("contenteditable", "true")
-        searchBar.setAttribute("placeholder", "Search for project..")
-        searchBar.setAttribute("class", "menu_search")
-        searchBar.setAttribute("id", "project_search")
-        middleBrowseDiv.appendChild(searchBar)
-
-
-        //Display option buttons
-        var browseDisplay1 = document.createElement("div")
-        browseDisplay1.setAttribute("class", "browseDisplay")
-        var listPicture = document.createElement("IMG")
-        listPicture.setAttribute("src", '/imgs/list-with-dots.svg') //https://www.freeiconspng.com/img/1454
-        listPicture.setAttribute("style", "height: 75%;padding: 3px;")
-        browseDisplay1.appendChild(listPicture)
-        middleBrowseDiv.appendChild(browseDisplay1)
-        var browseDisplay2 = document.createElement("div")
-        browseDisplay2.setAttribute("class", "browseDisplay active_filter")
-        browseDisplay2.setAttribute("id", "thumb")
-        var listPicture2 = document.createElement("IMG")
-        listPicture2.setAttribute("src", '/imgs/thumb_icon.png') 
-        listPicture2.setAttribute("style", "height: 80%;padding: 3px;")
-        browseDisplay2.appendChild(listPicture2)
-        middleBrowseDiv.appendChild(browseDisplay2)
-
-        //Input to search for projects
-
-        searchBar.addEventListener('keydown', (e) => {
-            
-            this.loadProjectsBySearch("yoursButton",e, searchBar.value, "updated")
-            this.loadProjectsBySearch("githubButton",e, searchBar.value, "stars") // updated just sorts content by most recently updated
-        })
-        
-
-        this.projectsSpaceDiv = document.createElement("DIV")
-        this.projectsSpaceDiv.setAttribute("class", "float-left-div")
-        this.projectsSpaceDiv.setAttribute("style", "overflow-x: hidden; margin-top: 10px;")
-        popup.appendChild(this.projectsSpaceDiv)
-        
-        const pageChange = document.createElement("div")
-        const pageBack = document.createElement("button")
-        pageBack.setAttribute("id", "back")
-        pageBack.setAttribute("class", "page_change")
-        pageBack.innerHTML = "&#8249;"
-
-        const pageForward = document.createElement("button")
-        pageChange.appendChild(pageBack)
-        pageChange.appendChild(pageForward)
-        pageForward.setAttribute("id", "forward")
-        pageForward.setAttribute("class", "page_change")
-        pageForward.innerHTML = "&#8250;"
-
-        popup.appendChild(pageChange)
-
-        
-        this.openTab(page)
-
-        //Event listeners 
-
-        browseDisplay1.addEventListener("click", () => {
-            // titlesDiv.style.display = "flex"
-            browseDisplay2.classList.remove("active_filter")
-            this.openTab(page)
-        })
-        browseDisplay2.addEventListener("click", () => {
-            // titlesDiv.style.display = "none"
-            browseDisplay2.classList.add("active_filter")
-            this.openTab(page)
-        })
-        pageForward.addEventListener("click", () => {
-            if (page >=1){ page +=1 }
-            this.openTab(page)
-        })
-        pageBack.addEventListener("click", () => {
-            if (page >1){page -=1}
-            this.openTab(page)
-        })
-
-    }
-
-    /** 
-     * Search for the name of a project and then return results which match that search.
-     */
-    this.loadProjectsBySearch = async function(tabName, ev, searchString, sorting, pageNumber, clear = true){
-        
-        if(ev.key == "Enter"){
-            //Remove projects shown now
-            if(clear){
-                while (this.projectsSpaceDiv.firstChild) {
-                    this.projectsSpaceDiv.removeChild(this.projectsSpaceDiv.firstChild)
-                }
-            }
-            // add initial projects to div
-
-            //New project div
-            if (currentUser !== null && clear){
-                var browseDiv = document.createElement("div")
-                browseDiv.setAttribute("class", "browseDiv")
-                this.projectsSpaceDiv.appendChild(browseDiv)
-            
-                var createNewProject = document.createElement("div")
-                createNewProject.setAttribute("class", "newProject")
-
-                browseDiv.appendChild(createNewProject)
-                this.NewProject("New Project", null, true, "")
-            }
-            //header for project list style display
-            var titlesDiv = document.createElement("div")
-            titlesDiv.setAttribute("id","titlesDiv")
-            var titles = document.createElement("div")
-            titles.innerHTML = ""
-            titles.setAttribute("class","browseColumn")
-            titlesDiv.appendChild(titles)
-            var titles2 = document.createElement("div")
-            titles2.innerHTML = "Project"
-            titles2.setAttribute("class","browseColumn")
-            titlesDiv.appendChild(titles2)
-            var titles3 = document.createElement("div")
-            titles3.innerHTML = "Creator"
-            titles3.setAttribute("class","browseColumn")
-            titlesDiv.appendChild(titles3)
-            var titles4 = document.createElement("div")
-            titles4.innerHTML = "Created on"
-            titles4.setAttribute("class","browseColumn")
-            titlesDiv.appendChild(titles4)
-            var titles5 = document.createElement("div")
-            titles5.innerHTML = "Last Modified"
-            titles5.setAttribute("class","browseColumn")
-            titlesDiv.appendChild(titles5)
-
-            if (!document.getElementById("thumb").classList.contains("active_filter")){
-                titlesDiv.style.display = "flex"
-                titlesDiv.style.marginTop = "10px"
-                browseDiv.style.width = "100%"
-                createNewProject.style.height = "80px"
-            }
-        
-            this.projectsSpaceDiv.appendChild(titlesDiv)
-              
-            //Load projects
-            var query
-            var owned
-
-            var sortMethod = sorting  //drop down input. temporarily inactive until we figure some better way to sort
-            if(tabName == "yoursButton"){
-                owned = true
-                query = searchString + ' ' + 'fork:true user:' + currentUser + ' topic:maslowcreate'
-            }
-            else{
-                owned = false
-                query = searchString + ' topic:maslowcreate -user:' + currentUser
-            }
-
-            
-            return octokit.search.repos({
-                q: query,
-                sort: sortMethod,
-                per_page: 50,
-                page: pageNumber,
-                headers: {
-                    accept: 'application/vnd.github.mercy-preview+json'
-                }
-            }).then(result => {
-                result.data.items.forEach(repo => {
-                    const thumbnailPath = "https://raw.githubusercontent.com/"+repo.full_name+"/master/project.svg?sanitize=true"
-                    
-                    this.addProject(repo.name, repo.id, repo.owner.login, repo.created_at, repo.updated_at, owned, thumbnailPath)
-                })
-                
-            }) 
-        } 
-    }
     
-    /** 
-     * Adds a new project to the load projects display.
-     */
-    this.NewProject = function(projectName, id, owned, thumbnailPath){
-        //create a project element to display
-        
-        var project = document.createElement("DIV")
-        project.classList.add("newProjectdiv")
-        
-        var projectPicture = document.createElement("IMG")
-        projectPicture.setAttribute("src", thumbnailPath)
-        projectPicture.setAttribute("onerror", "this.src='/defaultThumbnail.svg'")
-        projectPicture.setAttribute("style", "height: 80%; float: left;")
-        project.appendChild(projectPicture)
-        
-        var projectText = document.createElement("span")
-        projectText.innerHTML = "Start a new project"
-        projectText.setAttribute("style","align-self: center")
-        project.appendChild(projectText)
 
-        document.querySelector(".newProject").appendChild(project) 
-        
-        project.addEventListener('click', () => {
-            this.projectClicked(projectName, id, owned)
-        })
-
-    }
-    
-    /** 
-     * Adds a new project to the load projects display.
-     */
-    this.addProject = function(projectName, id, owner, createdAt, updatedAt, owned, thumbnailPath){
-        
-        this.projectsSpaceDiv.classList.remove("float-left-div-thumb")
-        var project = document.createElement("DIV")
-        var projectPicture = document.createElement("IMG")
-        projectPicture.setAttribute("src", thumbnailPath)
-        projectPicture.setAttribute("onerror", "this.src='/defaultThumbnail.svg'")
-        project.appendChild(projectPicture)
-        project.setAttribute("id", projectName)
-        project.classList.add("project")
-
-        if (owned){
-            project.classList.add("mine")
-        }
-
-        //create a project element to display
-        if (document.getElementById("thumb").classList.contains("active_filter")){
-            
-            //projectPicture.setAttribute("style", "width: 100%; height: 80%;")
-            project.appendChild(document.createElement("BR"))
-
-            var shortProjectName
-            if(projectName.length > 13){
-                shortProjectName = document.createTextNode(projectName.substr(0,9)+"..")
-            }
-            else{
-                shortProjectName = document.createTextNode(projectName)
-            }
-            project.setAttribute("title",projectName)
-            project.appendChild(shortProjectName) 
-        }
-        else{
-            project.setAttribute("style", "display:flex; flex-direction:row; flex-wrap:wrap; width: 100%; border-bottom: 1px solid darkgrey;")
-            projectPicture.setAttribute("class", "browseColumn")
-            
-            shortProjectName = document.createElement("DIV")
-            shortProjectName.innerHTML = projectName
-            shortProjectName.setAttribute("class", "browseColumn")
-            project.appendChild(shortProjectName) 
-
-            var ownerName = document.createElement("DIV")
-            var ownerNameIn = document.createTextNode(owner)
-            ownerName.appendChild(ownerNameIn) 
-            ownerName.setAttribute("class", "browseColumn")
-            project.appendChild(ownerName) 
-
-            var date = new Date(createdAt)
-            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-            var createdTime = document.createElement("DIV")
-            createdTime.setAttribute("class", "browseColumn")
-            var createdTimeIn = document.createTextNode(months[date.getMonth()] + " " + date.getFullYear())
-            createdTime.appendChild(createdTimeIn) 
-            project.appendChild(createdTime) 
-
-            var updated = new Date(updatedAt)
-            var updatedTime = document.createElement("DIV")
-            var updatedTimeIn = document.createTextNode(months[updated.getMonth()] + " " + date.getFullYear())
-            updatedTime.appendChild(updatedTimeIn)
-            updatedTime.setAttribute("class", "browseColumn")
-            project.appendChild(updatedTime) 
-   
-        }
-
-        this.projectsSpaceDiv.appendChild(project) 
-
-        project.addEventListener('click', () => {
-            this.projectClicked(projectName, id, owned)
-        })
-    }
     
     /** 
      * Runs when you click on a project.
@@ -418,7 +77,7 @@ export default function GitHubModule(){
     
     /** 
      * Runs owned search first and then full github search
-     */
+     
     this.openTab = function(page) {
 
         // Show the current tab, and add an "active" class to the button that opened the tab
@@ -430,10 +89,10 @@ export default function GitHubModule(){
                 this.loadProjectsBySearch("githubButton", {key: "Enter"}, document.getElementById("project_search").value, "stars", page, false)
             })
     }
-    
+    */
     /** 
      * The popup to create a new project (giving it a name and whatnot).
-     */
+     
     this.createNewProjectPopup = function(){
         //Clear the popup and populate the fields we will need to create the new repo
         
@@ -474,10 +133,10 @@ export default function GitHubModule(){
         popup.appendChild(createNewProjectDiv)
 
     }
-    
+    */
     /** 
      * Open a new tab with a sharable copy of the project.
-     */
+     
     this.shareOpenedProject = function(){
         alert("A page with a shareable url to this project will open in a new window. Share the link to that page with anyone you would like to share the project with.")
          
@@ -490,10 +149,11 @@ export default function GitHubModule(){
             window.open('/run?'+ID)
         })
     }
+
     
     /** 
      * Open a new tab with the github page for the project.
-     */
+    
     this.openGitHubPage = function(){
         //Open the github page for the current project in a new tab
         octokit.repos.get({
@@ -504,10 +164,10 @@ export default function GitHubModule(){
             window.open(url)
         })
     }
-    
+     */
     /** 
      * Search github for projects which match a string.
-     */
+    
     this.searchGithub = async (searchString,owned) => {
         //Load projects
         var query
@@ -529,7 +189,7 @@ export default function GitHubModule(){
             }
         })
     }
-    
+     */
    
   
     
@@ -546,7 +206,6 @@ export default function GitHubModule(){
         const name = document.getElementById('project-name').value
         const description = document.getElementById('project-description').value
         const licenseText = licenses[document.getElementById('license-options').value]
-        
         //Load a blank project
         GlobalVariables.topLevelMolecule = new Molecule({
             x: 0, 
@@ -558,12 +217,28 @@ export default function GitHubModule(){
         })
         
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule
-        
+      
         //Create a new repo
-        octokit.repos.createForAuthenticatedUser({
-            name: name,
-            description: description
-        }).then(result => {
+  // Use popup for oauth
+  OAuth.popup("github").then((github) => {
+    /**
+     * Oktokit object to access github
+     * @type {object}
+     */
+    octokit = new Octokit({
+      auth: github.access_token,
+    });
+  });
+    octokit.request("POST /user/repos", {
+    name: "Hello-World",
+    description: "This is your first repo!",
+    homepage: "https://github.com",
+    private: false,
+    is_template: true,
+    headers: {
+      "X-GitHub-Api-Version": "2022-11-28",
+    }
+  }).then(result => {
             //Once we have created the new repo we need to create a file within it to store the project in
             currentRepoName = result.data.name
             var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize()
@@ -678,6 +353,7 @@ export default function GitHubModule(){
             
             const passBOMOn = (bomItems) => {
                 const values = {op: "svg", readPath: GlobalVariables.topLevelMolecule.path}
+                console.log(window)
                 const {answer} = window.ask(values)
                 answer.then( answer => {
                     //this.progressSave(10)
@@ -724,8 +400,7 @@ export default function GitHubModule(){
                                     'BillOfMaterials.md': bomContent,
                                     'README.md': readmeContent,
                                     'project.svg': finalSVG,
-                                    'project.maslowcreate': projectContent,
-                                    'data.json': JSONData
+                                    'project.maslowcreate': projectContent,   
                                 },
                                 commit: 'Autosave'
                             }

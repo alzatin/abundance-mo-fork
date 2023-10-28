@@ -769,6 +769,12 @@ Sidebar navigation
 .rotati {
   transform: rotate(90deg);
 }
+.rotati-right {
+  transform: translate(-30px);
+}
+.rotati-plus {
+  transform: translate(-30px) rotate(90deg);
+}
 .menu-nav-button {
   background-color: transparent;
   border: none;
