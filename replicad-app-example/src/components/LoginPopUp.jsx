@@ -40,11 +40,7 @@ var octokit = null;
  * @type {string}
  */
 var currentUser = null;
-/**
- * The octokit instance which allows authenticated interaction with GitHub.
- * @type {object}
- */
-var authorizedUserOcto = null;
+
 /**
  * The name of the current repo.
  * @type {string}

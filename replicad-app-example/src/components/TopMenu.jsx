@@ -156,6 +156,7 @@ function TopMenu(props) {
                 .then((response) => {
                   setState(60);
                   const newTreeSha = response.data.sha;
+
                   octokit.rest.git
                     .createCommit({
                       owner,
@@ -221,7 +222,7 @@ function TopMenu(props) {
           */
     setState(10);
     createCommit(
-      authorizedUserOcto,
+      props.authorizedUserOcto,
       {
         owner: GlobalVariables.currentUser,
         repo: GlobalVariables.currentRepo.name,

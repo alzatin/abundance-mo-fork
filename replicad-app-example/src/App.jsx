@@ -21,6 +21,11 @@ import "./maslowCreate.css";
 import "./menuIcons.css";
 import "./login.css";
 import "./codemirror.css";
+/**
+ * The octokit instance which allows authenticated interaction with GitHub.
+ * @type {object}
+ */
+var authorizedUserOcto = null;
 
 const cad = wrap(new cadWorker());
 
@@ -38,7 +43,6 @@ export default function ReplicadApp() {
     cad.createMesh(size).then((m) => setMesh(m));
   }, [size]);
 
-  var authorizedUserOcto;
   const [popUpOpen, setPopUpOpen] = useState(true);
   const [isloggedIn, setIsLoggedIn] = useState(false);
 
@@ -75,7 +79,11 @@ export default function ReplicadApp() {
 
   return (
     <main>
-      <TopMenu setPopUpOpen={setPopUpOpen} setIsLoggedIn={setIsLoggedIn} />
+      <TopMenu
+        setPopUpOpen={setPopUpOpen}
+        authorizedUserOcto={authorizedUserOcto}
+        setIsLoggedIn={setIsLoggedIn}
+      />
       <div id="headerBar">
         <p> Maslow Create</p>
         <img className="thumnail-logo" src="/imgs/maslow-logo.png" alt="logo" />
