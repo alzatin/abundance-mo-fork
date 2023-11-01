@@ -46,9 +46,6 @@ var currentUser = null;
  * @type {string}
  */
 var currentRepoName = null;
-/**
- * Creates a new blank project.
- */
 
 // initial pop up construction with github login button
 const InitialLog = (props) => {
@@ -353,7 +350,7 @@ const ShowProjects = (props) => {
           <div className="top_browse_menu">
             <div
               onClick={() => {
-                setjectPopUp(true);
+                setNewProjectPopUp(true);
               }}
               className="newProjectDiv"
             >
@@ -393,6 +390,27 @@ const ShowProjects = (props) => {
             )}
           </div>
         ) : null}
+        <div className="search-bar-div">
+          <input
+            type="text"
+            contentEditable="true"
+            value={searchBarValue}
+            onChange={handleSearchChange}
+            placeholder="Search for project.."
+            className="menu_search browseButton"
+            id="project_search"
+          />
+          <img
+            src="/imgs/search_icon.svg"
+            alt="search"
+            style={{
+              width: "20px",
+              color: "white",
+              marginRight: "5px",
+              opacity: "0.5",
+            }}
+          />
+        </div>
 
         <div className="project-item-div">
           {projectsLoaded ? <AddProject /> : null}
@@ -524,27 +542,6 @@ const ShowProjects = (props) => {
               </button>
             </>
           ) : null}
-        </div>
-        <div className="search-bar-div">
-          <input
-            type="text"
-            contentEditable="true"
-            value={searchBarValue}
-            onChange={handleSearchChange}
-            placeholder="Search for project.."
-            className="menu_search browseButton"
-            id="project_search"
-          />
-          <img
-            src="/imgs/search_icon.svg"
-            alt="search"
-            style={{
-              width: "20px",
-              color: "white",
-              marginRight: "5px",
-              opacity: "0.5",
-            }}
-          />
         </div>
       </div>
       {projectPopUp ? <NewProjectPopUp /> : <ClassicBrowse />}
