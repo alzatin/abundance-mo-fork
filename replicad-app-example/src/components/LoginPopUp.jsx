@@ -557,43 +557,15 @@ const ShowProjects = (props) => {
 };
 
 function LoginPopUp(props) {
+  //tryLogin = props.tryLogin;
   const closePopUp = function () {
     props.setPopUpOpen(false);
   };
 
-  /* I think this authorization either needs to happen at a higher level or the variable of the authorized github
-   token needs to be saved to global so we don't keep making oauth calls if we need authorization for pull requests and such*/
-  const tryLogin = function () {
-    // Initialize with OAuth.io app public key
-    if (window.location.href.includes("private")) {
-      OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
-    } else {
-      OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
-    }
-
-    // Use popup for oauth
-    OAuth.popup("github").then((github) => {
-      /**
-       * Oktokit object to access github
-       * @type {object}
-       */
-      authorizedUserOcto = new Octokit({
-        auth: github.access_token,
-      });
-      //getting current user post authetication
-      authorizedUserOcto.request("GET /user", {}).then((response) => {
-        currentUser = response.data.login;
-        GlobalVariables.currentUser = currentUser;
-        if (currentUser) {
-          props.setIsLoggedIn(true);
-        }
-      });
-    });
-  };
   const [closed, setTop] = useState(false);
   const [userBrowsing, setBrowsing] = useState(false);
   var isloggedIn = props.isloggedIn;
-
+  var currentUser = GlobalVariables.currentUser;
   let popUpContent;
   if (!closed) {
     if (GlobalVariables.currentUser !== undefined && !userBrowsing) {
@@ -614,12 +586,12 @@ function LoginPopUp(props) {
           userBrowsing={userBrowsing}
           setBrowsing={setBrowsing}
           isloggedIn={isloggedIn}
-          tryLogin={tryLogin}
+          tryLogin={props.tryLogin}
         />
       );
     } else {
       popUpContent = (
-        <InitialLog tryLogin={tryLogin} setBrowsing={setBrowsing} />
+        <InitialLog tryLogin={props.tryLogin} setBrowsing={setBrowsing} />
       );
     }
     return (
