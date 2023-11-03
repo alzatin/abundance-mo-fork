@@ -1,10 +1,11 @@
 // // Getting back to old-maslow-create
 
-// - right click menu : icons size, descriptions, menu not closing when icon not picked)
-
-// - login pop up
-// - Project Browser
-// - only show pull request button on forked projects
-// - bottom grid menu fix
-// maslow logo+ project name
-// shortcuts
+- right click menu : icons size, descriptions, menu not closing when icon not picked
+- css create new project
+- add auto save
+- fix shortcuts
+- only show pull request button on forked projects
+- bottom grid menu fix
+- maslow logo + project name
+- make run mode work again (should we make it a toggle?)
+- Delete github oauth and give loginpopup new name

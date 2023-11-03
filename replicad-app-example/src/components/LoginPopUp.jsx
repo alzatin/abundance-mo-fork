@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
-import { OAuth } from "oauthio-web";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
-import { nullDependencies } from "mathjs";
 import { licenses } from "./js/licenseOptions.js";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
@@ -421,7 +419,7 @@ const ShowProjects = (props) => {
   // Loads project when clicked in browse mode
   const loadProject = function (project) {
     console.log(project);
-    //should non owners get a different load ?  window.open("/run?" + project.id);
+
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
     GlobalVariables.gitHub.totalAtomCount = 0;
@@ -439,26 +437,31 @@ const ShowProjects = (props) => {
     });
 
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+    if (GlobalVariables.currentUser == project.owner.login) {
+      console.log("owner");
+      octokit
+        .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
+          owner: project.owner.login,
+          repo: project.name,
+        })
+        .then((response) => {
+          props.closePopUp();
+          //content will be base64 encoded
+          let rawFile = JSON.parse(atob(response.data.content));
 
-    octokit
-      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
-        owner: project.owner.login,
-        repo: project.name,
-      })
-      .then((response) => {
-        props.closePopUp();
-        //content will be base64 encoded
-        console.log();
-        let rawFile = JSON.parse(atob(response.data.content));
-
-        if (rawFile.filetypeVersion == 1) {
-          GlobalVariables.topLevelMolecule.deserialize(rawFile);
-        } else {
-          GlobalVariables.topLevelMolecule.deserialize(
-            this.convertFromOldFormat(rawFile)
-          );
-        }
-      });
+          if (rawFile.filetypeVersion == 1) {
+            GlobalVariables.topLevelMolecule.deserialize(rawFile);
+          } else {
+            GlobalVariables.topLevelMolecule.deserialize(
+              this.convertFromOldFormat(rawFile)
+            );
+          }
+        });
+    } else {
+      console.log("not yours");
+      props.setRunMode(true);
+      // run mode? window.open('/run?'+projectID)
+    }
   };
 
   // adds individual projects after API call
@@ -569,6 +572,7 @@ function LoginPopUp(props) {
           userBrowsing={userBrowsing}
           setBrowsing={setBrowsing}
           isloggedIn={isloggedIn}
+          setRunMode={props.setRunMode}
         />
       );
     } else if (userBrowsing) {
@@ -580,6 +584,7 @@ function LoginPopUp(props) {
           setBrowsing={setBrowsing}
           isloggedIn={isloggedIn}
           tryLogin={props.tryLogin}
+          setRunMode={props.setRunMode}
         />
       );
     } else {

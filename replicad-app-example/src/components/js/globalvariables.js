@@ -113,7 +113,7 @@ class GlobalVariables{
         this.currentUser
         /** 
           /** 
-         * A reference to the selected repository authenticated.
+         * A reference to the selected repository name.
          * @type {string}
          */
         this.currentRepoName

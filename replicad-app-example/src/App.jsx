@@ -14,6 +14,7 @@ import FlowCanvas from "./components/flowCanvas.jsx";
 import LowerHalf from "./components/lowerHalf.jsx";
 import LoginPopUp from "./components/LoginPopUp.jsx";
 import TopMenu from "./components/TopMenu.jsx";
+import RunMode from "./components/RunMode.jsx";
 
 import cadWorker from "./worker.js?worker";
 
@@ -45,6 +46,7 @@ export default function ReplicadApp() {
 
   const [popUpOpen, setPopUpOpen] = useState(true);
   const [isloggedIn, setIsLoggedIn] = useState(false);
+  const [runModeon, setRunMode] = useState(false);
 
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
@@ -77,31 +79,50 @@ export default function ReplicadApp() {
     });
   };
 
+  function CreateMode() {
+    return (
+      <>
+        <TopMenu
+          setPopUpOpen={setPopUpOpen}
+          authorizedUserOcto={authorizedUserOcto}
+          setIsLoggedIn={setIsLoggedIn}
+        />
+        <div id="headerBar">
+          <p> Maslow Create</p>
+          <img
+            className="thumnail-logo"
+            src="/imgs/maslow-logo.png"
+            alt="logo"
+          />
+          {popUpOpen ? (
+            <LoginPopUp
+              tryLogin={tryLogin}
+              setIsLoggedIn={setIsLoggedIn}
+              isloggedIn={isloggedIn}
+              setPopUpOpen={setPopUpOpen}
+              setRunMode={setRunMode}
+            />
+          ) : null}
+        </div>
+        <FlowCanvas
+          displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
+        />
+        <LowerHalf
+          displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
+        />
+      </>
+    );
+  }
+
   return (
     <main>
-      <TopMenu
-        setPopUpOpen={setPopUpOpen}
-        authorizedUserOcto={authorizedUserOcto}
-        setIsLoggedIn={setIsLoggedIn}
-      />
-      <div id="headerBar">
-        <p> Maslow Create</p>
-        <img className="thumnail-logo" src="/imgs/maslow-logo.png" alt="logo" />
-        {popUpOpen ? (
-          <LoginPopUp
-            tryLogin={tryLogin}
-            setIsLoggedIn={setIsLoggedIn}
-            isloggedIn={isloggedIn}
-            setPopUpOpen={setPopUpOpen}
-          />
-        ) : null}
-      </div>
-      <FlowCanvas
-        displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
-      />
-      <LowerHalf
-        displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
-      />
+      {runModeon ? (
+        <RunMode
+          displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
+        />
+      ) : (
+        <CreateMode />
+      )}
     </main>
   );
 }
