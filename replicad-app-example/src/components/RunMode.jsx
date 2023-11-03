@@ -42,8 +42,6 @@ function runMode(props) {
     if (props.props.authorizedUserOcto) {
       var owner = GlobalVariables.currentRepo.owner.login;
       var repo = GlobalVariables.currentRepo.name;
-      console.log(owner);
-      console.log(repo);
       // if authenticated and it is not your project, make a clone of the project and return to create mode
       props.props.authorizedUserOcto
         .request("GET /repos/{owner}/{repo}", {
@@ -55,10 +53,12 @@ function runMode(props) {
             owner: owner,
             repo: repo,
           });
-          console.log("forking");
         });
     } else {
-      //trylogin
+      props.props.tryLogin().then((result) => {
+        // is this an infinite loop? or if it's not authenticated does it end and that's that?
+        forkProject();
+      });
     }
   };
   const windowSize = useWindowSize();

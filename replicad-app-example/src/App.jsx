@@ -117,7 +117,7 @@ export default function ReplicadApp() {
     <main>
       {runModeon ? (
         <RunMode
-          props={{ authorizedUserOcto: authorizedUserOcto }}
+          props={{ authorizedUserOcto: authorizedUserOcto, tryLogin: tryLogin }}
           displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
         />
       ) : (
