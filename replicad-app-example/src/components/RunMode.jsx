@@ -28,24 +28,63 @@ function useWindowSize() {
   return windowSize;
 }
 
-function runMode(displayProps) {
+function runMode(props) {
   //Todo this is not very clean
-  let cad = displayProps.displayProps.cad;
-  let size = displayProps.displayProps.size;
-  let setMesh = displayProps.displayProps.setMesh;
-  let mesh = displayProps.displayProps.mesh;
+  let cad = props.displayProps.cad;
+  let size = props.displayProps.size;
+  let setMesh = props.displayProps.setMesh;
+  let mesh = props.displayProps.mesh;
 
+  console.log(GlobalVariables.currentRepoName);
+  console.log(props.props.authorizedUserOcto);
+
+  const forkProject = async function () {
+    if (props.props.authorizedUserOcto) {
+      var owner = GlobalVariables.currentRepo.owner.login;
+      var repo = GlobalVariables.currentRepo.name;
+      console.log(owner);
+      console.log(repo);
+      // if authenticated and it is not your project, make a clone of the project and return to create mode
+      props.props.authorizedUserOcto
+        .request("GET /repos/{owner}/{repo}", {
+          owner: owner,
+          repo: repo,
+        })
+        .then((result) => {
+          props.props.authorizedUserOcto.rest.repos.createFork({
+            owner: owner,
+            repo: repo,
+          });
+          console.log("forking");
+        });
+    } else {
+      //trylogin
+    }
+  };
   const windowSize = useWindowSize();
   return (
     <>
       <div class="runContainer">
         <div class="runSideBar">
-          <p class="molecule_title">oof</p>
+          <p class="molecule_title">{GlobalVariables.currentRepoName}</p>
           <p class="atom_description">oof</p>
           <div class="runSideBarDiv">
             <div class="sidebar-subitem">
               <button class=" browseButton" id="BillOfMaterials-button">
                 Bill Of Materials
+              </button>
+              <button
+                class=" browseButton"
+                id="Fork-button"
+                onClick={forkProject}
+              >
+                Fork
+              </button>
+              <button class=" browseButton" id="Share-button">
+                Share
+              </button>
+              <button class=" browseButton" id="Star-button">
+                Star
               </button>
             </div>
           </div>

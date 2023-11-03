@@ -52,7 +52,6 @@ export default function ReplicadApp() {
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
   const tryLogin = function () {
-    authorizedUserOcto;
     // Initialize with OAuth.io app public key
     if (window.location.href.includes("private")) {
       OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
@@ -118,6 +117,7 @@ export default function ReplicadApp() {
     <main>
       {runModeon ? (
         <RunMode
+          props={{ authorizedUserOcto: authorizedUserOcto }}
           displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
         />
       ) : (
