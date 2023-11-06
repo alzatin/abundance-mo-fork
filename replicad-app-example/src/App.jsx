@@ -79,6 +79,7 @@ export default function ReplicadApp() {
   };
 
   function CreateMode() {
+    var projectToLoad = GlobalVariables.currentRepo;
     return (
       <>
         <TopMenu
@@ -94,6 +95,7 @@ export default function ReplicadApp() {
           />
           {popUpOpen ? (
             <LoginPopUp
+              projectToLoad={projectToLoad}
               tryLogin={tryLogin}
               setIsLoggedIn={setIsLoggedIn}
               isloggedIn={isloggedIn}
@@ -141,12 +143,24 @@ export default function ReplicadApp() {
     }
   };
 
+  function openForkedProject(project) {
+    console.log(project);
+    GlobalVariables.currentRepo = project;
+    setRunMode(false);
+    setPopUpOpen(false);
+  }
+
   return (
     <main>
       {isloggedIn ? <ToggleSwitch /> : null}
       {runModeon ? (
         <RunMode
-          props={{ authorizedUserOcto: authorizedUserOcto, tryLogin: tryLogin }}
+          props={{
+            openForkedProject: openForkedProject,
+            setRunMode: setRunMode,
+            authorizedUserOcto: authorizedUserOcto,
+            tryLogin: tryLogin,
+          }}
           displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
         />
       ) : (

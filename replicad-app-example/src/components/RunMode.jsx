@@ -46,10 +46,23 @@ function runMode(props) {
           repo: repo,
         })
         .then((result) => {
-          props.props.authorizedUserOcto.rest.repos.createFork({
-            owner: owner,
-            repo: repo,
-          });
+          props.props.authorizedUserOcto.rest.repos
+            .createFork({
+              owner: owner,
+              repo: repo,
+            })
+            .then(() => {
+              var activeUser = GlobalVariables.currentUser;
+              // return to create mode
+              props.props.authorizedUserOcto
+                .request("GET /repos/{owner}/{repo}", {
+                  owner: activeUser,
+                  repo: repo,
+                })
+                .then((result) => {
+                  props.props.openForkedProject(result.data);
+                });
+            });
         });
     } else {
       props.props.tryLogin().then((result) => {
@@ -61,27 +74,25 @@ function runMode(props) {
   var isItOwner = false;
   const windowSize = useWindowSize();
   // check if you own the project
-  console.log(
-    globalvariables.currentUser + "" + globalvariables.currentRepo.owner.login
-  );
+  console.log(globalvariables.currentRepo);
   if (globalvariables.currentUser == globalvariables.currentRepo.owner.login) {
     isItOwner = true;
   }
 
   return (
     <>
-      <div class="runContainer">
-        <div class="runSideBar">
-          <p class="molecule_title">{GlobalVariables.currentRepoName}</p>
-          <p class="atom_description">Description</p>
-          <div class="runSideBarDiv">
-            <div class="sidebar-subitem">
-              <button class=" browseButton" id="BillOfMaterials-button">
+      <div className="runContainer">
+        <div className="runSideBar">
+          <p className="molecule_title">{GlobalVariables.currentRepoName}</p>
+          <p className="atom_description">Description</p>
+          <div className="runSideBarDiv">
+            <div className="sidebar-subitem">
+              <button className=" browseButton" id="BillOfMaterials-button">
                 Bill Of Materials
               </button>
               {!isItOwner ? (
                 <button
-                  class=" browseButton"
+                  className=" browseButton"
                   id="Fork-button"
                   onClick={forkProject}
                 >
@@ -89,10 +100,10 @@ function runMode(props) {
                 </button>
               ) : null}
 
-              <button class=" browseButton" id="Share-button">
+              <button className=" browseButton" id="Share-button">
                 Share
               </button>
-              <button class=" browseButton" id="Star-button">
+              <button className=" browseButton" id="Star-button">
                 Star
               </button>
             </div>

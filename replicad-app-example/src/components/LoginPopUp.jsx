@@ -445,7 +445,7 @@ const ShowProjects = (props) => {
           repo: project.name,
         })
         .then((response) => {
-          props.closePopUp();
+          props.setPopUpOpen(false);
           //content will be base64 encoded
           let rawFile = JSON.parse(atob(response.data.content));
 
@@ -554,66 +554,61 @@ const ShowProjects = (props) => {
 
 function LoginPopUp(props) {
   //tryLogin = props.tryLogin;
-  const closePopUp = function () {
-    props.setPopUpOpen(false);
-  };
 
-  const [closed, setTop] = useState(false);
   const [userBrowsing, setBrowsing] = useState(false);
   var isloggedIn = props.isloggedIn;
   var currentUser = GlobalVariables.currentUser;
   let popUpContent;
-  if (!closed) {
-    if (GlobalVariables.currentUser !== undefined && !userBrowsing) {
-      popUpContent = (
-        <ShowProjects
-          user={currentUser}
-          closePopUp={closePopUp}
-          userBrowsing={userBrowsing}
-          setBrowsing={setBrowsing}
-          isloggedIn={isloggedIn}
-          setRunMode={props.setRunMode}
-        />
-      );
-    } else if (userBrowsing) {
-      popUpContent = (
-        <ShowProjects
-          user={""}
-          closePopUp={closePopUp}
-          userBrowsing={userBrowsing}
-          setBrowsing={setBrowsing}
-          isloggedIn={isloggedIn}
-          tryLogin={props.tryLogin}
-          setRunMode={props.setRunMode}
-        />
-      );
-    } else {
-      popUpContent = (
-        <InitialLog tryLogin={props.tryLogin} setBrowsing={setBrowsing} />
-      );
-    }
-    return (
-      <div
-        className="login-popup"
-        id="projects-popup"
-        style={{
-          padding: "0",
-          border: "10px solid #3e3d3d",
-        }}
-      >
-        <div>
-          {" "}
-          <button
-            className="closeButton"
-            onClick={() => props.setPopUpOpen(false)}
-          >
-            <img></img>
-          </button>{" "}
-        </div>
-        {popUpContent}
-      </div>
+
+  if (GlobalVariables.currentUser !== undefined && !userBrowsing) {
+    popUpContent = (
+      <ShowProjects
+        user={currentUser}
+        setPopUpOpen={props.setPopUpOpen}
+        userBrowsing={userBrowsing}
+        setBrowsing={setBrowsing}
+        isloggedIn={isloggedIn}
+        setRunMode={props.setRunMode}
+      />
+    );
+  } else if (userBrowsing) {
+    popUpContent = (
+      <ShowProjects
+        user={""}
+        userBrowsing={userBrowsing}
+        setPopUpOpen={props.setPopUpOpen}
+        setBrowsing={setBrowsing}
+        isloggedIn={isloggedIn}
+        tryLogin={props.tryLogin}
+        setRunMode={props.setRunMode}
+      />
+    );
+  } else {
+    popUpContent = (
+      <InitialLog tryLogin={props.tryLogin} setBrowsing={setBrowsing} />
     );
   }
+  return (
+    <div
+      className="login-popup"
+      id="projects-popup"
+      style={{
+        padding: "0",
+        border: "10px solid #3e3d3d",
+      }}
+    >
+      <div>
+        {" "}
+        <button
+          className="closeButton"
+          onClick={() => props.setPopUpOpen(false)}
+        >
+          <img></img>
+        </button>{" "}
+      </div>
+      {popUpContent}
+    </div>
+  );
 }
 
 export default LoginPopUp;
