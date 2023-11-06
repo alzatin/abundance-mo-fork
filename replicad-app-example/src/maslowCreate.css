@@ -859,6 +859,9 @@ Sidebar navigation
 
 input:checked + .slider {
   background-color: #534857;
+  -webkit-transform: translateY(460px);
+  -ms-transform: translateY(460px);
+  transform: translateY(460px);
 }
 
 input:focus + .slider {

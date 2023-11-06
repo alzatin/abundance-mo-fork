@@ -120,17 +120,15 @@
   width: 40%;
 }
 .runSideBarDiv {
-  background-color: #3e3d3d;
   display: flex;
   flex-direction: column;
   position: relative;
   z-index: 1;
   border-radius: 4px;
   width: 60%;
-  margin: 0 auto 10px;
+  margin: 0 50px;
   padding: 5px;
   text-align: center;
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 /*=== Trigger  ===*/
@@ -528,6 +526,8 @@
   text-transform: uppercase;
   outline: 0;
   background: #444;
+  margin: 20px;
+  padding: 25px;
   width: 100%;
   border: 0;
   color: #ffffff;
