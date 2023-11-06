@@ -8,7 +8,7 @@ body {
 }
 
 .jscad-container {
-  margin: 0px 0px 20px 0px; /* not inherited */
+  margin: 0px; /* not inherited */
   padding: 0px; /* not inherited */
   color: Black;
   font-weight: bold;
@@ -22,8 +22,8 @@ body {
 
 #headerBar {
   position: absolute;
-  bottom: 0px;
-  right: 30px;
+  bottom: 10px;
+  right: 20px;
   z-index: 1000;
 }
 
@@ -197,7 +197,6 @@ input:checked + .sliderAtom:before {
 
 .sideBar {
   flex: 2;
-  margin: 0px 10px 0px 0.3%;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -208,8 +207,8 @@ input:checked + .sliderAtom:before {
   color: #444;
   overflow: auto;
   padding: 0px;
-  border: 2px solid #fefefe;
-  border-radius: 5px;
+  border: 3px #424040;
+  border-left-style: solid;
 }
 
 .runSideBar {
@@ -225,12 +224,8 @@ input:checked + .sliderAtom:before {
 }
 
 .flex-parent {
-  flex-basis: 1;
-  flex-shrink: 2;
   display: flex;
-  width: 100%;
-  max-height: width/3;
-  margin-bottom: 5px;
+  border: solid 4px #424040;
 }
 .runContainer {
   display: flex;
@@ -822,7 +817,7 @@ Sidebar navigation
   display: inline-block;
   width: 45px;
   height: 24px;
-  top: 340px;
+  top: 380px;
 }
 
 /* Hide default HTML checkbox */

@@ -87,7 +87,6 @@ export default function ReplicadApp() {
           setIsLoggedIn={setIsLoggedIn}
         />
         <div id="headerBar">
-          <p> Maslow Create</p>
           <img
             className="thumnail-logo"
             src="/imgs/maslow-logo.png"

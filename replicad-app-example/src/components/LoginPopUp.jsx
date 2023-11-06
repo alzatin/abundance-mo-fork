@@ -395,7 +395,7 @@ const ShowProjects = (props) => {
             value={searchBarValue}
             onChange={handleSearchChange}
             placeholder="Search for project.."
-            className="menu_search browseButton"
+            className="menu_search searchButton"
             id="project_search"
           />
           <img

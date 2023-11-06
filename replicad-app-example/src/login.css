@@ -537,6 +537,20 @@
   cursor: pointer;
 }
 
+.searchButton {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #444;
+  width: 100%;
+  border: 0;
+  color: #ffffff;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
 .browseButton:hover {
   background: #f1eff1;
   border: 2px solid #444;
