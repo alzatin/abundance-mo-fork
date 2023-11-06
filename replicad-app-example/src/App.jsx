@@ -121,14 +121,25 @@ export default function ReplicadApp() {
     }
   }
   const ToggleSwitch = () => {
-    return (
-      <>
-        <label className="switch">
-          <input type="checkbox" onClick={toggleRun}></input>
-          <span className="slider round"></span>
-        </label>
-      </>
-    );
+    if (runModeon) {
+      return (
+        <>
+          <label title="Create/Run Mode" className="switch">
+            <input type="checkbox" onChange={toggleRun} checked></input>
+            <span className="slider round"></span>
+          </label>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <label title="Create/Run Mode" className="switch">
+            <input type="checkbox" onChange={toggleRun}></input>
+            <span className="slider round"></span>
+          </label>
+        </>
+      );
+    }
   };
 
   return (
