@@ -120,13 +120,20 @@ export default function ReplicadApp() {
       setRunMode(true);
     }
   }
+  const ToggleSwitch = () => {
+    return (
+      <>
+        <label className="switch">
+          <input type="checkbox" onClick={toggleRun}></input>
+          <span className="slider round"></span>
+        </label>
+      </>
+    );
+  };
 
   return (
     <main>
-      <label className="switch">
-        <input type="checkbox" onClick={toggleRun}></input>
-        <span className="slider round"></span>
-      </label>
+      {isloggedIn ? <ToggleSwitch /> : null}
       {runModeon ? (
         <RunMode
           props={{ authorizedUserOcto: authorizedUserOcto, tryLogin: tryLogin }}
