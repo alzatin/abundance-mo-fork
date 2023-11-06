@@ -216,6 +216,8 @@ input:checked + .sliderAtom:before {
   background-color: #ffffff;
   color: #444;
   overflow: auto;
+  border: 3px #424040;
+  border-right-style: solid;
 }
 
 #gridDiv,
@@ -854,9 +856,9 @@ Sidebar navigation
 
 input:checked + .slider {
   background-color: #534857;
-  -webkit-transform: translateY(460px);
-  -ms-transform: translateY(460px);
-  transform: translateY(460px);
+  -webkit-transform: translateY(430px);
+  -ms-transform: translateY(430px);
+  transform: translateY(430px);
 }
 
 input:focus + .slider {

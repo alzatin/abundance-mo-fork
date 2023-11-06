@@ -58,7 +58,16 @@ function runMode(props) {
       });
     }
   };
+  var isItOwner = false;
   const windowSize = useWindowSize();
+  // check if you own the project
+  console.log(
+    globalvariables.currentUser + "" + globalvariables.currentRepo.owner.login
+  );
+  if (globalvariables.currentUser == globalvariables.currentRepo.owner.login) {
+    isItOwner = true;
+  }
+
   return (
     <>
       <div class="runContainer">
@@ -70,13 +79,16 @@ function runMode(props) {
               <button class=" browseButton" id="BillOfMaterials-button">
                 Bill Of Materials
               </button>
-              <button
-                class=" browseButton"
-                id="Fork-button"
-                onClick={forkProject}
-              >
-                Fork
-              </button>
+              {!isItOwner ? (
+                <button
+                  class=" browseButton"
+                  id="Fork-button"
+                  onClick={forkProject}
+                >
+                  Fork
+                </button>
+              ) : null}
+
               <button class=" browseButton" id="Share-button">
                 Share
               </button>
