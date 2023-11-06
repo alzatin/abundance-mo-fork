@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 import GlobalVariables from "./js/globalvariables.js";
+import globalvariables from "./js/globalvariables.js";
 function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
   // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
@@ -34,10 +35,6 @@ function runMode(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
-
-  console.log(GlobalVariables.currentRepoName);
-  console.log(props.props.authorizedUserOcto);
-
   const forkProject = async function () {
     if (props.props.authorizedUserOcto) {
       var owner = GlobalVariables.currentRepo.owner.login;
@@ -67,7 +64,7 @@ function runMode(props) {
       <div class="runContainer">
         <div class="runSideBar">
           <p class="molecule_title">{GlobalVariables.currentRepoName}</p>
-          <p class="atom_description">oof</p>
+          <p class="atom_description">Description</p>
           <div class="runSideBarDiv">
             <div class="sidebar-subitem">
               <button class=" browseButton" id="BillOfMaterials-button">
