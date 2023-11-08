@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
-import { OAuth } from "oauthio-web";
-import { Octokit } from "https://esm.sh/octokit@2.0.19";
 
 function TopMenu(props) {
   const [currentMoleculeTop, setTop] = useState(false);
@@ -156,6 +154,7 @@ function TopMenu(props) {
                 .then((response) => {
                   setState(60);
                   const newTreeSha = response.data.sha;
+
                   octokit.rest.git
                     .createCommit({
                       owner,
@@ -191,19 +190,21 @@ function TopMenu(props) {
    */
   const saveProject = async (setState) => {
     setState(5);
-    var authorizedUserOcto;
+    var authorizedUserOcto = props.authorizedUserOcto;
 
     var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
     jsonRepOfProject.filetypeVersion = 1;
     jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
     const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
 
+    /*
     // Initialize with OAuth.io app public key
     if (window.location.href.includes("private")) {
       OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
     } else {
       OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
     }
+    
 
     // Use popup for oauth
     OAuth.popup("github").then((github) => {
@@ -215,27 +216,26 @@ function TopMenu(props) {
         .then((response) => {
           GlobalVariables.currentUser = response.data.login;
         })
-        .then(() => {
-          setState(10);
-          createCommit(
-            authorizedUserOcto,
-            {
-              owner: GlobalVariables.currentUser,
-              repo: GlobalVariables.currentRepo.name,
-              changes: {
-                files: {
-                  "BillOfMaterials.md": "bom",
-                  "README.md": "readme",
-                  "project.svg": "finalSVG",
-                  "project.maslowcreate": projectContent,
-                },
-                commit: "Autosave",
-              },
-            },
-            setState
-          );
-        });
-    });
+        .then(() => { 
+          */
+    setState(10);
+    createCommit(
+      props.authorizedUserOcto,
+      {
+        owner: GlobalVariables.currentUser,
+        repo: GlobalVariables.currentRepo.name,
+        changes: {
+          files: {
+            "BillOfMaterials.md": "bom",
+            "README.md": "readme",
+            "project.svg": "finalSVG",
+            "project.maslowcreate": projectContent,
+          },
+          commit: "Autosave",
+        },
+      },
+      setState
+    );
   };
   //{checks for top level variable and show go-up button if this is not top molecule
   const TopLevel = (props) => {
@@ -271,11 +271,11 @@ function TopMenu(props) {
     }
     return (
       <>
-        <div class="save-bar">
+        <div className="save-bar">
           <h1>Saving</h1>
-          <div class="progress">
+          <div className="progress">
             <div
-              class="progress-done"
+              className="progress-done"
               data-done="70"
               style={{ width: props.saveState + "%", opacity: "1" }}
             >

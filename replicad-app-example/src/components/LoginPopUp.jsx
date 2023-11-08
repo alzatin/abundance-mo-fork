@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
-import { OAuth } from "oauthio-web";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
-import { nullDependencies } from "mathjs";
 import { licenses } from "./js/licenseOptions.js";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
@@ -40,19 +38,12 @@ var octokit = null;
  * @type {string}
  */
 var currentUser = null;
-/**
- * The octokit instance which allows authenticated interaction with GitHub.
- * @type {object}
- */
-var authorizedUserOcto = null;
+
 /**
  * The name of the current repo.
  * @type {string}
  */
 var currentRepoName = null;
-/**
- * Creates a new blank project.
- */
 
 // initial pop up construction with github login button
 const InitialLog = (props) => {
@@ -357,7 +348,7 @@ const ShowProjects = (props) => {
           <div className="top_browse_menu">
             <div
               onClick={() => {
-                setjectPopUp(true);
+                setNewProjectPopUp(true);
               }}
               className="newProjectDiv"
             >
@@ -397,6 +388,27 @@ const ShowProjects = (props) => {
             )}
           </div>
         ) : null}
+        <div className="search-bar-div">
+          <input
+            type="text"
+            contentEditable="true"
+            value={searchBarValue}
+            onChange={handleSearchChange}
+            placeholder="Search for project.."
+            className="menu_search searchButton"
+            id="project_search"
+          />
+          <img
+            src="/imgs/search_icon.svg"
+            alt="search"
+            style={{
+              width: "20px",
+              color: "white",
+              marginRight: "5px",
+              opacity: "0.5",
+            }}
+          />
+        </div>
 
         <div className="project-item-div">
           {projectsLoaded ? <AddProject /> : null}
@@ -407,7 +419,7 @@ const ShowProjects = (props) => {
   // Loads project when clicked in browse mode
   const loadProject = function (project) {
     console.log(project);
-    //should non owners get a different load ?  window.open("/run?" + project.id);
+
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
     GlobalVariables.gitHub.totalAtomCount = 0;
@@ -425,26 +437,31 @@ const ShowProjects = (props) => {
     });
 
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+    if (GlobalVariables.currentUser == project.owner.login) {
+      console.log("owner");
+      octokit
+        .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
+          owner: project.owner.login,
+          repo: project.name,
+        })
+        .then((response) => {
+          props.setPopUpOpen(false);
+          //content will be base64 encoded
+          let rawFile = JSON.parse(atob(response.data.content));
 
-    octokit
-      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
-        owner: project.owner.login,
-        repo: project.name,
-      })
-      .then((response) => {
-        props.closePopUp();
-        //content will be base64 encoded
-        console.log();
-        let rawFile = JSON.parse(atob(response.data.content));
-
-        if (rawFile.filetypeVersion == 1) {
-          GlobalVariables.topLevelMolecule.deserialize(rawFile);
-        } else {
-          GlobalVariables.topLevelMolecule.deserialize(
-            this.convertFromOldFormat(rawFile)
-          );
-        }
-      });
+          if (rawFile.filetypeVersion == 1) {
+            GlobalVariables.topLevelMolecule.deserialize(rawFile);
+          } else {
+            GlobalVariables.topLevelMolecule.deserialize(
+              this.convertFromOldFormat(rawFile)
+            );
+          }
+        });
+    } else {
+      console.log("not yours");
+      props.setRunMode(true);
+      // run mode? window.open('/run?'+projectID)
+    }
   };
 
   // adds individual projects after API call
@@ -529,27 +546,6 @@ const ShowProjects = (props) => {
             </>
           ) : null}
         </div>
-        <div className="search-bar-div">
-          <input
-            type="text"
-            contentEditable="true"
-            value={searchBarValue}
-            onChange={handleSearchChange}
-            placeholder="Search for project.."
-            className="menu_search browseButton"
-            id="project_search"
-          />
-          <img
-            src="/imgs/search_icon.svg"
-            alt="search"
-            style={{
-              width: "20px",
-              color: "white",
-              marginRight: "5px",
-              opacity: "0.5",
-            }}
-          />
-        </div>
       </div>
       {projectPopUp ? <NewProjectPopUp /> : <ClassicBrowse />}
     </>
@@ -557,93 +553,62 @@ const ShowProjects = (props) => {
 };
 
 function LoginPopUp(props) {
-  const closePopUp = function () {
-    props.setPopUpOpen(false);
-  };
+  //tryLogin = props.tryLogin;
 
-  /* I think this authorization either needs to happen at a higher level or the variable of the authorized github
-   token needs to be saved to global so we don't keep making oauth calls if we need authorization for pull requests and such*/
-  const tryLogin = function () {
-    // Initialize with OAuth.io app public key
-    if (window.location.href.includes("private")) {
-      OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
-    } else {
-      OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
-    }
-
-    // Use popup for oauth
-    OAuth.popup("github").then((github) => {
-      /**
-       * Oktokit object to access github
-       * @type {object}
-       */
-      authorizedUserOcto = new Octokit({
-        auth: github.access_token,
-      });
-      //getting current user post authetication
-      authorizedUserOcto.request("GET /user", {}).then((response) => {
-        currentUser = response.data.login;
-        GlobalVariables.currentUser = currentUser;
-        if (currentUser) {
-          props.setIsLoggedIn(true);
-        }
-      });
-    });
-  };
-  const [closed, setTop] = useState(false);
   const [userBrowsing, setBrowsing] = useState(false);
   var isloggedIn = props.isloggedIn;
-
+  var currentUser = GlobalVariables.currentUser;
   let popUpContent;
-  if (!closed) {
-    if (GlobalVariables.currentUser !== undefined && !userBrowsing) {
-      popUpContent = (
-        <ShowProjects
-          user={currentUser}
-          closePopUp={closePopUp}
-          userBrowsing={userBrowsing}
-          setBrowsing={setBrowsing}
-          isloggedIn={isloggedIn}
-        />
-      );
-    } else if (userBrowsing) {
-      popUpContent = (
-        <ShowProjects
-          user={""}
-          closePopUp={closePopUp}
-          userBrowsing={userBrowsing}
-          setBrowsing={setBrowsing}
-          isloggedIn={isloggedIn}
-          tryLogin={tryLogin}
-        />
-      );
-    } else {
-      popUpContent = (
-        <InitialLog tryLogin={tryLogin} setBrowsing={setBrowsing} />
-      );
-    }
-    return (
-      <div
-        className="login-popup"
-        id="projects-popup"
-        style={{
-          padding: "0",
-          border: "10px solid #3e3d3d",
-        }}
-      >
-        <div>
-          {" "}
-          <button
-            className="closeButton"
-            onClick={() => props.setPopUpOpen(false)}
-          >
-            <img></img>
-          </button>{" "}
-        </div>
-        {popUpContent}
-      </div>
+
+  if (GlobalVariables.currentUser !== undefined && !userBrowsing) {
+    popUpContent = (
+      <ShowProjects
+        user={currentUser}
+        setPopUpOpen={props.setPopUpOpen}
+        userBrowsing={userBrowsing}
+        setBrowsing={setBrowsing}
+        isloggedIn={isloggedIn}
+        setRunMode={props.setRunMode}
+      />
+    );
+  } else if (userBrowsing) {
+    popUpContent = (
+      <ShowProjects
+        user={""}
+        userBrowsing={userBrowsing}
+        setPopUpOpen={props.setPopUpOpen}
+        setBrowsing={setBrowsing}
+        isloggedIn={isloggedIn}
+        tryLogin={props.tryLogin}
+        setRunMode={props.setRunMode}
+      />
+    );
+  } else {
+    popUpContent = (
+      <InitialLog tryLogin={props.tryLogin} setBrowsing={setBrowsing} />
     );
   }
+  return (
+    <div
+      className="login-popup"
+      id="projects-popup"
+      style={{
+        padding: "0",
+        border: "10px solid #3e3d3d",
+      }}
+    >
+      <div>
+        {" "}
+        <button
+          className="closeButton"
+          onClick={() => props.setPopUpOpen(false)}
+        >
+          <img></img>
+        </button>{" "}
+      </div>
+      {popUpContent}
+    </div>
+  );
 }
 
 export default LoginPopUp;
