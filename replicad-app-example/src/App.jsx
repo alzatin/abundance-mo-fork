@@ -2,6 +2,14 @@ import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { OAuth } from "oauthio-web";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import {
+  BrowserRouter,
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  Link,
+} from "react-router-dom";
 
 import FileSaver from "file-saver";
 import { wrap } from "comlink";
@@ -121,30 +129,42 @@ export default function ReplicadApp() {
       setRunMode(true);
     }
   }
+  /* Toggle button to switch between run and create modes  */
   const ToggleRunCreate = () => {
-    if (runModeon) {
+    const location = useLocation();
+    console.log(location.pathname);
+
+    const [checked, setChecked] = useState(false);
+    const handleChange = () => {
+      setChecked(!checked);
+    };
+
+    if (location.pathname === "/") {
       return (
         <>
-          <label title="Create/Run Mode" className="switch">
-            <input type="checkbox" onChange={toggleRun} checked></input>
-            <span className="slider round"></span>
-          </label>
+          <Link to="/run">
+            <label title="Create/Run Mode" className="switch">
+              <input type="checkbox" onChange={handleChange}></input>
+              <span className="slider round"></span>
+            </label>
+          </Link>
         </>
       );
     } else {
       return (
         <>
-          <label title="Create/Run Mode" className="switch">
-            <input type="checkbox" onChange={toggleRun}></input>
-            <span className="slider round"></span>
-          </label>
+          <Link to="/">
+            <label title="Create/Run Mode" className="switch">
+              <input type="checkbox" checked onChange={handleChange}></input>
+              <span className="slider round"></span>
+            </label>
+          </Link>
         </>
       );
     }
   };
-
+  /* Function to return to create mode once a project has been forked, opens newly created project */
   function openForkedProject(project) {
-    console.log(project);
     GlobalVariables.currentRepo = project;
     setRunMode(false);
     setPopUpOpen(false);
@@ -152,20 +172,31 @@ export default function ReplicadApp() {
 
   return (
     <main>
-      {isloggedIn ? <ToggleRunCreate /> : null}
-      {runModeon ? (
-        <RunMode
-          props={{
-            openForkedProject: openForkedProject,
-            setRunMode: setRunMode,
-            authorizedUserOcto: authorizedUserOcto,
-            tryLogin: tryLogin,
-          }}
-          displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
-        />
-      ) : (
-        <CreateMode />
-      )}
+      <BrowserRouter>
+        {isloggedIn ? <ToggleRunCreate /> : null}
+        <Routes>
+          <Route exact path="/" element={<CreateMode />} />
+          <Route
+            path="/run"
+            element={
+              <RunMode
+                props={{
+                  openForkedProject: openForkedProject,
+                  setRunMode: setRunMode,
+                  authorizedUserOcto: authorizedUserOcto,
+                  tryLogin: tryLogin,
+                }}
+                displayProps={{
+                  mesh: mesh,
+                  setMesh: setMesh,
+                  size: size,
+                  cad: cad,
+                }}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </main>
   );
 }
