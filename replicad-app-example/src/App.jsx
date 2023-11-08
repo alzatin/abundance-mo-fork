@@ -121,7 +121,7 @@ export default function ReplicadApp() {
       setRunMode(true);
     }
   }
-  const ToggleSwitch = () => {
+  const ToggleRunCreate = () => {
     if (runModeon) {
       return (
         <>
@@ -152,7 +152,7 @@ export default function ReplicadApp() {
 
   return (
     <main>
-      {isloggedIn ? <ToggleSwitch /> : null}
+      {isloggedIn ? <ToggleRunCreate /> : null}
       {runModeon ? (
         <RunMode
           props={{
