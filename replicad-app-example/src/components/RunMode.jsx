@@ -3,6 +3,15 @@ import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 import GlobalVariables from "./js/globalvariables.js";
 import globalvariables from "./js/globalvariables.js";
+import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Routes,
+  useParams,
+} from "react-router-dom";
+
 function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
   // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
@@ -35,7 +44,7 @@ function runMode(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
-
+  /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function () {
     if (props.props.authorizedUserOcto) {
       var owner = GlobalVariables.currentRepo.owner.login;
@@ -76,7 +85,16 @@ function runMode(props) {
   var authorizedUserOcto;
   const windowSize = useWindowSize();
   // check if you own the project
-  console.log(globalvariables.currentRepo);
+
+  /** get repository from github by the id in the url */
+  const getProjectById = () => {
+    const { id } = useParams();
+    var octokit = new Octokit();
+    octokit.request("GET /repositories/:id", { id }).then((result) => {
+      return result.data.name;
+    });
+  };
+
   if (authorizedUserOcto) {
     if (
       globalvariables.currentUser == globalvariables.currentRepo.owner.login
@@ -84,12 +102,16 @@ function runMode(props) {
       isItOwner = true;
     }
   }
+  var projectRunning;
+  if (!globalvariables.currentRepo) {
+    globalvariables.currentRepoName = getProjectById();
+  }
 
   return (
     <>
       <div className="runContainer">
         <div className="runSideBar">
-          <p className="molecule_title">{GlobalVariables.currentRepoName}</p>
+          <p className="molecule_title">{globalvariables.currentRepoName}</p>
           <p className="atom_description">Description</p>
           <div className="runSideBarDiv">
             <div className="sidebar-subitem">

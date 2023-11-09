@@ -149,7 +149,7 @@ export default function ReplicadApp() {
             }
             to={
               GlobalVariables.currentRepo
-                ? `/run?${GlobalVariables.currentRepo.id}`
+                ? `/run/${GlobalVariables.currentRepo.id}`
                 : "/run"
             }
           >
@@ -190,7 +190,7 @@ export default function ReplicadApp() {
         <Routes>
           <Route exact path="/" element={<CreateMode />} />
           <Route
-            path="/run"
+            path="/run/:id"
             element={
               <RunMode
                 props={{
