@@ -4,6 +4,7 @@ import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
 import { licenses } from "./js/licenseOptions.js";
 import { Link } from "react-router-dom";
+import globalvariables from "./js/globalvariables.js";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
 //var PopUpState = true;
@@ -425,21 +426,19 @@ const ShowProjects = (props) => {
     GlobalVariables.currentRepo = project;
     GlobalVariables.gitHub.totalAtomCount = 0;
     GlobalVariables.gitHub.numberOfAtomsToLoad = 0;
-
     GlobalVariables.startTime = new Date().getTime();
-
-    const currentRepoName = project.name;
-    //Load a blank project
-    GlobalVariables.topLevelMolecule = new Molecule({
-      x: 0,
-      y: 0,
-      topLevel: true,
-      atomType: "Molecule",
-    });
-
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+
     if (GlobalVariables.currentUser == project.owner.login) {
-      console.log("owner");
+      props.setOwned(true);
+      const currentRepoName = project.name;
+      //Load a blank project
+      GlobalVariables.topLevelMolecule = new Molecule({
+        x: 0,
+        y: 0,
+        topLevel: true,
+        atomType: "Molecule",
+      });
       octokit
         .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
           owner: project.owner.login,
@@ -470,8 +469,11 @@ const ShowProjects = (props) => {
     return nodes.map((node) => (
       <Link
         key={node.id}
-        // Moving to the product page
-        to={`/?id=${node.id}`}
+        to={
+          node.owner.login == globalvariables.currentUser
+            ? `/?id=${node.id}`
+            : `/run/${node.id}`
+        }
         className="product__item"
       >
         <div
@@ -576,6 +578,7 @@ function LoginPopUp(props) {
         setBrowsing={setBrowsing}
         isloggedIn={isloggedIn}
         setRunMode={props.setRunMode}
+        setOwned={props.setOwned}
       />
     );
   } else if (userBrowsing) {
@@ -588,6 +591,7 @@ function LoginPopUp(props) {
         isloggedIn={isloggedIn}
         tryLogin={props.tryLogin}
         setRunMode={props.setRunMode}
+        setOwned={props.setOwned}
       />
     );
   } else {

@@ -55,6 +55,7 @@ export default function ReplicadApp() {
   const [popUpOpen, setPopUpOpen] = useState(true);
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [runModeon, setRunMode] = useState(false);
+  const [isItOwned, setOwned] = useState(false);
 
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
@@ -103,6 +104,7 @@ export default function ReplicadApp() {
           />
           {popUpOpen ? (
             <LoginPopUp
+              setOwned={setOwned}
               projectToLoad={projectToLoad}
               tryLogin={tryLogin}
               setIsLoggedIn={setIsLoggedIn}
@@ -132,7 +134,6 @@ export default function ReplicadApp() {
   /* Toggle button to switch between run and create modes  */
   const ToggleRunCreate = () => {
     const location = useLocation();
-    console.log(location.pathname);
 
     const [checked, setChecked] = useState(false);
     const handleChange = () => {
@@ -194,6 +195,7 @@ export default function ReplicadApp() {
             element={
               <RunMode
                 props={{
+                  isItOwned: isItOwned,
                   openForkedProject: openForkedProject,
                   setRunMode: setRunMode,
                   authorizedUserOcto: authorizedUserOcto,

@@ -81,7 +81,6 @@ function runMode(props) {
       });
     }
   };
-  var isItOwner = false;
   var authorizedUserOcto;
   const windowSize = useWindowSize();
   // check if you own the project
@@ -95,14 +94,6 @@ function runMode(props) {
     });
   };
 
-  if (authorizedUserOcto) {
-    if (
-      globalvariables.currentUser == globalvariables.currentRepo.owner.login
-    ) {
-      isItOwner = true;
-    }
-  }
-  var projectRunning;
   if (!globalvariables.currentRepo) {
     globalvariables.currentRepoName = getProjectById();
   }
@@ -118,7 +109,7 @@ function runMode(props) {
               <button className=" browseButton" id="BillOfMaterials-button">
                 Bill Of Materials
               </button>
-              {!isItOwner ? (
+              {!props.props.isItOwned ? (
                 <button
                   className=" browseButton"
                   id="Fork-button"
