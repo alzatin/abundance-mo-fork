@@ -138,11 +138,21 @@ export default function ReplicadApp() {
     const handleChange = () => {
       setChecked(!checked);
     };
-
     if (location.pathname === "/") {
       return (
         <>
-          <Link to="/run">
+          <Link
+            key={
+              GlobalVariables.currentRepo
+                ? GlobalVariables.currentRepo.id
+                : null
+            }
+            to={
+              GlobalVariables.currentRepo
+                ? `/run?${GlobalVariables.currentRepo.id}`
+                : "/run"
+            }
+          >
             <label title="Create/Run Mode" className="switch">
               <input type="checkbox" onChange={handleChange}></input>
               <span className="slider round"></span>
@@ -153,7 +163,10 @@ export default function ReplicadApp() {
     } else {
       return (
         <>
-          <Link to="/">
+          <Link
+            key={GlobalVariables.currentRepo.id}
+            to={`/?${GlobalVariables.currentRepo.id}`}
+          >
             <label title="Create/Run Mode" className="switch">
               <input type="checkbox" checked onChange={handleChange}></input>
               <span className="slider round"></span>

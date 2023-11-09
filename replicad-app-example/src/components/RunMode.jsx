@@ -35,6 +35,7 @@ function runMode(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
+
   const forkProject = async function () {
     if (props.props.authorizedUserOcto) {
       var owner = GlobalVariables.currentRepo.owner.login;

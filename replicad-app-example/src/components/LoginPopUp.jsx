@@ -3,6 +3,7 @@ import GlobalVariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
 import { licenses } from "./js/licenseOptions.js";
+import { Link } from "react-router-dom";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
 //var PopUpState = true;
@@ -458,7 +459,6 @@ const ShowProjects = (props) => {
           }
         });
     } else {
-      console.log("not yours");
       props.setRunMode(true);
       // run mode? window.open('/run?'+projectID)
     }
@@ -468,36 +468,43 @@ const ShowProjects = (props) => {
   const AddProject = () => {
     //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"
     return nodes.map((node) => (
-      <div
-        className="project"
+      <Link
         key={node.id}
-        id={node.name}
-        onClick={(e) => loadProject(node, e)}
+        // Moving to the product page
+        to={`/?id=${node.id}`}
+        className="product__item"
       >
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
+        <div
+          className="project"
+          key={node.id}
+          id={node.name}
+          onClick={(e) => loadProject(node, e)}
         >
-          {node.name}
-        </p>
-        <img className="project_image" src="/imgs/defaultThumbnail.svg"></img>
-        <div style={{ display: "flex" }}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ transform: "scale(.7)" }}
-            width="16"
-            height="16"
+          <p
+            style={{
+              fontSize: "1em",
+              textOverflow: "ellipsis",
+              display: "block",
+              overflow: "hidden",
+              width: "80%",
+            }}
           >
-            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
-          </svg>
-          <p>{node.stargazers_count}</p>
+            {node.name}
+          </p>
+          <img className="project_image" src="/imgs/defaultThumbnail.svg"></img>
+          <div style={{ display: "flex" }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ transform: "scale(.7)" }}
+              width="16"
+              height="16"
+            >
+              <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+            </svg>
+            <p>{node.stargazers_count}</p>
+          </div>
         </div>
-      </div>
+      </Link>
     ));
   };
 
