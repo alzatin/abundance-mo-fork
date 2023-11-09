@@ -73,11 +73,16 @@ function runMode(props) {
     }
   };
   var isItOwner = false;
+  var authorizedUserOcto;
   const windowSize = useWindowSize();
   // check if you own the project
   console.log(globalvariables.currentRepo);
-  if (globalvariables.currentUser == globalvariables.currentRepo.owner.login) {
-    isItOwner = true;
+  if (authorizedUserOcto) {
+    if (
+      globalvariables.currentUser == globalvariables.currentRepo.owner.login
+    ) {
+      isItOwner = true;
+    }
   }
 
   return (
