@@ -187,6 +187,7 @@ export default function ReplicadApp() {
         {isloggedIn ? <ToggleRunCreate /> : null}
         <Routes>
           <Route exact path="/" element={<CreateMode />} />
+          <Route path="/:id" element={<CreateMode />} />
           <Route
             path="/run/:id"
             element={
