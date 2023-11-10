@@ -124,22 +124,17 @@ export default function ReplicadApp() {
     );
   }
 
-  function toggleRun() {
-    if (runModeon) {
-      setRunMode(false);
-    } else {
-      setRunMode(true);
-    }
-  }
   /* Toggle button to switch between run and create modes  */
   const ToggleRunCreate = () => {
-    const location = useLocation();
-
-    const [checked, setChecked] = useState(false);
+    const [runchecked, setChecked] = useState(false);
     const handleChange = () => {
-      setChecked(!checked);
+      console.log("this is running");
+      setChecked(!runchecked);
+      console.log(runchecked);
+      setRunMode(!runModeon);
+      console.log(runModeon);
     };
-    if (location.pathname === "/") {
+    if (!runModeon) {
       return (
         <>
           <Link
@@ -153,9 +148,10 @@ export default function ReplicadApp() {
                 ? `/run/${GlobalVariables.currentRepo.id}`
                 : "/run"
             }
+            onClick={handleChange}
           >
             <label title="Create/Run Mode" className="switch">
-              <input type="checkbox" onChange={handleChange}></input>
+              <input type="checkbox" checked={runchecked}></input>
               <span className="slider round"></span>
             </label>
           </Link>
@@ -166,10 +162,11 @@ export default function ReplicadApp() {
         <>
           <Link
             key={GlobalVariables.currentRepo.id}
-            to={`/?${GlobalVariables.currentRepo.id}`}
+            to={`/${GlobalVariables.currentRepo.id}`}
+            onClick={handleChange}
           >
             <label title="Create/Run Mode" className="switch">
-              <input type="checkbox" checked onChange={handleChange}></input>
+              <input type="checkbox" checked></input>
               <span className="slider round"></span>
             </label>
           </Link>
