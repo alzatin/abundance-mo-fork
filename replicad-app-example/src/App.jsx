@@ -92,23 +92,23 @@ export default function ReplicadApp() {
     var location = useLocation();
     console.log(location.pathname);
     //use location? if run isn't part of URL THEN try login ?, if run is not part of URL show runmode but show login button
-    var projectToLoad = GlobalVariables.currentRepo;
-    return (
-      <LoginPopUp
-        setOwned={setOwned}
-        projectToLoad={projectToLoad}
-        tryLogin={tryLogin}
-        setIsLoggedIn={setIsLoggedIn}
-        isloggedIn={isloggedIn}
-        setPopUpOpen={setPopUpOpen}
-        setRunMode={setRunMode}
-      />
-    );
   }
 
   function CreateMode() {
+    var projectToLoad = GlobalVariables.currentRepo;
     return (
       <>
+        {popUpOpen ? (
+          <LoginPopUp
+            setOwned={setOwned}
+            projectToLoad={projectToLoad}
+            tryLogin={tryLogin}
+            setIsLoggedIn={setIsLoggedIn}
+            isloggedIn={isloggedIn}
+            setPopUpOpen={setPopUpOpen}
+            setRunMode={setRunMode}
+          />
+        ) : null}
         <TopMenu
           setPopUpOpen={setPopUpOpen}
           authorizedUserOcto={authorizedUserOcto}
@@ -182,7 +182,6 @@ export default function ReplicadApp() {
   return (
     <main>
       <BrowserRouter>
-        {popUpOpen ? <LoginInMode /> : null}
         {isItOwned ? <ToggleRunCreate /> : null}
         <Routes>
           <Route exact path="/" element={<CreateMode />} />

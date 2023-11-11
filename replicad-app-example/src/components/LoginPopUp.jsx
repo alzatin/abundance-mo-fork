@@ -473,7 +473,7 @@ const ShowProjects = (props) => {
         key={node.id}
         to={
           node.owner.login == globalvariables.currentUser
-            ? `/?id=${node.id}`
+            ? `/${node.id}`
             : `/run/${node.id}`
         }
         className="product__item"

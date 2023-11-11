@@ -133,6 +133,15 @@ function runMode(props) {
                 Star
               </button>
             </div>
+            <Link
+              to={`/`}
+              onClick={() => {
+                props.props.setRunMode(false);
+                props.props.setPopUpOpen(true);
+              }}
+            >
+              <button>Return to browsing</button>
+            </Link>
           </div>
         </div>
         <div
