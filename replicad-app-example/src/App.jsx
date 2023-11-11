@@ -9,6 +9,7 @@ import {
   Route,
   useLocation,
   Link,
+  useNavigate,
 } from "react-router-dom";
 
 import FileSaver from "file-saver";
@@ -87,8 +88,26 @@ export default function ReplicadApp() {
     });
   };
 
-  function CreateMode() {
+  function LoginInMode() {
+    var location = useLocation();
+    console.log(location.pathname);
+    //use location? if run isn't part of URL THEN try login ?, if run is not part of URL show runmode but show login button
     var projectToLoad = GlobalVariables.currentRepo;
+    return (
+      <LoginPopUp
+        setOwned={setOwned}
+        projectToLoad={projectToLoad}
+        tryLogin={tryLogin}
+        setIsLoggedIn={setIsLoggedIn}
+        isloggedIn={isloggedIn}
+        setPopUpOpen={setPopUpOpen}
+        setRunMode={setRunMode}
+      />
+    );
+  }
+
+  function CreateMode() {
+    setRunMode(false);
     return (
       <>
         <TopMenu
@@ -102,17 +121,6 @@ export default function ReplicadApp() {
             src="/imgs/maslow-logo.png"
             alt="logo"
           />
-          {popUpOpen ? (
-            <LoginPopUp
-              setOwned={setOwned}
-              projectToLoad={projectToLoad}
-              tryLogin={tryLogin}
-              setIsLoggedIn={setIsLoggedIn}
-              isloggedIn={isloggedIn}
-              setPopUpOpen={setPopUpOpen}
-              setRunMode={setRunMode}
-            />
-          ) : null}
         </div>
         <FlowCanvas
           displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
@@ -128,11 +136,8 @@ export default function ReplicadApp() {
   const ToggleRunCreate = () => {
     const [runchecked, setChecked] = useState(false);
     const handleChange = () => {
-      console.log("this is running");
       setChecked(!runchecked);
-      console.log(runchecked);
       setRunMode(!runModeon);
-      console.log(runModeon);
     };
     if (!runModeon) {
       return (
@@ -151,7 +156,7 @@ export default function ReplicadApp() {
             onClick={handleChange}
           >
             <label title="Create/Run Mode" className="switch">
-              <input type="checkbox" checked={runchecked}></input>
+              <input type="checkbox"></input>
               <span className="slider round"></span>
             </label>
           </Link>
@@ -166,7 +171,7 @@ export default function ReplicadApp() {
             onClick={handleChange}
           >
             <label title="Create/Run Mode" className="switch">
-              <input type="checkbox" checked></input>
+              <input type="checkbox" defaultChecked></input>
               <span className="slider round"></span>
             </label>
           </Link>
@@ -174,17 +179,12 @@ export default function ReplicadApp() {
       );
     }
   };
-  /* Function to return to create mode once a project has been forked, opens newly created project */
-  function openForkedProject(project) {
-    GlobalVariables.currentRepo = project;
-    setRunMode(false);
-    setPopUpOpen(false);
-  }
 
   return (
     <main>
       <BrowserRouter>
-        {isloggedIn ? <ToggleRunCreate /> : null}
+        {popUpOpen ? <LoginInMode /> : null}
+        {isItOwned ? <ToggleRunCreate /> : null}
         <Routes>
           <Route exact path="/" element={<CreateMode />} />
           <Route path="/:id" element={<CreateMode />} />
@@ -193,9 +193,10 @@ export default function ReplicadApp() {
             element={
               <RunMode
                 props={{
+                  setPopUpOpen: setPopUpOpen,
                   isItOwned: isItOwned,
-                  openForkedProject: openForkedProject,
                   setRunMode: setRunMode,
+                  setOwned: setOwned,
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
                 }}

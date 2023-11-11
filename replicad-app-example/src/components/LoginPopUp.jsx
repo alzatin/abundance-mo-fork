@@ -459,6 +459,8 @@ const ShowProjects = (props) => {
         });
     } else {
       props.setRunMode(true);
+      props.setOwned(false);
+      props.setPopUpOpen(false);
       // run mode? window.open('/run?'+projectID)
     }
   };

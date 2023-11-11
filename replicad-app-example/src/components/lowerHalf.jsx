@@ -74,7 +74,13 @@ export default function LowerHalf(displayProps) {
           <div id="arrow-up-menu" className="arrow-up"></div>
           <div id="viewer_bar"></div>
         </div>
-        <div className="sideBar" value={globalvariables.currentRepo}></div>
+        <div className="sideBar" value={globalvariables.currentRepo}>
+          {globalvariables.currentRepo
+            ? globalvariables.currentRepo.name +
+              " " +
+              globalvariables.currentRepo.owner.login
+            : null}
+        </div>
         <div id="bottom_bar"></div>
       </div>
     </>

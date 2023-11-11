@@ -10,6 +10,7 @@ import {
   Route,
   Routes,
   useParams,
+  useNavigate,
 } from "react-router-dom";
 
 function useWindowSize() {
@@ -44,6 +45,8 @@ function runMode(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
+
+  var navigate = useNavigate();
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function () {
     if (props.props.authorizedUserOcto) {
@@ -70,7 +73,10 @@ function runMode(props) {
                   repo: repo,
                 })
                 .then((result) => {
-                  props.props.openForkedProject(result.data);
+                  props.props.setOwned(true);
+                  GlobalVariables.currentRepo = result.data;
+                  navigate(`/${GlobalVariables.currentRepo.id}`),
+                    { replace: true };
                 });
             });
         });
@@ -151,7 +157,7 @@ function runMode(props) {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  fontSize: "2em",
+                  fontSize: "1em",
                 }}
               >
                 Loading...
