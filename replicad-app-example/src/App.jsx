@@ -107,7 +107,6 @@ export default function ReplicadApp() {
   }
 
   function CreateMode() {
-    setRunMode(false);
     return (
       <>
         <TopMenu

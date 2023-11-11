@@ -74,6 +74,7 @@ function runMode(props) {
                 })
                 .then((result) => {
                   props.props.setOwned(true);
+                  props.props.setRunMode(false);
                   GlobalVariables.currentRepo = result.data;
                   navigate(`/${GlobalVariables.currentRepo.id}`),
                     { replace: true };
