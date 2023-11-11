@@ -92,19 +92,17 @@ const InitialLog = (props) => {
           >
             Check out what others have designed in Maslow Create
           </p>
-          <form className="login-form">
-            <button
-              type="button"
-              className="submit-btn browseButton"
-              onClick={() => {
-                props.setBrowsing(true);
-              }}
-              id="browseNonGit"
-              style={{ padding: "0 30px" }}
-            >
-              Browse all projects
-            </button>
-          </form>
+
+          <button
+            type="button"
+            onClick={() => {
+              props.setBrowsing(true);
+            }}
+            id="browseNonGit"
+            style={{ padding: "0 30px" }}
+          >
+            Browse all projects
+          </button>
         </div>
       </div>
     </div>
