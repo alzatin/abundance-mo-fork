@@ -5,6 +5,7 @@ function TopMenu(props) {
   const [currentMoleculeTop, setTop] = useState(false);
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
+
   // objects for navigation items in the top menu
   const navItems = [
     {
@@ -55,8 +56,8 @@ function TopMenu(props) {
        */
       id: "Share",
       buttonFunc: () => {
-        var ID = GlobalVariables.currentRepo.id;
-        window.open("/run?" + ID);
+        var shareDialog = document.querySelector("dialog");
+        shareDialog.showModal();
       },
       icon: "Open.svg",
     },
@@ -356,6 +357,23 @@ function TopMenu(props) {
           savePopUp={savePopUp}
           setSavePopUp={setSavePopUp}
         />
+      ) : null}
+      {GlobalVariables.currentRepo ? (
+        <dialog>
+          <button
+            autoFocus
+            onClick={() => {
+              var shareDialog = document.querySelector("dialog");
+              shareDialog.close();
+            }}
+          >
+            Close
+          </button>
+          <p>Use this link to share this project</p>
+          <a href={"/run/" + GlobalVariables.currentRepo.id} target="_blank">
+            /run/{GlobalVariables.currentRepo.id}
+          </a>
+        </dialog>
       ) : null}
       <TopLevel currentMoleculeTop={currentMoleculeTop} setTop={setTop} />
       <Navbar currentMoleculeTop={currentMoleculeTop} />

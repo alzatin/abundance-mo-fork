@@ -610,12 +610,14 @@ function LoginPopUp(props) {
     >
       <div>
         {" "}
-        <button
-          className="closeButton"
-          onClick={() => props.setPopUpOpen(false)}
-        >
-          <img></img>
-        </button>{" "}
+        {isloggedIn ? (
+          <button
+            className="closeButton"
+            onClick={() => props.setPopUpOpen(false)}
+          >
+            <img></img>
+          </button>
+        ) : null}
       </div>
       {popUpContent}
     </div>
