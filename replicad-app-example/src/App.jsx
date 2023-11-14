@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { OAuth } from "oauthio-web";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import {
+  BrowserRouter,
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import FileSaver from "file-saver";
 import { wrap } from "comlink";
@@ -47,6 +56,7 @@ export default function ReplicadApp() {
   const [popUpOpen, setPopUpOpen] = useState(true);
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [runModeon, setRunMode] = useState(false);
+  const [isItOwned, setOwned] = useState(false);
 
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
@@ -78,10 +88,27 @@ export default function ReplicadApp() {
     });
   };
 
+  function LoginInMode() {
+    var location = useLocation();
+    console.log(location.pathname);
+    //use location? if run isn't part of URL THEN try login ?, if run is not part of URL show runmode but show login button
+  }
+
   function CreateMode() {
     var projectToLoad = GlobalVariables.currentRepo;
     return (
       <>
+        {popUpOpen ? (
+          <LoginPopUp
+            setOwned={setOwned}
+            projectToLoad={projectToLoad}
+            tryLogin={tryLogin}
+            setIsLoggedIn={setIsLoggedIn}
+            isloggedIn={isloggedIn}
+            setPopUpOpen={setPopUpOpen}
+            setRunMode={setRunMode}
+          />
+        ) : null}
         <TopMenu
           setPopUpOpen={setPopUpOpen}
           authorizedUserOcto={authorizedUserOcto}
@@ -93,16 +120,6 @@ export default function ReplicadApp() {
             src="/imgs/maslow-logo.png"
             alt="logo"
           />
-          {popUpOpen ? (
-            <LoginPopUp
-              projectToLoad={projectToLoad}
-              tryLogin={tryLogin}
-              setIsLoggedIn={setIsLoggedIn}
-              isloggedIn={isloggedIn}
-              setPopUpOpen={setPopUpOpen}
-              setRunMode={setRunMode}
-            />
-          ) : null}
         </div>
         <FlowCanvas
           displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
@@ -114,58 +131,84 @@ export default function ReplicadApp() {
     );
   }
 
-  function toggleRun() {
-    if (runModeon) {
-      setRunMode(false);
-    } else {
-      setRunMode(true);
-    }
-  }
-  const ToggleSwitch = () => {
-    if (runModeon) {
+  /* Toggle button to switch between run and create modes  */
+  const ToggleRunCreate = () => {
+    const [runchecked, setChecked] = useState(false);
+    const handleChange = () => {
+      setChecked(!runchecked);
+      setRunMode(!runModeon);
+    };
+    if (!runModeon) {
       return (
         <>
-          <label title="Create/Run Mode" className="switch">
-            <input type="checkbox" onChange={toggleRun} checked></input>
-            <span className="slider round"></span>
-          </label>
+          <Link
+            key={
+              GlobalVariables.currentRepo
+                ? GlobalVariables.currentRepo.id
+                : null
+            }
+            to={
+              GlobalVariables.currentRepo
+                ? `/run/${GlobalVariables.currentRepo.id}`
+                : "/run"
+            }
+            onClick={handleChange}
+          >
+            <label title="Create/Run Mode" className="switch">
+              <input type="checkbox"></input>
+              <span className="slider round"></span>
+            </label>
+          </Link>
         </>
       );
     } else {
       return (
         <>
-          <label title="Create/Run Mode" className="switch">
-            <input type="checkbox" onChange={toggleRun}></input>
-            <span className="slider round"></span>
-          </label>
+          <Link
+            key={GlobalVariables.currentRepo.id}
+            to={`/${GlobalVariables.currentRepo.id}`}
+            onClick={handleChange}
+          >
+            <label title="Create/Run Mode" className="switch">
+              <input type="checkbox" defaultChecked></input>
+              <span className="slider round"></span>
+            </label>
+          </Link>
         </>
       );
     }
   };
 
-  function openForkedProject(project) {
-    console.log(project);
-    GlobalVariables.currentRepo = project;
-    setRunMode(false);
-    setPopUpOpen(false);
-  }
-
   return (
     <main>
-      {isloggedIn ? <ToggleSwitch /> : null}
-      {runModeon ? (
-        <RunMode
-          props={{
-            openForkedProject: openForkedProject,
-            setRunMode: setRunMode,
-            authorizedUserOcto: authorizedUserOcto,
-            tryLogin: tryLogin,
-          }}
-          displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
-        />
-      ) : (
-        <CreateMode />
-      )}
+      <BrowserRouter>
+        {isItOwned ? <ToggleRunCreate /> : null}
+        <Routes>
+          <Route exact path="/" element={<CreateMode />} />
+          <Route path="/:id" element={<CreateMode />} />
+          <Route
+            path="/run/:id"
+            element={
+              <RunMode
+                props={{
+                  setPopUpOpen: setPopUpOpen,
+                  isItOwned: isItOwned,
+                  setRunMode: setRunMode,
+                  setOwned: setOwned,
+                  authorizedUserOcto: authorizedUserOcto,
+                  tryLogin: tryLogin,
+                }}
+                displayProps={{
+                  mesh: mesh,
+                  setMesh: setMesh,
+                  size: size,
+                  cad: cad,
+                }}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </main>
   );
 }

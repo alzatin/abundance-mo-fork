@@ -819,7 +819,7 @@ Sidebar navigation
   display: inline-block;
   width: 45px;
   height: 24px;
-  top: 380px;
+  top: 340px;
 }
 
 /* Hide default HTML checkbox */
@@ -856,9 +856,9 @@ Sidebar navigation
 
 input:checked + .slider {
   background-color: #534857;
-  -webkit-transform: translateY(430px);
-  -ms-transform: translateY(430px);
-  transform: translateY(430px);
+  -webkit-transform: translateY(360px);
+  -ms-transform: translateY(360px);
+  transform: translateY(360px);
 }
 
 input:focus + .slider {

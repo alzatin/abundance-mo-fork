@@ -3,6 +3,8 @@ import GlobalVariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
 import { licenses } from "./js/licenseOptions.js";
+import { Link } from "react-router-dom";
+import globalvariables from "./js/globalvariables.js";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
 //var PopUpState = true;
@@ -90,19 +92,17 @@ const InitialLog = (props) => {
           >
             Check out what others have designed in Maslow Create
           </p>
-          <form className="login-form">
-            <button
-              type="button"
-              className="submit-btn browseButton"
-              onClick={() => {
-                props.setBrowsing(true);
-              }}
-              id="browseNonGit"
-              style={{ padding: "0 30px" }}
-            >
-              Browse all projects
-            </button>
-          </form>
+
+          <button
+            type="button"
+            onClick={() => {
+              props.setBrowsing(true);
+            }}
+            id="browseNonGit"
+            style={{ padding: "0 30px" }}
+          >
+            Browse all projects
+          </button>
         </div>
       </div>
     </div>
@@ -424,21 +424,19 @@ const ShowProjects = (props) => {
     GlobalVariables.currentRepo = project;
     GlobalVariables.gitHub.totalAtomCount = 0;
     GlobalVariables.gitHub.numberOfAtomsToLoad = 0;
-
     GlobalVariables.startTime = new Date().getTime();
-
-    const currentRepoName = project.name;
-    //Load a blank project
-    GlobalVariables.topLevelMolecule = new Molecule({
-      x: 0,
-      y: 0,
-      topLevel: true,
-      atomType: "Molecule",
-    });
-
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+
     if (GlobalVariables.currentUser == project.owner.login) {
-      console.log("owner");
+      props.setOwned(true);
+      const currentRepoName = project.name;
+      //Load a blank project
+      GlobalVariables.topLevelMolecule = new Molecule({
+        x: 0,
+        y: 0,
+        topLevel: true,
+        atomType: "Molecule",
+      });
       octokit
         .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
           owner: project.owner.login,
@@ -458,8 +456,9 @@ const ShowProjects = (props) => {
           }
         });
     } else {
-      console.log("not yours");
       props.setRunMode(true);
+      props.setOwned(false);
+      props.setPopUpOpen(false);
       // run mode? window.open('/run?'+projectID)
     }
   };
@@ -468,36 +467,46 @@ const ShowProjects = (props) => {
   const AddProject = () => {
     //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"
     return nodes.map((node) => (
-      <div
-        className="project"
+      <Link
         key={node.id}
-        id={node.name}
-        onClick={(e) => loadProject(node, e)}
+        to={
+          node.owner.login == globalvariables.currentUser
+            ? `/${node.id}`
+            : `/run/${node.id}`
+        }
+        className="product__item"
       >
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
+        <div
+          className="project"
+          key={node.id}
+          id={node.name}
+          onClick={(e) => loadProject(node, e)}
         >
-          {node.name}
-        </p>
-        <img className="project_image" src="/imgs/defaultThumbnail.svg"></img>
-        <div style={{ display: "flex" }}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ transform: "scale(.7)" }}
-            width="16"
-            height="16"
+          <p
+            style={{
+              fontSize: "1em",
+              textOverflow: "ellipsis",
+              display: "block",
+              overflow: "hidden",
+              width: "80%",
+            }}
           >
-            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
-          </svg>
-          <p>{node.stargazers_count}</p>
+            {node.name}
+          </p>
+          <img className="project_image" src="/imgs/defaultThumbnail.svg"></img>
+          <div style={{ display: "flex" }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ transform: "scale(.7)" }}
+              width="16"
+              height="16"
+            >
+              <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+            </svg>
+            <p>{node.stargazers_count}</p>
+          </div>
         </div>
-      </div>
+      </Link>
     ));
   };
 
@@ -569,6 +578,7 @@ function LoginPopUp(props) {
         setBrowsing={setBrowsing}
         isloggedIn={isloggedIn}
         setRunMode={props.setRunMode}
+        setOwned={props.setOwned}
       />
     );
   } else if (userBrowsing) {
@@ -581,6 +591,7 @@ function LoginPopUp(props) {
         isloggedIn={isloggedIn}
         tryLogin={props.tryLogin}
         setRunMode={props.setRunMode}
+        setOwned={props.setOwned}
       />
     );
   } else {
@@ -599,12 +610,14 @@ function LoginPopUp(props) {
     >
       <div>
         {" "}
-        <button
-          className="closeButton"
-          onClick={() => props.setPopUpOpen(false)}
-        >
-          <img></img>
-        </button>{" "}
+        {isloggedIn ? (
+          <button
+            className="closeButton"
+            onClick={() => props.setPopUpOpen(false)}
+          >
+            <img></img>
+          </button>
+        ) : null}
       </div>
       {popUpContent}
     </div>

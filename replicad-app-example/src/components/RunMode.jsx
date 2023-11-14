@@ -3,6 +3,16 @@ import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 import GlobalVariables from "./js/globalvariables.js";
 import globalvariables from "./js/globalvariables.js";
+import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Routes,
+  useParams,
+  useNavigate,
+} from "react-router-dom";
+
 function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
   // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
@@ -35,6 +45,9 @@ function runMode(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
+
+  var navigate = useNavigate();
+  /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function () {
     if (props.props.authorizedUserOcto) {
       var owner = GlobalVariables.currentRepo.owner.login;
@@ -60,7 +73,11 @@ function runMode(props) {
                   repo: repo,
                 })
                 .then((result) => {
-                  props.props.openForkedProject(result.data);
+                  props.props.setOwned(true);
+                  props.props.setRunMode(false);
+                  GlobalVariables.currentRepo = result.data;
+                  navigate(`/${GlobalVariables.currentRepo.id}`),
+                    { replace: true };
                 });
             });
         });
@@ -71,26 +88,35 @@ function runMode(props) {
       });
     }
   };
-  var isItOwner = false;
+  var authorizedUserOcto;
   const windowSize = useWindowSize();
   // check if you own the project
-  console.log(globalvariables.currentRepo);
-  if (globalvariables.currentUser == globalvariables.currentRepo.owner.login) {
-    isItOwner = true;
+
+  /** get repository from github by the id in the url */
+  const getProjectById = () => {
+    const { id } = useParams();
+    var octokit = new Octokit();
+    octokit.request("GET /repositories/:id", { id }).then((result) => {
+      return result.data.name;
+    });
+  };
+
+  if (!globalvariables.currentRepo) {
+    globalvariables.currentRepoName = getProjectById();
   }
 
   return (
     <>
       <div className="runContainer">
         <div className="runSideBar">
-          <p className="molecule_title">{GlobalVariables.currentRepoName}</p>
+          <p className="molecule_title">{globalvariables.currentRepoName}</p>
           <p className="atom_description">Description</p>
           <div className="runSideBarDiv">
             <div className="sidebar-subitem">
               <button className=" browseButton" id="BillOfMaterials-button">
                 Bill Of Materials
               </button>
-              {!isItOwner ? (
+              {!props.props.isItOwned ? (
                 <button
                   className=" browseButton"
                   id="Fork-button"
@@ -107,6 +133,15 @@ function runMode(props) {
                 Star
               </button>
             </div>
+            <Link
+              to={`/`}
+              onClick={() => {
+                props.props.setRunMode(false);
+                props.props.setPopUpOpen(true);
+              }}
+            >
+              <button>Return to browsing</button>
+            </Link>
           </div>
         </div>
         <div
@@ -132,7 +167,7 @@ function runMode(props) {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  fontSize: "2em",
+                  fontSize: "1em",
                 }}
               >
                 Loading...
