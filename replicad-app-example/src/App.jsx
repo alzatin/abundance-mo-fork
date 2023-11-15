@@ -18,7 +18,6 @@ import { wrap } from "comlink";
 // import ThreeContext from "./components/ThreeContext.jsx";
 // import ReplicadMesh from "./components/ReplicadMesh.jsx";
 import GlobalVariables from "./components/js/globalvariables.js";
-import TodoList from "./TodoList.jsx";
 import FlowCanvas from "./components/flowCanvas.jsx";
 import LowerHalf from "./components/lowerHalf.jsx";
 import LoginPopUp from "./components/LoginPopUp.jsx";
@@ -102,6 +101,7 @@ export default function ReplicadApp() {
           <LoginPopUp
             setOwned={setOwned}
             projectToLoad={projectToLoad}
+            authorizedUserOcto={authorizedUserOcto}
             tryLogin={tryLogin}
             setIsLoggedIn={setIsLoggedIn}
             isloggedIn={isloggedIn}

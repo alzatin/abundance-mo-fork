@@ -10,4 +10,5 @@
 - make run mode work again (should we make it a toggle?)
 - Delete github oauth and give loginpopup new name
 - separate loginpop up from create mode
+- fix dialog css
 - i think background click is triggering a rerender of the entire project but removing all atoms

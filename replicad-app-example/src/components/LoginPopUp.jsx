@@ -3,7 +3,7 @@ import GlobalVariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
 import { licenses } from "./js/licenseOptions.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import globalvariables from "./js/globalvariables.js";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
@@ -115,6 +115,8 @@ const ShowProjects = (props) => {
   const [projectsLoaded, setStateLoaded] = React.useState(false);
   const [projectPopUp, setNewProjectPopUp] = useState(false);
   const [searchBarValue, setSearchBarValue] = useState("");
+  var authorizedUserOcto = props.authorizedUserOcto;
+  const navigate = useNavigate();
 
   // conditional query for maslow projects
   useEffect(() => {
@@ -172,6 +174,9 @@ const ShowProjects = (props) => {
       .then((result) => {
         //Once we have created the new repo we need to create a file within it to store the project in
         currentRepoName = result.data.name;
+        currentUser = GlobalVariables.currentUser;
+        GlobalVariables.currentRepo = result.data;
+
         var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
         jsonRepOfProject.filetypeVersion = 1;
         jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
@@ -187,7 +192,7 @@ const ShowProjects = (props) => {
             message: "initialize repo",
             content: projectContent,
           })
-          .then(() => {
+          .then((result) => {
             //Then create the BOM file
             var content = window.btoa(bomHeader); // create a file with just the header in it and base64 encode it
             authorizedUserOcto.rest.repos
@@ -246,7 +251,11 @@ const ShowProjects = (props) => {
                                     content: window.btoa(licenseText),
                                   })
                                   .then(() => {
-                                    loadProject(result.data);
+                                    loadProject(GlobalVariables.currentRepo);
+
+                                    navigate(
+                                      `/${GlobalVariables.currentRepo.id}`
+                                    );
                                     intervalTimer = setInterval(() => {
                                       this.saveProject();
                                     }, 1200000); //Save the project regularly
@@ -284,7 +293,7 @@ const ShowProjects = (props) => {
         <div>
           <div className="form" style={{ color: "whitesmoke" }}>
             <h1 style={{ fontSize: "1em" }}>NEW PROJECT</h1>
-            <form className="login-form">
+            <div className="login-form">
               <div className="form-row">
                 <div className="input-data">
                   <input
@@ -334,7 +343,7 @@ const ShowProjects = (props) => {
                   </div>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </>
@@ -573,6 +582,7 @@ function LoginPopUp(props) {
     popUpContent = (
       <ShowProjects
         user={currentUser}
+        authorizedUserOcto={props.authorizedUserOcto}
         setPopUpOpen={props.setPopUpOpen}
         userBrowsing={userBrowsing}
         setBrowsing={setBrowsing}
@@ -587,6 +597,7 @@ function LoginPopUp(props) {
         user={""}
         userBrowsing={userBrowsing}
         setPopUpOpen={props.setPopUpOpen}
+        authorizedUserOcto={props.authorizedUserOcto}
         setBrowsing={setBrowsing}
         isloggedIn={isloggedIn}
         tryLogin={props.tryLogin}
