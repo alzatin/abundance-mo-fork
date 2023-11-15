@@ -4,6 +4,7 @@ import ReplicadMesh from "./ReplicadMesh.jsx";
 import GlobalVariables from "./js/globalvariables.js";
 import globalvariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import ShareDialog from "./ShareDialog.jsx";
 import {
   BrowserRouter as Router,
   Link,
@@ -137,6 +138,7 @@ function runMode(props) {
 
   return (
     <>
+      <ShareDialog />
       <div className="runContainer">
         <div className="runSideBar">
           <p className="molecule_title">{globalvariables.currentRepoName}</p>
@@ -160,7 +162,8 @@ function runMode(props) {
                 className=" browseButton"
                 id="Share-button"
                 onClick={() => {
-                  console.log("add share functionality");
+                  var shareDialog = document.querySelector("dialog");
+                  shareDialog.showModal();
                 }}
               >
                 Share

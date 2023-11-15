@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
+import ShareDialog from "./ShareDialog.jsx";
 
 function TopMenu(props) {
   const [currentMoleculeTop, setTop] = useState(false);
@@ -337,23 +338,7 @@ function TopMenu(props) {
           setSavePopUp={setSavePopUp}
         />
       ) : null}
-      {GlobalVariables.currentRepo ? (
-        <dialog>
-          <button
-            autoFocus
-            onClick={() => {
-              var shareDialog = document.querySelector("dialog");
-              shareDialog.close();
-            }}
-          >
-            Close
-          </button>
-          <p>Use this link to share this project</p>
-          <a href={"/run/" + GlobalVariables.currentRepo.id} target="_blank">
-            /run/{GlobalVariables.currentRepo.id}
-          </a>
-        </dialog>
-      ) : null}
+      <ShareDialog />
       <TopLevel currentMoleculeTop={currentMoleculeTop} setTop={setTop} />
       <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>
