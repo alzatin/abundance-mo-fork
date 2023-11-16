@@ -1,21 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 import ShareDialog from "./ShareDialog.jsx";
+import { useNavigate } from "react-router-dom";
 
 function TopMenu(props) {
   const [currentMoleculeTop, setTop] = useState(false);
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
+  const navigate = useNavigate();
 
   // objects for navigation items in the top menu
   const navItems = [
     {
       id: "Open",
       buttonFunc: () => {
-        if (GlobalVariables.currentUser != undefined) {
-          props.setIsLoggedIn(true);
-        }
-        props.setPopUpOpen(true);
+        navigate("/");
       },
       icon: "Open.svg",
     },
@@ -219,6 +218,7 @@ function TopMenu(props) {
     );
   };
   //{checks for top level variable and show go-up button if this is not top molecule
+  //i'm not so sure this useeffect is right. put on list to review
   const TopLevel = (props) => {
     const ref = useRef();
     useEffect(() => {

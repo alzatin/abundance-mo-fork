@@ -7,7 +7,6 @@ import { Link, useNavigate } from "react-router-dom";
 import globalvariables from "./js/globalvariables.js";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
-//var PopUpState = true;
 
 //Login pop up component logic: pop up appears introducing logo and github login button,
 // if user gets authenticated in the tryLogin function, then the pop up disappears and the projects appear, if they do notget authenticated, then the pop up stays and the user can browse projects
@@ -116,6 +115,7 @@ const ShowProjects = (props) => {
   const [projectPopUp, setNewProjectPopUp] = useState(false);
   const [searchBarValue, setSearchBarValue] = useState("");
   var authorizedUserOcto = props.authorizedUserOcto;
+
   const navigate = useNavigate();
 
   // conditional query for maslow projects
@@ -427,8 +427,6 @@ const ShowProjects = (props) => {
   };
   // Loads project when clicked in browse mode
   const loadProject = function (project) {
-    console.log(project);
-
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
     GlobalVariables.gitHub.totalAtomCount = 0;
@@ -436,40 +434,31 @@ const ShowProjects = (props) => {
     GlobalVariables.startTime = new Date().getTime();
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
 
-    if (GlobalVariables.currentUser == project.owner.login) {
-      props.setOwned(true);
-      const currentRepoName = project.name;
-      //Load a blank project
-      GlobalVariables.topLevelMolecule = new Molecule({
-        x: 0,
-        y: 0,
-        topLevel: true,
-        atomType: "Molecule",
-      });
-      octokit
-        .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
-          owner: project.owner.login,
-          repo: project.name,
-        })
-        .then((response) => {
-          props.setPopUpOpen(false);
-          //content will be base64 encoded
-          let rawFile = JSON.parse(atob(response.data.content));
+    const currentRepoName = project.name;
+    //Load a blank project
+    GlobalVariables.topLevelMolecule = new Molecule({
+      x: 0,
+      y: 0,
+      topLevel: true,
+      atomType: "Molecule",
+    });
+    octokit
+      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
+        owner: project.owner.login,
+        repo: project.name,
+      })
+      .then((response) => {
+        //content will be base64 encoded
+        let rawFile = JSON.parse(atob(response.data.content));
 
-          if (rawFile.filetypeVersion == 1) {
-            GlobalVariables.topLevelMolecule.deserialize(rawFile);
-          } else {
-            GlobalVariables.topLevelMolecule.deserialize(
-              this.convertFromOldFormat(rawFile)
-            );
-          }
-        });
-    } else {
-      props.setRunMode(true);
-      props.setOwned(false);
-      props.setPopUpOpen(false);
-      // run mode? window.open('/run?'+projectID)
-    }
+        if (rawFile.filetypeVersion == 1) {
+          GlobalVariables.topLevelMolecule.deserialize(rawFile);
+        } else {
+          GlobalVariables.topLevelMolecule.deserialize(
+            this.convertFromOldFormat(rawFile)
+          );
+        }
+      });
   };
 
   // adds individual projects after API call
@@ -570,7 +559,7 @@ const ShowProjects = (props) => {
   );
 };
 
-function LoginPopUp(props) {
+function LoginMode(props) {
   //tryLogin = props.tryLogin;
 
   const [userBrowsing, setBrowsing] = useState(false);
@@ -578,16 +567,14 @@ function LoginPopUp(props) {
   var currentUser = GlobalVariables.currentUser;
   let popUpContent;
 
-  if (GlobalVariables.currentUser !== undefined && !userBrowsing) {
+  if (props.authorizedUserOcto && !userBrowsing) {
     popUpContent = (
       <ShowProjects
         user={currentUser}
         authorizedUserOcto={props.authorizedUserOcto}
-        setPopUpOpen={props.setPopUpOpen}
         userBrowsing={userBrowsing}
         setBrowsing={setBrowsing}
         isloggedIn={isloggedIn}
-        setRunMode={props.setRunMode}
         setOwned={props.setOwned}
       />
     );
@@ -596,12 +583,10 @@ function LoginPopUp(props) {
       <ShowProjects
         user={""}
         userBrowsing={userBrowsing}
-        setPopUpOpen={props.setPopUpOpen}
         authorizedUserOcto={props.authorizedUserOcto}
         setBrowsing={setBrowsing}
         isloggedIn={isloggedIn}
         tryLogin={props.tryLogin}
-        setRunMode={props.setRunMode}
         setOwned={props.setOwned}
       />
     );
@@ -621,13 +606,12 @@ function LoginPopUp(props) {
     >
       <div>
         {" "}
-        {isloggedIn ? (
-          <button
-            className="closeButton"
-            onClick={() => props.setPopUpOpen(false)}
-          >
-            <img></img>
-          </button>
+        {GlobalVariables.currentRepo ? (
+          <Link to={`/${GlobalVariables.currentRepo.id}`}>
+            <button className="closeButton">
+              <img></img>
+            </button>
+          </Link>
         ) : null}
       </div>
       {popUpContent}
@@ -635,4 +619,4 @@ function LoginPopUp(props) {
   );
 }
 
-export default LoginPopUp;
+export default LoginMode;

@@ -5,6 +5,7 @@ import GlobalVariables from "./js/globalvariables.js";
 import globalvariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import ShareDialog from "./ShareDialog.jsx";
+import ToggleRunCreate from "./ToggleRunCreate.jsx";
 import {
   BrowserRouter as Router,
   Link,
@@ -79,7 +80,6 @@ function runMode(props) {
                 })
                 .then((result) => {
                   props.props.setOwned(true);
-                  props.props.setRunMode(false);
                   GlobalVariables.currentRepo = result.data;
                   navigate(`/${GlobalVariables.currentRepo.id}`),
                     { replace: true };
@@ -139,6 +139,10 @@ function runMode(props) {
   return (
     <>
       <ShareDialog />
+      <ToggleRunCreate
+        runModeon={props.props.runModeon}
+        setRunMode={props.props.setRunMode}
+      />
       <div className="runContainer">
         <div className="runSideBar">
           <p className="molecule_title">{globalvariables.currentRepoName}</p>
@@ -148,7 +152,7 @@ function runMode(props) {
               <button className=" browseButton" id="BillOfMaterials-button">
                 Bill Of Materials
               </button>
-              {!props.props.isItOwned ? (
+              {props.props.authorizedUserOcto ? (
                 <button
                   className=" browseButton"
                   id="Fork-button"
@@ -178,13 +182,7 @@ function runMode(props) {
                 Star
               </button>
             </div>
-            <Link
-              to={`/`}
-              onClick={() => {
-                props.props.setRunMode(false);
-                props.props.setPopUpOpen(true);
-              }}
-            >
+            <Link to={`/`}>
               <button>Return to browsing</button>
             </Link>
           </div>

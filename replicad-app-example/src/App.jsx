@@ -9,7 +9,6 @@ import {
   Route,
   useLocation,
   Link,
-  useNavigate,
 } from "react-router-dom";
 
 import FileSaver from "file-saver";
@@ -20,9 +19,10 @@ import { wrap } from "comlink";
 import GlobalVariables from "./components/js/globalvariables.js";
 import FlowCanvas from "./components/flowCanvas.jsx";
 import LowerHalf from "./components/lowerHalf.jsx";
-import LoginPopUp from "./components/LoginPopUp.jsx";
+import LoginMode from "./components/LoginMode.jsx";
 import TopMenu from "./components/TopMenu.jsx";
 import RunMode from "./components/RunMode.jsx";
+import ToggleRunCreate from "./components/ToggleRunCreate.jsx";
 
 import cadWorker from "./worker.js?worker";
 
@@ -52,10 +52,9 @@ export default function ReplicadApp() {
     cad.createMesh(size).then((m) => setMesh(m));
   }, [size]);
 
-  const [popUpOpen, setPopUpOpen] = useState(true);
   const [isloggedIn, setIsLoggedIn] = useState(false);
-  const [runModeon, setRunMode] = useState(false);
   const [isItOwned, setOwned] = useState(false);
+  const [runModeon, setRunMode] = useState(false);
 
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
@@ -87,33 +86,11 @@ export default function ReplicadApp() {
     });
   };
 
-  function LoginInMode() {
-    var location = useLocation();
-    console.log(location.pathname);
-    //use location? if run isn't part of URL THEN try login ?, if run is not part of URL show runmode but show login button
-  }
-
   function CreateMode() {
-    var projectToLoad = GlobalVariables.currentRepo;
     return (
       <>
-        {popUpOpen ? (
-          <LoginPopUp
-            setOwned={setOwned}
-            projectToLoad={projectToLoad}
-            authorizedUserOcto={authorizedUserOcto}
-            tryLogin={tryLogin}
-            setIsLoggedIn={setIsLoggedIn}
-            isloggedIn={isloggedIn}
-            setPopUpOpen={setPopUpOpen}
-            setRunMode={setRunMode}
-          />
-        ) : null}
-        <TopMenu
-          setPopUpOpen={setPopUpOpen}
-          authorizedUserOcto={authorizedUserOcto}
-          setIsLoggedIn={setIsLoggedIn}
-        />
+        <ToggleRunCreate runModeon={runModeon} setRunMode={setRunMode} />
+        <TopMenu authorizedUserOcto={authorizedUserOcto} />
         <div id="headerBar">
           <img
             className="thumnail-logo"
@@ -132,71 +109,36 @@ export default function ReplicadApp() {
   }
 
   /* Toggle button to switch between run and create modes  */
-  const ToggleRunCreate = () => {
-    const [runchecked, setChecked] = useState(false);
-    const handleChange = () => {
-      setChecked(!runchecked);
-      setRunMode(!runModeon);
-    };
-    if (!runModeon) {
-      return (
-        <>
-          <Link
-            key={
-              GlobalVariables.currentRepo
-                ? GlobalVariables.currentRepo.id
-                : null
-            }
-            to={
-              GlobalVariables.currentRepo
-                ? `/run/${GlobalVariables.currentRepo.id}`
-                : "/run"
-            }
-            onClick={handleChange}
-          >
-            <label title="Create/Run Mode" className="switch">
-              <input type="checkbox"></input>
-              <span className="slider round"></span>
-            </label>
-          </Link>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <Link
-            key={GlobalVariables.currentRepo.id}
-            to={`/${GlobalVariables.currentRepo.id}`}
-            onClick={handleChange}
-          >
-            <label title="Create/Run Mode" className="switch">
-              <input type="checkbox" defaultChecked></input>
-              <span className="slider round"></span>
-            </label>
-          </Link>
-        </>
-      );
-    }
-  };
 
   return (
     <main>
       <BrowserRouter>
-        {isItOwned ? <ToggleRunCreate /> : null}
         <Routes>
-          <Route exact path="/" element={<CreateMode />} />
+          <Route
+            exact
+            path="/"
+            element={
+              <LoginMode
+                setOwned={setOwned}
+                authorizedUserOcto={authorizedUserOcto}
+                tryLogin={tryLogin}
+                setIsLoggedIn={setIsLoggedIn}
+                isloggedIn={isloggedIn}
+              />
+            }
+          />
           <Route path="/:id" element={<CreateMode />} />
           <Route
             path="/run/:id"
             element={
               <RunMode
                 props={{
-                  setPopUpOpen: setPopUpOpen,
                   isItOwned: isItOwned,
-                  setRunMode: setRunMode,
                   setOwned: setOwned,
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
+                  runModeon: runModeon,
+                  setRunMode: setRunMode,
                 }}
                 displayProps={{
                   mesh: mesh,
