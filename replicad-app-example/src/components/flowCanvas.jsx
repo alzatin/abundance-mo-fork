@@ -30,7 +30,6 @@ export default function FlowCanvas(displayProps) {
   // Loads project
   const loadProject = function (project) {
     GlobalVariables.loadedRepo = project;
-    console.log("project is getting reloaded");
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
     GlobalVariables.totalAtomCount = 0;
@@ -68,7 +67,6 @@ export default function FlowCanvas(displayProps) {
             convertFromOldFormat(rawFile)
           );
         }
-        console.log(GlobalVariables.topLevelMolecule);
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
       });
   };
@@ -240,7 +238,6 @@ export default function FlowCanvas(displayProps) {
       cmenu.hide();
 
       var clickHandledByMolecule = false;
-      console.log(GlobalVariables.currentMolecule);
       GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
         if (
           molecule.clickDown(
@@ -325,8 +322,6 @@ export default function FlowCanvas(displayProps) {
   useEffect(() => {
     createCMenu(circleMenu);
   }, []);
-
-  console.log("create mode is rerendering");
 
   return (
     <>

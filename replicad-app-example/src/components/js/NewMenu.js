@@ -109,7 +109,6 @@ const createCMenu = (targetElement) => {
             uniqueID: GlobalVariables.generateUniqueID()
                 
         }, true)
-        console.log("I;m placing an atom")
         //Simulate a click on the new atom
         var clickHandledByAtom = false
         //clickdown on the atom is making it rerender project
