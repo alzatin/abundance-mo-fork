@@ -31,7 +31,7 @@ import Gcode            from '../molecules/gcode.js'
 import Code             from '../molecules/code.js'
 import Group            from '../molecules/group.js'
 import UploadSVG        from '../molecules/uploadSVG.js'
-import GitHubModule     from './githubOauth'
+
 
 /**
  * This class defines things which are made available to all objects which import it. It is a singlton which means that each time it is imported the same instance is made available so if it is written to in one place, it can be read somewhere else.
@@ -122,26 +122,22 @@ class GlobalVariables{
          * @type {string}
          */
            this.currentRepo
+           /** 
+         * A reference to the repo that goes through loaded project().
+         * @type {string}
+         */
+           this.loadedRepo
         /** 
          * A reference to the top level molecule of the project.
          * @type {object}
          */
         this.topLevelMolecule
-        /** 
-         * A flag to indicate if the program is running in run mode (ie a shared link).
-         * @type {boolean}
-         */
-        this.runMode = false
+       
         /** 
          * A flag to indicate if the program is running with a touch interface. Set in flowDraw.js.
          * @type {boolean}
          */
         this.touchInterface = false
-        /** 
-         * The github object which is used to interact with GitHub.
-         * @type {object}
-         */
-        this.gitHub = new GitHubModule()
         /** 
          * The replicad object which is used to interact with the replicad worker.
          * @type {object}

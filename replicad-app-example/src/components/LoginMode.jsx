@@ -146,6 +146,57 @@ const ShowProjects = (props) => {
       });
   }, [props.userBrowsing, searchBarValue]);
 
+  /** It's unclear whether this is working, I'm adding it here so that i can get rid of oauth file */
+  const convertFromOldFormat = function (json) {
+    var listOfMoleculeAtoms = json.molecules;
+
+    //Find the top level molecule
+    var projectObject = listOfMoleculeAtoms.filter((molecule) => {
+      return molecule.topLevel == true;
+    })[0];
+    //Remove that element from the listOfMoleculeAtoms
+    listOfMoleculeAtoms.splice(
+      listOfMoleculeAtoms.findIndex((e) => e.topLevel == true),
+      1
+    );
+
+    //Recursive function to walk the tree and find molecule placeholders
+    function walkForMolecules(projectObject) {
+      projectObject.allAtoms.forEach(function (
+        atom,
+        allAtomsIndex,
+        allAtomsObject
+      ) {
+        if (atom.atomType == "Molecule") {
+          if (atom.allAtoms != undefined) {
+            //If this molecule has allAtoms
+            walkForMolecules(atom); //Walk it
+          } else {
+            //Else replace it with a version which does have allAtoms from the list
+            //Find the version in molecules list and plug it in
+            allAtomsObject[allAtomsIndex] = listOfMoleculeAtoms.filter(
+              (molecule) => {
+                return molecule.uniqueID == atom.uniqueID;
+              }
+            )[0];
+            //Remove that element from the listOfMoleculeAtoms
+            listOfMoleculeAtoms.splice(
+              listOfMoleculeAtoms.findIndex((e) => e.uniqueID == atom.uniqueID),
+              1
+            );
+          }
+        }
+      });
+    }
+
+    //Find any placeholder molecules in there (this needs to be a full tree walk for everything to work)
+    while (listOfMoleculeAtoms.length > 0) {
+      walkForMolecules(projectObject);
+    }
+
+    return projectObject;
+  };
+
   const createProject = async () => {
     const name = document.getElementById("project-name").value;
     const description = document.getElementById("project-description").value;
@@ -163,6 +214,7 @@ const ShowProjects = (props) => {
     });
 
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+
     await authorizedUserOcto
       .request("POST /user/repos", {
         name: name,
@@ -425,41 +477,6 @@ const ShowProjects = (props) => {
       </>
     );
   };
-  // Loads project when clicked in browse mode
-  const loadProject = function (project) {
-    GlobalVariables.currentRepoName = project.name;
-    GlobalVariables.currentRepo = project;
-    GlobalVariables.gitHub.totalAtomCount = 0;
-    GlobalVariables.gitHub.numberOfAtomsToLoad = 0;
-    GlobalVariables.startTime = new Date().getTime();
-    GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-
-    const currentRepoName = project.name;
-    //Load a blank project
-    GlobalVariables.topLevelMolecule = new Molecule({
-      x: 0,
-      y: 0,
-      topLevel: true,
-      atomType: "Molecule",
-    });
-    octokit
-      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
-        owner: project.owner.login,
-        repo: project.name,
-      })
-      .then((response) => {
-        //content will be base64 encoded
-        let rawFile = JSON.parse(atob(response.data.content));
-
-        if (rawFile.filetypeVersion == 1) {
-          GlobalVariables.topLevelMolecule.deserialize(rawFile);
-        } else {
-          GlobalVariables.topLevelMolecule.deserialize(
-            this.convertFromOldFormat(rawFile)
-          );
-        }
-      });
-  };
 
   // adds individual projects after API call
   const AddProject = () => {
@@ -478,7 +495,9 @@ const ShowProjects = (props) => {
           className="project"
           key={node.id}
           id={node.name}
-          onClick={(e) => loadProject(node, e)}
+          onClick={() => {
+            GlobalVariables.currentRepo = node;
+          }}
         >
           <p
             style={{

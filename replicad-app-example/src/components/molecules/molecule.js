@@ -101,11 +101,10 @@ export default class Molecule extends Atom{
         this.unitsIndex = 0
         
         this.setValues(values)
-
         //Add the molecule's output
         this.placeAtom({
             parentMolecule: this, 
-            x: GlobalVariables.pixelsToWidth(GlobalVariables.canvas.current.width - 20),
+            x: GlobalVariables.pixelsToWidth(/*GlobalVariables.canvas.current.width*/ 900 - 20),
             y: .5,
             parent: this,
             name: 'Output',
@@ -138,6 +137,7 @@ export default class Molecule extends Atom{
      * Add the center dot to the molecule
      */ 
     draw(){
+        
         const percentLoaded = 1-this.toProcess/this.totalAtomCount
         if(this.toProcess > 1){
             this.processing = true
@@ -173,6 +173,7 @@ export default class Molecule extends Atom{
      * Handle double clicks by replacing the molecule currently on the screen with this one, esentially diving into it.
      * @param {number} x - The x coordinate of the click
      * @param {number} y - The y coordinate of the click
+     * 
      */ 
     doubleClick(x,y){
         //returns true if something was done with the click

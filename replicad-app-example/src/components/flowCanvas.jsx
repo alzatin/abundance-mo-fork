@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables";
 import Molecule from "./molecules/molecule";
 import { createCMenu, cmenu } from "./js/NewMenu.js";
+import { Octokit } from "https://esm.sh/octokit@2.0.19";
 
 var flowCanvas;
 
@@ -26,6 +27,47 @@ export default function FlowCanvas(displayProps) {
   let setMesh = displayProps.displayProps.setMesh;
   let mesh = displayProps.displayProps.mesh;
 
+  // Loads project
+  const loadProject = function (project) {
+    GlobalVariables.loadedRepo = project;
+    console.log("project is getting reloaded");
+    GlobalVariables.currentRepoName = project.name;
+    GlobalVariables.currentRepo = project;
+    GlobalVariables.totalAtomCount = 0;
+    GlobalVariables.numberOfAtomsToLoad = 0;
+    GlobalVariables.startTime = new Date().getTime();
+
+    const currentRepoName = project.name;
+    //Load a blank project
+    GlobalVariables.topLevelMolecule = new Molecule({
+      x: 0,
+      y: 0,
+      topLevel: true,
+      atomType: "Molecule",
+    });
+    var octokit = new Octokit();
+
+    octokit
+      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
+        owner: project.owner.login,
+        repo: project.name,
+      })
+      .then((response) => {
+        //content will be base64 encoded
+        let rawFile = JSON.parse(atob(response.data.content));
+
+        if (rawFile.filetypeVersion == 1) {
+          GlobalVariables.topLevelMolecule.deserialize(rawFile);
+        } else {
+          GlobalVariables.topLevelMolecule.deserialize(
+            convertFromOldFormat(rawFile)
+          );
+        }
+        console.log(GlobalVariables.topLevelMolecule);
+        GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+      });
+  };
+
   useEffect(() => {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       cad.generateDisplayMesh(id).then((m) => setMesh(m));
@@ -44,10 +86,9 @@ export default function FlowCanvas(displayProps) {
 
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
-
     GlobalVariables.c = canvasRef.current.getContext("2d");
 
-    if (!GlobalVariables.runMode) {
+    if (GlobalVariables.currentRepo !== GlobalVariables.loadedRepo) {
       //If we are in CAD mode load an empty project as a placeholder
       GlobalVariables.currentMolecule = new Molecule({
         x: GlobalVariables.pixelsToWidth(GlobalVariables.canvas.width - 20),
@@ -57,12 +98,15 @@ export default function FlowCanvas(displayProps) {
         atomType: "Molecule",
         uniqueID: GlobalVariables.generateUniqueID(),
       });
-    }
 
-    GlobalVariables.c.moveTo(0, 0);
-    GlobalVariables.c.lineTo(500, 500);
-    GlobalVariables.c.fill();
-    GlobalVariables.c.stroke();
+      GlobalVariables.c.moveTo(0, 0);
+      GlobalVariables.c.lineTo(500, 500);
+      GlobalVariables.c.fill();
+      GlobalVariables.c.stroke();
+
+      console.log("project loaded is different");
+      loadProject(GlobalVariables.currentRepo);
+    }
 
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
       atom.update();
@@ -207,7 +251,7 @@ export default function FlowCanvas(displayProps) {
       cmenu.hide();
 
       var clickHandledByMolecule = false;
-
+      console.log(GlobalVariables.currentMolecule);
       GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
         if (
           molecule.clickDown(
@@ -234,6 +278,7 @@ export default function FlowCanvas(displayProps) {
 
       if (!clickHandledByMolecule) {
         GlobalVariables.currentMolecule.backgroundClick();
+        console.log("background click");
       } else {
         GlobalVariables.currentMolecule.selected = false;
       }
@@ -291,6 +336,8 @@ export default function FlowCanvas(displayProps) {
   useEffect(() => {
     createCMenu(circleMenu);
   }, []);
+
+  console.log("create mode is rerendering");
 
   return (
     <>

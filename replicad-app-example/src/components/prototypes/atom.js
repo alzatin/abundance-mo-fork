@@ -186,7 +186,7 @@ export default class Atom {
         let xInPixels = GlobalVariables.widthToPixels(this.x)
         let yInPixels = GlobalVariables.heightToPixels(this.y)
         let radiusInPixels = GlobalVariables.widthToPixels(this.radius)
-
+        
         this.inputs.forEach(child => {
             child.draw()       
         })
@@ -391,7 +391,7 @@ export default class Atom {
                 clickProcessed = true
             }
         }
-           
+         console.log("when is the rerendering happening?")  
         return clickProcessed 
     }
 
