@@ -47,6 +47,11 @@ export default function FlowCanvas(displayProps) {
     });
     var octokit = new Octokit();
 
+    GlobalVariables.c.moveTo(0, 0);
+    GlobalVariables.c.lineTo(500, 500);
+    GlobalVariables.c.fill();
+    GlobalVariables.c.stroke();
+
     octokit
       .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
         owner: project.owner.login,
@@ -87,24 +92,8 @@ export default function FlowCanvas(displayProps) {
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
     GlobalVariables.c = canvasRef.current.getContext("2d");
-
+    /** Only run loadproject() if the project is different from what is already loaded  */
     if (GlobalVariables.currentRepo !== GlobalVariables.loadedRepo) {
-      //If we are in CAD mode load an empty project as a placeholder
-      GlobalVariables.currentMolecule = new Molecule({
-        x: GlobalVariables.pixelsToWidth(GlobalVariables.canvas.width - 20),
-        y: GlobalVariables.pixelsToHeight(GlobalVariables.canvas.height / 2),
-        topLevel: true,
-        name: "Maslow Create",
-        atomType: "Molecule",
-        uniqueID: GlobalVariables.generateUniqueID(),
-      });
-
-      GlobalVariables.c.moveTo(0, 0);
-      GlobalVariables.c.lineTo(500, 500);
-      GlobalVariables.c.fill();
-      GlobalVariables.c.stroke();
-
-      console.log("project loaded is different");
       loadProject(GlobalVariables.currentRepo);
     }
 
