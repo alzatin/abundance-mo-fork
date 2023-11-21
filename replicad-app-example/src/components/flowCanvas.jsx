@@ -86,6 +86,7 @@ export default function FlowCanvas(displayProps) {
     GlobalVariables.canvas = canvasRef;
     GlobalVariables.c = canvasRef.current.getContext("2d");
 
+    /** Only run loadproject() if the project is different from what is already loaded  */
     if (GlobalVariables.currentRepo !== GlobalVariables.loadedRepo) {
       //Load a blank project
       GlobalVariables.topLevelMolecule = new Molecule({
@@ -95,11 +96,9 @@ export default function FlowCanvas(displayProps) {
         atomType: "Molecule",
       });
       GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-      /** Only run loadproject() if the project is different from what is already loaded  */
       loadProject(GlobalVariables.currentRepo);
     }
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
-      console.log("when is atom update running");
       atom.update();
     });
   }, []);
