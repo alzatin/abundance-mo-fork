@@ -9,7 +9,6 @@ import {
   Route,
   useLocation,
   Link,
-  useNavigate,
 } from "react-router-dom";
 
 import FileSaver from "file-saver";
@@ -18,12 +17,12 @@ import { wrap } from "comlink";
 // import ThreeContext from "./components/ThreeContext.jsx";
 // import ReplicadMesh from "./components/ReplicadMesh.jsx";
 import GlobalVariables from "./components/js/globalvariables.js";
-import TodoList from "./TodoList.jsx";
 import FlowCanvas from "./components/flowCanvas.jsx";
 import LowerHalf from "./components/lowerHalf.jsx";
-import LoginPopUp from "./components/LoginPopUp.jsx";
+import LoginMode from "./components/LoginMode.jsx";
 import TopMenu from "./components/TopMenu.jsx";
 import RunMode from "./components/RunMode.jsx";
+import ToggleRunCreate from "./components/ToggleRunCreate.jsx";
 
 import cadWorker from "./worker.js?worker";
 
@@ -53,10 +52,9 @@ export default function ReplicadApp() {
     cad.createMesh(size).then((m) => setMesh(m));
   }, [size]);
 
-  const [popUpOpen, setPopUpOpen] = useState(true);
   const [isloggedIn, setIsLoggedIn] = useState(false);
-  const [runModeon, setRunMode] = useState(false);
   const [isItOwned, setOwned] = useState(false);
+  const [runModeon, setRunMode] = useState(false);
 
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
@@ -88,32 +86,88 @@ export default function ReplicadApp() {
     });
   };
 
-  function LoginInMode() {
-    var location = useLocation();
-    console.log(location.pathname);
-    //use location? if run isn't part of URL THEN try login ?, if run is not part of URL show runmode but show login button
-  }
-
   function CreateMode() {
-    var projectToLoad = GlobalVariables.currentRepo;
+    /**
+     * Export a molecule as a new github project.
+     */ // adding this function here because I'm not sure where it's supposed to go
+    const exportCurrentMoleculeToGithub = function (molecule) {
+      //Get name and description
+      var name = molecule.name;
+      var description = "A stand alone molecule exported from Maslow Create";
+
+      //Create a new repo
+      octokit.repos
+        .createForAuthenticatedUser({
+          name: name,
+          description: description,
+        })
+        .then((result) => {
+          //Once we have created the new repo we need to create a file within it to store the project in
+          var repoName = result.data.name;
+          var id = result.data.id;
+          var path = "project.maslowcreate";
+          var content = window.btoa("init"); // create a file with just the word "init" in it and base64 encode it
+          octokit.repos
+            .createOrUpdateFileContents({
+              owner: currentUser,
+              repo: repoName,
+              path: path,
+              message: "initialize repo",
+              content: content,
+            })
+            .then(() => {
+              //Save the molecule into the newly created repo
+
+              var path = "project.maslowcreate";
+
+              molecule.topLevel = true; //force the molecule to export in the long form as if it were the top level molecule
+              var content = window.btoa(
+                JSON.stringify(molecule.serialize({ molecules: [] }), null, 4)
+              ); //Convert the passed molecule object to a JSON string and then convert it to base64 encoding
+
+              //Get the SHA for the file
+              octokit.repos
+                .getContent({
+                  owner: currentUser,
+                  repo: repoName,
+                  path: path,
+                })
+                .then((result) => {
+                  var sha = result.data.sha;
+
+                  //Save the repo to the file
+                  octokit.repos
+                    .updateFile({
+                      owner: currentUser,
+                      repo: repoName,
+                      path: path,
+                      message: "export Molecule",
+                      content: content,
+                      sha: sha,
+                    })
+                    .then(() => {
+                      //Replace the existing molecule now that we just exported
+                      molecule.replaceThisMoleculeWithGithub(id);
+                    });
+                });
+            });
+
+          //Update the project topics
+          octokit.repos.replaceTopics({
+            owner: currentUser,
+            repo: repoName,
+            names: ["maslowcreate", "maslowcreate-molecule"],
+            headers: {
+              accept: "application/vnd.github.mercy-preview+json",
+            },
+          });
+        });
+    };
+
     return (
       <>
-        {popUpOpen ? (
-          <LoginPopUp
-            setOwned={setOwned}
-            projectToLoad={projectToLoad}
-            tryLogin={tryLogin}
-            setIsLoggedIn={setIsLoggedIn}
-            isloggedIn={isloggedIn}
-            setPopUpOpen={setPopUpOpen}
-            setRunMode={setRunMode}
-          />
-        ) : null}
-        <TopMenu
-          setPopUpOpen={setPopUpOpen}
-          authorizedUserOcto={authorizedUserOcto}
-          setIsLoggedIn={setIsLoggedIn}
-        />
+        <ToggleRunCreate runModeon={runModeon} setRunMode={setRunMode} />
+        <TopMenu authorizedUserOcto={authorizedUserOcto} />
         <div id="headerBar">
           <img
             className="thumnail-logo"
@@ -132,71 +186,36 @@ export default function ReplicadApp() {
   }
 
   /* Toggle button to switch between run and create modes  */
-  const ToggleRunCreate = () => {
-    const [runchecked, setChecked] = useState(false);
-    const handleChange = () => {
-      setChecked(!runchecked);
-      setRunMode(!runModeon);
-    };
-    if (!runModeon) {
-      return (
-        <>
-          <Link
-            key={
-              GlobalVariables.currentRepo
-                ? GlobalVariables.currentRepo.id
-                : null
-            }
-            to={
-              GlobalVariables.currentRepo
-                ? `/run/${GlobalVariables.currentRepo.id}`
-                : "/run"
-            }
-            onClick={handleChange}
-          >
-            <label title="Create/Run Mode" className="switch">
-              <input type="checkbox"></input>
-              <span className="slider round"></span>
-            </label>
-          </Link>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <Link
-            key={GlobalVariables.currentRepo.id}
-            to={`/${GlobalVariables.currentRepo.id}`}
-            onClick={handleChange}
-          >
-            <label title="Create/Run Mode" className="switch">
-              <input type="checkbox" defaultChecked></input>
-              <span className="slider round"></span>
-            </label>
-          </Link>
-        </>
-      );
-    }
-  };
 
   return (
     <main>
       <BrowserRouter>
-        {isItOwned ? <ToggleRunCreate /> : null}
         <Routes>
-          <Route exact path="/" element={<CreateMode />} />
+          <Route
+            exact
+            path="/"
+            element={
+              <LoginMode
+                setOwned={setOwned}
+                authorizedUserOcto={authorizedUserOcto}
+                tryLogin={tryLogin}
+                setIsLoggedIn={setIsLoggedIn}
+                isloggedIn={isloggedIn}
+              />
+            }
+          />
           <Route path="/:id" element={<CreateMode />} />
           <Route
             path="/run/:id"
             element={
               <RunMode
                 props={{
-                  setPopUpOpen: setPopUpOpen,
                   isItOwned: isItOwned,
-                  setRunMode: setRunMode,
                   setOwned: setOwned,
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
+                  runModeon: runModeon,
+                  setRunMode: setRunMode,
                 }}
                 displayProps={{
                   mesh: mesh,

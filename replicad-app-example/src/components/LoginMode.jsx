@@ -3,11 +3,10 @@ import GlobalVariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
 import { licenses } from "./js/licenseOptions.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import globalvariables from "./js/globalvariables.js";
 
 /*--Credit to https://codepen.io/colorlib/pen/rxddKy */
-//var PopUpState = true;
 
 //Login pop up component logic: pop up appears introducing logo and github login button,
 // if user gets authenticated in the tryLogin function, then the pop up disappears and the projects appear, if they do notget authenticated, then the pop up stays and the user can browse projects
@@ -115,6 +114,9 @@ const ShowProjects = (props) => {
   const [projectsLoaded, setStateLoaded] = React.useState(false);
   const [projectPopUp, setNewProjectPopUp] = useState(false);
   const [searchBarValue, setSearchBarValue] = useState("");
+  var authorizedUserOcto = props.authorizedUserOcto;
+
+  const navigate = useNavigate();
 
   // conditional query for maslow projects
   useEffect(() => {
@@ -144,6 +146,57 @@ const ShowProjects = (props) => {
       });
   }, [props.userBrowsing, searchBarValue]);
 
+  /** It's unclear whether this is working, I'm adding it here so that i can get rid of oauth file */
+  const convertFromOldFormat = function (json) {
+    var listOfMoleculeAtoms = json.molecules;
+
+    //Find the top level molecule
+    var projectObject = listOfMoleculeAtoms.filter((molecule) => {
+      return molecule.topLevel == true;
+    })[0];
+    //Remove that element from the listOfMoleculeAtoms
+    listOfMoleculeAtoms.splice(
+      listOfMoleculeAtoms.findIndex((e) => e.topLevel == true),
+      1
+    );
+
+    //Recursive function to walk the tree and find molecule placeholders
+    function walkForMolecules(projectObject) {
+      projectObject.allAtoms.forEach(function (
+        atom,
+        allAtomsIndex,
+        allAtomsObject
+      ) {
+        if (atom.atomType == "Molecule") {
+          if (atom.allAtoms != undefined) {
+            //If this molecule has allAtoms
+            walkForMolecules(atom); //Walk it
+          } else {
+            //Else replace it with a version which does have allAtoms from the list
+            //Find the version in molecules list and plug it in
+            allAtomsObject[allAtomsIndex] = listOfMoleculeAtoms.filter(
+              (molecule) => {
+                return molecule.uniqueID == atom.uniqueID;
+              }
+            )[0];
+            //Remove that element from the listOfMoleculeAtoms
+            listOfMoleculeAtoms.splice(
+              listOfMoleculeAtoms.findIndex((e) => e.uniqueID == atom.uniqueID),
+              1
+            );
+          }
+        }
+      });
+    }
+
+    //Find any placeholder molecules in there (this needs to be a full tree walk for everything to work)
+    while (listOfMoleculeAtoms.length > 0) {
+      walkForMolecules(projectObject);
+    }
+
+    return projectObject;
+  };
+
   const createProject = async () => {
     const name = document.getElementById("project-name").value;
     const description = document.getElementById("project-description").value;
@@ -161,6 +214,7 @@ const ShowProjects = (props) => {
     });
 
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+
     await authorizedUserOcto
       .request("POST /user/repos", {
         name: name,
@@ -172,6 +226,9 @@ const ShowProjects = (props) => {
       .then((result) => {
         //Once we have created the new repo we need to create a file within it to store the project in
         currentRepoName = result.data.name;
+        currentUser = GlobalVariables.currentUser;
+        GlobalVariables.currentRepo = result.data;
+
         var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
         jsonRepOfProject.filetypeVersion = 1;
         jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
@@ -187,7 +244,7 @@ const ShowProjects = (props) => {
             message: "initialize repo",
             content: projectContent,
           })
-          .then(() => {
+          .then((result) => {
             //Then create the BOM file
             var content = window.btoa(bomHeader); // create a file with just the header in it and base64 encode it
             authorizedUserOcto.rest.repos
@@ -246,7 +303,11 @@ const ShowProjects = (props) => {
                                     content: window.btoa(licenseText),
                                   })
                                   .then(() => {
-                                    loadProject(result.data);
+                                    loadProject(GlobalVariables.currentRepo);
+
+                                    navigate(
+                                      `/${GlobalVariables.currentRepo.id}`
+                                    );
                                     intervalTimer = setInterval(() => {
                                       this.saveProject();
                                     }, 1200000); //Save the project regularly
@@ -284,7 +345,7 @@ const ShowProjects = (props) => {
         <div>
           <div className="form" style={{ color: "whitesmoke" }}>
             <h1 style={{ fontSize: "1em" }}>NEW PROJECT</h1>
-            <form className="login-form">
+            <div className="login-form">
               <div className="form-row">
                 <div className="input-data">
                   <input
@@ -334,7 +395,7 @@ const ShowProjects = (props) => {
                   </div>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </>
@@ -416,52 +477,6 @@ const ShowProjects = (props) => {
       </>
     );
   };
-  // Loads project when clicked in browse mode
-  const loadProject = function (project) {
-    console.log(project);
-
-    GlobalVariables.currentRepoName = project.name;
-    GlobalVariables.currentRepo = project;
-    GlobalVariables.gitHub.totalAtomCount = 0;
-    GlobalVariables.gitHub.numberOfAtomsToLoad = 0;
-    GlobalVariables.startTime = new Date().getTime();
-    GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-
-    if (GlobalVariables.currentUser == project.owner.login) {
-      props.setOwned(true);
-      const currentRepoName = project.name;
-      //Load a blank project
-      GlobalVariables.topLevelMolecule = new Molecule({
-        x: 0,
-        y: 0,
-        topLevel: true,
-        atomType: "Molecule",
-      });
-      octokit
-        .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
-          owner: project.owner.login,
-          repo: project.name,
-        })
-        .then((response) => {
-          props.setPopUpOpen(false);
-          //content will be base64 encoded
-          let rawFile = JSON.parse(atob(response.data.content));
-
-          if (rawFile.filetypeVersion == 1) {
-            GlobalVariables.topLevelMolecule.deserialize(rawFile);
-          } else {
-            GlobalVariables.topLevelMolecule.deserialize(
-              this.convertFromOldFormat(rawFile)
-            );
-          }
-        });
-    } else {
-      props.setRunMode(true);
-      props.setOwned(false);
-      props.setPopUpOpen(false);
-      // run mode? window.open('/run?'+projectID)
-    }
-  };
 
   // adds individual projects after API call
   const AddProject = () => {
@@ -480,7 +495,9 @@ const ShowProjects = (props) => {
           className="project"
           key={node.id}
           id={node.name}
-          onClick={(e) => loadProject(node, e)}
+          onClick={() => {
+            GlobalVariables.currentRepo = node;
+          }}
         >
           <p
             style={{
@@ -561,7 +578,7 @@ const ShowProjects = (props) => {
   );
 };
 
-function LoginPopUp(props) {
+function LoginMode(props) {
   //tryLogin = props.tryLogin;
 
   const [userBrowsing, setBrowsing] = useState(false);
@@ -569,15 +586,14 @@ function LoginPopUp(props) {
   var currentUser = GlobalVariables.currentUser;
   let popUpContent;
 
-  if (GlobalVariables.currentUser !== undefined && !userBrowsing) {
+  if (props.authorizedUserOcto && !userBrowsing) {
     popUpContent = (
       <ShowProjects
         user={currentUser}
-        setPopUpOpen={props.setPopUpOpen}
+        authorizedUserOcto={props.authorizedUserOcto}
         userBrowsing={userBrowsing}
         setBrowsing={setBrowsing}
         isloggedIn={isloggedIn}
-        setRunMode={props.setRunMode}
         setOwned={props.setOwned}
       />
     );
@@ -586,11 +602,10 @@ function LoginPopUp(props) {
       <ShowProjects
         user={""}
         userBrowsing={userBrowsing}
-        setPopUpOpen={props.setPopUpOpen}
+        authorizedUserOcto={props.authorizedUserOcto}
         setBrowsing={setBrowsing}
         isloggedIn={isloggedIn}
         tryLogin={props.tryLogin}
-        setRunMode={props.setRunMode}
         setOwned={props.setOwned}
       />
     );
@@ -610,13 +625,12 @@ function LoginPopUp(props) {
     >
       <div>
         {" "}
-        {isloggedIn ? (
-          <button
-            className="closeButton"
-            onClick={() => props.setPopUpOpen(false)}
-          >
-            <img></img>
-          </button>
+        {GlobalVariables.currentRepo ? (
+          <Link to={`/${GlobalVariables.currentRepo.id}`}>
+            <button className="closeButton">
+              <img></img>
+            </button>
+          </Link>
         ) : null}
       </div>
       {popUpContent}
@@ -624,4 +638,4 @@ function LoginPopUp(props) {
   );
 }
 
-export default LoginPopUp;
+export default LoginMode;

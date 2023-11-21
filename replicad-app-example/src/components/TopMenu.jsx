@@ -1,20 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
+import ShareDialog from "./ShareDialog.jsx";
+import { useNavigate } from "react-router-dom";
 
 function TopMenu(props) {
   const [currentMoleculeTop, setTop] = useState(false);
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
+  const navigate = useNavigate();
 
   // objects for navigation items in the top menu
   const navItems = [
     {
       id: "Open",
       buttonFunc: () => {
-        if (GlobalVariables.currentUser != undefined) {
-          props.setIsLoggedIn(true);
-        }
-        props.setPopUpOpen(true);
+        navigate("/");
       },
       icon: "Open.svg",
     },
@@ -198,27 +198,6 @@ function TopMenu(props) {
     jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
     const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
 
-    /*
-    // Initialize with OAuth.io app public key
-    if (window.location.href.includes("private")) {
-      OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
-    } else {
-      OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
-    }
-    
-
-    // Use popup for oauth
-    OAuth.popup("github").then((github) => {
-      authorizedUserOcto = new Octokit({
-        auth: github.access_token,
-      });
-      authorizedUserOcto
-        .request("GET /user", {})
-        .then((response) => {
-          GlobalVariables.currentUser = response.data.login;
-        })
-        .then(() => { 
-          */
     setState(10);
     createCommit(
       props.authorizedUserOcto,
@@ -239,6 +218,7 @@ function TopMenu(props) {
     );
   };
   //{checks for top level variable and show go-up button if this is not top molecule
+  //i'm not so sure this useeffect is right. put on list to review
   const TopLevel = (props) => {
     const ref = useRef();
     useEffect(() => {
@@ -358,23 +338,7 @@ function TopMenu(props) {
           setSavePopUp={setSavePopUp}
         />
       ) : null}
-      {GlobalVariables.currentRepo ? (
-        <dialog>
-          <button
-            autoFocus
-            onClick={() => {
-              var shareDialog = document.querySelector("dialog");
-              shareDialog.close();
-            }}
-          >
-            Close
-          </button>
-          <p>Use this link to share this project</p>
-          <a href={"/run/" + GlobalVariables.currentRepo.id} target="_blank">
-            /run/{GlobalVariables.currentRepo.id}
-          </a>
-        </dialog>
-      ) : null}
+      <ShareDialog />
       <TopLevel currentMoleculeTop={currentMoleculeTop} setTop={setTop} />
       <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>

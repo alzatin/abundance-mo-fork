@@ -4,6 +4,8 @@ import ReplicadMesh from "./ReplicadMesh.jsx";
 import GlobalVariables from "./js/globalvariables.js";
 import globalvariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import ShareDialog from "./ShareDialog.jsx";
+import ToggleRunCreate from "./ToggleRunCreate.jsx";
 import {
   BrowserRouter as Router,
   Link,
@@ -46,7 +48,11 @@ function runMode(props) {
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
 
+  var authorizedUserOcto = props.props.authorizedUserOcto;
+  const windowSize = useWindowSize();
+
   var navigate = useNavigate();
+
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function () {
     if (props.props.authorizedUserOcto) {
@@ -74,7 +80,6 @@ function runMode(props) {
                 })
                 .then((result) => {
                   props.props.setOwned(true);
-                  props.props.setRunMode(false);
                   GlobalVariables.currentRepo = result.data;
                   navigate(`/${GlobalVariables.currentRepo.id}`),
                     { replace: true };
@@ -88,9 +93,35 @@ function runMode(props) {
       });
     }
   };
-  var authorizedUserOcto;
-  const windowSize = useWindowSize();
-  // check if you own the project
+
+  /**
+   * Like a project on github by unique ID.
+   */
+  const starProject = function (id) {
+    //Find out the information of who owns the project we are trying to like
+
+    var owner = GlobalVariables.currentRepo.owner.login;
+    var repoName = GlobalVariables.currentRepo.name;
+    document.getElementById("Star-button").style.backgroundColor = "gray";
+
+    authorizedUserOcto.rest.activity.starRepoForAuthenticatedUser({
+      owner: owner,
+      repo: repoName,
+    });
+    //Find out if the project has been starred and unstar if it is
+    /* octokit.activity.checkStarringRepo({
+                    owner:user,
+                    repo: repoName
+                }).then(() => { 
+                    var button= document.getElementById("Star-button")
+                    button.setAttribute("class","browseButton")
+                    button.innerHTML = "Star"
+                    octokit.activity.unstarRepo({
+                        owner: user,
+                        repo: repoName
+                    })
+                })*/
+  };
 
   /** get repository from github by the id in the url */
   const getProjectById = () => {
@@ -107,6 +138,11 @@ function runMode(props) {
 
   return (
     <>
+      <ShareDialog />
+      <ToggleRunCreate
+        runModeon={props.props.runModeon}
+        setRunMode={props.props.setRunMode}
+      />
       <div className="runContainer">
         <div className="runSideBar">
           <p className="molecule_title">{globalvariables.currentRepoName}</p>
@@ -116,7 +152,7 @@ function runMode(props) {
               <button className=" browseButton" id="BillOfMaterials-button">
                 Bill Of Materials
               </button>
-              {!props.props.isItOwned ? (
+              {props.props.authorizedUserOcto ? (
                 <button
                   className=" browseButton"
                   id="Fork-button"
@@ -126,20 +162,27 @@ function runMode(props) {
                 </button>
               ) : null}
 
-              <button className=" browseButton" id="Share-button">
+              <button
+                className=" browseButton"
+                id="Share-button"
+                onClick={() => {
+                  var shareDialog = document.querySelector("dialog");
+                  shareDialog.showModal();
+                }}
+              >
                 Share
               </button>
-              <button className=" browseButton" id="Star-button">
+              <button
+                className=" browseButton"
+                id="Star-button"
+                onClick={() => {
+                  starProject(GlobalVariables.currentRepo.id);
+                }}
+              >
                 Star
               </button>
             </div>
-            <Link
-              to={`/`}
-              onClick={() => {
-                props.props.setRunMode(false);
-                props.props.setPopUpOpen(true);
-              }}
-            >
+            <Link to={`/`}>
               <button>Return to browsing</button>
             </Link>
           </div>

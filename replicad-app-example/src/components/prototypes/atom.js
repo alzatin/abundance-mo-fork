@@ -186,7 +186,7 @@ export default class Atom {
         let xInPixels = GlobalVariables.widthToPixels(this.x)
         let yInPixels = GlobalVariables.heightToPixels(this.y)
         let radiusInPixels = GlobalVariables.widthToPixels(this.radius)
-
+        
         this.inputs.forEach(child => {
             child.draw()       
         })
@@ -391,7 +391,7 @@ export default class Atom {
                 clickProcessed = true
             }
         }
-           
+         
         return clickProcessed 
     }
 
@@ -589,6 +589,7 @@ export default class Atom {
      * Runs with each frame to draw the atom.
      */ 
     update() {
+        
         this.inputs.forEach(child => {
             child.update()     
         })

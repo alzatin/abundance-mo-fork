@@ -109,15 +109,15 @@ const createCMenu = (targetElement) => {
             uniqueID: GlobalVariables.generateUniqueID()
                 
         }, true)
-        
         //Simulate a click on the new atom
         var clickHandledByAtom = false
-        GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(atom => {
+        //clickdown on the atom is making it rerender project
+       /* GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(atom => {
             if (atom.clickDown(containerX,containerY,clickHandledByAtom) == true){
                 clickHandledByAtom = true
                 atom.clickUp(containerX, containerY) //Click up to not drag the atom
             }
-        })
+        })*/
     }
 }
 
