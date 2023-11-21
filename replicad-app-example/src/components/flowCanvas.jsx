@@ -29,7 +29,6 @@ export default function FlowCanvas(displayProps) {
 
   // Loads project
   const loadProject = function (project) {
-    console.log("loading project");
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
@@ -243,15 +242,19 @@ export default function FlowCanvas(displayProps) {
       var clickHandledByMolecule = false;
       GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
         if (
+          // if the click is inside molecule => change state ?
           molecule.clickDown(
             event.clientX,
             event.clientY,
             clickHandledByMolecule
-          ) == true
+          )
         ) {
           clickHandledByMolecule = true;
         }
       });
+      if (!clickHandledByMolecule) {
+        GlobalVariables.currentMolecule.backgroundClick();
+      }
 
       //Draw the selection box
       // if (!clickHandledByMolecule){
@@ -263,21 +266,6 @@ export default function FlowCanvas(displayProps) {
       //         name: 'Box',
       //         atomType: 'Box'
       //     }, null, GlobalVariables.availableTypes)
-      // }
-
-      if (!clickHandledByMolecule) {
-        GlobalVariables.currentMolecule.backgroundClick();
-        console.log("background click");
-      } else {
-        GlobalVariables.currentMolecule.selected = false;
-      }
-
-      //hide search menu if it is visible
-      // if (!document.querySelector('#canvas_menu').contains(event.target)) {
-      //     const menu = document.querySelector('#canvas_menu')
-      //     menu.classList.add('off')
-      //     menu.style.top = '-200%'
-      //     menu.style.left = '-200%'
       // }
     }
   };

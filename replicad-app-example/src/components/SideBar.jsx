@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 
 function SideBar(props) {
-  console.log("sidebar rerender");
   return (
     <>
       <div className="sideBar" value={GlobalVariables.currentRepo}>
