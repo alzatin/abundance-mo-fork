@@ -391,7 +391,7 @@ export default class Atom {
                 clickProcessed = true
             }
         }
-         console.log("when is the rerendering happening?")  
+         
         return clickProcessed 
     }
 
@@ -589,6 +589,7 @@ export default class Atom {
      * Runs with each frame to draw the atom.
      */ 
     update() {
+        
         this.inputs.forEach(child => {
             child.update()     
         })

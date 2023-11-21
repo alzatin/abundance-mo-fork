@@ -29,6 +29,7 @@ export default function FlowCanvas(displayProps) {
 
   // Loads project
   const loadProject = function (project) {
+    console.log("loading project");
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
@@ -37,13 +38,7 @@ export default function FlowCanvas(displayProps) {
     GlobalVariables.startTime = new Date().getTime();
 
     const currentRepoName = project.name;
-    //Load a blank project
-    GlobalVariables.topLevelMolecule = new Molecule({
-      x: 0,
-      y: 0,
-      topLevel: true,
-      atomType: "Molecule",
-    });
+
     var octokit = new Octokit();
 
     GlobalVariables.c.moveTo(0, 0);
@@ -67,7 +62,6 @@ export default function FlowCanvas(displayProps) {
             convertFromOldFormat(rawFile)
           );
         }
-        GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
       });
   };
 
@@ -87,15 +81,25 @@ export default function FlowCanvas(displayProps) {
   const circleMenu = useRef(null);
   const [globalVariables, setGlobalVariables] = useState(GlobalVariables);
 
+  // On component mount create a new top level molecule before project load
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
     GlobalVariables.c = canvasRef.current.getContext("2d");
-    /** Only run loadproject() if the project is different from what is already loaded  */
+
     if (GlobalVariables.currentRepo !== GlobalVariables.loadedRepo) {
+      //Load a blank project
+      GlobalVariables.topLevelMolecule = new Molecule({
+        x: 0,
+        y: 0,
+        topLevel: true,
+        atomType: "Molecule",
+      });
+      GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+      /** Only run loadproject() if the project is different from what is already loaded  */
       loadProject(GlobalVariables.currentRepo);
     }
-
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
+      console.log("when is atom update running");
       atom.update();
     });
   }, []);
@@ -186,7 +190,7 @@ export default function FlowCanvas(displayProps) {
       }
       //Save project
       if (e.key == "s") {
-        GlobalVariables.gitHub.saveProject();
+        GlobalVariables.saveProject();
       }
       //Opens menu to search for github molecule
       if (e.key == "g") {
