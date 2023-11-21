@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 import globalvariables from "./js/globalvariables.js";
+import SideBar from "./SideBar.jsx";
 
 function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
@@ -74,13 +75,7 @@ export default function LowerHalf(displayProps) {
           <div id="arrow-up-menu" className="arrow-up"></div>
           <div id="viewer_bar"></div>
         </div>
-        <div className="sideBar" value={globalvariables.currentRepo}>
-          {globalvariables.currentRepo
-            ? globalvariables.currentRepo.name +
-              " " +
-              globalvariables.currentRepo.owner.login
-            : null}
-        </div>
+        <SideBar />
         <div id="bottom_bar"></div>
       </div>
     </>

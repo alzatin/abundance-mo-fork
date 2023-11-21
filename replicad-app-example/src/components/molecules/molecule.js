@@ -104,7 +104,7 @@ export default class Molecule extends Atom{
         //Add the molecule's output
         this.placeAtom({
             parentMolecule: this, 
-            x: GlobalVariables.pixelsToWidth(/*GlobalVariables.canvas.current.width*/ 900 - 20),
+            x: GlobalVariables.pixelsToWidth(GlobalVariables.canvas.current.width - 20),
             y: .5,
             parent: this,
             name: 'Output',
@@ -730,6 +730,8 @@ export default class Molecule extends Atom{
                     
                     //Add the atom to the list to display
                     this.nodesOnTheScreen.push(atom)
+                    // fakes a click on newly placed atom
+                    atom.selected = true;
                     
                     if(unlock){
                         
@@ -749,20 +751,9 @@ export default class Molecule extends Atom{
                             
                         }
                         
-                        //Fake a click on the newly placed atom
-                        const downEvt = new MouseEvent('mousedown', {
-                            clientX: atom.x,
-                            clientY: atom.y
-                        })
-                        const upEvt = new MouseEvent('mouseup', {
-                            clientX: atom.x,
-                            clientY: atom.y
-                        })
                         
                         atom.updateValue()
                         
-                        document.getElementById('flow-canvas').dispatchEvent(downEvt)
-                        document.getElementById('flow-canvas').dispatchEvent(upEvt)
                     }
                 }
             }

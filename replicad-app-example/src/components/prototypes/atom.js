@@ -364,6 +364,8 @@ export default class Atom {
      * @param {boolean} clickProcessed - A flag to indicate if the click has already been processed
      */ 
     clickDown(x,y, clickProcessed){
+        console.log(x,y)
+        console.log(GlobalVariables.currentMolecule)
         let xInPixels = GlobalVariables.widthToPixels(this.x)
         let yInPixels = GlobalVariables.heightToPixels(this.y)
         let radiusInPixels = GlobalVariables.widthToPixels(this.radius)
