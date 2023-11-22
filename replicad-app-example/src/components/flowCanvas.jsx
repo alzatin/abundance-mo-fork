@@ -79,7 +79,6 @@ export default function FlowCanvas(props) {
 
   const canvasRef = useRef(null);
   const circleMenu = useRef(null);
-  const [globalVariables, setGlobalVariables] = useState(GlobalVariables);
 
   // On component mount create a new top level molecule before project load
   useEffect(() => {
@@ -255,7 +254,7 @@ export default function FlowCanvas(props) {
           ) < radiusInPixels
         ) {
           props.props.setActiveAtom(atom);
-          atom.sendToRender();
+          //atom.sendToRender();
           atom.isMoving = true;
           atom.selected = true;
           clickHandledByMolecule = true;
@@ -263,6 +262,7 @@ export default function FlowCanvas(props) {
           atom.selected = false;
         }
       });
+      //background click  - have not yet transferred the handling of inputs and outputs
       if (!clickHandledByMolecule) {
         props.props.setActiveAtom(GlobalVariables.currentRepo);
       }
@@ -281,6 +281,7 @@ export default function FlowCanvas(props) {
     }
   };
 
+  //why do we need to handle a double click?
   const onDoubleClick = (event) => {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.doubleClick(event.clientX, event.clientY);
