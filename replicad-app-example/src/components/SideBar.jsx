@@ -88,12 +88,7 @@ function SideBar(props) {
                           <div className="sidebar-item sidebar-editable-div">
                             <label className="sidebar-subitem label-item">
                               <span>{input.name}</span>
-                              <span
-                                contentEditable={true}
-                                className="editing-item"
-                              >
-                                {input["value"]}
-                              </span>
+
                               <EditableContent
                                 input={input}
                                 initialValue={input["value"]}

@@ -732,7 +732,7 @@ export default class Molecule extends Atom{
                     //Add the atom to the list to display
                     this.nodesOnTheScreen.push(atom)
                     // fakes a click on newly placed atom
-                    atom.selected = true;
+                    //atom.selected = false;
                     
                     if(unlock){
                         

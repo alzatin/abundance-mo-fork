@@ -31,6 +31,7 @@ function useWindowSize() {
 }
 
 export default function LowerHalf(props) {
+  console.log("how many times is lower half rendering");
   //Todo this is not very clean
   let cad = props.displayProps.cad;
   let size = props.displayProps.size;

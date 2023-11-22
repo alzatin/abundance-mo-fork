@@ -29,6 +29,7 @@ export default function FlowCanvas(props) {
 
   // Loads project
   const loadProject = function (project) {
+    console.log("active atom changing");
     props.props.setActiveAtom(project);
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.name;
