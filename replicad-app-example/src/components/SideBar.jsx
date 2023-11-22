@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
+import AttachmentPoint from "./prototypes/attachmentpoint";
 
 function SideBar(props) {
   console.log(props.activeAtom);
@@ -10,6 +11,7 @@ function SideBar(props) {
     const [isEditing, setEditing] = useState(false);
     const inputRef = useRef(null);
     const wrapperRef = useRef(null);
+    let valueInBox;
 
     useEffect(() => {
       const { current } = inputRef;
@@ -28,14 +30,23 @@ function SideBar(props) {
         (type !== "textarea" && allKeys.indexOf(key) > -1)
       ) {
         setEditing(false);
+        props.input.setValue(valueInBox);
       }
     };
 
     const handleValueChange = (value) => {
       setValue(value);
+      valueInBox = value.trim();
+      if (props.resultShouldBeANumber) {
+        valueInBox = GlobalVariables.limitedEvaluate(valueInBox);
+      }
 
-      props.input.value = value;
-      console.log(props.input.value);
+      if (props.input instanceof AttachmentPoint) {
+        props.input.setValue(valueInBox);
+      } else {
+        props.input["value"] = valueInBox;
+        callBack(valueInBox);
+      }
     };
 
     return (
@@ -82,6 +93,7 @@ function SideBar(props) {
                   input.connectors.length == 0
                 ) {
                   if (input.valueType == "number") {
+                    var resultShouldBeANumber = true;
                     return (
                       <>
                         <li>
@@ -92,6 +104,7 @@ function SideBar(props) {
                               <EditableContent
                                 input={input}
                                 initialValue={input["value"]}
+                                resultShouldBeANumber={resultShouldBeANumber}
                               />
                             </label>
                           </div>
