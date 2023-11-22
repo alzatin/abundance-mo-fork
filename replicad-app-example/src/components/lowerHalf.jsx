@@ -30,12 +30,12 @@ function useWindowSize() {
   return windowSize;
 }
 
-export default function LowerHalf(displayProps) {
+export default function LowerHalf(props) {
   //Todo this is not very clean
-  let cad = displayProps.displayProps.cad;
-  let size = displayProps.displayProps.size;
-  let setMesh = displayProps.displayProps.setMesh;
-  let mesh = displayProps.displayProps.mesh;
+  let cad = props.displayProps.cad;
+  let size = props.displayProps.size;
+  let setMesh = props.displayProps.setMesh;
+  let mesh = props.displayProps.mesh;
 
   const windowSize = useWindowSize();
 
@@ -75,7 +75,7 @@ export default function LowerHalf(displayProps) {
           <div id="arrow-up-menu" className="arrow-up"></div>
           <div id="viewer_bar"></div>
         </div>
-        <SideBar />
+        <SideBar activeAtom={props.props.activeAtom} />
         <div id="bottom_bar"></div>
       </div>
     </>

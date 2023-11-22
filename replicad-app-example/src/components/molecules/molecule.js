@@ -202,15 +202,16 @@ export default class Molecule extends Atom{
      * Handle a background click (a click which doesn't land on one of the contained molecules) by deselected everything and displaying a 3D rendering of this molecules output.
      */ 
     backgroundClick(){
+        console.log("old background click")
         /**
          * Flag that the atom is now selected.
          */
         if(this.selected == false){
-            this.selected = true
-            this.updateSidebar()
-            this.sendToRender()   //This is might need to be removed because it was happening too often during loading
+            //this.selected = true
+            //this.updateSidebar()
+            //this.sendToRender()   //This is might need to be removed because it was happening too often during loading
         }
-    }
+    } 
 
     /**
      * Pushes serialized atoms into array if selected

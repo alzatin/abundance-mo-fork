@@ -55,6 +55,7 @@ export default function ReplicadApp() {
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [isItOwned, setOwned] = useState(false);
   const [runModeon, setRunMode] = useState(false);
+  const [activeAtom, setActiveAtom] = useState([]);
 
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
@@ -99,9 +100,11 @@ export default function ReplicadApp() {
           />
         </div>
         <FlowCanvas
+          props={{ activeAtom: activeAtom, setActiveAtom: setActiveAtom }}
           displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
         />
         <LowerHalf
+          props={{ activeAtom: activeAtom }}
           displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
         />
       </>

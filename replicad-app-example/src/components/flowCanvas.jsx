@@ -20,15 +20,16 @@ window.addEventListener(
   false
 );
 
-export default function FlowCanvas(displayProps) {
+export default function FlowCanvas(props) {
   //Todo this is not very clean
-  let cad = displayProps.displayProps.cad;
-  let size = displayProps.displayProps.size;
-  let setMesh = displayProps.displayProps.setMesh;
-  let mesh = displayProps.displayProps.mesh;
+  let cad = props.displayProps.cad;
+  let size = props.displayProps.size;
+  let setMesh = props.displayProps.setMesh;
+  let mesh = props.displayProps.mesh;
 
   // Loads project
   const loadProject = function (project) {
+    props.props.setActiveAtom(project);
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
@@ -240,20 +241,30 @@ export default function FlowCanvas(displayProps) {
       cmenu.hide();
 
       var clickHandledByMolecule = false;
-      GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
+      GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
+        let xInPixels = GlobalVariables.widthToPixels(atom.x);
+        let yInPixels = GlobalVariables.heightToPixels(atom.y);
+        let radiusInPixels = GlobalVariables.widthToPixels(atom.radius);
+
         if (
-          // if the click is inside molecule => change state ?
-          molecule.clickDown(
+          GlobalVariables.distBetweenPoints(
             event.clientX,
+            xInPixels,
             event.clientY,
-            clickHandledByMolecule
-          )
+            yInPixels
+          ) < radiusInPixels
         ) {
+          props.props.setActiveAtom(atom);
+          atom.sendToRender();
+          atom.isMoving = true;
+          atom.selected = true;
           clickHandledByMolecule = true;
+        } else {
+          atom.selected = false;
         }
       });
       if (!clickHandledByMolecule) {
-        GlobalVariables.currentMolecule.backgroundClick();
+        props.props.setActiveAtom(GlobalVariables.currentRepo);
       }
 
       //Draw the selection box

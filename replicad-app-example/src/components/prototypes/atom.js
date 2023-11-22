@@ -368,16 +368,15 @@ export default class Atom {
         let xInPixels = GlobalVariables.widthToPixels(this.x)
         let yInPixels = GlobalVariables.heightToPixels(this.y)
         let radiusInPixels = GlobalVariables.widthToPixels(this.radius)
-        var selectedMolecule =[]
+        
         //If none of the inputs processed the click see if the atom should, if not clicked, then deselected
         if(!clickProcessed && GlobalVariables.distBetweenPoints(x, xInPixels, y, yInPixels) < radiusInPixels){
             
-            this.isMoving = true
-            this.selected = true
-            this.updateSidebar()
-            this.sendToRender()
-            clickProcessed = true
-            selectedMolecule = this
+            //this.isMoving = true
+            //this.selected = true
+            //this.sendToRender()
+            //clickProcessed = true;
+           // this.updateSidebar()
         }
         //Deselect this if it wasn't clicked on, unless control is held
         else if (!GlobalVariables.ctrlDown){
@@ -483,8 +482,9 @@ export default class Atom {
     updateSidebar(){
         //updates the sidebar to display information about this node
         
-       console.log(this)
-       var valueList = this.initializeSideBar()
+      console.log("updating side bar")
+       
+       /*var valueList = this.initializeSideBar()
         
         //Add options to set all of the inputs
         this.inputs.forEach(input => {
@@ -503,7 +503,7 @@ export default class Atom {
             this.createButton(valueList,this,"Delete",()=>{this.deleteNode()})
         }
         
-        return valueList
+        return valueList*/
     }
     
     /**
