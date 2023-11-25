@@ -10,7 +10,6 @@ function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
   flowCanvas.width = window.innerWidth;
   flowCanvas.height = window.innerHeight * 0.45;
-  console.log(flowCanvas.height);
 }
 
 window.addEventListener(
@@ -225,6 +224,7 @@ export default function FlowCanvas(props) {
    * Called by mouse down
    */
   const onMouseDown = (event) => {
+    // if it's a right click show the circular menu
     var isRightMB;
     if ("which" in event) {
       // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
@@ -242,44 +242,20 @@ export default function FlowCanvas(props) {
       cmenu.hide();
 
       var clickHandledByMolecule = false;
-      GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
-        let xInPixels = GlobalVariables.widthToPixels(atom.x);
-        let yInPixels = GlobalVariables.heightToPixels(atom.y);
-        let radiusInPixels = GlobalVariables.widthToPixels(atom.radius);
-
-        if (
-          GlobalVariables.distBetweenPoints(
-            event.clientX,
-            xInPixels,
-            event.clientY,
-            yInPixels
-          ) < radiusInPixels
-        ) {
-          atom.selected = true;
-          //atom.sendToRender();
-          atom.isMoving = true;
+      //Run through all the atoms on the screen and decide if one was clicked
+      GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
+        let processingClick;
+        processingClick = molecule.clickDown(
+          event.clientX,
+          event.clientY,
+          clickHandledByMolecule
+        );
+        if (processingClick !== undefined) {
+          //if we have a click handled by a molecule, set it as the active atom
+          props.props.setActiveAtom(processingClick);
           clickHandledByMolecule = true;
-          props.props.setActiveAtom(atom);
-        } else {
-          atom.selected = false;
         }
       });
-      //background click  - have not yet transferred the handling of inputs and outputs
-      if (!clickHandledByMolecule) {
-        props.props.setActiveAtom(GlobalVariables.currentRepo);
-      }
-
-      //Draw the selection box
-      // if (!clickHandledByMolecule){
-      //     GlobalVariables.currentMolecule.placeAtom({
-      //         parentMolecule: GlobalVariables.currentMolecule,
-      //         x: GlobalVariables.pixelsToWidth(event.clientX),
-      //         y: GlobalVariables.pixelsToHeight(event.clientY),
-      //         parent: GlobalVariables.currentMolecule,
-      //         name: 'Box',
-      //         atomType: 'Box'
-      //     }, null, GlobalVariables.availableTypes)
-      // }
     }
   };
 

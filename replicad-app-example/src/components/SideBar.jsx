@@ -3,10 +3,8 @@ import GlobalVariables from "./js/globalvariables.js";
 import AttachmentPoint from "./prototypes/attachmentpoint";
 
 function SideBar(props) {
-  console.log(props.activeAtom);
-
   const EditableContent = (props) => {
-    const [value, setValue] = useState(props.initialValue);
+    const [value, setValue] = useState(props.initialvalue);
 
     const [isEditing, setEditing] = useState(false);
     const inputRef = useRef(null);
@@ -94,6 +92,7 @@ function SideBar(props) {
                 ) {
                   if (input.valueType == "number") {
                     var resultShouldBeANumber = true;
+                    let initialvalue = input["value"];
                     return (
                       <>
                         <li>
@@ -103,7 +102,7 @@ function SideBar(props) {
 
                               <EditableContent
                                 input={input}
-                                initialValue={input["value"]}
+                                initialvalue={initialvalue}
                                 resultShouldBeANumber={resultShouldBeANumber}
                               />
                             </label>
