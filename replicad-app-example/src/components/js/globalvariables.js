@@ -253,6 +253,7 @@ class GlobalVariables{
     */
     heightToPixels(height){
         height = Math.min(height, 1) //Constrain the position of the max value to be 1
+        
         let pixels = this.canvas.current.height * height
         return pixels
     }

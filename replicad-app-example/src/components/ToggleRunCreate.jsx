@@ -19,6 +19,7 @@ function ToggleRunCreate(props) {
               : "/run"
           }
           onClick={handleChange}
+          style={{ position: "absolute" }}
         >
           <label title="Create/Run Mode" className="switch">
             <input type="checkbox"></input>

@@ -10,6 +10,7 @@ function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
   flowCanvas.width = window.innerWidth;
   flowCanvas.height = window.innerHeight * 0.45;
+  console.log(flowCanvas.height);
 }
 
 window.addEventListener(
@@ -109,6 +110,7 @@ export default function FlowCanvas(props) {
       GlobalVariables.canvas.current.width,
       GlobalVariables.canvas.current.height
     );
+
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
       atom.update();
     });
@@ -116,7 +118,7 @@ export default function FlowCanvas(props) {
 
   const mouseMove = (e) => {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
-      molecule.clickMove(event.clientX, event.clientY);
+      molecule.clickMove(e.clientX, e.clientY);
     });
   };
 
@@ -328,6 +330,17 @@ export default function FlowCanvas(props) {
 
   return (
     <>
+      <canvas
+        ref={canvasRef}
+        id="flow-canvas"
+        tabIndex={0}
+        onMouseMove={mouseMove}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onDoubleClick={onDoubleClick}
+        onKeyUp={keyUp}
+        onKeyDown={keyDown}
+      ></canvas>
       <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>
 
@@ -342,17 +355,6 @@ export default function FlowCanvas(props) {
           <ul id="githubList" className="menu_list tabcontent"></ul>
         </div>
       </div>
-      <canvas
-        ref={canvasRef}
-        id="flow-canvas"
-        tabIndex={0}
-        onMouseMove={mouseMove}
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        onDoubleClick={onDoubleClick}
-        onKeyUp={keyUp}
-        onKeyDown={keyDown}
-      ></canvas>
     </>
   );
 }
