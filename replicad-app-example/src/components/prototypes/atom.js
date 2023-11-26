@@ -379,7 +379,6 @@ export default class Atom {
         //Deselect this if it wasn't clicked on, unless control is held
         else if (!GlobalVariables.ctrlDown){
             this.selected = false
-            //atomSelected = GlobalVariables.currentRepo
         }         
         //Returns true if something was done with the click
         this.inputs.forEach(child => {

@@ -80,20 +80,29 @@ function SideBar(props) {
         <p className="atom_description">
           {GlobalVariables.currentRepo.description}
         </p>
+        <div>Atom Inputs</div>
         <div>
           {props.activeAtom.inputs
             ? props.activeAtom.inputs.map((input) => {
                 var resultShouldBeANumber;
                 let initialvalue = input["value"];
+                console.log(input + " " + initialvalue);
+                let editableValue = true;
+
                 if (
                   input.type == "input" &&
                   input.valueType != "geometry" &&
                   input.connectors.length == 0
                 ) {
                   if (input.valueType == "number") {
+                    resultShouldBeANumber = "true";
                   } else {
                     resultShouldBeANumber = "false";
                   }
+                }
+                //this value should not be editable
+                if (input.valueType === "geometry") {
+                  editableValue = false;
                 }
                 return (
                   <>
@@ -102,11 +111,13 @@ function SideBar(props) {
                         <label className="sidebar-subitem label-item">
                           <span>{input.name}</span>
 
-                          <EditableContent
-                            input={input}
-                            initialvalue={initialvalue}
-                            resultShouldBeANumber={resultShouldBeANumber}
-                          />
+                          {editableValue ? (
+                            <EditableContent
+                              input={input}
+                              initialvalue={initialvalue}
+                              resultShouldBeANumber={resultShouldBeANumber}
+                            />
+                          ) : null}
                         </label>
                       </div>
                     </li>
