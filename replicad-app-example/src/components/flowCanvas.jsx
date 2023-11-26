@@ -256,6 +256,9 @@ export default function FlowCanvas(props) {
           clickHandledByMolecule = true;
         }
       });
+      if (!clickHandledByMolecule) {
+        props.props.setActiveAtom(GlobalVariables.currentMolecule);
+      }
     }
   };
 

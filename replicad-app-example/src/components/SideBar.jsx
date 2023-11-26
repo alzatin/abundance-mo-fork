@@ -28,7 +28,12 @@ function SideBar(props) {
         (type !== "textarea" && allKeys.indexOf(key) > -1)
       ) {
         setEditing(false);
-        props.input.setValue(valueInBox);
+        if (props.input instanceof AttachmentPoint) {
+          props.input.setValue(valueInBox);
+        } else {
+          props.input["value"] = valueInBox;
+          callBack(valueInBox);
+        }
       }
     };
 
@@ -37,13 +42,6 @@ function SideBar(props) {
       valueInBox = value.trim();
       if (props.resultShouldBeANumber) {
         valueInBox = GlobalVariables.limitedEvaluate(valueInBox);
-      }
-
-      if (props.input instanceof AttachmentPoint) {
-        props.input.setValue(valueInBox);
-      } else {
-        props.input["value"] = valueInBox;
-        callBack(valueInBox);
       }
     };
 
@@ -85,36 +83,36 @@ function SideBar(props) {
         <div>
           {props.activeAtom.inputs
             ? props.activeAtom.inputs.map((input) => {
+                var resultShouldBeANumber;
+                let initialvalue = input["value"];
                 if (
                   input.type == "input" &&
                   input.valueType != "geometry" &&
                   input.connectors.length == 0
                 ) {
                   if (input.valueType == "number") {
-                    var resultShouldBeANumber = true;
-                    let initialvalue = input["value"];
-                    return (
-                      <>
-                        <li>
-                          <div className="sidebar-item sidebar-editable-div">
-                            <label className="sidebar-subitem label-item">
-                              <span>{input.name}</span>
-
-                              <EditableContent
-                                input={input}
-                                initialvalue={initialvalue}
-                                resultShouldBeANumber={resultShouldBeANumber}
-                              />
-                            </label>
-                          </div>
-                        </li>
-                      </>
-                    );
-                    //this.createEditableValueListItem(valueList,input,'value', input.name, true)
                   } else {
-                    //this.createEditableValueListItem(valueList,input,'value', input.name, false)
+                    resultShouldBeANumber = "false";
                   }
                 }
+                return (
+                  <>
+                    <li key={input.id}>
+                      <div className="sidebar-item sidebar-editable-div">
+                        <label className="sidebar-subitem label-item">
+                          <span>{input.name}</span>
+
+                          <EditableContent
+                            input={input}
+                            initialvalue={initialvalue}
+                            resultShouldBeANumber={resultShouldBeANumber}
+                          />
+                        </label>
+                      </div>
+                    </li>
+                  </>
+                );
+                //this.createEditableValueListItem(valueList,input,'value', input.name, true)
               })
             : null}
         </div>
