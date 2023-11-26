@@ -3,13 +3,13 @@ import GlobalVariables from "./js/globalvariables.js";
 import AttachmentPoint from "./prototypes/attachmentpoint";
 
 function SideBar(props) {
+  let valueInBox;
   const EditableContent = (props) => {
     const [value, setValue] = useState(props.initialvalue);
 
     const [isEditing, setEditing] = useState(false);
     const inputRef = useRef(null);
     const wrapperRef = useRef(null);
-    let valueInBox;
 
     useEffect(() => {
       const { current } = inputRef;
@@ -39,7 +39,9 @@ function SideBar(props) {
 
     const handleValueChange = (value) => {
       setValue(value);
+
       valueInBox = value.trim();
+
       if (props.resultShouldBeANumber) {
         valueInBox = GlobalVariables.limitedEvaluate(valueInBox);
       }
@@ -86,7 +88,6 @@ function SideBar(props) {
             ? props.activeAtom.inputs.map((input) => {
                 var resultShouldBeANumber;
                 let initialvalue = input["value"];
-                console.log(input + " " + initialvalue);
                 let editableValue = true;
 
                 if (
@@ -104,6 +105,7 @@ function SideBar(props) {
                 if (input.valueType === "geometry") {
                   editableValue = false;
                 }
+
                 return (
                   <>
                     <li key={input.id}>
@@ -123,7 +125,6 @@ function SideBar(props) {
                     </li>
                   </>
                 );
-                //this.createEditableValueListItem(valueList,input,'value', input.name, true)
               })
             : null}
         </div>
