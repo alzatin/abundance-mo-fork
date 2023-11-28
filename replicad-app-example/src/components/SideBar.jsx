@@ -51,16 +51,19 @@ function SideBar(props) {
     return (
       <section
         {...props}
+        className="sidebar-editable-div"
         ref={wrapperRef}
         onClick={() => setEditing(true)}
         onBlur={() => setEditing(false)}
       >
+        <label className="sidebar-label-item">{props.input.name}</label>
         {isEditing ? (
           <div
             onBlur={() => setEditing(false)}
             onKeyDown={(e) => handleKeyDown(e, props.type)}
           >
             <textarea
+              className="sidebar-editable-area"
               ref={inputRef}
               type={props.type}
               value={value}
@@ -68,9 +71,7 @@ function SideBar(props) {
             />
           </div>
         ) : (
-          <div>
-            <p>{value}</p>
-          </div>
+          <div className="sidebar-editable-area">{value}</div>
         )}
       </section>
     );
@@ -107,18 +108,23 @@ function SideBar(props) {
                 }
 
                 return (
-                  <li key={input.uniqueID}>
-                    <div className="sidebar-item sidebar-editable-div">
-                      <label className="sidebar-subitem label-item">
-                        <span>{input.name}</span>
-                        {editableValue ? (
-                          <EditableContent
-                            input={input}
-                            initialvalue={initialvalue}
-                          />
-                        ) : null}
-                      </label>
-                    </div>
+                  <li key={input.uniqueID} className="sidebar-item ">
+                    {editableValue ? (
+                      <EditableContent
+                        input={input}
+                        initialvalue={initialvalue}
+                      />
+                    ) : (
+                      <section className="sidebar-editable-div">
+                        {" "}
+                        <label className="sidebar-label-item">
+                          {input.name}
+                        </label>
+                        <div className="sidebar-editable-area">
+                          "there's a geometry?"
+                        </div>
+                      </section>
+                    )}
                   </li>
                 );
               })

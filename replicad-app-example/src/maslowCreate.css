@@ -495,20 +495,10 @@ input.menu_search:focus {
 
 .sidebar-item {
   overflow: visible;
-  height: auto;
+  list-style: none;
+  height: 2rem;
   line-height: 1.5rem;
-  font-size: 1rem;
-  font-weight: 100;
-  padding: 0 1rem;
   cursor: pointer;
-}
-
-.sidebar-editable-div {
-  text-align: left;
-  padding-bottom: 10px;
-}
-.sidebar-editable-div:hover {
-  font-weight: 200;
 }
 
 .editing-item:hover .laber-item:active .editing-item:active {
@@ -516,27 +506,35 @@ input.menu_search:focus {
   font-weight: 500;
 }
 
-.sidebar-subitem {
-  display: inline-block;
-}
+.sidebar-editable-div {
+  width: 80%;
+  display: flex;
 
-.sidebar-subitem select {
-  background-color: white;
-  margin-left: 10px;
-  border-style: none;
-  width: 200%;
-  display: inline-block;
-  color: #000;
-  border-radius: 0px;
-  border-width: 0px;
-  height: 110%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
-
-.label-item {
-  display: block;
-  font-size: 1.8rem;
+.sidebar-editable-area {
+  width: 100%;
+  height: 40px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 20px;
+  resize: none;
+}
+.sidebar-label-item {
+  margin: 10px;
+  width: 100%;
+}
+.sidebar-item {
+  margin-bottom: 20px;
+  font-size: 20px;
   font-weight: 700;
   margin-left: 0;
+  text-transform: capitalize;
   margin-right: 5px;
   background: whitesmoke;
   color: #4d4d4d;
