@@ -4,6 +4,7 @@ import AttachmentPoint from "./prototypes/attachmentpoint";
 
 function SideBar(props) {
   let valueInBox;
+  let resultShouldBeANumber = false;
   const EditableContent = (props) => {
     const [value, setValue] = useState(props.initialvalue);
 
@@ -42,7 +43,7 @@ function SideBar(props) {
 
       valueInBox = value.trim();
 
-      if (props.resultShouldBeANumber) {
+      if (resultShouldBeANumber) {
         valueInBox = GlobalVariables.limitedEvaluate(valueInBox);
       }
     };
@@ -86,7 +87,6 @@ function SideBar(props) {
         <div>
           {props.activeAtom.inputs
             ? props.activeAtom.inputs.map((input) => {
-                var resultShouldBeANumber;
                 let initialvalue = input["value"];
                 let editableValue = true;
 
@@ -96,9 +96,9 @@ function SideBar(props) {
                   input.connectors.length == 0
                 ) {
                   if (input.valueType == "number") {
-                    resultShouldBeANumber = "true";
+                    resultShouldBeANumber = true;
                   } else {
-                    resultShouldBeANumber = "false";
+                    resultShouldBeANumber = false;
                   }
                 }
                 //this value should not be editable
@@ -107,23 +107,19 @@ function SideBar(props) {
                 }
 
                 return (
-                  <>
-                    <li key={input.id}>
-                      <div className="sidebar-item sidebar-editable-div">
-                        <label className="sidebar-subitem label-item">
-                          <span>{input.name}</span>
-
-                          {editableValue ? (
-                            <EditableContent
-                              input={input}
-                              initialvalue={initialvalue}
-                              resultShouldBeANumber={resultShouldBeANumber}
-                            />
-                          ) : null}
-                        </label>
-                      </div>
-                    </li>
-                  </>
+                  <li key={input.uniqueID}>
+                    <div className="sidebar-item sidebar-editable-div">
+                      <label className="sidebar-subitem label-item">
+                        <span>{input.name}</span>
+                        {editableValue ? (
+                          <EditableContent
+                            input={input}
+                            initialvalue={initialvalue}
+                          />
+                        ) : null}
+                      </label>
+                    </div>
+                  </li>
                 );
               })
             : null}

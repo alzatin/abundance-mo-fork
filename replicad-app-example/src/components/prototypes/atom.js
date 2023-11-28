@@ -808,7 +808,7 @@ export default class Atom {
      * @param {string} label - The label to display next to the editable value.
      * @param {boolean} resultShouldBeNumber - A flag to indicate if the input should be converted to a number.
      * @param {object} callBack - Optional. A function to call with the new value when the value changes.
-     */ 
+     
     createEditableValueListItem(list,object,key, label, resultShouldBeNumber, callBack = () => console.warn("no callback")){
 
         var listElement = document.createElement('LI')
@@ -863,7 +863,7 @@ export default class Atom {
             }
         })
 
-    }
+    }*/ 
     
     /**
      * Creates an non-editable HTML item to set the value of an object element. Used in the sidebar.
