@@ -465,6 +465,8 @@ input.menu_search:focus {
   background-color: #f7f6f6;
   color: black;
   text-align: right;
+  text-transform: capitalize;
+  font-weight: bold;
   margin: 0px;
   padding: 10px;
   border-bottom: 2px solid #e3e3e3;
@@ -478,27 +480,14 @@ input.menu_search:focus {
   border-bottom: 2px solid #e3e3e3;
 }
 
-.sidebar-list {
-  list-style: none;
-  padding: 10px;
-}
-
-.sidebar-item-no-hover {
-  text-align: center;
-  height: 1.5rem;
-  line-height: 1.5rem;
-  font-size: 1rem;
-  font-weight: 100;
-  padding: 0 1rem;
-  cursor: pointer;
-}
-
 .sidebar-item {
   overflow: visible;
   list-style: none;
   height: 2rem;
-  line-height: 1.5rem;
-  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 16px;
+  text-transform: capitalize;
+  margin-right: 5px;
 }
 
 .editing-item:hover .laber-item:active .editing-item:active {
@@ -521,26 +510,13 @@ input.menu_search:focus {
   box-sizing: border-box;
   border: 2px solid #ccc;
   border-radius: 4px;
-  background-color: #f8f8f8;
+
   font-size: 20px;
   resize: none;
 }
 .sidebar-label-item {
   margin: 10px;
   width: 100%;
-}
-.sidebar-item {
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: 700;
-  margin-left: 0;
-  text-transform: capitalize;
-  margin-right: 5px;
-  background: whitesmoke;
-  color: #4d4d4d;
-  border-radius: 5px;
-  padding: 2px;
-  padding-left: 5px;
 }
 
 .noediting-item {

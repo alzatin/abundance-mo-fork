@@ -82,9 +82,18 @@ function SideBar(props) {
       <div className="sideBar" value={GlobalVariables.currentRepo}>
         <p className="molecule_title">{props.activeAtom.name}</p>
         <p className="atom_description">
-          {GlobalVariables.currentRepo.description}
+          {GlobalVariables.currentRepo.description + "placeholder description"}
         </p>
-        <div>Atom Inputs</div>
+        <div
+          style={{
+            fontSize: "18px",
+            fontWeight: "bolder",
+            padding: "5px",
+            textDecoration: "underline",
+          }}
+        >
+          Inputs
+        </div>
         <div>
           {props.activeAtom.inputs
             ? props.activeAtom.inputs.map((input) => {
