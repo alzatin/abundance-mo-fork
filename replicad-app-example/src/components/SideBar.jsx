@@ -51,12 +51,10 @@ function SideBar(props) {
     return (
       <section
         {...props}
-        className="sidebar-editable-div"
         ref={wrapperRef}
         onClick={() => setEditing(true)}
         onBlur={() => setEditing(false)}
       >
-        <label className="sidebar-label-item">{props.input.name}</label>
         {isEditing ? (
           <div
             onBlur={() => setEditing(false)}
@@ -99,6 +97,7 @@ function SideBar(props) {
             ? props.activeAtom.inputs.map((input) => {
                 let initialvalue = input["value"];
                 let editableValue = true;
+                let editableTitle = false;
 
                 if (
                   input.type == "input" &&
@@ -116,8 +115,18 @@ function SideBar(props) {
                   editableValue = false;
                 }
 
+                if (
+                  input.parentMolecule.name === GlobalVariables.currentRepo.name
+                ) {
+                  editableTitle = true;
+                }
+
                 return (
-                  <li key={input.uniqueID} className="sidebar-item ">
+                  <div
+                    key={input.uniqueID}
+                    className="sidebar-editable-div sidebar-item"
+                  >
+                    <label className="sidebar-label-item">{input.name}</label>
                     {editableValue ? (
                       <EditableContent
                         input={input}
@@ -134,7 +143,7 @@ function SideBar(props) {
                         </div>
                       </section>
                     )}
-                  </li>
+                  </div>
                 );
               })
             : null}
