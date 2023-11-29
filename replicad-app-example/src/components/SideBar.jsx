@@ -5,6 +5,7 @@ import AttachmentPoint from "./prototypes/attachmentpoint";
 function SideBar(props) {
   let valueInBox;
   let resultShouldBeANumber = false;
+
   const EditableContent = (props) => {
     const [value, setValue] = useState(props.initialvalue);
 
@@ -30,7 +31,13 @@ function SideBar(props) {
       ) {
         setEditing(false);
         if (props.input instanceof AttachmentPoint) {
-          props.input.setValue(valueInBox);
+          if (props.whatediting === "title") {
+            console.log("value name attempting change to: " + valueInBox);
+            props.input.name = valueInBox;
+            console.log(props.input);
+          } else {
+            props.input.setValue(valueInBox);
+          }
         } else {
           props.input["value"] = valueInBox;
           callBack(valueInBox);
@@ -96,8 +103,10 @@ function SideBar(props) {
           {props.activeAtom.inputs
             ? props.activeAtom.inputs.map((input) => {
                 let initialvalue = input["value"];
+
                 let editableValue = true;
                 let editableTitle = false;
+                let whatediting;
 
                 if (
                   input.type == "input" &&
@@ -126,11 +135,23 @@ function SideBar(props) {
                     key={input.uniqueID}
                     className="sidebar-editable-div sidebar-item"
                   >
-                    <label className="sidebar-label-item">{input.name}</label>
+                    {editableTitle ? (
+                      <label className="sidebar-label-item">
+                        {" "}
+                        <EditableContent
+                          input={input}
+                          initialvalue={input.name}
+                          whatediting={"title"}
+                        />
+                      </label>
+                    ) : (
+                      <label className="sidebar-label-item">{input.name}</label>
+                    )}
                     {editableValue ? (
                       <EditableContent
                         input={input}
                         initialvalue={initialvalue}
+                        whatediting={"value"}
                       />
                     ) : (
                       <section className="sidebar-editable-div">

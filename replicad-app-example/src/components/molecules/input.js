@@ -16,7 +16,7 @@ export default class Input extends Atom {
          * This atom's name
          * @type {string}
          */
-        this.name = 'Input' + GlobalVariables.generateUniqueID()
+        this.name = 'Input ' + GlobalVariables.generateUniqueID()
         /** 
          * A description of this atom
          * @type {string}
