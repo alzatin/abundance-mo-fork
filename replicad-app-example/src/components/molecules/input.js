@@ -87,7 +87,7 @@ export default class Input extends Atom {
         this.height = radiusInPixels*1.3
         //Check if the name has been updated
         if(this.name != this.oldName){
-            console.log(this.name + " "+ this.oldName)
+            
             this.updateParentName()}
         
         //Set colors

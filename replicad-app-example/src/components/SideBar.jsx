@@ -33,15 +33,10 @@ function SideBar(props) {
         valueInBox = valueState;
 
         if (props.input instanceof AttachmentPoint) {
-          if (props.whatediting === "title") {
-            console.log(props.input);
-            props.activeAtom.output.parentMolecule.name = valueInBox;
-            props.input.name = valueInBox;
-          } else {
-            props.input.setValue(valueInBox);
-          }
+          props.input.setValue(valueInBox);
         } else {
           // if it's not an attachment point you are changing the name of an inputAtom
+
           props.input.name = valueInBox;
         }
       }

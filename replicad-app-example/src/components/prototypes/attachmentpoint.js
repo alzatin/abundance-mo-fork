@@ -517,14 +517,12 @@ export default class AttachmentPoint {
         this.ready = true
         //propagate the change to linked elements if this is an output
         if (this.type == 'output'){
-            console.log("seting value")
             this.connectors.forEach(connector => {     //select any connectors attached to this node
                 connector.propogate()
             })
         }
         //if this is an input attachment point
         else{
-            console.log("setting name")
             this.parentMolecule.updateValue(this.name)
         }
     }
