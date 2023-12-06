@@ -7,7 +7,7 @@ function SideBar(props) {
   let resultShouldBeANumber = false;
 
   const EditableContent = (props) => {
-    const [value, setValue] = useState(props.initialvalue);
+    const [valueState, setValueState] = useState(props.initialvalue);
 
     const [isEditing, setEditing] = useState(false);
     const inputRef = useRef(null);
@@ -30,24 +30,25 @@ function SideBar(props) {
         (type !== "textarea" && allKeys.indexOf(key) > -1)
       ) {
         setEditing(false);
+        valueInBox = valueState;
+
         if (props.input instanceof AttachmentPoint) {
           if (props.whatediting === "title") {
-            console.log("value name attempting change to: " + valueInBox);
-            props.input.name = valueInBox;
             console.log(props.input);
+            props.activeAtom.output.parentMolecule.name = valueInBox;
+            props.input.name = valueInBox;
           } else {
             props.input.setValue(valueInBox);
           }
         } else {
-          props.input["value"] = valueInBox;
-          callBack(valueInBox);
+          // if it's not an attachment point you are changing the name of an inputAtom
+          props.input.name = valueInBox;
         }
       }
     };
 
     const handleValueChange = (value) => {
-      setValue(value);
-
+      setValueState(value);
       valueInBox = value.trim();
 
       if (resultShouldBeANumber) {
@@ -71,12 +72,12 @@ function SideBar(props) {
               className="sidebar-editable-area"
               ref={inputRef}
               type={props.type}
-              value={value}
+              value={valueState}
               onChange={(e) => handleValueChange(e.target.value)}
             />
           </div>
         ) : (
-          <div className="sidebar-editable-area">{value}</div>
+          <div className="sidebar-editable-area">{valueState}</div>
         )}
       </section>
     );
@@ -97,17 +98,45 @@ function SideBar(props) {
             textDecoration: "underline",
           }}
         >
-          Inputs
+          Outputs
         </div>
         <div>
+          {" "}
+          {/** if the selected atom is an inputAtom make an editable name and value */}
+          {props.activeAtom.output && props.activeAtom.atomType == "Input" ? (
+            <div>
+              <label className="sidebar-label-item">
+                {" "}
+                <EditableContent
+                  input={props.activeAtom}
+                  initialvalue={props.activeAtom.output.parentMolecule.name}
+                  whatediting={"title"}
+                />
+              </label>
+              <EditableContent
+                input={props.activeAtom.output}
+                initialvalue={props.activeAtom.output.value}
+                whatediting={"value"}
+              />
+            </div>
+          ) : null}
+        </div>
+        <div>
+          <div
+            style={{
+              fontSize: "18px",
+              fontWeight: "bolder",
+              padding: "5px",
+              textDecoration: "underline",
+            }}
+          >
+            Inputs
+          </div>
+          {/** maps through the selected atom's input and creates editable value divs   */}
           {props.activeAtom.inputs
             ? props.activeAtom.inputs.map((input) => {
                 let initialvalue = input["value"];
-
                 let editableValue = true;
-                let editableTitle = false;
-                let whatediting;
-
                 if (
                   input.type == "input" &&
                   input.valueType != "geometry" &&
@@ -119,15 +148,9 @@ function SideBar(props) {
                     resultShouldBeANumber = false;
                   }
                 }
-                //this value should not be editable
+                //this value should not be editable - check if geometry is connected and mark in some way for it to be visible in sidebar
                 if (input.valueType === "geometry") {
                   editableValue = false;
-                }
-
-                if (
-                  input.parentMolecule.name === GlobalVariables.currentRepo.name
-                ) {
-                  editableTitle = true;
                 }
 
                 return (
@@ -135,18 +158,8 @@ function SideBar(props) {
                     key={input.uniqueID}
                     className="sidebar-editable-div sidebar-item"
                   >
-                    {editableTitle ? (
-                      <label className="sidebar-label-item">
-                        {" "}
-                        <EditableContent
-                          input={input}
-                          initialvalue={input.name}
-                          whatediting={"title"}
-                        />
-                      </label>
-                    ) : (
-                      <label className="sidebar-label-item">{input.name}</label>
-                    )}
+                    <label className="sidebar-label-item">{input.name}</label>
+
                     {editableValue ? (
                       <EditableContent
                         input={input}
@@ -155,13 +168,11 @@ function SideBar(props) {
                       />
                     ) : (
                       <section className="sidebar-editable-div">
-                        {" "}
-                        <label className="sidebar-label-item">
-                          {input.name}
-                        </label>
-                        <div className="sidebar-editable-area">
-                          "there's a geometry?"
-                        </div>
+                        {input.value == "" ? (
+                          <div>&#10062;</div>
+                        ) : (
+                          <div>&#9989;</div>
+                        )}{" "}
                       </section>
                     )}
                   </div>
