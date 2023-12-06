@@ -211,6 +211,13 @@ input:checked + .sliderAtom:before {
   border-left-style: solid;
 }
 
+.sidebar-title {
+  font-size: 18px;
+  font-weight: bolder;
+  padding: 5px;
+  text-decoration: underline;
+}
+
 .runSideBar {
   flex: 3;
   background-color: #ffffff;

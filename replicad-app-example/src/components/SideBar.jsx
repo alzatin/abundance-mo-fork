@@ -6,6 +6,7 @@ function SideBar(props) {
   let valueInBox;
   let resultShouldBeANumber = false;
 
+  /** Function component that makes editable divs on the sidebar / needs {input}, {initialValue} props */
   const EditableContent = (props) => {
     const [valueState, setValueState] = useState(props.initialvalue);
 
@@ -36,7 +37,6 @@ function SideBar(props) {
           props.input.setValue(valueInBox);
         } else {
           // if it's not an attachment point you are changing the name of an inputAtom
-
           props.input.name = valueInBox;
         }
       }
@@ -85,16 +85,7 @@ function SideBar(props) {
         <p className="atom_description">
           {GlobalVariables.currentRepo.description + "placeholder description"}
         </p>
-        <div
-          style={{
-            fontSize: "18px",
-            fontWeight: "bolder",
-            padding: "5px",
-            textDecoration: "underline",
-          }}
-        >
-          Outputs
-        </div>
+        <div className="sidebar-title">Outputs</div>
         <div>
           {" "}
           {/** if the selected atom is an inputAtom make an editable name and value */}
@@ -105,30 +96,34 @@ function SideBar(props) {
                 <EditableContent
                   input={props.activeAtom}
                   initialvalue={props.activeAtom.output.parentMolecule.name}
-                  whatediting={"title"}
                 />
               </label>
               <label className="sidebar-label-item">
                 <EditableContent
                   input={props.activeAtom.output}
                   initialvalue={props.activeAtom.output.value}
-                  whatediting={"value"}
                 />
               </label>
             </div>
-          ) : null}
+          ) : (
+            <section className="sidebar-editable-div">
+              {props.activeAtom.output ? (
+                <div>
+                  <p>{props.activeAtom.output.name}</p>
+                  <p>
+                    {props.activeAtom.output.value !== "" ? (
+                      <div>&#10062;</div>
+                    ) : (
+                      <div>&#9989;</div>
+                    )}
+                  </p>
+                </div>
+              ) : null}
+            </section>
+          )}
         </div>
         <div>
-          <div
-            style={{
-              fontSize: "18px",
-              fontWeight: "bolder",
-              padding: "5px",
-              textDecoration: "underline",
-            }}
-          >
-            Inputs
-          </div>
+          <div className="sidebar-title">Inputs</div>
           {/** maps through the selected atom's input and creates editable value divs   */}
           {props.activeAtom.inputs
             ? props.activeAtom.inputs.map((input) => {
@@ -161,7 +156,6 @@ function SideBar(props) {
                       <EditableContent
                         input={input}
                         initialvalue={initialvalue}
-                        whatediting={"value"}
                       />
                     ) : (
                       <section className="sidebar-editable-div">
