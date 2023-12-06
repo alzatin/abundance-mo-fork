@@ -104,7 +104,7 @@ function SideBar(props) {
           {" "}
           {/** if the selected atom is an inputAtom make an editable name and value */}
           {props.activeAtom.output && props.activeAtom.atomType == "Input" ? (
-            <div>
+            <div className="sidebar-editable-div sidebar-item">
               <label className="sidebar-label-item">
                 {" "}
                 <EditableContent
@@ -113,11 +113,13 @@ function SideBar(props) {
                   whatediting={"title"}
                 />
               </label>
-              <EditableContent
-                input={props.activeAtom.output}
-                initialvalue={props.activeAtom.output.value}
-                whatediting={"value"}
-              />
+              <label className="sidebar-label-item">
+                <EditableContent
+                  input={props.activeAtom.output}
+                  initialvalue={props.activeAtom.output.value}
+                  whatediting={"value"}
+                />
+              </label>
             </div>
           ) : null}
         </div>
