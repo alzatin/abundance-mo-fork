@@ -372,7 +372,7 @@ export default class Atom {
         if(!clickProcessed && GlobalVariables.distBetweenPoints(x, xInPixels, y, yInPixels) < radiusInPixels){
             this.isMoving = true
             this.selected = true
-            console.log(this)
+            
             //this.updateSidebar()
             this.sendToRender()
             atomSelected = this
