@@ -84,7 +84,7 @@ export default class RegularPolygon extends Atom {
         try{
             var numberOfSides = this.findIOValue('number of sides')
             var diameter = this.findIOValue('diameter')
-            console.log(typeof diameter)
+            
             GlobalVariables.cad.regularPolygon(this.uniqueID, diameter/2,numberOfSides).then(()=> {
                 this.basicThreadValueProcessing()
             });
