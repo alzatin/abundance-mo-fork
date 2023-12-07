@@ -373,7 +373,6 @@ export default class Atom {
             this.isMoving = true
             this.selected = true
             
-            //this.updateSidebar()
             this.sendToRender()
             atomSelected = this
         }
@@ -473,88 +472,6 @@ export default class Atom {
         this.inputs.forEach(child => {
             child.keyPress(key)
         })
-    }
-    
-    /**
-     * Updates the side bar to display information about the atom. By default this is just add a title and to let you edit any unconnected inputs.
-     */ 
-    updateSidebar(){
-        //updates the sidebar to display information about this node
-        
-        var valueList = this.initializeSideBar()
-        
-        //Add options to set all of the inputs
-        this.inputs.forEach(input => {
-            if(input.type == 'input' && input.valueType != 'geometry' && input.connectors.length == 0){
-                if(input.valueType == 'number'){
-                    this.createEditableValueListItem(valueList,input,'value', input.name, true)
-                }
-                else{
-                    this.createEditableValueListItem(valueList,input,'value', input.name, false)
-                }
-            }
-        })
-        
-        //Add a delete button if we are using the touch interface
-        if(GlobalVariables.touchInterface){
-            this.createButton(valueList,this,"Delete",()=>{this.deleteNode()})
-        }
-        
-        return valueList
-    }
-    
-    /**
-     * Initialized the sidebar with a title and create the HTML object.
-     */ 
-    initializeSideBar(){
-
-        //remove everything in the sideBar now
-        let sideBar = document.querySelector('.sideBar')
-        //Updates sidebar values before erasing
-        var editables = document.querySelectorAll(".editing-item")
-        editables.forEach(function(value) {
-            value.blur()
-        })
-
-        while (sideBar.firstChild) { 
-            sideBar.removeChild(sideBar.firstChild)
-        }
-
-        //adds the name of the molecule to sideBar
-        var name2 = document.createElement('p')
-        name2.textContent = this.name
-        sideBar.appendChild(name2)
-        name2.setAttribute('class','molecule_title')
-        
-        //adds the name of the molecule to sideBar
-        var description = document.createElement('p')
-        description.textContent = this.description
-        sideBar.appendChild(description)
-        description.setAttribute('class','atom_description')
-        
-
-        //add the name as of project title 
-        if (this.atomType == 'Molecule' ){
-            let headerBar_title = document.querySelector('#headerBar_title')
-            if(headerBar_title){
-                while (headerBar_title.firstChild) {
-                    headerBar_title.removeChild(headerBar_title.firstChild)
-                }
-               
-                var name1 = document.createElement('p')
-                name1.textContent = "- " + GlobalVariables.topLevelMolecule.name
-                headerBar_title.appendChild(name1)
-            }
-        }
-
-        //Create a list element
-        var valueList = document.createElement('ul')
-        sideBar.appendChild(valueList)
-        valueList.setAttribute('class', 'sidebar-list')
-
-        
-        return valueList
-
     }
 
     /**
