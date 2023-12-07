@@ -34,6 +34,8 @@ function SideBar(props) {
         valueInBox = valueState;
 
         if (props.input instanceof AttachmentPoint) {
+          valueInBox = GlobalVariables.limitedEvaluate(valueInBox);
+          console.log(typeof valueInBox);
           props.input.setValue(valueInBox);
         } else {
           // if it's not an attachment point you are changing the name of an inputAtom
@@ -47,6 +49,7 @@ function SideBar(props) {
       valueInBox = value.trim();
 
       if (resultShouldBeANumber) {
+        console.log("is it becoming a number?");
         valueInBox = GlobalVariables.limitedEvaluate(valueInBox);
       }
     };
