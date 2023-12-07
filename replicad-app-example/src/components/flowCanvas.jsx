@@ -20,16 +20,16 @@ window.addEventListener(
   false
 );
 
-export default function FlowCanvas(displayProps) {
+export default function FlowCanvas(props) {
   //Todo this is not very clean
-  let cad = displayProps.displayProps.cad;
-  let size = displayProps.displayProps.size;
-  let setMesh = displayProps.displayProps.setMesh;
-  let mesh = displayProps.displayProps.mesh;
+  let cad = props.displayProps.cad;
+  let size = props.displayProps.size;
+  let setMesh = props.displayProps.setMesh;
+  let mesh = props.displayProps.mesh;
 
   // Loads project
   const loadProject = function (project) {
-    console.log("loading project");
+    props.props.setActiveAtom(project);
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
@@ -79,13 +79,13 @@ export default function FlowCanvas(displayProps) {
 
   const canvasRef = useRef(null);
   const circleMenu = useRef(null);
-  const [globalVariables, setGlobalVariables] = useState(GlobalVariables);
 
   // On component mount create a new top level molecule before project load
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
     GlobalVariables.c = canvasRef.current.getContext("2d");
 
+    /** Only run loadproject() if the project is different from what is already loaded  */
     if (GlobalVariables.currentRepo !== GlobalVariables.loadedRepo) {
       //Load a blank project
       GlobalVariables.topLevelMolecule = new Molecule({
@@ -95,11 +95,9 @@ export default function FlowCanvas(displayProps) {
         atomType: "Molecule",
       });
       GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-      /** Only run loadproject() if the project is different from what is already loaded  */
       loadProject(GlobalVariables.currentRepo);
     }
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
-      console.log("when is atom update running");
       atom.update();
     });
   }, []);
@@ -111,6 +109,7 @@ export default function FlowCanvas(displayProps) {
       GlobalVariables.canvas.current.width,
       GlobalVariables.canvas.current.height
     );
+
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
       atom.update();
     });
@@ -118,7 +117,7 @@ export default function FlowCanvas(displayProps) {
 
   const mouseMove = (e) => {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
-      molecule.clickMove(event.clientX, event.clientY);
+      molecule.clickMove(e.clientX, e.clientY);
     });
   };
 
@@ -225,6 +224,7 @@ export default function FlowCanvas(displayProps) {
    * Called by mouse down
    */
   const onMouseDown = (event) => {
+    // if it's a right click show the circular menu
     var isRightMB;
     if ("which" in event) {
       // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
@@ -242,47 +242,27 @@ export default function FlowCanvas(displayProps) {
       cmenu.hide();
 
       var clickHandledByMolecule = false;
+      //Run through all the atoms on the screen and decide if one was clicked
       GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
-        if (
-          molecule.clickDown(
-            event.clientX,
-            event.clientY,
-            clickHandledByMolecule
-          ) == true
-        ) {
+        let processingClick;
+        processingClick = molecule.clickDown(
+          event.clientX,
+          event.clientY,
+          clickHandledByMolecule
+        );
+        if (processingClick !== undefined) {
+          //if we have a click handled by a molecule, set it as the active atom
+          props.props.setActiveAtom(processingClick);
           clickHandledByMolecule = true;
         }
       });
-
-      //Draw the selection box
-      // if (!clickHandledByMolecule){
-      //     GlobalVariables.currentMolecule.placeAtom({
-      //         parentMolecule: GlobalVariables.currentMolecule,
-      //         x: GlobalVariables.pixelsToWidth(event.clientX),
-      //         y: GlobalVariables.pixelsToHeight(event.clientY),
-      //         parent: GlobalVariables.currentMolecule,
-      //         name: 'Box',
-      //         atomType: 'Box'
-      //     }, null, GlobalVariables.availableTypes)
-      // }
-
       if (!clickHandledByMolecule) {
-        GlobalVariables.currentMolecule.backgroundClick();
-        console.log("background click");
-      } else {
-        GlobalVariables.currentMolecule.selected = false;
+        props.props.setActiveAtom(GlobalVariables.currentMolecule);
       }
-
-      //hide search menu if it is visible
-      // if (!document.querySelector('#canvas_menu').contains(event.target)) {
-      //     const menu = document.querySelector('#canvas_menu')
-      //     menu.classList.add('off')
-      //     menu.style.top = '-200%'
-      //     menu.style.left = '-200%'
-      // }
     }
   };
 
+  //why do we need to handle a double click?
   const onDoubleClick = (event) => {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.doubleClick(event.clientX, event.clientY);
@@ -329,6 +309,17 @@ export default function FlowCanvas(displayProps) {
 
   return (
     <>
+      <canvas
+        ref={canvasRef}
+        id="flow-canvas"
+        tabIndex={0}
+        onMouseMove={mouseMove}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onDoubleClick={onDoubleClick}
+        onKeyUp={keyUp}
+        onKeyDown={keyDown}
+      ></canvas>
       <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>
 
@@ -343,17 +334,6 @@ export default function FlowCanvas(displayProps) {
           <ul id="githubList" className="menu_list tabcontent"></ul>
         </div>
       </div>
-      <canvas
-        ref={canvasRef}
-        id="flow-canvas"
-        tabIndex={0}
-        onMouseMove={mouseMove}
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        onDoubleClick={onDoubleClick}
-        onKeyUp={keyUp}
-        onKeyDown={keyDown}
-      ></canvas>
     </>
   );
 }

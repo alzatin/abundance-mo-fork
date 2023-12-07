@@ -16,7 +16,7 @@ export default class Input extends Atom {
          * This atom's name
          * @type {string}
          */
-        this.name = 'Input' + GlobalVariables.generateUniqueID()
+        this.name;
         /** 
          * A description of this atom
          * @type {string}
@@ -62,7 +62,7 @@ export default class Input extends Atom {
         
         var valueList =  super.updateSidebar() //call the super function
         
-        this.createEditableValueListItem(valueList,this,'name', 'Name', false)
+        //this.createEditableValueListItem(valueList,this,'name', 'Name', false)
         
     }
     
@@ -70,7 +70,6 @@ export default class Input extends Atom {
      * Draws the atom on the screen.
      */ 
     draw() {
-        
         // //Snap the inputs to the far right side
         /**
         * The x position of the atom
@@ -87,7 +86,9 @@ export default class Input extends Atom {
         */
         this.height = radiusInPixels*1.3
         //Check if the name has been updated
-        if(this.name != this.oldName){this.updateParentName()}
+        if(this.name != this.oldName){
+            
+            this.updateParentName()}
         
         //Set colors
         if(this.processing){

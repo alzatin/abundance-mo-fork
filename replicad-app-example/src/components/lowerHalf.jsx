@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 import globalvariables from "./js/globalvariables.js";
+import SideBar from "./SideBar.jsx";
 
 function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
   // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
   const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
+    width: 0,
+    height: 0,
   });
   useEffect(() => {
     // Handler to call on window resize
@@ -29,12 +30,12 @@ function useWindowSize() {
   return windowSize;
 }
 
-export default function LowerHalf(displayProps) {
+export default function LowerHalf(props) {
   //Todo this is not very clean
-  let cad = displayProps.displayProps.cad;
-  let size = displayProps.displayProps.size;
-  let setMesh = displayProps.displayProps.setMesh;
-  let mesh = displayProps.displayProps.mesh;
+  let cad = props.displayProps.cad;
+  let size = props.displayProps.size;
+  let setMesh = props.displayProps.setMesh;
+  let mesh = props.displayProps.mesh;
 
   const windowSize = useWindowSize();
 
@@ -74,13 +75,7 @@ export default function LowerHalf(displayProps) {
           <div id="arrow-up-menu" className="arrow-up"></div>
           <div id="viewer_bar"></div>
         </div>
-        <div className="sideBar" value={globalvariables.currentRepo}>
-          {globalvariables.currentRepo
-            ? globalvariables.currentRepo.name +
-              " " +
-              globalvariables.currentRepo.owner.login
-            : null}
-        </div>
+        <SideBar activeAtom={props.props.activeAtom} />
         <div id="bottom_bar"></div>
       </div>
     </>

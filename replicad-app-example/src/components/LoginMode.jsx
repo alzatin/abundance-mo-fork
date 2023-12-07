@@ -146,57 +146,6 @@ const ShowProjects = (props) => {
       });
   }, [props.userBrowsing, searchBarValue]);
 
-  /** It's unclear whether this is working, I'm adding it here so that i can get rid of oauth file */
-  const convertFromOldFormat = function (json) {
-    var listOfMoleculeAtoms = json.molecules;
-
-    //Find the top level molecule
-    var projectObject = listOfMoleculeAtoms.filter((molecule) => {
-      return molecule.topLevel == true;
-    })[0];
-    //Remove that element from the listOfMoleculeAtoms
-    listOfMoleculeAtoms.splice(
-      listOfMoleculeAtoms.findIndex((e) => e.topLevel == true),
-      1
-    );
-
-    //Recursive function to walk the tree and find molecule placeholders
-    function walkForMolecules(projectObject) {
-      projectObject.allAtoms.forEach(function (
-        atom,
-        allAtomsIndex,
-        allAtomsObject
-      ) {
-        if (atom.atomType == "Molecule") {
-          if (atom.allAtoms != undefined) {
-            //If this molecule has allAtoms
-            walkForMolecules(atom); //Walk it
-          } else {
-            //Else replace it with a version which does have allAtoms from the list
-            //Find the version in molecules list and plug it in
-            allAtomsObject[allAtomsIndex] = listOfMoleculeAtoms.filter(
-              (molecule) => {
-                return molecule.uniqueID == atom.uniqueID;
-              }
-            )[0];
-            //Remove that element from the listOfMoleculeAtoms
-            listOfMoleculeAtoms.splice(
-              listOfMoleculeAtoms.findIndex((e) => e.uniqueID == atom.uniqueID),
-              1
-            );
-          }
-        }
-      });
-    }
-
-    //Find any placeholder molecules in there (this needs to be a full tree walk for everything to work)
-    while (listOfMoleculeAtoms.length > 0) {
-      walkForMolecules(projectObject);
-    }
-
-    return projectObject;
-  };
-
   const createProject = async () => {
     const name = document.getElementById("project-name").value;
     const description = document.getElementById("project-description").value;

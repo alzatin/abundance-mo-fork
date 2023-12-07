@@ -206,6 +206,7 @@ export default class AttachmentPoint {
                 GlobalVariables.c.fillText(this.name, xInPixels - (radiusInPixels + 3), yInPixels+2)
                 GlobalVariables.c.fill()
                 GlobalVariables.c.closePath()
+                
             }
             else{
 
@@ -267,7 +268,7 @@ export default class AttachmentPoint {
         let yInPixels = GlobalVariables.heightToPixels(this.y)
 
         if(GlobalVariables.distBetweenPoints (xInPixels, x, yInPixels, y) < this.defaultRadius && !clickProcessed){
-            console.log(this.value)
+            
             if(this.type == 'output'){                  //begin to extend a connector from this if it is an output
                 new Connector({
                     parentMolecule: this.parentMolecule, 
@@ -511,6 +512,7 @@ export default class AttachmentPoint {
      * Sets the current value of the ap. Force forces an update even if the value hasn't changed.
      */ 
     setValue(newValue){
+        
         this.value = newValue
         this.ready = true
         //propagate the change to linked elements if this is an output

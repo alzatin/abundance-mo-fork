@@ -104,7 +104,7 @@ export default class Molecule extends Atom{
         //Add the molecule's output
         this.placeAtom({
             parentMolecule: this, 
-            x: GlobalVariables.pixelsToWidth(/*GlobalVariables.canvas.current.width*/ 900 - 20),
+            x: GlobalVariables.pixelsToWidth(GlobalVariables.canvas.current.width - 20),
             y: .5,
             parent: this,
             name: 'Output',
@@ -202,15 +202,16 @@ export default class Molecule extends Atom{
      * Handle a background click (a click which doesn't land on one of the contained molecules) by deselected everything and displaying a 3D rendering of this molecules output.
      */ 
     backgroundClick(){
+        console.log("old background click")
         /**
          * Flag that the atom is now selected.
          */
         if(this.selected == false){
-            this.selected = true
-            this.updateSidebar()
-            this.sendToRender()   //This is might need to be removed because it was happening too often during loading
+            //this.selected = true
+            //this.updateSidebar()
+            //this.sendToRender()   //This is might need to be removed because it was happening too often during loading
         }
-    }
+    } 
 
     /**
      * Pushes serialized atoms into array if selected
@@ -730,6 +731,8 @@ export default class Molecule extends Atom{
                     
                     //Add the atom to the list to display
                     this.nodesOnTheScreen.push(atom)
+                    // fakes a click on newly placed atom
+                    //atom.selected = false;
                     
                     if(unlock){
                         
@@ -749,20 +752,9 @@ export default class Molecule extends Atom{
                             
                         }
                         
-                        //Fake a click on the newly placed atom
-                        const downEvt = new MouseEvent('mousedown', {
-                            clientX: atom.x,
-                            clientY: atom.y
-                        })
-                        const upEvt = new MouseEvent('mouseup', {
-                            clientX: atom.x,
-                            clientY: atom.y
-                        })
                         
                         atom.updateValue()
                         
-                        document.getElementById('flow-canvas').dispatchEvent(downEvt)
-                        document.getElementById('flow-canvas').dispatchEvent(upEvt)
                     }
                 }
             }
