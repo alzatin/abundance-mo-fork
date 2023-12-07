@@ -82,9 +82,13 @@ export default class RegularPolygon extends Atom {
      */ 
     updateValue(){
         try{
-            
-            const values = {op: "circle", diameter: this.findIOValue('diameter'), numSegments:this.findIOValue('number of sides'), writePath: this.path }
-            this.basicThreadValueProcessing(values)
+            var numberOfSides = this.findIOValue('number of sides')
+            var diameter = this.findIOValue('diameter')
+            console.log(typeof diameter)
+            GlobalVariables.cad.regularPolygon(this.uniqueID, 8,15).then(()=> {
+                this.basicThreadValueProcessing()
+            });
+
         }catch(err){this.setAlert(err)}
-    }  
+    }
 }

@@ -1,6 +1,6 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC } from "replicad";
+import { setOC, sketchPolysides } from "replicad";
 import { expose } from "comlink";
 import { sketchCircle, sketchRectangle, loft } from "replicad";
 
@@ -54,6 +54,13 @@ function circle(id, diameter) {
 function rectangle(id, x, y) {
   return started.then(() => {
     library[id] = {geometry: [sketchRectangle(x,y)], tags: []};
+    return true
+  });
+}
+
+function regularPolygon(id, radius,numberOfSides) {
+  return started.then(() => {
+    library[id] = {geometry: [sketchPolysides(radius,numberOfSides)], tags: []};
     return true
   });
 }
@@ -144,6 +151,7 @@ function actOnLeafs(assembly, action){
 }
 
 function flattenAssembly(assembly) {
+  console.log("flatten assembly " +assembly)
   var flattened = [];
   //This is a leaf
   if(assembly.geometry.length == 1 && assembly.geometry[0].geometry == undefined){
@@ -224,4 +232,4 @@ function generateDisplayMesh(id) {
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move, rotate, cut, intersect, assembly, loftShapes });
+expose({ createBlob, createMesh, circle, regularPolygon, rectangle, generateDisplayMesh, extrude, move, rotate, cut, intersect, assembly, loftShapes });
