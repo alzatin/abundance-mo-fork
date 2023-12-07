@@ -106,20 +106,22 @@ function SideBar(props) {
               </label>
             </div>
           ) : (
-            <section className="sidebar-editable-div">
+            <div>
               {props.activeAtom.output ? (
-                <div>
-                  <p>{props.activeAtom.output.name}</p>
-                  <p>
-                    {props.activeAtom.output.value !== "" ? (
-                      <div>&#10062;</div>
-                    ) : (
+                <section className="sidebar-editable-div sidebar-item">
+                  <label className="sidebar-label-item">
+                    {props.activeAtom.output.name}
+                  </label>
+                  <div>
+                    {props.activeAtom.output.connectors.length > 0 ? (
                       <div>&#9989;</div>
+                    ) : (
+                      <div>&#10062;</div>
                     )}
-                  </p>
-                </div>
+                  </div>
+                </section>
               ) : null}
-            </section>
+            </div>
           )}
         </div>
         <div>
@@ -158,13 +160,15 @@ function SideBar(props) {
                         initialvalue={initialvalue}
                       />
                     ) : (
-                      <section className="sidebar-editable-div">
-                        {input.value == "" ? (
-                          <div>&#10062;</div>
-                        ) : (
-                          <div>&#9989;</div>
-                        )}{" "}
-                      </section>
+                      <div>
+                        <section className="sidebar-editable-div">
+                          {input.value == "" ? (
+                            <div>&#10062;</div>
+                          ) : (
+                            <div>&#9989;</div>
+                          )}{" "}
+                        </section>
+                      </div>
                     )}
                   </div>
                 );
