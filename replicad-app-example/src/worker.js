@@ -84,7 +84,7 @@ function extrude(targetID, inputID, height) {
 function move(targetID, inputID, x, y, z) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[inputID], leaf => {
-      return {geometry: [leaf.geometry[0].clone().extrude(10).translate(10,10,10)], tags: leaf.tags};
+      return {geometry: [leaf.geometry[0].clone().extrude(10).translate(x,y,z)], tags: leaf.tags};
     });
     return true
   });
