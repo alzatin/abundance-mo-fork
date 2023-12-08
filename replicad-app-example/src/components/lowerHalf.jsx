@@ -72,7 +72,10 @@ export default function LowerHalf(props) {
               </div>
             )}
           </section>
-          <div id="arrow-up-menu" className="arrow-up"></div>
+          <div className="container arrow-up">
+            <input type="checkbox" class="custom" />
+            <div class="dots"></div>
+          </div>
           <div id="viewer_bar"></div>
         </div>
         <SideBar activeAtom={props.props.activeAtom} />

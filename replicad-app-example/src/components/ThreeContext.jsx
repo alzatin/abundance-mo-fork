@@ -33,6 +33,7 @@ export default function ThreeContext({ children, ...props }) {
         <OrbitControls />
         <ambientLight />
         <pointLight position={[100, 100, 100]} />
+        <axesHelper args={[5]} />
         <gridHelper
           rotation={[Math.PI / 2, 0, 0]}
           args={[1000, 100, 0xff0000, "teal"]}
