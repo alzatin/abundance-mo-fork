@@ -71,7 +71,6 @@ export default class Circle extends Atom {
      */ 
     updateValue(){
 
-       console.log("is update value running when loading an atom in circle?")
         try{
             var diameter = this.findIOValue('diameter')
             
