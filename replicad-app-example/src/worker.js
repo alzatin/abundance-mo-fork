@@ -1,6 +1,6 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC } from "replicad";
+import { setOC, sketchPolysides } from "replicad";
 import { expose } from "comlink";
 import { sketchCircle, sketchRectangle, loft } from "replicad";
 
@@ -58,6 +58,13 @@ function rectangle(id, x, y) {
   });
 }
 
+function regularPolygon(id, radius,numberOfSides) {
+  return started.then(() => {
+    library[id] = {geometry: [sketchPolysides(radius,numberOfSides)], tags: []};
+    return true
+  });
+}
+
 function loftShapes(targetID, inputID1, inputID2) {
   return started.then(() => {
     library[targetID] = loft(library[inputID1].geometry, library[inputID2].geometry);
@@ -68,6 +75,7 @@ function loftShapes(targetID, inputID1, inputID2) {
 function extrude(targetID, inputID, height) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[inputID], leaf => {
+      console.log(leaf.geometry[0])
       return {geometry: [leaf.geometry[0].clone().extrude(height)], tags: leaf.tags} ;
     });
     return true
@@ -77,7 +85,8 @@ function extrude(targetID, inputID, height) {
 function move(targetID, inputID, x, y, z) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[inputID], leaf => {
-      return {geometry: [leaf.geometry[0].clone().translate([x, y, z])], tags: leaf.tags} ;
+      
+      return {geometry: [leaf.geometry[0].translate(x,y,z)], tags: leaf.tags};
     });
     return true
   });
@@ -144,6 +153,7 @@ function actOnLeafs(assembly, action){
 }
 
 function flattenAssembly(assembly) {
+  console.log("flatten assembly " + assembly)
   var flattened = [];
   //This is a leaf
   if(assembly.geometry.length == 1 && assembly.geometry[0].geometry == undefined){
@@ -224,4 +234,4 @@ function generateDisplayMesh(id) {
 
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh, circle, rectangle, generateDisplayMesh, extrude, move, rotate, cut, intersect, assembly, loftShapes });
+expose({ createBlob, createMesh, circle, regularPolygon, rectangle, generateDisplayMesh, extrude, move, rotate, cut, intersect, assembly, loftShapes });

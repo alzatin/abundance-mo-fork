@@ -683,6 +683,7 @@ export default class Atom {
             GlobalVariables.writeToDisplay(this.uniqueID)
         }
         catch(err){
+            
             this.setAlert(err)
         }
 

@@ -34,6 +34,8 @@ function SideBar(props) {
         valueInBox = valueState;
 
         if (props.input instanceof AttachmentPoint) {
+          valueInBox = GlobalVariables.limitedEvaluate(valueInBox);
+
           props.input.setValue(valueInBox);
         } else {
           // if it's not an attachment point you are changing the name of an inputAtom

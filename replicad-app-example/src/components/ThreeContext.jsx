@@ -21,7 +21,7 @@ export default function ThreeContext({ children, ...props }) {
   return (
     <Suspense fallback={null}>
       <Canvas
-        id = "threeCanvas"
+        id="threeCanvas"
         style={{
           backgroundColor: "#f5f5f5",
         }}
@@ -33,6 +33,11 @@ export default function ThreeContext({ children, ...props }) {
         <OrbitControls />
         <ambientLight />
         <pointLight position={[100, 100, 100]} />
+        <axesHelper args={[5]} />
+        <gridHelper
+          rotation={[Math.PI / 2, 0, 0]}
+          args={[1000, 100, 0xff0000, "teal"]}
+        ></gridHelper>
         {children}
       </Canvas>
     </Suspense>

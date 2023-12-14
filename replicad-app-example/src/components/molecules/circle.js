@@ -70,6 +70,7 @@ export default class Circle extends Atom {
      * Super class the default update value function. This function computes the number of points to use for the circle and then calls the worker thread to create the circle.
      */ 
     updateValue(){
+
         try{
             var diameter = this.findIOValue('diameter')
             
