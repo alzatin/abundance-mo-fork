@@ -3,9 +3,10 @@ import GlobalVariables from "./js/globalvariables.js";
 import AttachmentPoint from "./prototypes/attachmentpoint";
 
 function SideBar(props) {
+  console.log(props.activeAtom);
   let valueInBox;
   let resultShouldBeANumber = false;
-
+  console.log("sidebar rerendering");
   /** Function component that makes editable divs on the sidebar / needs {input}, {initialValue} props */
   const EditableContent = (props) => {
     const [valueState, setValueState] = useState(props.initialvalue);
@@ -85,7 +86,9 @@ function SideBar(props) {
       <div className="sideBar" value={GlobalVariables.currentRepo}>
         <p className="molecule_title">{props.activeAtom.name}</p>
         <p className="atom_description">
-          {GlobalVariables.currentRepo.description + "placeholder description"}
+          {GlobalVariables.currentRepo
+            ? GlobalVariables.currentRepo.description
+            : "placeholder description"}
         </p>
         <div className="sidebar-title">Outputs</div>
         <div>

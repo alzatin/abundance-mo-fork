@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 import globalvariables from "./js/globalvariables.js";
-import SideBar from "./SideBar.jsx";
 
 function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
@@ -38,49 +37,47 @@ export default function LowerHalf(props) {
   let mesh = props.displayProps.mesh;
 
   const windowSize = useWindowSize();
-
+  console.log("lowehalf rerendering");
   return (
     <>
-      <div className="parent flex-parent" id="lowerHalf">
-        <div
-          className="jscad-container"
+      <div
+        className="jscad-container"
+        style={{
+          width: windowSize.width * 0.6,
+          height: windowSize.height * 0.5,
+        }}
+      >
+        <section
+          id="threeDView"
           style={{
             width: windowSize.width * 0.6,
             height: windowSize.height * 0.5,
           }}
         >
-          <section
-            id="threeDView"
-            style={{
-              width: windowSize.width * 0.6,
-              height: windowSize.height * 0.5,
-            }}
-          >
-            {mesh ? (
-              <ThreeContext>
-                <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
-              </ThreeContext>
-            ) : (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  fontSize: "2em",
-                }}
-              >
-                Loading...
-              </div>
-            )}
-          </section>
-          <div className="container arrow-up">
-            <input type="checkbox" class="custom" />
-            <div class="dots"></div>
-          </div>
-          <div id="viewer_bar"></div>
+          {mesh ? (
+            <ThreeContext>
+              <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
+            </ThreeContext>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                fontSize: "2em",
+              }}
+            >
+              Loading...
+            </div>
+          )}
+        </section>
+        <div className="container arrow-up">
+          <input type="checkbox" className="custom" />
+          <div className="dots"></div>
         </div>
-        <SideBar activeAtom={props.props.activeAtom} />
-        <div id="bottom_bar"></div>
+        <div id="viewer_bar"></div>
       </div>
+
+      <div id="bottom_bar"></div>
     </>
   );
 }

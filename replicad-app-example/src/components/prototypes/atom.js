@@ -364,6 +364,8 @@ export default class Atom {
      * @param {boolean} clickProcessed - A flag to indicate if the click has already been processed
      */ 
     clickDown(x,y, clickProcessed){
+        
+        console.log("click in molecule")
         let xInPixels = GlobalVariables.widthToPixels(this.x)
         let yInPixels = GlobalVariables.heightToPixels(this.y)
         let radiusInPixels = GlobalVariables.widthToPixels(this.radius)
@@ -372,9 +374,9 @@ export default class Atom {
         if(!clickProcessed && GlobalVariables.distBetweenPoints(x, xInPixels, y, yInPixels) < radiusInPixels){
             this.isMoving = true
             this.selected = true
-            
-            this.sendToRender()
             atomSelected = this
+            this.sendToRender()
+            
         }
         //Deselect this if it wasn't clicked on, unless control is held
         else if (!GlobalVariables.ctrlDown){
@@ -391,8 +393,10 @@ export default class Atom {
                 clickProcessed = true
             }
         }
-         
-        return atomSelected 
+        
+         return atomSelected
+        
+        
     }
 
     /**

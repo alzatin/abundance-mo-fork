@@ -7,8 +7,8 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation,
-  Link,
+  useParams,
+  useNavigate,
 } from "react-router-dom";
 
 import FileSaver from "file-saver";
@@ -23,6 +23,7 @@ import LoginMode from "./components/LoginMode.jsx";
 import TopMenu from "./components/TopMenu.jsx";
 import RunMode from "./components/RunMode.jsx";
 import ToggleRunCreate from "./components/ToggleRunCreate.jsx";
+import SideBar from "./components/SideBar.jsx";
 
 import cadWorker from "./worker.js?worker";
 
@@ -39,6 +40,7 @@ var authorizedUserOcto = null;
 const cad = wrap(new cadWorker());
 
 export default function ReplicadApp() {
+  console.log("full rerender app");
   const [size, setSize] = useState(5);
 
   const downloadModel = async () => {
@@ -55,8 +57,6 @@ export default function ReplicadApp() {
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [isItOwned, setOwned] = useState(false);
   const [runModeon, setRunMode] = useState(false);
-  const [activeAtom, setActiveAtom] = useState([]);
-
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
@@ -88,27 +88,59 @@ export default function ReplicadApp() {
   };
 
   function CreateMode() {
-    return (
-      <>
-        <ToggleRunCreate runModeon={runModeon} setRunMode={setRunMode} />
-        <TopMenu authorizedUserOcto={authorizedUserOcto} />
-        <div id="headerBar">
-          <img
-            className="thumnail-logo"
-            src="/imgs/maslow-logo.png"
-            alt="logo"
+    const navigate = useNavigate();
+    const [activeAtom, setActiveAtom] = useState([]);
+
+    if (isloggedIn) {
+      return (
+        <>
+          <ToggleRunCreate runModeon={runModeon} setRunMode={setRunMode} />
+          <TopMenu authorizedUserOcto={authorizedUserOcto} />
+          <div id="headerBar">
+            <img
+              className="thumnail-logo"
+              src="/imgs/maslow-logo.png"
+              alt="logo"
+            />
+          </div>
+          <FlowCanvas
+            props={{ setActiveAtom: setActiveAtom }}
+            displayProps={{
+              mesh: mesh,
+              setMesh: setMesh,
+              size: size,
+              cad: cad,
+            }}
           />
-        </div>
-        <FlowCanvas
-          props={{ activeAtom: activeAtom, setActiveAtom: setActiveAtom }}
-          displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
-        />
-        <LowerHalf
-          props={{ activeAtom: activeAtom }}
-          displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
-        />
-      </>
-    );
+          <div className="parent flex-parent" id="lowerHalf">
+            <LowerHalf
+              displayProps={{
+                mesh: mesh,
+                setMesh: setMesh,
+                size: size,
+                cad: cad,
+              }}
+            />
+            <SideBar activeAtom={activeAtom} />
+          </div>
+        </>
+      );
+    } else {
+      /** get repository from github by the id in the url */
+
+      console.warn("You are not logged in");
+      const { id } = useParams();
+      var octokit = new Octokit();
+      octokit.request("GET /repositories/:id", { id }).then((result) => {
+        GlobalVariables.currentRepoName = result.data.name;
+        GlobalVariables.currentRepo = result.data;
+        navigate(`/run/${GlobalVariables.currentRepo.id}`);
+      });
+
+      //open a pop up that gives you the option to log in or redirect to runmode
+
+      //tryLogin();
+    }
   }
 
   /* Toggle button to switch between run and create modes  */

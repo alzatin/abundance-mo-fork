@@ -21,6 +21,7 @@ window.addEventListener(
 );
 
 export default function FlowCanvas(props) {
+  console.log("flow canvas rerender");
   //Todo this is not very clean
   let cad = props.displayProps.cad;
   let size = props.displayProps.size;
@@ -244,20 +245,24 @@ export default function FlowCanvas(props) {
       var clickHandledByMolecule = false;
       //Run through all the atoms on the screen and decide if one was clicked
       GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
-        let processingClick;
-        processingClick = molecule.clickDown(
+        let atomClicked;
+
+        atomClicked = molecule.clickDown(
           event.clientX,
           event.clientY,
           clickHandledByMolecule
         );
-        if (processingClick !== undefined) {
+        if (atomClicked !== undefined) {
+          console.log(atomClicked);
+          let idi = atomClicked;
+          console.log(atomClicked == 764936);
           //if we have a click handled by a molecule, set it as the active atom
-          props.props.setActiveAtom(processingClick);
+          props.props.setActiveAtom(idi);
           clickHandledByMolecule = true;
         }
       });
       if (!clickHandledByMolecule) {
-        props.props.setActiveAtom(GlobalVariables.currentMolecule);
+        //props.props.setActiveAtom(GlobalVariables.currentMolecule);
       }
     }
   };
