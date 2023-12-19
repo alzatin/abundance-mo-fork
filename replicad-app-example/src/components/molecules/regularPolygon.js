@@ -69,12 +69,11 @@ export default class RegularPolygon extends Atom {
 
     beginPropagation(force = false){
         //Check to see if a value already exists. Generate it if it doesn't. Only do this for circles, rectangles, and regular polygons
-        if(!GlobalVariables.availablePaths.includes(this.path)||force){
-            //Triggers inputs with nothing connected to begin propagation
+       
             this.inputs.forEach(input => {
                 input.beginPropagation()
             })
-        }
+        
     }
     
     /**
