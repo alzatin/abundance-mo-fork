@@ -10,7 +10,7 @@ import AttachmentPoint from "./prototypes/attachmentpoint";
 function SideBar(props) {
   let valueInBox;
   let resultShouldBeANumber = false;
-
+  console.log(props.activeAtom);
   /**
    * Function component that creates editable form fields for input atoms
    * @prop {object} input - selected atom on screen

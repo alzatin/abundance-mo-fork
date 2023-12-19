@@ -236,12 +236,13 @@ export default class Molecule extends Atom{
      * Grab values from the inputs and push them out to the input atoms.
      */ 
     updateValue(targetName){
-        
+        console.log("update value running inside molecule")
         //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
         
         //Tell the correct input to update
         this.nodesOnTheScreen.forEach(atom => { //Scan all the input atoms
-            if(atom.atomType == 'Input' && atom.name == targetName){  //When there is a match
+            if(atom.atomType == 'Input' && atom.name == targetName){ 
+                console.log(atom.name) //When there is a match
                 atom.updateValue() //Tell that input to update it's value
             }
         })
@@ -333,6 +334,9 @@ export default class Molecule extends Atom{
         //Tell every atom inside this molecule to begin Propagation
         this.nodesOnTheScreen.forEach(node => {
             node.beginPropagation(force)
+        })
+        this.inputs.forEach(input => {
+            input.beginPropagation()
         })
     }
     
@@ -603,6 +607,8 @@ export default class Molecule extends Atom{
         
         if(json.allAtoms){
             json.allAtoms.forEach(atom => { //Place the atoms
+                console.log("placing atom")
+                console.log(atom)
                 const promise = this.placeAtom(atom, false)
                 promiseArray.push(promise)
                 this.setValues([]) //Call set values again with an empty list to trigger loading of IO values from memory
@@ -627,15 +633,8 @@ export default class Molecule extends Atom{
                 this.census()
                 this.loadTree()  //Walks back up the tree from this molecule loading input values from any connected atoms
                 
-                const splits = this.path.split('/')
-                const values = {op: "getPathsList", prefacePath: splits[0]+'/'+splits[1]}
-                const {answer} = window.ask(values)
-                answer.then( answer => {
+                this.beginPropagation(forceBeginPropagation)
                 
-                    GlobalVariables.availablePaths = answer
-                    this.beginPropagation(forceBeginPropagation)
-                
-                })
                 this.backgroundClick()
             }
         })
@@ -752,7 +751,7 @@ export default class Molecule extends Atom{
                             
                         }
                         
-                        
+                        console.log("is this running?")
                         atom.updateValue()
                         
                     }
