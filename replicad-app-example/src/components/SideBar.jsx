@@ -3,7 +3,6 @@ import GlobalVariables from "./js/globalvariables.js";
 import AttachmentPoint from "./prototypes/attachmentpoint";
 
 function SideBar(props) {
-  console.log(props.activeAtom);
   let valueInBox;
   let resultShouldBeANumber = false;
   console.log("sidebar rerendering");
