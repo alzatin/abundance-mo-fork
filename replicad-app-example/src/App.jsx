@@ -17,13 +17,11 @@ import { wrap } from "comlink";
 // import ThreeContext from "./components/ThreeContext.jsx";
 // import ReplicadMesh from "./components/ReplicadMesh.jsx";
 import GlobalVariables from "./components/js/globalvariables.js";
-import FlowCanvas from "./components/flowCanvas.jsx";
-import LowerHalf from "./components/lowerHalf.jsx";
+
 import LoginMode from "./components/LoginMode.jsx";
-import TopMenu from "./components/TopMenu.jsx";
+
 import RunMode from "./components/RunMode.jsx";
-import ToggleRunCreate from "./components/ToggleRunCreate.jsx";
-import SideBar from "./components/SideBar.jsx";
+import CreateMode from "./components/CreateMode.jsx";
 
 import cadWorker from "./worker.js?worker";
 
@@ -87,62 +85,6 @@ export default function ReplicadApp() {
     });
   };
 
-  function CreateMode() {
-    const navigate = useNavigate();
-    const [activeAtom, setActiveAtom] = useState([]);
-
-    if (isloggedIn) {
-      return (
-        <>
-          <ToggleRunCreate runModeon={runModeon} setRunMode={setRunMode} />
-          <TopMenu authorizedUserOcto={authorizedUserOcto} />
-          <div id="headerBar">
-            <img
-              className="thumnail-logo"
-              src="/imgs/maslow-logo.png"
-              alt="logo"
-            />
-          </div>
-          <FlowCanvas
-            props={{ setActiveAtom: setActiveAtom }}
-            displayProps={{
-              mesh: mesh,
-              setMesh: setMesh,
-              size: size,
-              cad: cad,
-            }}
-          />
-          <div className="parent flex-parent" id="lowerHalf">
-            <LowerHalf
-              displayProps={{
-                mesh: mesh,
-                setMesh: setMesh,
-                size: size,
-                cad: cad,
-              }}
-            />
-            <SideBar activeAtom={activeAtom} />
-          </div>
-        </>
-      );
-    } else {
-      /** get repository from github by the id in the url */
-
-      console.warn("You are not logged in");
-      const { id } = useParams();
-      var octokit = new Octokit();
-      octokit.request("GET /repositories/:id", { id }).then((result) => {
-        GlobalVariables.currentRepoName = result.data.name;
-        GlobalVariables.currentRepo = result.data;
-        navigate(`/run/${GlobalVariables.currentRepo.id}`);
-      });
-
-      //open a pop up that gives you the option to log in or redirect to runmode
-
-      //tryLogin();
-    }
-  }
-
   /* Toggle button to switch between run and create modes  */
 
   return (
@@ -162,7 +104,27 @@ export default function ReplicadApp() {
               />
             }
           />
-          <Route path="/:id" element={<CreateMode />} />
+          <Route
+            path="/:id"
+            element={
+              <CreateMode
+                props={{
+                  isItOwned: isItOwned,
+                  setOwned: setOwned,
+                  authorizedUserOcto: authorizedUserOcto,
+                  tryLogin: tryLogin,
+                  runModeon: runModeon,
+                  setRunMode: setRunMode,
+                }}
+                displayProps={{
+                  mesh: mesh,
+                  setMesh: setMesh,
+                  size: size,
+                  cad: cad,
+                }}
+              />
+            }
+          />
           <Route
             path="/run/:id"
             element={
