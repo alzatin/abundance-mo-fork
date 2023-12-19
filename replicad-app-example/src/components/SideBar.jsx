@@ -2,11 +2,20 @@ import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 import AttachmentPoint from "./prototypes/attachmentpoint";
 
+/**
+ * SideBar component creates elements that displays inputs and outputs of
+ * a selected Atom with editable fields for input atoms
+ * @prop {object} activeAtom - selected atom on screen
+ */
 function SideBar(props) {
   let valueInBox;
   let resultShouldBeANumber = false;
 
-  /** Function component that makes editable divs on the sidebar / needs {input}, {initialValue} props */
+  /**
+   * Function component that creates editable form fields for input atoms
+   * @prop {object} input - selected atom on screen
+   * @prop {object} initialvalue - name of editable name of input atom
+   */
   const EditableContent = (props) => {
     const [valueState, setValueState] = useState(props.initialvalue);
 

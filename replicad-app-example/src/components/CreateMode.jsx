@@ -16,7 +16,7 @@ import {
  * Create mode component appears displays flow canvas, renderer and sidebar when
  * a user has been authorized access to a project.
  * @prop {object} authorizedUserOcto - authorized octokit instance
- * @prop {setstate function} setRunMode - setState function for runMode
+ * @prop {setstate} setRunMode - setState function for runMode
  * @prop {boolean} RunMode - Determines if Run mode is on or off
  */
 function CreateMode(props) {
