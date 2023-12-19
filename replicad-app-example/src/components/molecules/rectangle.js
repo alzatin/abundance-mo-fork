@@ -42,12 +42,12 @@ export default class Rectangle extends Atom {
     beginPropagation(){
         
         //Check to see if a value already exists. Generate it if it doesn't. Only do this for circles and rectangles
-        if(!GlobalVariables.availablePaths.includes(this.path)){
+       
             //Triggers inputs with nothing connected to begin propagation
             this.inputs.forEach(input => {
                 input.beginPropagation()
             })
-        }
+        
     }
 
     /**
@@ -72,6 +72,7 @@ export default class Rectangle extends Atom {
      * Create a new rectangle in a worker thread.
      */ 
     updateValue(){
+        console.log("update value is running insdie rectangle")
         try{
             var xVal = this.findIOValue('x length')
             var yVal = this.findIOValue('y length')
