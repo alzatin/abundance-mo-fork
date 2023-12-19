@@ -68,6 +68,7 @@ export default function FlowCanvas(props) {
 
   useEffect(() => {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
+      console.log("write to display running");
       cad.generateDisplayMesh(id).then((m) => setMesh(m));
     };
 
@@ -243,7 +244,7 @@ export default function FlowCanvas(props) {
       cmenu.hide();
 
       var clickHandledByMolecule = false;
-      //Run through all the atoms on the screen and decide if one was clicked
+      /*Run through all the atoms on the screen and decide if one was clicked*/
       GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
         let atomClicked;
 
@@ -253,16 +254,15 @@ export default function FlowCanvas(props) {
           clickHandledByMolecule
         );
         if (atomClicked !== undefined) {
-          console.log(atomClicked);
           let idi = atomClicked;
-          console.log(atomClicked == 764936);
-          //if we have a click handled by a molecule, set it as the active atom
+
+          /* Clicked atom is now the active atom */
           props.props.setActiveAtom(idi);
           clickHandledByMolecule = true;
         }
       });
       if (!clickHandledByMolecule) {
-        //props.props.setActiveAtom(GlobalVariables.currentMolecule);
+        props.props.setActiveAtom(GlobalVariables.currentMolecule);
       }
     }
   };
