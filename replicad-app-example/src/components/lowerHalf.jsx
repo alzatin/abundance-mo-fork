@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 import globalvariables from "./js/globalvariables.js";
@@ -29,7 +29,7 @@ function useWindowSize() {
   return windowSize;
 }
 
-export default function LowerHalf(props) {
+export default memo(function LowerHalf(props) {
   //Todo this is not very clean
   let cad = props.displayProps.cad;
   let size = props.displayProps.size;
@@ -37,7 +37,6 @@ export default function LowerHalf(props) {
   let mesh = props.displayProps.mesh;
 
   const windowSize = useWindowSize();
-  console.log("lowehalf rerendering");
   return (
     <>
       <div
@@ -80,4 +79,4 @@ export default function LowerHalf(props) {
       <div id="bottom_bar"></div>
     </>
   );
-}
+});

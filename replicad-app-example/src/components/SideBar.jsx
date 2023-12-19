@@ -5,7 +5,7 @@ import AttachmentPoint from "./prototypes/attachmentpoint";
 function SideBar(props) {
   let valueInBox;
   let resultShouldBeANumber = false;
-  console.log("sidebar rerendering");
+
   /** Function component that makes editable divs on the sidebar / needs {input}, {initialValue} props */
   const EditableContent = (props) => {
     const [valueState, setValueState] = useState(props.initialvalue);

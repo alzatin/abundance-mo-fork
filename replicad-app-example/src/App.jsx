@@ -38,7 +38,6 @@ var authorizedUserOcto = null;
 const cad = wrap(new cadWorker());
 
 export default function ReplicadApp() {
-  console.log("full rerender app");
   const [size, setSize] = useState(5);
 
   const downloadModel = async () => {

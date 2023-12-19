@@ -12,14 +12,22 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+/**
+ * Create mode component appears displays flow canvas, renderer and sidebar when
+ * a user has been authorized access to a project.
+ * @prop {object} authorizedUserOcto - authorized octokit instance
+ * @prop {setstate function} setRunMode - setState function for runMode
+ * @prop {boolean} RunMode - Determines if Run mode is on or off
+ */
 function CreateMode(props) {
   const navigate = useNavigate();
   const [activeAtom, setActiveAtom] = useState([]);
 
   let authorizedUserOcto = props.props.authorizedUserOcto;
-  let isloggedIn = props.props.isloggedIn;
   let setRunMode = props.props.setRunMode;
   let runModeon = props.props.runModeon;
+
+  /** Display props for replicad renderer  */
   let cad = props.displayProps.cad;
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
@@ -70,8 +78,6 @@ function CreateMode(props) {
       GlobalVariables.currentRepo = result.data;
       navigate(`/run/${GlobalVariables.currentRepo.id}`);
     });
-
-    //open a pop up that gives you the option to log in or redirect to runmode
 
     //tryLogin();
   }

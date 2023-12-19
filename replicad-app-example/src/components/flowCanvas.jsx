@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables";
 import Molecule from "./molecules/molecule";
 import { createCMenu, cmenu } from "./js/NewMenu.js";
@@ -20,8 +20,7 @@ window.addEventListener(
   false
 );
 
-export default function FlowCanvas(props) {
-  console.log("flow canvas rerender");
+export default memo(function FlowCanvas(props) {
   //Todo this is not very clean
   let cad = props.displayProps.cad;
   let size = props.displayProps.size;
@@ -341,7 +340,7 @@ export default function FlowCanvas(props) {
       </div>
     </>
   );
-}
+});
 
 {
   /* i'd really like to make the tooltip for the circular menu happen with react here. Have not

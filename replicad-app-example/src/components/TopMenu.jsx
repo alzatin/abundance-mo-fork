@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 import ShareDialog from "./ShareDialog.jsx";
 import { useNavigate } from "react-router-dom";
@@ -345,4 +345,4 @@ function TopMenu(props) {
   );
 }
 
-export default TopMenu;
+export default memo(TopMenu);
