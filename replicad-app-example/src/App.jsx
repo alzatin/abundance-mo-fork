@@ -7,8 +7,8 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation,
-  Link,
+  useParams,
+  useNavigate,
 } from "react-router-dom";
 
 import FileSaver from "file-saver";
@@ -17,12 +17,11 @@ import { wrap } from "comlink";
 // import ThreeContext from "./components/ThreeContext.jsx";
 // import ReplicadMesh from "./components/ReplicadMesh.jsx";
 import GlobalVariables from "./components/js/globalvariables.js";
-import FlowCanvas from "./components/flowCanvas.jsx";
-import LowerHalf from "./components/lowerHalf.jsx";
+
 import LoginMode from "./components/LoginMode.jsx";
-import TopMenu from "./components/TopMenu.jsx";
+
 import RunMode from "./components/RunMode.jsx";
-import ToggleRunCreate from "./components/ToggleRunCreate.jsx";
+import CreateMode from "./components/CreateMode.jsx";
 
 import cadWorker from "./worker.js?worker";
 
@@ -55,8 +54,6 @@ export default function ReplicadApp() {
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [isItOwned, setOwned] = useState(false);
   const [runModeon, setRunMode] = useState(false);
-  const [activeAtom, setActiveAtom] = useState([]);
-
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
@@ -87,30 +84,6 @@ export default function ReplicadApp() {
     });
   };
 
-  function CreateMode() {
-    return (
-      <>
-        <ToggleRunCreate runModeon={runModeon} setRunMode={setRunMode} />
-        <TopMenu authorizedUserOcto={authorizedUserOcto} />
-        <div id="headerBar">
-          <img
-            className="thumnail-logo"
-            src="/imgs/maslow-logo.png"
-            alt="logo"
-          />
-        </div>
-        <FlowCanvas
-          props={{ activeAtom: activeAtom, setActiveAtom: setActiveAtom }}
-          displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
-        />
-        <LowerHalf
-          props={{ activeAtom: activeAtom }}
-          displayProps={{ mesh: mesh, setMesh: setMesh, size: size, cad: cad }}
-        />
-      </>
-    );
-  }
-
   /* Toggle button to switch between run and create modes  */
 
   return (
@@ -130,7 +103,27 @@ export default function ReplicadApp() {
               />
             }
           />
-          <Route path="/:id" element={<CreateMode />} />
+          <Route
+            path="/:id"
+            element={
+              <CreateMode
+                props={{
+                  isItOwned: isItOwned,
+                  setOwned: setOwned,
+                  authorizedUserOcto: authorizedUserOcto,
+                  tryLogin: tryLogin,
+                  runModeon: runModeon,
+                  setRunMode: setRunMode,
+                }}
+                displayProps={{
+                  mesh: mesh,
+                  setMesh: setMesh,
+                  size: size,
+                  cad: cad,
+                }}
+              />
+            }
+          />
           <Route
             path="/run/:id"
             element={

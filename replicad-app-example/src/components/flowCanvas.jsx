@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { memo, useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables";
 import Molecule from "./molecules/molecule";
 import { createCMenu, cmenu } from "./js/NewMenu.js";
@@ -20,7 +20,7 @@ window.addEventListener(
   false
 );
 
-export default function FlowCanvas(props) {
+export default memo(function FlowCanvas(props) {
   //Todo this is not very clean
   let cad = props.displayProps.cad;
   let size = props.displayProps.size;
@@ -67,6 +67,7 @@ export default function FlowCanvas(props) {
 
   useEffect(() => {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
+      console.log("write to display running");
       cad.generateDisplayMesh(id).then((m) => setMesh(m));
     };
 
@@ -242,17 +243,20 @@ export default function FlowCanvas(props) {
       cmenu.hide();
 
       var clickHandledByMolecule = false;
-      //Run through all the atoms on the screen and decide if one was clicked
+      /*Run through all the atoms on the screen and decide if one was clicked*/
       GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
-        let processingClick;
-        processingClick = molecule.clickDown(
+        let atomClicked;
+
+        atomClicked = molecule.clickDown(
           event.clientX,
           event.clientY,
           clickHandledByMolecule
         );
-        if (processingClick !== undefined) {
-          //if we have a click handled by a molecule, set it as the active atom
-          props.props.setActiveAtom(processingClick);
+        if (atomClicked !== undefined) {
+          let idi = atomClicked;
+
+          /* Clicked atom is now the active atom */
+          props.props.setActiveAtom(idi);
           clickHandledByMolecule = true;
         }
       });
@@ -336,7 +340,7 @@ export default function FlowCanvas(props) {
       </div>
     </>
   );
-}
+});
 
 {
   /* i'd really like to make the tooltip for the circular menu happen with react here. Have not
