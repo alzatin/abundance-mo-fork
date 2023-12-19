@@ -137,6 +137,7 @@ export default class Atom {
         }
         
         this.generatePath()
+        
     }
     
     /**
@@ -163,15 +164,19 @@ export default class Atom {
         
         for(var key in values) {
             this[key] = values[key]
+            
         }
         
         this.generatePath()
         
         if (typeof this.ioValues !== 'undefined') {
+            
             this.ioValues.forEach(ioValue => { //for each saved value
                 this.inputs.forEach(io => {  //Find the matching IO and set it to be the saved value
                     if(ioValue.name == io.name && io.type == 'input'){
+                        
                         io.value = ioValue.ioValue
+                       
                     }
                 })
             })
@@ -365,7 +370,6 @@ export default class Atom {
      */ 
     clickDown(x,y, clickProcessed){
         
-        console.log("click in molecule")
         let xInPixels = GlobalVariables.widthToPixels(this.x)
         let yInPixels = GlobalVariables.heightToPixels(this.y)
         let radiusInPixels = GlobalVariables.widthToPixels(this.radius)
@@ -375,6 +379,7 @@ export default class Atom {
             this.isMoving = true
             this.selected = true
             atomSelected = this
+          
             this.sendToRender()
             
         }
@@ -711,141 +716,6 @@ export default class Atom {
     }
     
     /**
-     * Dump the stored copies of any geometry in this atom to free up ram....probably can be deleted
-     */ 
-    // dumpBuffer(){
-    // this.inputs.forEach(input => {
-    // input.dumpBuffer()
-    // })
-    // if(this.output){
-    // this.output.dumpBuffer()
-    // }
-    // this.value = null
-    // }
-    
-    /**
-     * Creates an editable HTML item to set the value of an object element. Used in the sidebar.
-     * @param {object} list - The HTML object to attach the new item to.
-     * @param {object} object - The object with the element we are editing.
-     * @param {string} key - The key of the element to edit.
-     * @param {string} label - The label to display next to the editable value.
-     * @param {boolean} resultShouldBeNumber - A flag to indicate if the input should be converted to a number.
-     * @param {object} callBack - Optional. A function to call with the new value when the value changes.
-     
-    createEditableValueListItem(list,object,key, label, resultShouldBeNumber, callBack = () => console.warn("no callback")){
-
-        var listElement = document.createElement('LI')
-        list.appendChild(listElement)
-        
-        
-        //Div which contains the entire element
-        var div = document.createElement('div')
-        listElement.appendChild(div)
-        div.setAttribute('class', 'sidebar-item sidebar-editable-div')
-        
-        //Left div which displays the label
-        var labelDiv = document.createElement('label')
-        div.appendChild(labelDiv)
-        var labelText = document.createTextNode(label + ':')
-        labelDiv.appendChild(labelText)
-        labelDiv.setAttribute('class', 'sidebar-subitem label-item')
-        
-        
-        //Right div which is editable and displays the value
-        var valueTextDiv = document.createElement('span')
-        labelDiv.appendChild(valueTextDiv)
-        var valueText = document.createTextNode(object[key])
-        valueTextDiv.appendChild(valueText)
-        valueTextDiv.setAttribute('contenteditable', 'true')
-        valueTextDiv.setAttribute('class', 'editing-item')
-        var thisID = label+GlobalVariables.generateUniqueID()
-        valueTextDiv.setAttribute('id', thisID)
-        
-        
-        document.getElementById(thisID).addEventListener('focusout',() =>{
-            var valueInBox = document.getElementById(thisID).textContent.trim()
-            if(resultShouldBeNumber){
-                valueInBox = GlobalVariables.limitedEvaluate(valueInBox)
-            }
-            
-            //If the target is an attachmentPoint then call the setter function
-            if(object instanceof AttachmentPoint){
-                object.setValue(valueInBox)
-            }
-            else{
-                object[key] = valueInBox
-                callBack(valueInBox)
-            }
-        })
-        
-        //prevent the return key from being used when editing a value
-        document.getElementById(thisID).addEventListener('keypress', function(evt) {
-            if (evt.which === 13) {
-                evt.preventDefault() 
-                document.getElementById(thisID).blur() //shift focus away if someone presses enter
-            }
-        })
-
-    }*/ 
-    
-    /**
-     * Creates an non-editable HTML item to set the value of an object element. Used in the sidebar.
-     * @param {object} list - The HTML object to attach the new item to.
-     * @param {object} object - The object with the element we are displaying.
-     * @param {string} key - The key of the element to display.
-     * @param {string} label - The label to display next to the displayed value.
-     */ 
-    createNonEditableValueListItem(list,object,key, label){
-        var listElement = document.createElement('LI')
-        list.appendChild(listElement)
-        
-        
-        //Div which contains the entire element
-        var div = document.createElement('div')
-        listElement.appendChild(div)
-        div.setAttribute('class', 'sidebar-item sidebar-editable-div')
-        
-        //Left div which displays the label
-        var labelDiv = document.createElement('div')
-        div.appendChild(labelDiv)
-        var labelText = document.createTextNode(label + ':')
-        labelDiv.appendChild(labelText)
-        labelDiv.setAttribute('class', 'sidebar-subitem label-item')
-        
-        
-        //Right div which is editable and displays the value
-        var valueTextDiv = document.createElement('div')
-        div.appendChild(valueTextDiv)
-        var valueText = document.createTextNode(object[key])
-        valueTextDiv.appendChild(valueText)
-        valueTextDiv.setAttribute('contenteditable', 'false')
-        valueTextDiv.setAttribute('class', 'sidebar-subitem noediting-item')
-        var thisID = label+GlobalVariables.generateUniqueID()
-        valueTextDiv.setAttribute('id', thisID)
-        
-
-    }
-    
-    /**
-     * Creates a html representation of the passed text. Used in the sidebar.
-     * @param {object} list - The HTML object to attach the new item to.
-     * @param {string} texxt - The text used to generate the markdown html.
-     */ 
-    createMarkdownListItem(list, text){
-        
-        var converter = new showdown.Converter()
-        //var text      = '# hello, markdown!'
-        var html      = converter.makeHtml(text)
-        
-        var markdownTextDiv = document.createElement('div')
-        markdownTextDiv.innerHTML = html
-        
-        //var valueText = document.createTextNode(text)
-        //valueTextDiv.appendChild(valueText)
-        list.appendChild(markdownTextDiv)       
-    }
-    
-    /**
      * Creates dropdown with multiple options to select. Used in the sidebar.
      * @param {object} list - The HTML object to attach the new item to.
      * @param {object} parent - The parent which has the function to call on the change...this should really be done with a callback function.
@@ -895,42 +765,6 @@ export default class Atom {
     }
     
     /**
-     * Creates button. Used in the sidebar.
-     * @param {object} list - The HTML object to attach the new item to.
-     * @param {object} parent - The parent which has the function to call on the change...this should really be done with a callback function.
-     * @param {string} buttonText - The text on the button.
-     * @param {object} functionToCall - The function to call when the button is pressed.
-     */ 
-    createButton(list,parent,buttonText,functionToCall){
-        var listElement = document.createElement('LI')
-        list.appendChild(listElement)
-        
-        
-        //Div which contains the entire element
-        var div = document.createElement('div')
-        listElement.appendChild(div)
-        div.setAttribute('class', 'runSideBarDiv')
-        
-        
-        //Right div which is button
-        var valueTextDiv = document.createElement('div')
-        div.appendChild(valueTextDiv)
-        var button = document.createElement('button')
-        var buttonTextNode = document.createTextNode(buttonText)
-        button.setAttribute('class', ' browseButton')
-        button.setAttribute('id', buttonText.replace(/\s+/g, "") + "-button")
-        button.appendChild(buttonTextNode)
-        valueTextDiv.appendChild(button)
-        valueTextDiv.setAttribute('class', 'sidebar-subitem')
-        
-        button.addEventListener(
-            'mousedown',
-            function() { functionToCall() } ,
-            false
-        )
-    }
-    
-    /**
      * Creates file upload button. Used in the sidebar.
      * @param {object} list - The HTML object to attach the new item to.
      * @param {object} parent - The parent which has the function to call on the change...this should really be done with a callback function.
@@ -967,36 +801,5 @@ export default class Atom {
         )
     }
     
-    /**
-     * Creates button. Used in the sidebar.
-     * @param {object} list - The HTML object to attach the new item to.
-     * @param {string} buttonText - The text on the button.
-     * @param {boolean} - Flag to see if checkbox is checked
-     * @param {object} functionToCall - The function to call when the button is pressed.
-     */ 
-    createCheckbox(sideBar,text,isChecked,callback){
-        var gridDiv = document.createElement('div')
-        sideBar.appendChild(gridDiv)
-        gridDiv.setAttribute('id', text + "-parent")
-        gridDiv.setAttribute('class', "sidebar-checkbox")
-        var gridCheck = document.createElement('input')
-        gridDiv.appendChild(gridCheck)
-        gridCheck.setAttribute('type', 'checkbox')
-        gridCheck.setAttribute('id', text)
-        
-        if (isChecked){
-            gridCheck.setAttribute('checked', 'true')
-        }
-        
-
-        var gridCheckLabel = document.createElement('label')
-        gridDiv.appendChild(gridCheckLabel)
-        gridCheckLabel.setAttribute('for', 'gridCheck')
-        gridCheckLabel.setAttribute('style', 'margin-right:1em;')
-        gridCheckLabel.textContent = text
-
-        gridCheck.addEventListener('change', event => {
-            callback(event)
-        })
-    }
+   
 }
