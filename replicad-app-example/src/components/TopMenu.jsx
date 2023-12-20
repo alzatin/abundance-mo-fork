@@ -230,14 +230,19 @@ function TopMenu(props) {
     }, []);
     return (
       <>
-        {props.currentMoleculeTop && (
-          <img
-            className="nav-img nav-bar thumnail-logo"
-            src={"/imgs/Go Up.svg"}
-            key=""
-            title=""
-          />
-        )}
+        {props.currentMoleculeTop ? (
+          <button
+            className="nav-bar toggle menu-nav-button"
+            onClick={GlobalVariables.currentMolecule.goToParentMolecule}
+          >
+            <img
+              className="nav-img thumnail-logo"
+              src={"/imgs/Go Up.svg"}
+              key=""
+              title=""
+            />
+          </button>
+        ) : null}
       </>
     );
   };
