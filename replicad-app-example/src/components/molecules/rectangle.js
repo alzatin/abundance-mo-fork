@@ -72,7 +72,6 @@ export default class Rectangle extends Atom {
      * Create a new rectangle in a worker thread.
      */ 
     updateValue(){
-        console.log("update value is running insdie rectangle")
         try{
             var xVal = this.findIOValue('x length')
             var yVal = this.findIOValue('y length')

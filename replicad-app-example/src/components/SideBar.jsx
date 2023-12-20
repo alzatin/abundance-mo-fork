@@ -48,7 +48,7 @@ function SideBar(props) {
           }
           props.input.setValue(valueInBox);
         } else {
-          // if it's not an attachment point you are changing the name of an inputAtom
+          /*if it's not an attachment point you are changing the name of an inputAtom*/
           props.input.name = valueInBox;
         }
       }

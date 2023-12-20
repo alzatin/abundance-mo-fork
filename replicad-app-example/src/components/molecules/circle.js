@@ -41,7 +41,7 @@ export default class Circle extends Atom {
      */ 
     beginPropagation(force = false){
         //Check to see if a value already exists. Generate it if it doesn't. Only do this for circles and rectangles
-            console.log("begin propagation running inside circle")
+            
             //Triggers inputs with nothing connected to begin propagation
             this.inputs.forEach(input => {
                 input.beginPropagation()
@@ -70,11 +70,10 @@ export default class Circle extends Atom {
      * Super class the default update value function. This function computes the number of points to use for the circle and then calls the worker thread to create the circle.
      */ 
     updateValue(){
-        console.log("update value running inside circle")
 
         try{
             var diameter = this.findIOValue('diameter')
-            console.log("diameter is: ", diameter)
+            
             GlobalVariables.cad.circle(this.uniqueID, diameter).then(()=> {
                 this.basicThreadValueProcessing()
             });
