@@ -1,9 +1,8 @@
-
 /**
  * This class defines the available default licenses when creating a new project
- */ 
+ */
 const licenses = {
-    "CC0": `Creative Commons Legal Code
+  CC0: `Creative Commons Legal Code
 
 CC0 1.0 Universal
 
@@ -125,7 +124,7 @@ express Statement of Purpose.
     party to this document and has no duty or obligation with respect to
     this CC0 or use of the Work.`,
 
-    "CC-BY": `Attribution 4.0 International
+  "CC-BY": `Attribution 4.0 International
 
 =======================================================================
 
@@ -519,7 +518,7 @@ understandings, or agreements concerning use of licensed material. For
 the avoidance of doubt, this paragraph does not form part of the
 public licenses.
 
-Creative Commons may be contacted at creativecommons.org.`
-}
+Creative Commons may be contacted at creativecommons.org.`,
+};
 
-export { licenses }
+export { licenses };

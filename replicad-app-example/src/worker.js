@@ -46,81 +46,104 @@ function createMesh(thickness) {
 
 function circle(id, diameter) {
   return started.then(() => {
-    library[id] = {geometry: [sketchCircle(diameter/2)], tags: []};
-    return true
+    library[id] = { geometry: [sketchCircle(diameter / 2)], tags: [] };
+    return true;
   });
 }
 
 function rectangle(id, x, y) {
   return started.then(() => {
-    library[id] = {geometry: [sketchRectangle(x,y)], tags: []};
-    return true
+    library[id] = { geometry: [sketchRectangle(x, y)], tags: [] };
+    return true;
   });
 }
 
-function regularPolygon(id, radius,numberOfSides) {
+function regularPolygon(id, radius, numberOfSides) {
   return started.then(() => {
-    library[id] = {geometry: [sketchPolysides(radius,numberOfSides)], tags: []};
-    return true
+    library[id] = {
+      geometry: [sketchPolysides(radius, numberOfSides)],
+      tags: [],
+    };
+    return true;
   });
 }
 
 function loftShapes(targetID, inputID1, inputID2) {
   return started.then(() => {
-    library[targetID] = loft(library[inputID1].geometry, library[inputID2].geometry);
-    return true
+    library[targetID] = loft(
+      library[inputID1].geometry,
+      library[inputID2].geometry
+    );
+    return true;
   });
 }
 
 function extrude(targetID, inputID, height) {
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[inputID], leaf => {
-      console.log(leaf.geometry[0])
-      return {geometry: [leaf.geometry[0].clone().extrude(height)], tags: leaf.tags} ;
+    library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+      console.log(leaf.geometry[0]);
+      return {
+        geometry: [leaf.geometry[0].clone().extrude(height)],
+        tags: leaf.tags,
+      };
     });
-    return true
+    return true;
   });
 }
 
 function move(targetID, inputID, x, y, z) {
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[inputID], leaf => {
-      
-      return {geometry: [leaf.geometry[0].translate(x,y,z)], tags: leaf.tags};
+    library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+      return {
+        geometry: [leaf.geometry[0].translate(x, y, z)],
+        tags: leaf.tags,
+      };
     });
-    return true
+    return true;
   });
 }
 
-function rotate(targetID, inputID, x, y, z){
+function rotate(targetID, inputID, x, y, z) {
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[inputID], leaf => {
-      return {geometry: [leaf.geometry[0].clone()
-        .rotate(x, [0, 0, 0], [1, 0, 0])
-        .rotate(y, [0, 0, 0], [0, 1, 0])
-        .rotate(z, [0, 0, 0], [0, 0, 1])], tags: leaf.tags} ;
+    library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+      return {
+        geometry: [
+          leaf.geometry[0]
+            .clone()
+            .rotate(x, [0, 0, 0], [1, 0, 0])
+            .rotate(y, [0, 0, 0], [0, 1, 0])
+            .rotate(z, [0, 0, 0], [0, 0, 1]),
+        ],
+        tags: leaf.tags,
+      };
     });
-    return true
+    return true;
   });
 }
 
 function cut(targetID, input1ID, input2ID) {
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[input1ID], leaf => {
-      const cutTemplate = flattenRemove2DandFuse(library[input2ID])
-      return {geometry: [leaf.geometry[0].clone().cut(cutTemplate)], tags: leaf.tags} ;
+    library[targetID] = actOnLeafs(library[input1ID], (leaf) => {
+      const cutTemplate = flattenRemove2DandFuse(library[input2ID]);
+      return {
+        geometry: [leaf.geometry[0].clone().cut(cutTemplate)],
+        tags: leaf.tags,
+      };
     });
-    return true
+    return true;
   });
 }
 
 function intersect(targetID, input1ID, input2ID) {
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[input1ID], leaf => {
-      const shapeToIntersectWith = flattenRemove2DandFuse(library[input2ID])
-      return {geometry: [leaf.geometry[0].clone().intersect(shapeToIntersectWith)], tags: leaf.tags} ;
+    library[targetID] = actOnLeafs(library[input1ID], (leaf) => {
+      const shapeToIntersectWith = flattenRemove2DandFuse(library[input2ID]);
+      return {
+        geometry: [leaf.geometry[0].clone().intersect(shapeToIntersectWith)],
+        tags: leaf.tags,
+      };
     });
-    return true
+    return true;
   });
 }
 
@@ -130,99 +153,99 @@ function assembly(targetID, inputIDs) {
     for (let i = 0; i < inputIDs.length; i++) {
       assembly.push(library[inputIDs[i]]);
     }
-    library[targetID] = {geometry: assembly, tags: []};
-    return true
+    library[targetID] = { geometry: assembly, tags: [] };
+    return true;
   });
 }
 
-
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
-function actOnLeafs(assembly, action){
+function actOnLeafs(assembly, action) {
   //This is a leaf
-  if(assembly.geometry.length == 1 && assembly.geometry[0].geometry == undefined){
+  if (
+    assembly.geometry.length == 1 &&
+    assembly.geometry[0].geometry == undefined
+  ) {
     return action(assembly);
   }
   //This is a branch
-  else{
+  else {
     let transformedAssembly = [];
-    assembly.geometry.forEach(subAssembly => {
-      transformedAssembly.push(actOnLeafs(subAssembly, action))
-    })
-    return {geometry: transformedAssembly, tags: assembly.tags};
+    assembly.geometry.forEach((subAssembly) => {
+      transformedAssembly.push(actOnLeafs(subAssembly, action));
+    });
+    return { geometry: transformedAssembly, tags: assembly.tags };
   }
 }
 
 function flattenAssembly(assembly) {
-  console.log("flatten assembly " + assembly)
+  console.log("flatten assembly " + assembly);
   var flattened = [];
   //This is a leaf
-  if(assembly.geometry.length == 1 && assembly.geometry[0].geometry == undefined){
-    flattened.push(assembly.geometry[0])
+  if (
+    assembly.geometry.length == 1 &&
+    assembly.geometry[0].geometry == undefined
+  ) {
+    flattened.push(assembly.geometry[0]);
     return flattened;
   }
   //This is a branch
-  else{
-    assembly.geometry.forEach(subAssembly => {
-      flattened.push(...flattenAssembly(subAssembly))
-    })
+  else {
+    assembly.geometry.forEach((subAssembly) => {
+      flattened.push(...flattenAssembly(subAssembly));
+    });
     return flattened;
   }
-
 }
 
-function chainFuse(chain){
-  let fused = chain[0].clone()
+function chainFuse(chain) {
+  let fused = chain[0].clone();
   for (let i = 1; i < chain.length; i++) {
-    fused = fused.fuse(chain[i])
+    fused = fused.fuse(chain[i]);
   }
-  return fused
+  return fused;
 }
 
-function flattenRemove2DandFuse(chain){
+function flattenRemove2DandFuse(chain) {
   let flattened = flattenAssembly(chain);
 
   //Here we need to remove anything which isn't already 3D
-  let cleanedGeometry = []
-  flattened.forEach(pieceOfGeometry => {
-    if(pieceOfGeometry.mesh != undefined){
-      cleanedGeometry.push(pieceOfGeometry)
+  let cleanedGeometry = [];
+  flattened.forEach((pieceOfGeometry) => {
+    if (pieceOfGeometry.mesh != undefined) {
+      cleanedGeometry.push(pieceOfGeometry);
     }
-  })
+  });
 
   return chainFuse(cleanedGeometry);
 }
 
 function generateDisplayMesh(id) {
-
   return started.then(() => {
-
     //Flatten the assembly to remove heirarcy
     const flattened = flattenAssembly(library[id]);
 
     //Here we need to extrude anything which isn't already 3D
-    var cleanedGeometry = []
-    flattened.forEach(pieceOfGeometry => {
-      if(pieceOfGeometry.mesh == undefined){
-        cleanedGeometry.push(pieceOfGeometry.clone().extrude(.0001));
+    var cleanedGeometry = [];
+    flattened.forEach((pieceOfGeometry) => {
+      if (pieceOfGeometry.mesh == undefined) {
+        cleanedGeometry.push(pieceOfGeometry.clone().extrude(0.0001));
+      } else {
+        cleanedGeometry.push(pieceOfGeometry);
       }
-      else{
-        cleanedGeometry.push(pieceOfGeometry)
-      }
-    })
+    });
 
     let geometry = chainFuse(cleanedGeometry);
 
     console.log(geometry);
 
     //Try extruding if there is no 3d shape
-    if(geometry.mesh == undefined){
-      const threeDShape = geometry.clone().extrude(.0001);
+    if (geometry.mesh == undefined) {
+      const threeDShape = geometry.clone().extrude(0.0001);
       return {
         faces: threeDShape.mesh(),
         edges: threeDShape.meshEdges(),
       };
-    }
-    else{
+    } else {
       return {
         faces: geometry.mesh(),
         edges: geometry.meshEdges(),
@@ -231,7 +254,20 @@ function generateDisplayMesh(id) {
   });
 }
 
-
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
-expose({ createBlob, createMesh, circle, regularPolygon, rectangle, generateDisplayMesh, extrude, move, rotate, cut, intersect, assembly, loftShapes });
+expose({
+  createBlob,
+  createMesh,
+  circle,
+  regularPolygon,
+  rectangle,
+  generateDisplayMesh,
+  extrude,
+  move,
+  rotate,
+  cut,
+  intersect,
+  assembly,
+  loftShapes,
+});

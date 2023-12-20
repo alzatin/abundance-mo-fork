@@ -78,7 +78,8 @@ export default class Output extends Atom {
       this.decreaseToProcessCountByOne();
       this.path = this.findIOValue("number or geometry");
       //Propagate passes the updated value on while parent.updateValue is called when one of the molecule inputs changes
-      this.parent.propagate();  }
+      this.parent.propagate();
+    }
   }
 
   /**

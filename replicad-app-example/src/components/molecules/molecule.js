@@ -292,10 +292,9 @@ export default class Molecule extends Atom {
     } else {
       try {
         this.processing = true;
-       
-          this.processing = false;
-          this.pushPropagation();
-    
+
+        this.processing = false;
+        this.pushPropagation();
       } catch (err) {
         this.setAlert(err);
       }
@@ -311,7 +310,7 @@ export default class Molecule extends Atom {
       if (typeof this.readOutputAtomPath() == "number") {
         this.output.setValue(this.readOutputAtomPath());
       } else {
-        console.log(this.path)
+        console.log(this.path);
         this.output.setValue(this.path);
       }
       this.output.ready = true;
@@ -527,7 +526,6 @@ export default class Molecule extends Atom {
       });
 
       GlobalVariables.currentMolecule = this.parent; //set parent this to be the currently displayed molecule
-      
 
       //Push any changes up to the next level if there are any changes waiting in the output
       if (this.awaitingPropagationFlag == true) {
@@ -633,8 +631,6 @@ export default class Molecule extends Atom {
         this.loadTree(); //Walks back up the tree from this molecule loading input values from any connected atoms
 
         this.beginPropagation(forceBeginPropagation);
-
-       
       }
     });
   }
