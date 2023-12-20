@@ -254,14 +254,15 @@ export default memo(function FlowCanvas(props) {
         );
         if (atomClicked !== undefined) {
           let idi = atomClicked;
-
           /* Clicked atom is now the active atom */
           props.props.setActiveAtom(idi);
           clickHandledByMolecule = true;
         }
       });
       if (!clickHandledByMolecule) {
+        /* Background click - molecule is active atom */
         props.props.setActiveAtom(GlobalVariables.currentMolecule);
+        GlobalVariables.currentMolecule.sendToRender();
       }
     }
   };

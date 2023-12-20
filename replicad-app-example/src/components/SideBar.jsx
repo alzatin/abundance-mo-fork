@@ -10,7 +10,7 @@ import AttachmentPoint from "./prototypes/attachmentpoint";
 function SideBar(props) {
   let valueInBox;
   let resultShouldBeANumber = false;
-
+  console.log(props.activeAtom);
   /**
    * Function component that creates editable form fields for input atoms
    * @prop {object} input - selected atom on screen
@@ -43,11 +43,12 @@ function SideBar(props) {
         valueInBox = valueState;
 
         if (props.input instanceof AttachmentPoint) {
-          valueInBox = GlobalVariables.limitedEvaluate(valueInBox);
-
+          if (typeof valueInBox !== "number") {
+            valueInBox = GlobalVariables.limitedEvaluate(valueInBox);
+          }
           props.input.setValue(valueInBox);
         } else {
-          // if it's not an attachment point you are changing the name of an inputAtom
+          /*if it's not an attachment point you are changing the name of an inputAtom*/
           props.input.name = valueInBox;
         }
       }

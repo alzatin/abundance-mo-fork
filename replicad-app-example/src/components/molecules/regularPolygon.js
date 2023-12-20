@@ -1,94 +1,107 @@
-import Atom from '../prototypes/atom'
-import GlobalVariables from '../js/globalvariables.js'
+import Atom from "../prototypes/atom";
+import GlobalVariables from "../js/globalvariables.js";
 
 /**
  * This class creates the regular polygon atom.
  */
 export default class RegularPolygon extends Atom {
+  /**
+   * The constructor function.
+   * @param {object} values An array of values passed in which will be assigned to the class as this.x
+   */
+  constructor(values) {
+    super(values);
+
+    this.addIO("input", "number of sides", this, "number", 6);
+    this.addIO("input", "diameter", this, "number", 10);
+    this.addIO("output", "geometry", this, "geometry", "");
 
     /**
-     * The constructor function.
-     * @param {object} values An array of values passed in which will be assigned to the class as this.x
-     */ 
-    constructor(values){
-        super(values)
-        
-        this.addIO('input', 'number of sides', this, 'number', 6)
-        this.addIO('input', 'diameter', this, 'number', 10)
-        this.addIO('output', 'geometry', this, 'geometry', '')
-        
-        /**
-         * This atom's name
-         * @type {string}
-         */
-        this.name = 'RegularPolygon'
-        /**
-         * This atom's type
-         * @type {string}
-         */
-        this.atomType = 'RegularPolygon'
-        /** 
-         * A description of this atom
-         * @type {string}
-         */
-        this.description = "Creates a new regular polygon. Corners are on the diameter."
-        
-        this.setValues(values)
-    }
-
-
+     * This atom's name
+     * @type {string}
+     */
+    this.name = "RegularPolygon";
     /**
-     * Draw the circle atom & icon.
-     */ 
-    draw(){
-
-        super.draw() //Super call to draw the rest
-
-        let xInPixels = GlobalVariables.widthToPixels(this.x)
-        let yInPixels = GlobalVariables.heightToPixels(this.y)
-        let radiusInPixels = GlobalVariables.widthToPixels(this.radius)
-
-        // polygon in progress - replace numbers with variables
-        GlobalVariables.c.beginPath()
-        GlobalVariables.c.fillStyle = '#949294'
-        GlobalVariables.c.moveTo(xInPixels - radiusInPixels/3, yInPixels + radiusInPixels/1.7)
-        GlobalVariables.c.lineTo(xInPixels + radiusInPixels/3, yInPixels + radiusInPixels/1.7)
-        GlobalVariables.c.lineTo(xInPixels + radiusInPixels/1.5, yInPixels)
-        GlobalVariables.c.lineTo(xInPixels + radiusInPixels/2.5, yInPixels - radiusInPixels/1.7)
-        GlobalVariables.c.lineTo(xInPixels - radiusInPixels/2.5, yInPixels - radiusInPixels/1.7)
-        GlobalVariables.c.lineTo(xInPixels- radiusInPixels/1.5, yInPixels )
-        GlobalVariables.c.lineTo(xInPixels - radiusInPixels/3, yInPixels + radiusInPixels/1.7)
-        GlobalVariables.c.stroke()
-        GlobalVariables.c.closePath()
-
-    }
-    
+     * This atom's type
+     * @type {string}
+     */
+    this.atomType = "RegularPolygon";
     /**
-     * Starts propagation from this atom if it is not waiting for anything up stream.
-     */ 
+     * A description of this atom
+     * @type {string}
+     */
+    this.description =
+      "Creates a new regular polygon. Corners are on the diameter.";
 
-    beginPropagation(force = false){
-        //Check to see if a value already exists. Generate it if it doesn't. Only do this for circles, rectangles, and regular polygons
-        if(!GlobalVariables.availablePaths.includes(this.path)||force){
-            //Triggers inputs with nothing connected to begin propagation
-            this.inputs.forEach(input => {
-                input.beginPropagation()
-            })
-        }
-    }
-    
-    /**
-     * Create a new regular polygon in a worker thread.
-     */ 
-    updateValue(){
-        try{
-            var numberOfSides = this.findIOValue('number of sides')
-            var diameter = this.findIOValue('diameter')
-            
-            GlobalVariables.cad.regularPolygon(this.uniqueID, diameter/2,numberOfSides).then(()=> {
-                this.basicThreadValueProcessing()
-            });
+    this.setValues(values);
+  }
 
-        }catch(err){this.setAlert(err)}
+  /**
+   * Draw the circle atom & icon.
+   */
+  draw() {
+    super.draw(); //Super call to draw the rest
+
+    let xInPixels = GlobalVariables.widthToPixels(this.x);
+    let yInPixels = GlobalVariables.heightToPixels(this.y);
+    let radiusInPixels = GlobalVariables.widthToPixels(this.radius);
+
+    // polygon in progress - replace numbers with variables
+    GlobalVariables.c.beginPath();
+    GlobalVariables.c.fillStyle = "#949294";
+    GlobalVariables.c.moveTo(
+      xInPixels - radiusInPixels / 3,
+      yInPixels + radiusInPixels / 1.7
+    );
+    GlobalVariables.c.lineTo(
+      xInPixels + radiusInPixels / 3,
+      yInPixels + radiusInPixels / 1.7
+    );
+    GlobalVariables.c.lineTo(xInPixels + radiusInPixels / 1.5, yInPixels);
+    GlobalVariables.c.lineTo(
+      xInPixels + radiusInPixels / 2.5,
+      yInPixels - radiusInPixels / 1.7
+    );
+    GlobalVariables.c.lineTo(
+      xInPixels - radiusInPixels / 2.5,
+      yInPixels - radiusInPixels / 1.7
+    );
+    GlobalVariables.c.lineTo(xInPixels - radiusInPixels / 1.5, yInPixels);
+    GlobalVariables.c.lineTo(
+      xInPixels - radiusInPixels / 3,
+      yInPixels + radiusInPixels / 1.7
+    );
+    GlobalVariables.c.stroke();
+    GlobalVariables.c.closePath();
+  }
+
+  /**
+   * Starts propagation from this atom if it is not waiting for anything up stream.
+   */
+
+  beginPropagation(force = false) {
+    //Check to see if a value already exists. Generate it if it doesn't. Only do this for circles, rectangles, and regular polygons
+
+    this.inputs.forEach((input) => {
+      input.beginPropagation();
+    });
+  }
+
+  /**
+   * Create a new regular polygon in a worker thread.
+   */
+  updateValue() {
+    try {
+      var numberOfSides = this.findIOValue("number of sides");
+      var diameter = this.findIOValue("diameter");
+
+      GlobalVariables.cad
+        .regularPolygon(this.uniqueID, diameter / 2, numberOfSides)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        });
+    } catch (err) {
+      this.setAlert(err);
     }
+  }
 }
