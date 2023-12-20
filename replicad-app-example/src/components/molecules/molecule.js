@@ -203,7 +203,6 @@ export default class Molecule extends Atom {
 
     if (distFromClick < this.radius * 2) {
       GlobalVariables.currentMolecule = this; //set this to be the currently displayed molecule
-      GlobalVariables.currentMolecule.backgroundClick();
       /**
        * Deselects Atom
        * @type {boolean}
@@ -528,7 +527,7 @@ export default class Molecule extends Atom {
       });
 
       GlobalVariables.currentMolecule = this.parent; //set parent this to be the currently displayed molecule
-      GlobalVariables.currentMolecule.backgroundClick();
+      
 
       //Push any changes up to the next level if there are any changes waiting in the output
       if (this.awaitingPropagationFlag == true) {
