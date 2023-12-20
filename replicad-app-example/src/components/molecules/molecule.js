@@ -216,21 +216,6 @@ export default class Molecule extends Atom {
   }
 
   /**
-   * Handle a background click (a click which doesn't land on one of the contained molecules) by deselected everything and displaying a 3D rendering of this molecules output.
-   */
-  backgroundClick() {
-    console.log("old background click");
-    /**
-     * Flag that the atom is now selected.
-     */
-    if (this.selected == false) {
-      //this.selected = true
-    
-      //this.sendToRender()   //This is might need to be removed because it was happening too often during loading
-    }
-  }
-
-  /**
    * Pushes serialized atoms into array if selected
    */
   copy() {
@@ -533,38 +518,6 @@ export default class Molecule extends Atom {
   }
 
   /**
-   * Creates markdown version of the readme content for this atom in the sidebar
-   * @param {object} list - The HTML object to append the created element to.
-   */
-  displaySidebarReadme(list) {
-    var readmeContent = "";
-
-    this.requestReadme().forEach((item) => {
-      readmeContent = readmeContent + item + "\n\n\n";
-    });
-
-    if (readmeContent.length > 0) {
-      //If there is anything to say
-
-      list.appendChild(document.createElement("br"));
-      list.appendChild(document.createElement("br"));
-
-      var div = document.createElement("h3");
-      div.setAttribute("style", "float:right;");
-
-      list.appendChild(div);
-      var valueText = document.createTextNode(`- ReadMe`);
-      div.appendChild(valueText);
-
-      var x = document.createElement("HR");
-      x.setAttribute("style", "width:100%;");
-      list.appendChild(x);
-
-      this.createMarkdownListItem(list, readmeContent);
-    }
-  }
-
-  /**
    * Replace the currently displayed molecule with the parent of this molecule...moves the user up one level.
    */
   goToParentMolecule() {
@@ -682,7 +635,7 @@ export default class Molecule extends Atom {
 
         this.beginPropagation(forceBeginPropagation);
 
-        this.backgroundClick();
+       
       }
     });
   }
