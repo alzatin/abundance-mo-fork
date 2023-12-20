@@ -9,7 +9,7 @@ var flowCanvas;
 function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
   flowCanvas.width = window.innerWidth;
-  flowCanvas.height = window.innerHeight * 0.5;
+  flowCanvas.height = window.innerHeight * 0.45;
 }
 
 window.addEventListener(
