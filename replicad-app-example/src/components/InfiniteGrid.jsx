@@ -7,7 +7,7 @@ import { Plane } from "@react-three/drei";
 const infiniteGridMaterial = function InfiniteGridMaterial({
   size1 = 10,
   size2 = 100,
-  color = new THREE.Color("LightBlue"),
+  color = new THREE.Color("#efe3fd"),
   distance = 10000,
   axes = "xyz",
 } = {}) {

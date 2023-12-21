@@ -7,7 +7,6 @@ export default observer(function ParamsEditor({
   activeAtom,
   defaultParams,
   hidden,
-  onRun,
 }) {
   defaultParams = {};
 
@@ -17,16 +16,10 @@ export default observer(function ParamsEditor({
       defaultParams[input.name] = input.value;
     });
   }
-  console.log(defaultParams);
-  /*const runFcn = useRef(onRun);
-  useEffect(() => {
-    runFcn.current = onRun;
-  }, [onRun]);*/
 
   /** Handles parameter change button click and updates active atom inputs */
   function handleParamChange(newParams) {
     activeAtom.inputs.map((input) => {
-      console.log(input);
       input.setValue(newParams[input.name]);
     });
   }
@@ -46,6 +39,7 @@ export default observer(function ParamsEditor({
           ),
         settings: { disabled: false },
         label: "Apply params",
+        transient: false,
       },
       ...defaultParams,
     };
@@ -60,5 +54,29 @@ export default observer(function ParamsEditor({
     [activeAtom]
   );
 
-  return <></>;
+  return (
+    <>
+      {" "}
+      <Leva
+        hideCopyButton
+        theme={{
+          colors: {
+            elevation1: "#3F4243",
+            elevation2: "var(--bg-color)",
+            elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
+
+            highlight1: "#C4A3D5",
+            highlight2: "#ededed",
+            highlight3: "#ededed",
+
+            accent1: "#C4A3D5",
+            accent2: "#88748F", //apply button
+            accent3: "#88748F",
+
+            vivid1: "red",
+          },
+        }}
+      />
+    </>
+  );
 });
