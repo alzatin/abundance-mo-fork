@@ -10,13 +10,14 @@ export default observer(function ParamsEditor({
   onRun,
 }) {
   defaultParams = {};
+
   /** Runs through active atom inputs and adds IO parameters to default param*/
   if (activeAtom.inputs) {
     activeAtom.inputs.map((input) => {
       defaultParams[input.name] = input.value;
     });
   }
-
+  console.log(defaultParams);
   /*const runFcn = useRef(onRun);
   useEffect(() => {
     runFcn.current = onRun;
@@ -25,6 +26,7 @@ export default observer(function ParamsEditor({
   /** Handles parameter change button click and updates active atom inputs */
   function handleParamChange(newParams) {
     activeAtom.inputs.map((input) => {
+      console.log(input);
       input.setValue(newParams[input.name]);
     });
   }
@@ -55,7 +57,7 @@ export default observer(function ParamsEditor({
     () => () => {
       levaStore.dispose();
     },
-    []
+    [activeAtom]
   );
 
   return <></>;
