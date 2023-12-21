@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useMemo } from "react";
 import { observer } from "mobx-react";
 import { useControls, levaStore, Leva } from "leva";
 
+/**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
 export default observer(function ParamsEditor({
   activeAtom,
   defaultParams,
@@ -9,27 +10,31 @@ export default observer(function ParamsEditor({
   onRun,
 }) {
   defaultParams = {};
-
+  /** Runs through active atom inputs and adds IO parameters to default param*/
   if (activeAtom.inputs) {
     activeAtom.inputs.map((input) => {
-      console.log(input.value);
       defaultParams[input.name] = input.value;
     });
-
-    console.log(defaultParams);
   }
 
-  const runFcn = useRef(onRun);
+  /*const runFcn = useRef(onRun);
   useEffect(() => {
     runFcn.current = onRun;
-  }, [onRun]);
+  }, [onRun]);*/
+
+  /** Handles parameter change button click and updates active atom inputs */
+  function handleParamChange(newParams) {
+    activeAtom.inputs.map((input) => {
+      input.setValue(newParams[input.name]);
+    });
+  }
 
   const paramsConfig = useMemo(() => {
     return {
       _run: {
         type: "BUTTON",
         onClick: (get) =>
-          runFcn.current(
+          handleParamChange(
             Object.fromEntries(
               levaStore
                 .getVisiblePaths()
@@ -45,6 +50,7 @@ export default observer(function ParamsEditor({
   }, [defaultParams]);
 
   useControls(() => paramsConfig, [activeAtom]);
+
   useEffect(
     () => () => {
       levaStore.dispose();
