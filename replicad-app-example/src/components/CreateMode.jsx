@@ -37,8 +37,6 @@ function CreateMode(props) {
   if (authorizedUserOcto) {
     return (
       <>
-        <ToggleRunCreate runModeon={runModeon} setRunMode={setRunMode} />
-        <TopMenu authorizedUserOcto={authorizedUserOcto} />
         <div id="headerBar">
           <img
             className="thumnail-logo"
@@ -46,6 +44,8 @@ function CreateMode(props) {
             alt="logo"
           />
         </div>
+        <ToggleRunCreate runModeon={runModeon} setRunMode={setRunMode} />
+        <TopMenu authorizedUserOcto={authorizedUserOcto} />
         <FlowCanvas
           props={{ setActiveAtom: setActiveAtom }}
           displayProps={{

@@ -22,8 +22,8 @@ body {
 
 #headerBar {
   position: absolute;
-  bottom: 10px;
-  right: 20px;
+  top: 15px;
+  right: 15px;
   z-index: 1000;
 }
 
@@ -148,6 +148,7 @@ input:checked + .sliderAtom:before {
 }
 
 #flow-canvas {
+  background-color: #3f4243;
   margin-top: 0;
   flex-shrink: 2;
   padding-bottom: 10px;
@@ -756,7 +757,9 @@ Sidebar navigation
   position: fixed;
   width: 45px;
   height: 24px;
-  top: 300px;
+  top: 48%;
+  right: 15px;
+  z-index: 2;
 }
 
 /* Hide default HTML checkbox */
@@ -815,4 +818,13 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/*new leva sidebar */
+.paramEditorDiv {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 280px;
+  z-index: 3;
 }

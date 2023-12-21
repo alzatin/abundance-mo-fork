@@ -57,26 +57,29 @@ export default observer(function ParamsEditor({
   return (
     <>
       {" "}
-      <Leva
-        hideCopyButton
-        theme={{
-          colors: {
-            elevation1: "#3F4243",
-            elevation2: "var(--bg-color)",
-            elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
+      <div className="paramEditorDiv">
+        <Leva
+          fill
+          hideCopyButton
+          theme={{
+            colors: {
+              elevation1: "#3F4243",
+              elevation2: "var(--bg-color)",
+              elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
 
-            highlight1: "#C4A3D5",
-            highlight2: "#ededed",
-            highlight3: "#ededed",
+              highlight1: "#C4A3D5",
+              highlight2: "#ededed",
+              highlight3: "#ededed",
 
-            accent1: "#C4A3D5",
-            accent2: "#88748F", //apply button
-            accent3: "#88748F",
+              accent1: "#C4A3D5",
+              accent2: "#88748F", //apply button
+              accent3: "#88748F",
 
-            vivid1: "red",
-          },
-        }}
-      />
+              vivid1: "red",
+            },
+          }}
+        />
+      </div>
     </>
   );
 });
