@@ -2,15 +2,19 @@ import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 import AttachmentPoint from "./prototypes/attachmentpoint";
 
+import { useControls } from "leva";
+
 /**
  * SideBar component creates elements that displays inputs and outputs of
  * a selected Atom with editable fields for input atoms
  * @prop {object} activeAtom - selected atom on screen
  */
 function SideBar(props) {
+  //console.log(props.activeAtom);
+  //
   let valueInBox;
   let resultShouldBeANumber = false;
-  console.log(props.activeAtom);
+
   /**
    * Function component that creates editable form fields for input atoms
    * @prop {object} input - selected atom on screen
