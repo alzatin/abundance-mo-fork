@@ -7,6 +7,7 @@ import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
 import SideBar from "./SideBar.jsx";
 import ParamsEditor from "./ParameterEditor.jsx";
+
 import {
   BrowserRouter as Router,
   useParams,
@@ -57,6 +58,7 @@ function CreateMode(props) {
         />
         <div className="parent flex-parent" id="lowerHalf">
           <ParamsEditor activeAtom={activeAtom} />
+
           <LowerHalf
             displayProps={{
               mesh: mesh,

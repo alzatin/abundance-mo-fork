@@ -758,7 +758,7 @@ Sidebar navigation
   width: 45px;
   height: 24px;
   top: 48%;
-  right: 15px;
+  right: 5px;
   z-index: 2;
 }
 
@@ -824,6 +824,14 @@ input:checked + .slider:before {
 .paramEditorDiv {
   position: absolute;
   top: 50%;
+  left: 10px;
+  width: 280px;
+  z-index: 3;
+}
+
+.gridEditorDiv {
+  position: absolute;
+  top: 20%;
   left: 10px;
   width: 280px;
   z-index: 3;
