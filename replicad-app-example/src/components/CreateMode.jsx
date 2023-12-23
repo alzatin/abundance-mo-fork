@@ -25,6 +25,7 @@ function CreateMode(props) {
   const navigate = useNavigate();
   const [activeAtom, setActiveAtom] = useState([]);
   const [gridParam, setGrid] = useState(true);
+  const [axesParam, setAxes] = useState(true);
 
   let authorizedUserOcto = props.props.authorizedUserOcto;
   let setRunMode = props.props.setRunMode;
@@ -62,9 +63,10 @@ function CreateMode(props) {
             activeAtom={activeAtom}
             setActiveAtom={setActiveAtom}
             setGrid={setGrid}
+            setAxes={setAxes}
           />
           <LowerHalf
-            props={{ gridParam: gridParam }}
+            props={{ gridParam: gridParam, axesParam: axesParam }}
             displayProps={{
               mesh: mesh,
               setMesh: setMesh,

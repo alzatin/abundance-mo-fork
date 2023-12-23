@@ -13,22 +13,39 @@ import {
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
 export default observer(function ParamsEditor({
   activeAtom,
-  defaultParams,
   setActiveAtom,
   hidden,
   setGrid,
+  setAxes,
 }) {
-  defaultParams = {};
+  let inputParams = {};
+  let outputParams = {};
 
   const store1 = useCreateStore();
   const store2 = useCreateStore();
 
   /** Runs through active atom inputs and adds IO parameters to default param*/
   if (activeAtom.inputs) {
+    let disabledInput = false;
     activeAtom.inputs.map((input) => {
-      defaultParams[input.name] = input.value;
-      /**need to change this simple value to also have settings
-       *  like disabled or type of input */
+      /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
+      const checkInput = () => {
+        return input.name == "geometry";
+      };
+
+      inputParams[input.name] = {
+        value: input.value,
+        disabled: checkInput(),
+      };
+    });
+  }
+
+  if (activeAtom.outputs) {
+    activeAtom.outputs.map((output) => {
+      outputParamsParams[output.name] = {
+        value: output.value,
+        disabled: false,
+      };
     });
   }
 
@@ -58,9 +75,10 @@ export default observer(function ParamsEditor({
         transient: false,
       },
 
-      ...defaultParams,
+      ...inputParams,
+      ...outputParams,
     };
-  }, [defaultParams]);
+  }, [inputParams, outputParams]);
 
   /** Creates Leva panel with parameters from active atom inputs */
   useControls(() => paramsConfig, { store: store1 }, [activeAtom]);
@@ -73,11 +91,16 @@ export default observer(function ParamsEditor({
         value: true,
         label: "show grid",
         onChange: (value) => {
-          console.log(value);
-          console.log(setGrid(value));
+          setGrid(value);
         },
       },
-      axes: { value: true, label: "show axes" },
+      axes: {
+        value: true,
+        label: "show axes",
+        onChange: (value) => {
+          setAxes(value);
+        },
+      },
     },
     { store: store2 }
   );

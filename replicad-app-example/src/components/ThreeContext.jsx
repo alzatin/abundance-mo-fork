@@ -19,7 +19,7 @@ THREE.Object3D.DefaultUp.set(0, 0, 1);
 // a matcap material instead of the meshStandardMaterial used here.
 export default function ThreeContext({ children, ...props }) {
   const dpr = Math.min(window.devicePixelRatio, 2);
-  console.log(props.gridParam);
+
   return (
     <Suspense fallback={null}>
       <Canvas
@@ -33,7 +33,7 @@ export default function ThreeContext({ children, ...props }) {
         {...props}
       >
         {props.gridParam ? <InfiniteGrid /> : null}
-        <Controls enableDamping={false}></Controls>
+        {props.axesParam ? <Controls enableDamping={false}></Controls> : null}
         <ambientLight />
         <pointLight position={[100, 100, 100]} />
 
