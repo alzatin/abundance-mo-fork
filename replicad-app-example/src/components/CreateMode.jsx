@@ -24,6 +24,7 @@ import {
 function CreateMode(props) {
   const navigate = useNavigate();
   const [activeAtom, setActiveAtom] = useState([]);
+  const [gridParam, setGrid] = useState(true);
 
   let authorizedUserOcto = props.props.authorizedUserOcto;
   let setRunMode = props.props.setRunMode;
@@ -57,9 +58,13 @@ function CreateMode(props) {
           }}
         />
         <div className="parent flex-parent" id="lowerHalf">
-          <ParamsEditor activeAtom={activeAtom} />
-
+          <ParamsEditor
+            activeAtom={activeAtom}
+            setActiveAtom={setActiveAtom}
+            setGrid={setGrid}
+          />
           <LowerHalf
+            props={{ gridParam: gridParam }}
             displayProps={{
               mesh: mesh,
               setMesh: setMesh,

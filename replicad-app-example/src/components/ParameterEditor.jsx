@@ -14,7 +14,9 @@ import {
 export default observer(function ParamsEditor({
   activeAtom,
   defaultParams,
+  setActiveAtom,
   hidden,
+  setGrid,
 }) {
   defaultParams = {};
 
@@ -34,6 +36,7 @@ export default observer(function ParamsEditor({
   function handleParamChange(newParams) {
     activeAtom.inputs.map((input) => {
       input.setValue(newParams[input.name]);
+      activeAtom.sendToRender();
     });
   }
 
@@ -44,7 +47,7 @@ export default observer(function ParamsEditor({
         onClick: (get) =>
           handleParamChange(
             Object.fromEntries(
-              store1
+              levaStore
                 .getVisiblePaths()
                 .filter((f) => f !== "_run")
                 .map((f) => [f, get(f)])
@@ -54,39 +57,26 @@ export default observer(function ParamsEditor({
         label: "Apply params",
         transient: false,
       },
-      _runi: {
-        settings: { disabled: false },
-        transient: true,
-        value: 4,
-        min: 0,
-        max: 10,
-        step: 1,
-      },
+
       ...defaultParams,
     };
   }, [defaultParams]);
 
-  const gridConfig = useMemo(() => {
-    return {
-      _runi: {
-        settings: { disabled: false },
-        transient: true,
-        value: 4,
-        min: 0,
-        max: 10,
-        step: 1,
-      },
-      store: store2,
-    };
-  }, []);
+  /** Creates Leva panel with parameters from active atom inputs */
+  useControls(() => paramsConfig, { store: store1 }, [activeAtom]);
 
-  //useControls({ color: "#fff" }, { store: store1 });
-
-  useControls(() => paramsConfig, [activeAtom]);
+  /** Creates Leva panel with grid settings */
   useControls(
     {
       color: { value: "#fff", label: "grid-color" },
-      grid: { value: true, label: "show grid" },
+      grid: {
+        value: true,
+        label: "show grid",
+        onChange: (value) => {
+          console.log(value);
+          console.log(setGrid(value));
+        },
+      },
       axes: { value: true, label: "show axes" },
     },
     { store: store2 }

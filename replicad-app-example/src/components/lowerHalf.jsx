@@ -54,7 +54,7 @@ export default memo(function LowerHalf(props) {
           }}
         >
           {mesh ? (
-            <ThreeContext>
+            <ThreeContext gridParam={props.props.gridParam}>
               <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
             </ThreeContext>
           ) : (

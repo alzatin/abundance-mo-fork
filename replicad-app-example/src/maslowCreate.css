@@ -823,7 +823,7 @@ input:checked + .slider:before {
 /*new leva sidebar */
 .paramEditorDiv {
   position: absolute;
-  top: 50%;
+  top: 52%;
   left: 10px;
   width: 280px;
   z-index: 3;
@@ -831,7 +831,7 @@ input:checked + .slider:before {
 
 .gridEditorDiv {
   position: absolute;
-  top: 20%;
+  top: 47%;
   left: 10px;
   width: 280px;
   z-index: 3;
