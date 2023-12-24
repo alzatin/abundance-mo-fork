@@ -37,6 +37,8 @@ function CreateMode(props) {
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
 
+  console.log(activeAtom);
+
   if (authorizedUserOcto) {
     return (
       <>

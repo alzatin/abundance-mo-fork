@@ -8,7 +8,9 @@ import {
   levaStore,
   LevaStoreProvider,
   Leva,
+  folder,
 } from "leva";
+import { falseDependencies } from "mathjs";
 
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
 export default observer(function ParamsEditor({
@@ -20,33 +22,45 @@ export default observer(function ParamsEditor({
 }) {
   let inputParams = {};
   let outputParams = {};
+  let inputNamesConfig = {};
 
   const store1 = useCreateStore();
   const store2 = useCreateStore();
 
   /** Runs through active atom inputs and adds IO parameters to default param*/
   if (activeAtom.inputs) {
-    let disabledInput = false;
     activeAtom.inputs.map((input) => {
       /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
       const checkInput = () => {
-        return input.name == "geometry";
+        return input.valueType == "geometry";
       };
-
       inputParams[input.name] = {
         value: input.value,
-        disabled: checkInput(),
+        disabled: checkInput(input),
       };
     });
   }
 
-  if (activeAtom.outputs) {
-    activeAtom.outputs.map((output) => {
-      outputParamsParams[output.name] = {
-        value: output.value,
-        disabled: false,
-      };
-    });
+  if (activeAtom.output) {
+    console.log("atom has an output");
+    let output = activeAtom.output;
+
+    const checkConnector = () => {
+      return activeAtom.output.connectors.length > 0;
+    };
+    outputParams[output.uniqueID] = {
+      value: checkConnector(),
+      label: "Output " + output.name,
+      disabled: true,
+    };
+
+    /*if (activeAtom.atomType == "Input") {
+        outputParams[output.name] = {
+          value: output.value,
+          disabled: false,
+        };
+       
+      }*/
   }
 
   /** Handles parameter change button click and updates active atom inputs */
@@ -56,15 +70,22 @@ export default observer(function ParamsEditor({
       activeAtom.sendToRender();
     });
   }
+  const outputParamsConfig = useMemo(() => {
+    return { ...outputParams };
+  }, [outputParams]);
+  const inputParamsConfig = useMemo(() => {
+    return { ...inputParams };
+  }, [inputParams]);
 
-  const paramsConfig = useMemo(() => {
-    return {
+  /** Creates Leva panel with parameters from active atom inputs */
+  useControls(
+    {
       _run: {
         type: "BUTTON",
         onClick: (get) =>
           handleParamChange(
             Object.fromEntries(
-              levaStore
+              store1
                 .getVisiblePaths()
                 .filter((f) => f !== "_run")
                 .map((f) => [f, get(f)])
@@ -74,19 +95,18 @@ export default observer(function ParamsEditor({
         label: "Apply params",
         transient: false,
       },
-
-      ...inputParams,
-      ...outputParams,
-    };
-  }, [inputParams, outputParams]);
-
-  /** Creates Leva panel with parameters from active atom inputs */
-  useControls(() => paramsConfig, { store: store1 }, [activeAtom]);
+    },
+    { store: store1 },
+    [activeAtom]
+  );
+  useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
+  useControls(() => outputParamsConfig, { store: store1 }, [activeAtom]);
+  useControls(() => inputNamesConfig, { store: store1 }, [activeAtom]);
 
   /** Creates Leva panel with grid settings */
   useControls(
+    "Grid",
     {
-      color: { value: "#fff", label: "grid-color" },
       grid: {
         value: true,
         label: "show grid",
@@ -107,8 +127,7 @@ export default observer(function ParamsEditor({
 
   useEffect(
     () => () => {
-      console.log(paramsConfig);
-      levaStore.dispose();
+      store1.dispose();
     },
     [activeAtom]
   );
@@ -147,7 +166,7 @@ export default observer(function ParamsEditor({
           store={store2}
           fill
           hidden={false}
-          collapsed={true}
+          collapsed={false}
           hideCopyButton
           theme={{
             colors: {
