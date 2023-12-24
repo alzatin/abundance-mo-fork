@@ -51,14 +51,14 @@ export default observer(function ParamsEditor({
   /** Runs through active atom output and checks if it's connected to something*/
   if (activeAtom.output) {
     let output = activeAtom.output;
-
-    console.log(activeAtom.atomType);
     if (activeAtom.atomType == "Input") {
-      console.log("running?");
       inputNames[activeAtom.name] = {
         value: activeAtom.name,
         label: activeAtom.name,
         disabled: false,
+        onChange: (value) => {
+          activeAtom.name = value;
+        },
       };
     }
 
