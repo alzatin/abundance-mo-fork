@@ -11,6 +11,7 @@ import {
   folder,
 } from "leva";
 import { falseDependencies } from "mathjs";
+import globalvariables from "./js/globalvariables";
 
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
 export default observer(function ParamsEditor({
@@ -152,6 +153,9 @@ export default observer(function ParamsEditor({
           hidden={false}
           collapsed={false}
           hideCopyButton
+          titleBar={{
+            title: activeAtom.name || globalvariables.currentRepo.name,
+          }}
           theme={{
             colors: {
               elevation1: "#3F4243",
@@ -178,6 +182,9 @@ export default observer(function ParamsEditor({
           hidden={false}
           collapsed={true}
           hideCopyButton
+          titleBar={{
+            title: "Render Settings",
+          }}
           theme={{
             colors: {
               elevation1: "#3F4243",

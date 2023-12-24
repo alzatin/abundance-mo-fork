@@ -827,6 +827,7 @@ input:checked + .slider:before {
   left: 10px;
   width: 280px;
   z-index: 3;
+  height: auto;
 }
 
 .gridEditorDiv {
