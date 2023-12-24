@@ -22,7 +22,7 @@ export default observer(function ParamsEditor({
 }) {
   let inputParams = {};
   let outputParams = {};
-  let inputNamesConfig = {};
+  let inputNames = {};
 
   const store1 = useCreateStore();
   const store2 = useCreateStore();
@@ -30,10 +30,10 @@ export default observer(function ParamsEditor({
   /** Runs through active atom inputs and adds IO parameters to default param*/
   if (activeAtom.inputs) {
     activeAtom.inputs.map((input) => {
-      console.log(input);
       const checkConnector = () => {
         return input.connectors.length > 0;
       };
+
       /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
       if (input.valueType == "geometry") {
         inputParams[input.name] = {
@@ -47,10 +47,19 @@ export default observer(function ParamsEditor({
       }
     });
   }
-
+  /** Runs through active atom output and checks if it's connected to something*/
   if (activeAtom.output) {
-    console.log("atom has an output");
     let output = activeAtom.output;
+
+    console.log(activeAtom.atomType);
+    if (activeAtom.atomType == "Input") {
+      console.log("running?");
+      inputNames[activeAtom.name] = {
+        value: activeAtom.name,
+        label: activeAtom.name,
+        disabled: false,
+      };
+    }
 
     const checkConnector = () => {
       return activeAtom.output.connectors.length > 0;
@@ -75,6 +84,9 @@ export default observer(function ParamsEditor({
   const inputParamsConfig = useMemo(() => {
     return { ...inputParams };
   }, [inputParams]);
+  const inputNamesConfig = useMemo(() => {
+    return { ...inputNames };
+  }, [inputNames]);
 
   /** Creates Leva panel with parameters from active atom inputs */
   useControls(
@@ -137,9 +149,8 @@ export default observer(function ParamsEditor({
       <div className="paramEditorDiv">
         <LevaPanel
           store={store1}
-          fill
           hidden={false}
-          collapsed={true}
+          collapsed={false}
           hideCopyButton
           theme={{
             colors: {
@@ -165,7 +176,7 @@ export default observer(function ParamsEditor({
           store={store2}
           fill
           hidden={false}
-          collapsed={false}
+          collapsed={true}
           hideCopyButton
           theme={{
             colors: {
