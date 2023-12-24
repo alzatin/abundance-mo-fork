@@ -30,14 +30,21 @@ export default observer(function ParamsEditor({
   /** Runs through active atom inputs and adds IO parameters to default param*/
   if (activeAtom.inputs) {
     activeAtom.inputs.map((input) => {
+      console.log(input);
+      const checkConnector = () => {
+        return input.connectors.length > 0;
+      };
       /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
-      const checkInput = () => {
-        return input.valueType == "geometry";
-      };
-      inputParams[input.name] = {
-        value: input.value,
-        disabled: checkInput(input),
-      };
+      if (input.valueType == "geometry") {
+        inputParams[input.name] = {
+          value: checkConnector(),
+          disabled: true,
+        };
+      } else {
+        inputParams[input.name] = {
+          value: input.value,
+        };
+      }
     });
   }
 
@@ -53,14 +60,6 @@ export default observer(function ParamsEditor({
       label: "Output " + output.name,
       disabled: true,
     };
-
-    /*if (activeAtom.atomType == "Input") {
-        outputParams[output.name] = {
-          value: output.value,
-          disabled: false,
-        };
-       
-      }*/
   }
 
   /** Handles parameter change button click and updates active atom inputs */
