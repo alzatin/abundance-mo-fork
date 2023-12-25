@@ -757,9 +757,10 @@ Sidebar navigation
   position: fixed;
   width: 45px;
   height: 24px;
-  top: 48%;
-  right: 5px;
+  top: 47%;
+  right: 70px;
   z-index: 2;
+  font-size: 11px;
 }
 
 /* Hide default HTML checkbox */

@@ -5,7 +5,6 @@ import ToggleRunCreate from "./ToggleRunCreate.jsx";
 import TopMenu from "./TopMenu.jsx";
 import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
-import SideBar from "./SideBar.jsx";
 import ParamsEditor from "./ParameterEditor.jsx";
 
 import {
@@ -76,7 +75,6 @@ function CreateMode(props) {
               cad: cad,
             }}
           />
-          {/*<SideBar activeAtom={activeAtom} />*/}
         </div>
       </>
     );
