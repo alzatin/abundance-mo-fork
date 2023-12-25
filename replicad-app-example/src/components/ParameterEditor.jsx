@@ -151,8 +151,9 @@ export default observer(function ParamsEditor({
         <LevaPanel
           store={store1}
           hidden={false}
-          collapsed={false}
+          collapsed={true}
           hideCopyButton
+          fill
           titleBar={{
             title: activeAtom.name || globalvariables.currentRepo.name,
           }}
