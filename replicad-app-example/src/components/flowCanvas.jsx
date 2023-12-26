@@ -4,8 +4,6 @@ import Molecule from "./molecules/molecule";
 import { createCMenu, cmenu } from "./js/NewMenu.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 
-var flowCanvas;
-
 function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
   flowCanvas.width = window.innerWidth;
@@ -29,7 +27,6 @@ export default memo(function FlowCanvas(props) {
 
   // Loads project
   const loadProject = function (project) {
-    props.props.setActiveAtom(project);
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
@@ -37,14 +34,14 @@ export default memo(function FlowCanvas(props) {
     GlobalVariables.numberOfAtomsToLoad = 0;
     GlobalVariables.startTime = new Date().getTime();
 
-    const currentRepoName = project.name;
-
     var octokit = new Octokit();
 
+    /* not sure what this is doing
     GlobalVariables.c.moveTo(0, 0);
     GlobalVariables.c.lineTo(500, 500);
     GlobalVariables.c.fill();
     GlobalVariables.c.stroke();
+    */
 
     octokit
       .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
@@ -57,6 +54,7 @@ export default memo(function FlowCanvas(props) {
 
         if (rawFile.filetypeVersion == 1) {
           GlobalVariables.topLevelMolecule.deserialize(rawFile);
+          props.props.setActiveAtom(GlobalVariables.topLevelMolecule);
         } else {
           GlobalVariables.topLevelMolecule.deserialize(
             convertFromOldFormat(rawFile)
@@ -72,10 +70,6 @@ export default memo(function FlowCanvas(props) {
     };
 
     GlobalVariables.cad = cad;
-
-    // cad.rectangle("12345", 10,5).then((m) => {
-    //     GlobalVariables.writeToDisplay("12345");
-    // });
   });
 
   const canvasRef = useRef(null);

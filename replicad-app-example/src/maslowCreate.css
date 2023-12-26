@@ -763,62 +763,15 @@ Sidebar navigation
   font-size: 11px;
 }
 
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #dd92db;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 19px;
-  width: 20px;
-  left: 4px;
-  bottom: 3px;
-  background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-}
-
-input:checked + .slider {
-  background-color: #534857;
-  -webkit-transform: translateY(360px);
-  -ms-transform: translateY(360px);
-  transform: translateY(360px);
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #534857;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(17px);
-  -ms-transform: translateX(17px);
-  transform: translateX(17px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
+/* The switch - the box around the slider */
+.switch_run {
+  position: fixed;
+  width: 45px;
+  height: 24px;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  font-size: 11px;
 }
 
 /*new leva sidebar */
@@ -830,10 +783,25 @@ input:checked + .slider:before {
   z-index: 3;
 }
 
+.paramEditorDivRun {
+  position: absolute;
+  top: 10%;
+  right: 10px;
+  width: 280px;
+  z-index: 3;
+}
+
 .gridEditorDiv {
   position: absolute;
   top: 47%;
   left: 10px;
+  width: 280px;
+  z-index: 3;
+}
+.gridEditorDivRun {
+  position: absolute;
+  top: 5%;
+  right: 10px;
   width: 280px;
   z-index: 3;
 }

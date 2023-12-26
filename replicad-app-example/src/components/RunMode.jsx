@@ -6,6 +6,8 @@ import globalvariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import ShareDialog from "./ShareDialog.jsx";
 import ToggleRunCreate from "./ToggleRunCreate.jsx";
+import ParamsEditor from "./ParameterEditor.jsx";
+import Molecule from "./molecules/molecule.js";
 import {
   BrowserRouter as Router,
   Link,
@@ -48,10 +50,70 @@ function runMode(props) {
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
 
+  const [gridParamRun, setGridRun] = useState(true);
+  const [axesParamRun, setAxesRun] = useState(true);
+
   var authorizedUserOcto = props.props.authorizedUserOcto;
+  var setActiveAtom = props.props.setActiveAtom;
+  var activeAtom = props.props.activeAtom;
+
   const windowSize = useWindowSize();
 
   var navigate = useNavigate();
+  const { id } = useParams();
+
+  // Loads project
+  const loadRunProject = function (project) {
+    GlobalVariables.loadedRepo = project;
+    GlobalVariables.currentRepoName = project.name;
+    GlobalVariables.currentRepo = project;
+    GlobalVariables.totalAtomCount = 0;
+    GlobalVariables.numberOfAtomsToLoad = 0;
+    GlobalVariables.startTime = new Date().getTime();
+
+    var octokit = new Octokit();
+
+    octokit
+      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
+        owner: project.owner.login,
+        repo: project.name,
+      })
+      .then((response) => {
+        //content will be base64 encoded
+        let rawFile = JSON.parse(atob(response.data.content));
+
+        if (rawFile.filetypeVersion == 1) {
+          GlobalVariables.topLevelMolecule.deserialize(rawFile);
+          setActiveAtom(GlobalVariables.topLevelMolecule);
+        } else {
+          GlobalVariables.topLevelMolecule.deserialize(
+            convertFromOldFormat(rawFile)
+          );
+        }
+      });
+  };
+
+  useEffect(() => {
+    if (!globalvariables.currentRepo) {
+      var octokit = new Octokit();
+      octokit.request("GET /repositories/:id", { id }).then((result) => {
+        globalvariables.currentRepo = result.data;
+        /** Only run loadproject() if the project is different from what is already loaded  */
+        if (globalvariables.currentRepo !== GlobalVariables.loadedRepo) {
+          console.log("new repo is being loaded");
+          //Load a blank project
+          GlobalVariables.topLevelMolecule = new Molecule({
+            x: 0,
+            y: 0,
+            topLevel: true,
+            atomType: "Molecule",
+          });
+          GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+          loadRunProject(GlobalVariables.currentRepo);
+        }
+      });
+    }
+  }, []);
 
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function () {
@@ -123,28 +185,22 @@ function runMode(props) {
                 })*/
   };
 
-  /** get repository from github by the id in the url */
-  const getProjectById = () => {
-    const { id } = useParams();
-    var octokit = new Octokit();
-    octokit.request("GET /repositories/:id", { id }).then((result) => {
-      return result.data.name;
-    });
-  };
-
-  if (!globalvariables.currentRepo) {
-    globalvariables.currentRepoName = getProjectById();
-  }
-
   return (
     <>
       <ShareDialog />
-      <ToggleRunCreate
-        runModeon={props.props.runModeon}
-        setRunMode={props.props.setRunMode}
-      />
+      {props.props.isloggedIn ? <ToggleRunCreate run={true} /> : null}
+      {activeAtom ? (
+        <ParamsEditor
+          run={true}
+          setActiveAtom={setActiveAtom}
+          activeAtom={activeAtom}
+          setGrid={setGridRun}
+          setAxes={setAxesRun}
+        />
+      ) : null}
+
       <div className="runContainer">
-        <div className="runSideBar">
+        {/*<div className="runSideBar">
           <p className="molecule_title">{globalvariables.currentRepoName}</p>
           <p className="atom_description">Description</p>
           <div className="runSideBarDiv">
@@ -186,11 +242,11 @@ function runMode(props) {
               <button>Return to browsing</button>
             </Link>
           </div>
-        </div>
+        </div> */}
         <div
           className="jscad-container"
           style={{
-            width: windowSize.width * 0.6,
+            width: windowSize.width,
             height: windowSize.height,
           }}
         >
@@ -202,7 +258,7 @@ function runMode(props) {
             }}
           >
             {mesh ? (
-              <ThreeContext>
+              <ThreeContext gridParam={gridParamRun} axesParam={axesParamRun}>
                 <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
               </ThreeContext>
             ) : (
@@ -217,11 +273,10 @@ function runMode(props) {
               </div>
             )}
           </section>
-          <div id="arrow-up-menu" className="arrow-up"></div>
-          <div id="viewer_bar"></div>
         </div>
       </div>
     </>
   );
 }
+
 export default runMode;

@@ -101,7 +101,7 @@ export default class Molecule extends Atom {
 
     this.setValues(values);
     //Add the molecule's output
-    this.placeAtom(
+    /*this.placeAtom(
       {
         parentMolecule: this,
         x: GlobalVariables.pixelsToWidth(
@@ -114,7 +114,7 @@ export default class Molecule extends Atom {
         uniqueID: GlobalVariables.generateUniqueID(),
       },
       false
-    );
+    );*/
   }
 
   /**
@@ -596,6 +596,7 @@ export default class Molecule extends Atom {
    * @param {object} values - An array of values to apply to this molecule before de-serializing it's contents. Used by githubmolecules to set top level correctly
    */
   deserialize(json, values = {}, forceBeginPropagation = false) {
+    console.log(this);
     //Find the target molecule in the list
     let promiseArray = [];
 
@@ -667,8 +668,9 @@ export default class Molecule extends Atom {
         }
       }
     });
-
-    this.output.value = this.path;
+    if (this.output) {
+      this.output.value = this.path;
+    }
     return this.path;
   }
 

@@ -7,6 +7,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useLocation,
   useParams,
   useNavigate,
 } from "react-router-dom";
@@ -53,7 +54,7 @@ export default function ReplicadApp() {
 
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [isItOwned, setOwned] = useState(false);
-  const [runModeon, setRunMode] = useState(false);
+  const [activeAtom, setActiveAtom] = useState(null);
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
@@ -109,11 +110,11 @@ export default function ReplicadApp() {
               <CreateMode
                 props={{
                   isItOwned: isItOwned,
+                  activeAtom: activeAtom,
+                  setActiveAtom: setActiveAtom,
                   setOwned: setOwned,
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
-                  runModeon: runModeon,
-                  setRunMode: setRunMode,
                 }}
                 displayProps={{
                   mesh: mesh,
@@ -129,12 +130,13 @@ export default function ReplicadApp() {
             element={
               <RunMode
                 props={{
+                  isloggedIn: isloggedIn,
                   isItOwned: isItOwned,
                   setOwned: setOwned,
+                  setActiveAtom: setActiveAtom,
+                  activeAtom: activeAtom,
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
-                  runModeon: runModeon,
-                  setRunMode: setRunMode,
                 }}
                 displayProps={{
                   mesh: mesh,

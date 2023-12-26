@@ -1,5 +1,10 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import { observer } from "mobx-react";
+
+import { useParams } from "react-router-dom";
+import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import globalvariables from "./js/globalvariables";
+
 import {
   useControls,
   useStoreContext,
@@ -11,13 +16,13 @@ import {
   folder,
 } from "leva";
 import { falseDependencies } from "mathjs";
-import globalvariables from "./js/globalvariables";
 
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
 export default observer(function ParamsEditor({
   activeAtom,
   setActiveAtom,
   hidden,
+  run,
   setGrid,
   setAxes,
 }) {
@@ -28,50 +33,51 @@ export default observer(function ParamsEditor({
   const store1 = useCreateStore();
   const store2 = useCreateStore();
 
-  /** Runs through active atom inputs and adds IO parameters to default param*/
-  if (activeAtom.inputs) {
-    activeAtom.inputs.map((input) => {
-      const checkConnector = () => {
-        return input.connectors.length > 0;
-      };
-
-      /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
-      if (input.valueType == "geometry") {
-        inputParams[input.name] = {
-          value: checkConnector(),
-          disabled: true,
+  if (activeAtom !== null) {
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (activeAtom.inputs) {
+      activeAtom.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
         };
-      } else {
-        inputParams[input.name] = {
-          value: input.value,
+
+        /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
+        if (input.valueType == "geometry") {
+          inputParams[input.name] = {
+            value: checkConnector(),
+            disabled: true,
+          };
+        } else {
+          inputParams[input.name] = {
+            value: input.value,
+          };
+        }
+      });
+    }
+    /** Runs through active atom output and checks if it's connected to something*/
+    if (activeAtom.output) {
+      let output = activeAtom.output;
+      if (activeAtom.atomType == "Input") {
+        inputNames[activeAtom.name] = {
+          value: activeAtom.name,
+          label: activeAtom.name,
+          disabled: false,
+          onChange: (value) => {
+            activeAtom.name = value;
+          },
         };
       }
-    });
-  }
-  /** Runs through active atom output and checks if it's connected to something*/
-  if (activeAtom.output) {
-    let output = activeAtom.output;
-    if (activeAtom.atomType == "Input") {
-      inputNames[activeAtom.name] = {
-        value: activeAtom.name,
-        label: activeAtom.name,
-        disabled: false,
-        onChange: (value) => {
-          activeAtom.name = value;
-        },
+
+      const checkConnector = () => {
+        return activeAtom.output.connectors.length > 0;
+      };
+      outputParams[output.uniqueID] = {
+        value: checkConnector(),
+        label: "Output " + output.name,
+        disabled: true,
       };
     }
-
-    const checkConnector = () => {
-      return activeAtom.output.connectors.length > 0;
-    };
-    outputParams[output.uniqueID] = {
-      value: checkConnector(),
-      label: "Output " + output.name,
-      disabled: true,
-    };
   }
-
   /** Handles parameter change button click and updates active atom inputs */
   function handleParamChange(newParams) {
     activeAtom.inputs.map((input) => {
@@ -147,7 +153,7 @@ export default observer(function ParamsEditor({
   return (
     <>
       {" "}
-      <div className="paramEditorDiv">
+      <div className={run ? "paramEditorDivRun" : "paramEditorDiv"}>
         <LevaPanel
           store={store1}
           hidden={false}
@@ -176,7 +182,7 @@ export default observer(function ParamsEditor({
           }}
         />
       </div>
-      <div className="gridEditorDiv">
+      <div className={run ? "gridEditorDivRun" : "gridEditorDiv"}>
         <LevaPanel
           store={store2}
           fill

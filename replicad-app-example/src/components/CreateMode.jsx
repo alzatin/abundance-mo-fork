@@ -22,21 +22,19 @@ import {
  */
 function CreateMode(props) {
   const navigate = useNavigate();
-  const [activeAtom, setActiveAtom] = useState([]);
+
   const [gridParam, setGrid] = useState(true);
   const [axesParam, setAxes] = useState(true);
 
   let authorizedUserOcto = props.props.authorizedUserOcto;
-  let setRunMode = props.props.setRunMode;
-  let runModeon = props.props.runModeon;
+  let activeAtom = props.props.activeAtom;
+  let setActiveAtom = props.props.setActiveAtom;
 
   /** Display props for replicad renderer  */
   let cad = props.displayProps.cad;
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
-
-  console.log(activeAtom);
 
   if (authorizedUserOcto) {
     return (
@@ -48,7 +46,7 @@ function CreateMode(props) {
             alt="logo"
           />
         </div>
-        <ToggleRunCreate runModeon={runModeon} setRunMode={setRunMode} />
+        <ToggleRunCreate run={false} />
         <TopMenu authorizedUserOcto={authorizedUserOcto} />
         <FlowCanvas
           props={{ setActiveAtom: setActiveAtom }}
@@ -60,12 +58,14 @@ function CreateMode(props) {
           }}
         />
         <div className="parent flex-parent" id="lowerHalf">
-          <ParamsEditor
-            activeAtom={activeAtom}
-            setActiveAtom={setActiveAtom}
-            setGrid={setGrid}
-            setAxes={setAxes}
-          />
+          {activeAtom ? (
+            <ParamsEditor
+              activeAtom={activeAtom}
+              setActiveAtom={setActiveAtom}
+              setGrid={setGrid}
+              setAxes={setAxes}
+            />
+          ) : null}
           <LowerHalf
             props={{ gridParam: gridParam, axesParam: axesParam }}
             displayProps={{
