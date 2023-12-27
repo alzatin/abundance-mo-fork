@@ -805,3 +805,62 @@ Sidebar navigation
   width: 280px;
   z-index: 3;
 }
+
+/* Run Navigation */
+
+.run-navigation {
+  position: absolute;
+  width: 60px;
+
+  top: 200px;
+  left: 100px;
+  z-index: 3;
+}
+.run-navigation-button {
+  border: 2px solid #e5cbf2b2;
+  border-radius: 50%;
+
+  width: 60px;
+  height: 60px;
+  margin-bottom: 50px;
+}
+
+.run-navigation-button:hover {
+  cursor: pointer;
+  border: 2px solid #e3bbf7;
+  background-color: #3f4243ef;
+}
+
+.thumnail-logo-run {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+/* Share Dialog */
+
+.share-dialog {
+  font-family: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
+  text-transform: uppercase;
+  position: fixed;
+  color: #3f4243;
+  background-color: #ededed98;
+  width: 600px;
+  border: 3px solid #c4a3d5;
+  border-radius: 10px;
+  top: 30%;
+  z-index: 4;
+}
+.share-dialog button {
+  margin: 10px;
+  text-transform: uppercase;
+  background-color: #c4a3d549;
+  border: 2px solid #c4a3d5;
+  width: 100px;
+  border-radius: 3px;
+}
+.share-dialog button:hover {
+  background-color: #c4a3d5b0;
+}

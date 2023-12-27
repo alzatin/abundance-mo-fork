@@ -53,7 +53,6 @@ export default function ReplicadApp() {
   }, [size]);
 
   const [isloggedIn, setIsLoggedIn] = useState(false);
-  const [isItOwned, setOwned] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
@@ -96,7 +95,6 @@ export default function ReplicadApp() {
             path="/"
             element={
               <LoginMode
-                setOwned={setOwned}
                 authorizedUserOcto={authorizedUserOcto}
                 tryLogin={tryLogin}
                 setIsLoggedIn={setIsLoggedIn}
@@ -109,10 +107,9 @@ export default function ReplicadApp() {
             element={
               <CreateMode
                 props={{
-                  isItOwned: isItOwned,
                   activeAtom: activeAtom,
                   setActiveAtom: setActiveAtom,
-                  setOwned: setOwned,
+
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
                 }}
@@ -131,8 +128,7 @@ export default function ReplicadApp() {
               <RunMode
                 props={{
                   isloggedIn: isloggedIn,
-                  isItOwned: isItOwned,
-                  setOwned: setOwned,
+
                   setActiveAtom: setActiveAtom,
                   activeAtom: activeAtom,
                   authorizedUserOcto: authorizedUserOcto,

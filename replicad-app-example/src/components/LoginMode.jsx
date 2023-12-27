@@ -518,7 +518,6 @@ const ShowProjects = (props) => {
 
 function LoginMode(props) {
   /*
-   * @prop {setState} setOwned - setState function for isOwned
    * @prop {object} authorizedUserOcto - authorized octokit instance
    * @prop {setState} setIsLoggedIn - setState function for isloggedIn
    * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
@@ -536,7 +535,6 @@ function LoginMode(props) {
         userBrowsing={userBrowsing}
         setBrowsing={setBrowsing}
         isloggedIn={props.isloggedIn}
-        setOwned={props.setOwned}
       />
     );
   } else if (userBrowsing) {
@@ -548,7 +546,6 @@ function LoginMode(props) {
         setBrowsing={setBrowsing}
         isloggedIn={props.isloggedIn}
         tryLogin={props.tryLogin}
-        setOwned={props.setOwned}
       />
     );
   } else {
