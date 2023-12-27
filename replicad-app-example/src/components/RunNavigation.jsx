@@ -124,9 +124,9 @@ function RunNavigation(props) {
   /**
    * Like a project on github by unique ID.
    */
-  const starProject = function (id) {
+  const starProject = function (authorizedUserOcto) {
     //Find out the information of who owns the project we are trying to like
-
+    console.log("star is running");
     var owner = GlobalVariables.currentRepo.owner.login;
     var repoName = GlobalVariables.currentRepo.name;
 
@@ -156,7 +156,8 @@ function RunNavigation(props) {
   };
 
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
-  const forkProject = async function () {
+  const forkProject = async function (authorizedUserOcto) {
+    console.log(authorizedUserOcto);
     console.log("fork function running");
     var owner = GlobalVariables.currentRepo.owner.login;
     var repo = GlobalVariables.currentRepo.name;
@@ -192,15 +193,16 @@ function RunNavigation(props) {
 
   /** Runs if star is clicked but there's no logged in user */
   const loginStar = function () {
-    if (props.tryLogin()) {
-      starProject(GlobalVariables.currentRepo.id);
-    }
+    props.tryLogin().then((result) => {
+      starProject(result);
+    });
   };
+
   /** Runs if fork is clicked but there's no logged in user */
   const loginFork = function () {
-    if (props.tryLogin()) {
-      forkProject();
-    }
+    props.tryLogin().then((result) => {
+      forkProject(result);
+    });
   };
 
   return (
@@ -219,18 +221,18 @@ function RunNavigation(props) {
         <button
           className=" run-navigation-button"
           id="Fork-button"
-          onClick={authorizedUserOcto ? forkProject : loginFork}
+          onClick={() => {
+            authorizedUserOcto ? forkProject(authorizedUserOcto) : loginFork();
+          }}
         >
           {forkSvg}
         </button>
         <button
           className=" run-navigation-button"
           id="Star-button"
-          onClick={
-            authorizedUserOcto
-              ? starProject(GlobalVariables.currentRepo.id)
-              : loginStar
-          }
+          onClick={() => {
+            authorizedUserOcto ? starProject(authorizedUserOcto) : loginStar();
+          }}
         >
           {starSvg}
         </button>
