@@ -79,6 +79,7 @@ export default function ReplicadApp() {
         GlobalVariables.currentUser = response.data.login;
         if (GlobalVariables.currentUser) {
           setIsLoggedIn(true);
+          return GlobalVariables.currentUser;
         }
       });
     });
@@ -128,7 +129,6 @@ export default function ReplicadApp() {
               <RunMode
                 props={{
                   isloggedIn: isloggedIn,
-
                   setActiveAtom: setActiveAtom,
                   activeAtom: activeAtom,
                   authorizedUserOcto: authorizedUserOcto,

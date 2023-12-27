@@ -58,6 +58,9 @@ function runMode(props) {
   var authorizedUserOcto = props.props.authorizedUserOcto;
   var setActiveAtom = props.props.setActiveAtom;
   var activeAtom = props.props.activeAtom;
+  var tryLogin = props.props.tryLogin;
+
+  console.log(props.props.isloggedIn);
 
   const windowSize = useWindowSize();
 
@@ -135,7 +138,10 @@ function runMode(props) {
           setAxes={setAxesRun}
         />
       ) : null}
-      <RunNavigation authorizedUserOcto={authorizedUserOcto} />
+      <RunNavigation
+        authorizedUserOcto={authorizedUserOcto}
+        tryLogin={tryLogin}
+      />
       <div className="runContainer">
         <div
           className="jscad-container"

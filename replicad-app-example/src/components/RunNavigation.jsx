@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import ShareDialog from "./ShareDialog.jsx";
+import { useNavigate } from "react-router-dom";
+import GlobalVariables from "./js/globalvariables.js";
 
+//navigation svg icons - turn into key pairs later
 let shareSvg = (
   <svg
     fill="#c4a3d5"
@@ -111,9 +114,12 @@ let billSvg = (
     />
   </svg>
 );
+
 function RunNavigation(props) {
   let [shareDialog, setShareDialog] = useState(false);
   let authorizedUserOcto = props.authorizedUserOcto;
+
+  var navigate = useNavigate();
 
   /**
    * Like a project on github by unique ID.
@@ -123,12 +129,17 @@ function RunNavigation(props) {
 
     var owner = GlobalVariables.currentRepo.owner.login;
     var repoName = GlobalVariables.currentRepo.name;
+
     document.getElementById("Star-button").style.backgroundColor = "gray";
 
-    authorizedUserOcto.rest.activity.starRepoForAuthenticatedUser({
-      owner: owner,
-      repo: repoName,
-    });
+    authorizedUserOcto.rest.activity
+      .starRepoForAuthenticatedUser({
+        owner: owner,
+        repo: repoName,
+      })
+      .then(() => {
+        console.log("starred");
+      });
     //Find out if the project has been starred and unstar if it is
     /* octokit.activity.checkStarringRepo({
                       owner:user,
@@ -146,41 +157,49 @@ function RunNavigation(props) {
 
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function () {
-    if (authorizedUserOcto) {
-      var owner = GlobalVariables.currentRepo.owner.login;
-      var repo = GlobalVariables.currentRepo.name;
-      // if authenticated and it is not your project, make a clone of the project and return to create mode
-      authorizedUserOcto
-        .request("GET /repos/{owner}/{repo}", {
-          owner: owner,
-          repo: repo,
-        })
-        .then((result) => {
-          authorizedUserOcto.rest.repos
-            .createFork({
-              owner: owner,
-              repo: repo,
-            })
-            .then(() => {
-              var activeUser = GlobalVariables.currentUser;
-              // return to create mode
-              authorizedUserOcto
-                .request("GET /repos/{owner}/{repo}", {
-                  owner: activeUser,
-                  repo: repo,
-                })
-                .then((result) => {
-                  GlobalVariables.currentRepo = result.data;
-                  navigate(`/${GlobalVariables.currentRepo.id}`),
-                    { replace: true };
-                });
-            });
-        });
-    } else {
-      props.props.tryLogin().then((result) => {
-        // is this an infinite loop? or if it's not authenticated does it end and that's that?
-        forkProject();
+    console.log("fork function running");
+    var owner = GlobalVariables.currentRepo.owner.login;
+    var repo = GlobalVariables.currentRepo.name;
+    // if authenticated and it is not your project, make a clone of the project and return to create mode
+    authorizedUserOcto
+      .request("GET /repos/{owner}/{repo}", {
+        owner: owner,
+        repo: repo,
+      })
+      .then((result) => {
+        authorizedUserOcto.rest.repos
+          .createFork({
+            owner: owner,
+            repo: repo,
+          })
+          .then(() => {
+            var activeUser = GlobalVariables.currentUser;
+            // return to create mode
+            authorizedUserOcto
+              .request("GET /repos/{owner}/{repo}", {
+                owner: activeUser,
+                repo: repo,
+              })
+              .then((result) => {
+                console.log("fork");
+                GlobalVariables.currentRepo = result.data;
+                navigate(`/${GlobalVariables.currentRepo.id}`),
+                  { replace: true };
+              });
+          });
       });
+  };
+
+  /** Runs if star is clicked but there's no logged in user */
+  const loginStar = function () {
+    if (props.tryLogin()) {
+      starProject(GlobalVariables.currentRepo.id);
+    }
+  };
+  /** Runs if fork is clicked but there's no logged in user */
+  const loginFork = function () {
+    if (props.tryLogin()) {
+      forkProject();
     }
   };
 
@@ -200,16 +219,18 @@ function RunNavigation(props) {
         <button
           className=" run-navigation-button"
           id="Fork-button"
-          onClick={forkProject}
+          onClick={authorizedUserOcto ? forkProject : loginFork}
         >
           {forkSvg}
         </button>
         <button
           className=" run-navigation-button"
           id="Star-button"
-          onClick={() => {
-            starProject(GlobalVariables.currentRepo.id);
-          }}
+          onClick={
+            authorizedUserOcto
+              ? starProject(GlobalVariables.currentRepo.id)
+              : loginStar
+          }
         >
           {starSvg}
         </button>
