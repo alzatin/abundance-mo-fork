@@ -3,8 +3,8 @@ import GlobalVariables from "./js/globalvariables.js";
 import { Link } from "react-router-dom";
 import globalvariables from "./js/globalvariables.js";
 
-function ToggleRunCreate({ run }) {
-  const [runModeon, setRunMode] = useState(run);
+function ToggleRunCreate(props) {
+  const [runModeon, setRunMode] = useState(props.run);
 
   const handleChange = () => {
     setRunMode(!runModeon);
@@ -71,7 +71,7 @@ function ToggleRunCreate({ run }) {
         <>
           <Link
             key={GlobalVariables.currentRepo.id}
-            to={`/${GlobalVariables.currentRepo.id}`}
+            to={props.isItOwned ? `/${GlobalVariables.currentRepo.id}` : `/`}
             onClick={handleChange}
           >
             <label title="Create/Run Mode" className="switch_run">
@@ -88,7 +88,7 @@ function ToggleRunCreate({ run }) {
                   height="8"
                   viewBox="0 0 9 5"
                   xmlns="http://www.w3.org/2000/svg"
-                  class="leva-c-cHvNmv"
+                  className="leva-c-cHvNmv"
                   style={{
                     transform: "rotate(90deg)",
                     alignSelf: "center",
@@ -106,7 +106,7 @@ function ToggleRunCreate({ run }) {
                       "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
                   }}
                 >
-                  Create Mode
+                  {props.isItOwned ? "Create Mode" : "Browse Projects"}
                 </p>
               </button>
             </label>

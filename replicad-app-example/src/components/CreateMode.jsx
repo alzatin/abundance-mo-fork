@@ -37,37 +37,23 @@ function CreateMode(props) {
   let mesh = props.displayProps.mesh;
 
   if (authorizedUserOcto) {
-    return (
-      <>
-        <div id="headerBar">
-          <img
-            className="thumnail-logo"
-            src="/imgs/maslow-logo.png"
-            alt="logo"
-          />
-        </div>
-        <ToggleRunCreate run={false} />
-        <TopMenu authorizedUserOcto={authorizedUserOcto} />
-        <FlowCanvas
-          props={{ setActiveAtom: setActiveAtom }}
-          displayProps={{
-            mesh: mesh,
-            setMesh: setMesh,
-            size: size,
-            cad: cad,
-          }}
-        />
-        <div className="parent flex-parent" id="lowerHalf">
-          {activeAtom ? (
-            <ParamsEditor
-              activeAtom={activeAtom}
-              setActiveAtom={setActiveAtom}
-              setGrid={setGrid}
-              setAxes={setAxes}
+    if (
+      GlobalVariables.currentRepo.owner.login ==
+      GlobalVariables.currentRepo.owner.login
+    ) {
+      return (
+        <>
+          <div id="headerBar">
+            <img
+              className="thumnail-logo"
+              src="/imgs/maslow-logo.png"
+              alt="logo"
             />
-          ) : null}
-          <LowerHalf
-            props={{ gridParam: gridParam, axesParam: axesParam }}
+          </div>
+          <ToggleRunCreate run={false} />
+          <TopMenu authorizedUserOcto={authorizedUserOcto} />
+          <FlowCanvas
+            props={{ setActiveAtom: setActiveAtom }}
             displayProps={{
               mesh: mesh,
               setMesh: setMesh,
@@ -75,9 +61,30 @@ function CreateMode(props) {
               cad: cad,
             }}
           />
-        </div>
-      </>
-    );
+          <div className="parent flex-parent" id="lowerHalf">
+            {activeAtom ? (
+              <ParamsEditor
+                activeAtom={activeAtom}
+                setActiveAtom={setActiveAtom}
+                setGrid={setGrid}
+                setAxes={setAxes}
+              />
+            ) : null}
+            <LowerHalf
+              props={{ gridParam: gridParam, axesParam: axesParam }}
+              displayProps={{
+                mesh: mesh,
+                setMesh: setMesh,
+                size: size,
+                cad: cad,
+              }}
+            />
+          </div>
+        </>
+      );
+    } else {
+      navigate(`/run/${GlobalVariables.currentRepo.id}`);
+    }
   } else {
     /** get repository from github by the id in the url */
 
@@ -87,7 +94,14 @@ function CreateMode(props) {
     octokit.request("GET /repositories/:id", { id }).then((result) => {
       GlobalVariables.currentRepoName = result.data.name;
       GlobalVariables.currentRepo = result.data;
-      navigate(`/run/${GlobalVariables.currentRepo.id}`);
+      props.props
+        .tryLogin()
+        .then((result) => {
+          navigate(`/${GlobalVariables.currentRepo.id}`);
+        })
+        .catch((error) => {
+          navigate(`/run/${GlobalVariables.currentRepo.id}`);
+        });
     });
 
     //tryLogin();

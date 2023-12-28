@@ -112,7 +112,6 @@ export default function ReplicadApp() {
                 props={{
                   activeAtom: activeAtom,
                   setActiveAtom: setActiveAtom,
-
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
                 }}

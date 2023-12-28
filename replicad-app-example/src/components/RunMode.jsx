@@ -125,7 +125,11 @@ function runMode(props) {
 
   return (
     <>
-      {isItOwned ? <ToggleRunCreate run={true} /> : null}
+      <ToggleRunCreate
+        run={true}
+        authorizedUserOcto={authorizedUserOcto}
+        isItOwned={isItOwned}
+      />
       {activeAtom ? (
         <ParamsEditor
           run={true}
