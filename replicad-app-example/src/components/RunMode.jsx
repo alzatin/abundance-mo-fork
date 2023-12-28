@@ -143,6 +143,10 @@ function runMode(props) {
         authorizedUserOcto={authorizedUserOcto}
         tryLogin={tryLogin}
       />
+      <div className="info_run_div">
+        <p>{"Project Name: " + globalvariables.currentRepo.name}</p>
+        <p>{"Repo Owner: " + globalvariables.currentRepo.owner.login}</p>
+      </div>
       <div className="runContainer">
         <div
           className="jscad-container"

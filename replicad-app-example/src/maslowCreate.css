@@ -864,3 +864,14 @@ Sidebar navigation
 .share-dialog button:hover {
   background-color: #c4a3d5b0;
 }
+
+/*info div for run repository*/
+.info_run_div {
+  border: 2px solid #c4a3d54c;
+  padding: 10px 20px;
+  position: absolute;
+  top: 80%;
+  right: 20%;
+  z-index: 4;
+  color: #c4a3d5;
+}
