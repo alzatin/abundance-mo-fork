@@ -97,24 +97,24 @@ function runMode(props) {
   };
 
   useEffect(() => {
-    if (!globalvariables.currentRepo) {
-      var octokit = new Octokit();
-      octokit.request("GET /repositories/:id", { id }).then((result) => {
-        globalvariables.currentRepo = result.data;
-        /** Only run loadproject() if the project is different from what is already loaded  */
-        if (globalvariables.currentRepo !== GlobalVariables.loadedRepo) {
-          //Load a blank project
-          GlobalVariables.topLevelMolecule = new Molecule({
-            x: 0,
-            y: 0,
-            topLevel: true,
-            atomType: "Molecule",
-          });
-          GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-          loadRunProject(GlobalVariables.currentRepo);
-        }
-      });
-    }
+    var octokit = new Octokit();
+    octokit.request("GET /repositories/:id", { id }).then((result) => {
+      globalvariables.currentRepo = result.data;
+      console.log(GlobalVariables.loadedRepo);
+      /** Only run loadproject() if the project is different from what is already loaded  */
+      if (globalvariables.currentRepo !== GlobalVariables.loadedRepo) {
+        //Load a blank project
+        GlobalVariables.topLevelMolecule = new Molecule({
+          x: 0,
+          y: 0,
+          topLevel: true,
+          atomType: "Molecule",
+        });
+        GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+        loadRunProject(GlobalVariables.currentRepo);
+      }
+    });
+
     if (
       GlobalVariables.currentRepo &&
       GlobalVariables.currentRepo.owner.login == globalvariables.currentUser

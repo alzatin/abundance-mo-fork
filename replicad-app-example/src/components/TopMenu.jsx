@@ -258,7 +258,6 @@ function TopMenu(props) {
     return (
       <>
         <div className="save-bar">
-          <h1>Saving</h1>
           <div className="progress">
             <div
               className="progress-done"
@@ -267,7 +266,7 @@ function TopMenu(props) {
             >
               {props.saveState !== 100
                 ? props.saveState + "%"
-                : "Project Saved"}
+                : "Project Saved!"}
             </div>
           </div>
         </div>

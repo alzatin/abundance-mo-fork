@@ -70,6 +70,7 @@ function CreateMode(props) {
                 setAxes={setAxes}
               />
             ) : null}
+
             <LowerHalf
               props={{ gridParam: gridParam, axesParam: axesParam }}
               displayProps={{

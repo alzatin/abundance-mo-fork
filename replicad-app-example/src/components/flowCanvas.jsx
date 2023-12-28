@@ -320,6 +320,19 @@ export default memo(function FlowCanvas(props) {
         onKeyDown={keyDown}
       ></canvas>
       <div>
+        <p
+          style={{
+            position: "absolute",
+            zIndex: "5",
+            top: "1%",
+            right: "5%",
+            color: "rgb(255 255 255 / 34%)",
+          }}
+        >
+          {GlobalVariables.currentRepo.name}
+        </p>
+      </div>
+      <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>
 
         <div id="canvas_menu">

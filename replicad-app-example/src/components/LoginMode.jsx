@@ -526,7 +526,7 @@ function LoginMode(props) {
   const [userBrowsing, setBrowsing] = useState(false);
   var currentUser = GlobalVariables.currentUser;
   let popUpContent;
-
+  console.log(props.authorizedUserOcto);
   if (props.authorizedUserOcto && !userBrowsing) {
     popUpContent = (
       <ShowProjects

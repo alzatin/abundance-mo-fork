@@ -244,7 +244,6 @@ export default class Molecule extends Atom {
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
       if (atom.atomType == "Input" && atom.name == targetName) {
-        console.log(atom.name); //When there is a match
         atom.updateValue(); //Tell that input to update it's value
       }
     });
@@ -279,7 +278,6 @@ export default class Molecule extends Atom {
    * Called when this molecules value changes
    */
   propagate() {
-    console.log("propagate in inside molecule");
     //Set the output nodes with type 'geometry' to be the generated code
     if (this.simplify) {
       try {
@@ -310,7 +308,6 @@ export default class Molecule extends Atom {
       if (typeof this.readOutputAtomPath() == "number") {
         this.output.setValue(this.readOutputAtomPath());
       } else {
-        console.log(this.path);
         this.output.setValue(this.path);
       }
       this.output.ready = true;
