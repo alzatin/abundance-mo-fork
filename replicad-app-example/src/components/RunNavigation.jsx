@@ -126,7 +126,7 @@ function RunNavigation(props) {
    */
   const starProject = function (authorizedUserOcto) {
     //Find out the information of who owns the project we are trying to like
-    console.log("star is running");
+
     var owner = GlobalVariables.currentRepo.owner.login;
     var repoName = GlobalVariables.currentRepo.name;
 
@@ -157,8 +157,6 @@ function RunNavigation(props) {
 
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function (authorizedUserOcto) {
-    console.log(authorizedUserOcto);
-    console.log("fork function running");
     var owner = GlobalVariables.currentRepo.owner.login;
     var repo = GlobalVariables.currentRepo.name;
     // if authenticated and it is not your project, make a clone of the project and return to create mode
@@ -182,7 +180,6 @@ function RunNavigation(props) {
                 repo: repo,
               })
               .then((result) => {
-                console.log("fork");
                 GlobalVariables.currentRepo = result.data;
                 navigate(`/${GlobalVariables.currentRepo.id}`),
                   { replace: true };

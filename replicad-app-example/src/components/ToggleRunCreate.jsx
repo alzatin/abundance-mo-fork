@@ -52,7 +52,7 @@ function ToggleRunCreate({ run }) {
                   height="8"
                   viewBox="0 0 9 5"
                   xmlns="http://www.w3.org/2000/svg"
-                  class="leva-c-cHvNmv"
+                  className="leva-c-cHvNmv"
                   style={{
                     transform: "rotate(-90deg)",
                     alignSelf: "center",

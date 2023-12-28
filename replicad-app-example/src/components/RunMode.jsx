@@ -60,8 +60,6 @@ function runMode(props) {
   var activeAtom = props.props.activeAtom;
   var tryLogin = props.props.tryLogin;
 
-  console.log(props.props.isloggedIn);
-
   const windowSize = useWindowSize();
 
   var navigate = useNavigate();
@@ -105,7 +103,6 @@ function runMode(props) {
         globalvariables.currentRepo = result.data;
         /** Only run loadproject() if the project is different from what is already loaded  */
         if (globalvariables.currentRepo !== GlobalVariables.loadedRepo) {
-          console.log("new repo is being loaded");
           //Load a blank project
           GlobalVariables.topLevelMolecule = new Molecule({
             x: 0,

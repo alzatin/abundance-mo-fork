@@ -20,7 +20,6 @@ THREE.Object3D.DefaultUp.set(0, 0, 1);
 export default function ThreeContext({ children, ...props }) {
   const dpr = Math.min(window.devicePixelRatio, 2);
 
-  console.log(props);
   return (
     <Suspense fallback={null}>
       <Canvas

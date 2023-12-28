@@ -596,7 +596,6 @@ export default class Molecule extends Atom {
    * @param {object} values - An array of values to apply to this molecule before de-serializing it's contents. Used by githubmolecules to set top level correctly
    */
   deserialize(json, values = {}, forceBeginPropagation = false) {
-    console.log(this);
     //Find the target molecule in the list
     let promiseArray = [];
 
