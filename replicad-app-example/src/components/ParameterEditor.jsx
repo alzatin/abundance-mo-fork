@@ -44,7 +44,7 @@ export default observer(function ParamsEditor({
         /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
         if (input.valueType == "geometry") {
           inputParams[input.name] = {
-            value: checkConnector(),
+            value: input.value,
             disabled: true,
           };
         } else {
@@ -72,7 +72,7 @@ export default observer(function ParamsEditor({
         return activeAtom.output.connectors.length > 0;
       };
       outputParams[output.uniqueID] = {
-        value: checkConnector(),
+        value: output.value,
         label: "Output " + output.name,
         disabled: true,
       };

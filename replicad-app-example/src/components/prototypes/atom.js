@@ -619,7 +619,6 @@ export default class Atom {
    * Displays the atom in 3D and sets the output.
    */
   displayAndPropagate() {
-    console.log("is this running?");
     //If this has an output write to it
     if (this.output) {
       this.output.setValue(this.uniqueID);
@@ -705,8 +704,6 @@ export default class Atom {
    */
   sendToRender() {
     //Send code to JSxCAD to render
-    console.log("Send to render ran");
-    console.log(this.uniqueID);
     try {
       GlobalVariables.writeToDisplay(this.uniqueID);
     } catch (err) {

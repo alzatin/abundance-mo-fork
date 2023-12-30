@@ -100,7 +100,6 @@ function runMode(props) {
     var octokit = new Octokit();
     octokit.request("GET /repositories/:id", { id }).then((result) => {
       globalvariables.currentRepo = result.data;
-      console.log(GlobalVariables.loadedRepo);
       /** Only run loadproject() if the project is different from what is already loaded  */
       if (globalvariables.currentRepo !== GlobalVariables.loadedRepo) {
         //Load a blank project

@@ -66,6 +66,7 @@ export default memo(function FlowCanvas(props) {
   useEffect(() => {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running");
+      console.log(id);
       cad.generateDisplayMesh(id).then((m) => setMesh(m));
     };
 

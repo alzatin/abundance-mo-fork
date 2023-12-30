@@ -77,8 +77,21 @@ export default class Output extends Atom {
     if (this.inputs.every((x) => x.ready)) {
       this.decreaseToProcessCountByOne();
       this.path = this.findIOValue("number or geometry");
+      this.value = this.path;
       //Propagate passes the updated value on while parent.updateValue is called when one of the molecule inputs changes
       this.parent.propagate();
+    }
+  }
+
+  /**
+   * Sends output value to render instead of uniqueID
+   */
+  sendToRender() {
+    //Send code to JSxCAD to render
+    try {
+      GlobalVariables.writeToDisplay(this.value);
+    } catch (err) {
+      this.setAlert(err);
     }
   }
 
