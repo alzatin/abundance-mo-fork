@@ -4,8 +4,11 @@ import ReplicadMesh from "./ReplicadMesh.jsx";
 import GlobalVariables from "./js/globalvariables.js";
 import globalvariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-import ShareDialog from "./ShareDialog.jsx";
+
 import ToggleRunCreate from "./ToggleRunCreate.jsx";
+import ParamsEditor from "./ParameterEditor.jsx";
+import RunNavigation from "./RunNavigation.jsx";
+import Molecule from "./molecules/molecule.js";
 import {
   BrowserRouter as Router,
   Link,
@@ -48,149 +51,106 @@ function runMode(props) {
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
 
+  const [gridParamRun, setGridRun] = useState(true);
+  const [axesParamRun, setAxesRun] = useState(true);
+  const [isItOwned, setOwned] = useState(false);
+
   var authorizedUserOcto = props.props.authorizedUserOcto;
+  var setActiveAtom = props.props.setActiveAtom;
+  var activeAtom = props.props.activeAtom;
+  var tryLogin = props.props.tryLogin;
+
   const windowSize = useWindowSize();
 
   var navigate = useNavigate();
+  const { id } = useParams();
 
-  /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
-  const forkProject = async function () {
-    if (props.props.authorizedUserOcto) {
-      var owner = GlobalVariables.currentRepo.owner.login;
-      var repo = GlobalVariables.currentRepo.name;
-      // if authenticated and it is not your project, make a clone of the project and return to create mode
-      props.props.authorizedUserOcto
-        .request("GET /repos/{owner}/{repo}", {
-          owner: owner,
-          repo: repo,
-        })
-        .then((result) => {
-          props.props.authorizedUserOcto.rest.repos
-            .createFork({
-              owner: owner,
-              repo: repo,
-            })
-            .then(() => {
-              var activeUser = GlobalVariables.currentUser;
-              // return to create mode
-              props.props.authorizedUserOcto
-                .request("GET /repos/{owner}/{repo}", {
-                  owner: activeUser,
-                  repo: repo,
-                })
-                .then((result) => {
-                  props.props.setOwned(true);
-                  GlobalVariables.currentRepo = result.data;
-                  navigate(`/${GlobalVariables.currentRepo.id}`),
-                    { replace: true };
-                });
-            });
-        });
-    } else {
-      props.props.tryLogin().then((result) => {
-        // is this an infinite loop? or if it's not authenticated does it end and that's that?
-        forkProject();
+  // Loads project
+  const loadRunProject = function (project) {
+    GlobalVariables.loadedRepo = project;
+    GlobalVariables.currentRepoName = project.name;
+    GlobalVariables.currentRepo = project;
+    GlobalVariables.totalAtomCount = 0;
+    GlobalVariables.numberOfAtomsToLoad = 0;
+    GlobalVariables.startTime = new Date().getTime();
+
+    var octokit = new Octokit();
+
+    octokit
+      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
+        owner: project.owner.login,
+        repo: project.name,
+      })
+      .then((response) => {
+        //content will be base64 encoded
+        let rawFile = JSON.parse(atob(response.data.content));
+
+        if (rawFile.filetypeVersion == 1) {
+          GlobalVariables.topLevelMolecule.deserialize(rawFile);
+          setActiveAtom(GlobalVariables.topLevelMolecule);
+        } else {
+          GlobalVariables.topLevelMolecule.deserialize(
+            convertFromOldFormat(rawFile)
+          );
+        }
       });
-    }
   };
 
-  /**
-   * Like a project on github by unique ID.
-   */
-  const starProject = function (id) {
-    //Find out the information of who owns the project we are trying to like
-
-    var owner = GlobalVariables.currentRepo.owner.login;
-    var repoName = GlobalVariables.currentRepo.name;
-    document.getElementById("Star-button").style.backgroundColor = "gray";
-
-    authorizedUserOcto.rest.activity.starRepoForAuthenticatedUser({
-      owner: owner,
-      repo: repoName,
-    });
-    //Find out if the project has been starred and unstar if it is
-    /* octokit.activity.checkStarringRepo({
-                    owner:user,
-                    repo: repoName
-                }).then(() => { 
-                    var button= document.getElementById("Star-button")
-                    button.setAttribute("class","browseButton")
-                    button.innerHTML = "Star"
-                    octokit.activity.unstarRepo({
-                        owner: user,
-                        repo: repoName
-                    })
-                })*/
-  };
-
-  /** get repository from github by the id in the url */
-  const getProjectById = () => {
-    const { id } = useParams();
+  useEffect(() => {
     var octokit = new Octokit();
     octokit.request("GET /repositories/:id", { id }).then((result) => {
-      return result.data.name;
+      globalvariables.currentRepo = result.data;
+      /** Only run loadproject() if the project is different from what is already loaded  */
+      if (globalvariables.currentRepo !== GlobalVariables.loadedRepo) {
+        //Load a blank project
+        GlobalVariables.topLevelMolecule = new Molecule({
+          x: 0,
+          y: 0,
+          topLevel: true,
+          atomType: "Molecule",
+        });
+        GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+        loadRunProject(GlobalVariables.currentRepo);
+      }
     });
-  };
 
-  if (!globalvariables.currentRepo) {
-    globalvariables.currentRepoName = getProjectById();
-  }
+    if (
+      GlobalVariables.currentRepo &&
+      GlobalVariables.currentRepo.owner.login == globalvariables.currentUser
+    ) {
+      setOwned(true);
+    }
+  }, []);
 
   return (
     <>
-      <ShareDialog />
       <ToggleRunCreate
-        runModeon={props.props.runModeon}
-        setRunMode={props.props.setRunMode}
+        run={true}
+        authorizedUserOcto={authorizedUserOcto}
+        isItOwned={isItOwned}
       />
+      {activeAtom ? (
+        <ParamsEditor
+          run={true}
+          setActiveAtom={setActiveAtom}
+          activeAtom={activeAtom}
+          setGrid={setGridRun}
+          setAxes={setAxesRun}
+        />
+      ) : null}
+      <RunNavigation
+        authorizedUserOcto={authorizedUserOcto}
+        tryLogin={tryLogin}
+      />
+      <div className="info_run_div">
+        <p>{"Project Name: " + globalvariables.currentRepo.name}</p>
+        <p>{"Repo Owner: " + globalvariables.currentRepo.owner.login}</p>
+      </div>
       <div className="runContainer">
-        <div className="runSideBar">
-          <p className="molecule_title">{globalvariables.currentRepoName}</p>
-          <p className="atom_description">Description</p>
-          <div className="runSideBarDiv">
-            <div className="sidebar-subitem">
-              <button className=" browseButton" id="BillOfMaterials-button">
-                Bill Of Materials
-              </button>
-              {props.props.authorizedUserOcto ? (
-                <button
-                  className=" browseButton"
-                  id="Fork-button"
-                  onClick={forkProject}
-                >
-                  Fork
-                </button>
-              ) : null}
-
-              <button
-                className=" browseButton"
-                id="Share-button"
-                onClick={() => {
-                  var shareDialog = document.querySelector("dialog");
-                  shareDialog.showModal();
-                }}
-              >
-                Share
-              </button>
-              <button
-                className=" browseButton"
-                id="Star-button"
-                onClick={() => {
-                  starProject(GlobalVariables.currentRepo.id);
-                }}
-              >
-                Star
-              </button>
-            </div>
-            <Link to={`/`}>
-              <button>Return to browsing</button>
-            </Link>
-          </div>
-        </div>
         <div
           className="jscad-container"
           style={{
-            width: windowSize.width * 0.6,
+            width: windowSize.width,
             height: windowSize.height,
           }}
         >
@@ -202,7 +162,7 @@ function runMode(props) {
             }}
           >
             {mesh ? (
-              <ThreeContext>
+              <ThreeContext gridParam={gridParamRun} axesParam={axesParamRun}>
                 <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
               </ThreeContext>
             ) : (
@@ -217,11 +177,10 @@ function runMode(props) {
               </div>
             )}
           </section>
-          <div id="arrow-up-menu" className="arrow-up"></div>
-          <div id="viewer_bar"></div>
         </div>
       </div>
     </>
   );
 }
+
 export default runMode;

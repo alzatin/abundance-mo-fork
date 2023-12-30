@@ -22,8 +22,8 @@ body {
 
 #headerBar {
   position: absolute;
-  bottom: 10px;
-  right: 20px;
+  top: 15px;
+  right: 15px;
   z-index: 1000;
 }
 
@@ -73,44 +73,11 @@ body {
   opacity: 0.2;
 }
 
-.switch {
-  position: fixed;
-  bottom: 50.5%;
-  left: 1%;
-  width: 30px;
-  height: 15px;
-}
-
 /* Hide default HTML checkbox */
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
-}
-
-/* The slider */
-.sliderAtom {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-}
-
-.sliderAtom:before {
-  position: absolute;
-  content: "";
-  height: 15px;
-  width: 15px;
-  left: 0px;
-  bottom: 0px;
-  background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
 }
 
 input:checked + .sliderAtom {
@@ -181,6 +148,7 @@ input:checked + .sliderAtom:before {
 }
 
 #flow-canvas {
+  background-color: #3f4243;
   margin-top: 0;
   flex-shrink: 2;
   padding-bottom: 10px;
@@ -786,67 +754,124 @@ Sidebar navigation
 /* The toggle switch between run and create */
 /* The switch - the box around the slider */
 .switch {
-  position: relative;
-  display: inline-block;
+  position: fixed;
   width: 45px;
   height: 24px;
-  top: 340px;
+  top: 47%;
+  right: 70px;
+  z-index: 2;
+  font-size: 11px;
 }
 
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+/* The switch - the box around the slider */
+.switch_run {
+  position: fixed;
+  width: 45px;
+  height: 24px;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  font-size: 11px;
 }
 
-/* The slider */
-.slider {
+/*new leva sidebar */
+.paramEditorDiv {
   position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #dd92db;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  top: 52%;
+  left: 10px;
+  width: 280px;
+  z-index: 3;
 }
 
-.slider:before {
+.paramEditorDivRun {
   position: absolute;
-  content: "";
-  height: 19px;
-  width: 20px;
-  left: 4px;
-  bottom: 3px;
-  background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  top: 10%;
+  right: 10px;
+  width: 280px;
+  z-index: 3;
 }
 
-input:checked + .slider {
-  background-color: #534857;
-  -webkit-transform: translateY(360px);
-  -ms-transform: translateY(360px);
-  transform: translateY(360px);
+.gridEditorDiv {
+  position: absolute;
+  top: 47%;
+  left: 10px;
+  width: 280px;
+  z-index: 3;
+}
+.gridEditorDivRun {
+  position: absolute;
+  top: 5%;
+  right: 10px;
+  width: 280px;
+  z-index: 3;
 }
 
-input:focus + .slider {
-  box-shadow: 0 0 1px #534857;
-}
+/* Run Navigation */
 
-input:checked + .slider:before {
-  -webkit-transform: translateX(17px);
-  -ms-transform: translateX(17px);
-  transform: translateX(17px);
-}
+.run-navigation {
+  position: absolute;
+  width: 60px;
 
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
+  top: 200px;
+  left: 100px;
+  z-index: 3;
 }
-
-.slider.round:before {
+.run-navigation-button {
+  border: 2px solid #e5cbf2b2;
   border-radius: 50%;
+
+  width: 60px;
+  height: 60px;
+  margin-bottom: 50px;
+}
+
+.run-navigation-button:hover {
+  cursor: pointer;
+  border: 2px solid #e3bbf7;
+  background-color: #3f4243ef;
+}
+
+.thumnail-logo-run {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+/* Share Dialog */
+
+.share-dialog {
+  font-family: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
+  text-transform: uppercase;
+  position: fixed;
+  color: #3f4243;
+  background-color: #ededed98;
+  width: 600px;
+  border: 3px solid #c4a3d5;
+  border-radius: 10px;
+  top: 30%;
+  z-index: 4;
+}
+.share-dialog button {
+  margin: 10px;
+  text-transform: uppercase;
+  background-color: #c4a3d549;
+  border: 2px solid #c4a3d5;
+  width: 100px;
+  border-radius: 3px;
+}
+.share-dialog button:hover {
+  background-color: #c4a3d5b0;
+}
+
+/*info div for run repository*/
+.info_run_div {
+  border: 2px solid #c4a3d54c;
+  padding: 10px 20px;
+  position: absolute;
+  top: 80%;
+  right: 20%;
+  z-index: 4;
+  color: #c4a3d5;
 }

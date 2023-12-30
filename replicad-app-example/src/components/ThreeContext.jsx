@@ -2,6 +2,8 @@ import React, { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
+import InfiniteGrid from "./InfiniteGrid.jsx";
+import Controls from "./ThreeControls.jsx";
 
 // We change the default orientation - threejs tends to use Y are the height,
 // while replicad uses Z. This is mostly a representation default.
@@ -28,16 +30,12 @@ export default function ThreeContext({ children, ...props }) {
         dpr={dpr}
         frameloop="demand"
         camera={{ position: [20, 40, 50] }}
-        {...props}
       >
-        <OrbitControls />
+        {props.gridParam ? <InfiniteGrid /> : null}
+        {props.axesParam ? <Controls enableDamping={false}></Controls> : null}
         <ambientLight />
         <pointLight position={[100, 100, 100]} />
-        <axesHelper args={[5]} />
-        <gridHelper
-          rotation={[Math.PI / 2, 0, 0]}
-          args={[1000, 100, 0xff0000, "teal"]}
-        ></gridHelper>
+
         {children}
       </Canvas>
     </Suspense>

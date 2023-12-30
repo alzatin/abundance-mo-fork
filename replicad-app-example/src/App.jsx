@@ -7,6 +7,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useLocation,
   useParams,
   useNavigate,
 } from "react-router-dom";
@@ -52,34 +53,36 @@ export default function ReplicadApp() {
   }, [size]);
 
   const [isloggedIn, setIsLoggedIn] = useState(false);
-  const [isItOwned, setOwned] = useState(false);
-  const [runModeon, setRunMode] = useState(false);
+  const [activeAtom, setActiveAtom] = useState(null);
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
   const tryLogin = function () {
-    // Initialize with OAuth.io app public key
-    if (window.location.href.includes("private")) {
-      OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
-    } else {
-      OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
-    }
+    return new Promise((resolve, reject) => {
+      // Initialize with OAuth.io app public key
+      if (window.location.href.includes("private")) {
+        OAuth.initialize("6CQQE8MMCBFjdWEjevnTBMCQpsw"); //app public key for repo scope
+      } else {
+        OAuth.initialize("BYP9iFpD7aTV9SDhnalvhZ4fwD8"); //app public key for public_repo scope
+      }
 
-    // Use popup for oauth
-    OAuth.popup("github").then((github) => {
-      /**
-       * Oktokit object to access github
-       * @type {object}
-       */
-      authorizedUserOcto = new Octokit({
-        auth: github.access_token,
-      });
-      //getting current user post authetication
-      authorizedUserOcto.request("GET /user", {}).then((response) => {
-        GlobalVariables.currentUser = response.data.login;
-        if (GlobalVariables.currentUser) {
-          setIsLoggedIn(true);
-        }
+      // Use popup for oauth
+      OAuth.popup("github").then((github) => {
+        /**
+         * Oktokit object to access github
+         * @type {object}
+         */
+        authorizedUserOcto = new Octokit({
+          auth: github.access_token,
+        });
+        //getting current user post authetication
+        authorizedUserOcto.request("GET /user", {}).then((response) => {
+          GlobalVariables.currentUser = response.data.login;
+          if (GlobalVariables.currentUser) {
+            setIsLoggedIn(true);
+            resolve(authorizedUserOcto);
+          }
+        });
       });
     });
   };
@@ -95,7 +98,6 @@ export default function ReplicadApp() {
             path="/"
             element={
               <LoginMode
-                setOwned={setOwned}
                 authorizedUserOcto={authorizedUserOcto}
                 tryLogin={tryLogin}
                 setIsLoggedIn={setIsLoggedIn}
@@ -108,12 +110,10 @@ export default function ReplicadApp() {
             element={
               <CreateMode
                 props={{
-                  isItOwned: isItOwned,
-                  setOwned: setOwned,
+                  activeAtom: activeAtom,
+                  setActiveAtom: setActiveAtom,
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
-                  runModeon: runModeon,
-                  setRunMode: setRunMode,
                 }}
                 displayProps={{
                   mesh: mesh,
@@ -129,12 +129,11 @@ export default function ReplicadApp() {
             element={
               <RunMode
                 props={{
-                  isItOwned: isItOwned,
-                  setOwned: setOwned,
+                  isloggedIn: isloggedIn,
+                  setActiveAtom: setActiveAtom,
+                  activeAtom: activeAtom,
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
-                  runModeon: runModeon,
-                  setRunMode: setRunMode,
                 }}
                 displayProps={{
                   mesh: mesh,

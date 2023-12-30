@@ -7,6 +7,7 @@ function TopMenu(props) {
   const [currentMoleculeTop, setTop] = useState(false);
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
+  let [shareDialog, setShareDialog] = useState(false);
   const navigate = useNavigate();
 
   // objects for navigation items in the top menu
@@ -56,8 +57,7 @@ function TopMenu(props) {
        */
       id: "Share",
       buttonFunc: () => {
-        var shareDialog = document.querySelector("dialog");
-        shareDialog.showModal();
+        setShareDialog(true);
       },
       icon: "Open.svg",
     },
@@ -258,7 +258,6 @@ function TopMenu(props) {
     return (
       <>
         <div className="save-bar">
-          <h1>Saving</h1>
           <div className="progress">
             <div
               className="progress-done"
@@ -267,7 +266,7 @@ function TopMenu(props) {
             >
               {props.saveState !== 100
                 ? props.saveState + "%"
-                : "Project Saved"}
+                : "Project Saved!"}
             </div>
           </div>
         </div>
@@ -343,7 +342,7 @@ function TopMenu(props) {
           setSavePopUp={setSavePopUp}
         />
       ) : null}
-      <ShareDialog />
+      <ShareDialog shareDialog={shareDialog} setShareDialog={setShareDialog} />
       <TopLevel currentMoleculeTop={currentMoleculeTop} setTop={setTop} />
       <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>

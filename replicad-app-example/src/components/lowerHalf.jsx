@@ -42,19 +42,22 @@ export default memo(function LowerHalf(props) {
       <div
         className="jscad-container"
         style={{
-          width: windowSize.width * 0.6,
-          height: windowSize.height * 0.5,
+          width: windowSize.width * 1,
+          height: windowSize.height * 0.6,
         }}
       >
         <section
           id="threeDView"
           style={{
-            width: windowSize.width * 0.6,
-            height: windowSize.height * 0.5,
+            width: windowSize.width * 1,
+            height: windowSize.height * 0.6,
           }}
         >
           {mesh ? (
-            <ThreeContext>
+            <ThreeContext
+              gridParam={props.props.gridParam}
+              axesParam={props.props.axesParam}
+            >
               <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
             </ThreeContext>
           ) : (

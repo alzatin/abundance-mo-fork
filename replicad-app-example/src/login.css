@@ -642,9 +642,10 @@
   display: flex;
   align-items: center;
   position: absolute;
-  left: 70%;
+  right: 1%;
+  top: 40%;
   border-radius: 5px;
-  width: 400px;
+  width: 300px;
 }
 .progress {
   background-color: #d8d8d8;
