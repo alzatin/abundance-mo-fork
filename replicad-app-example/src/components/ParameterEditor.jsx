@@ -40,49 +40,23 @@ export default observer(function ParamsEditor({
         const checkConnector = () => {
           return input.connectors.length > 0;
         };
-
         /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
-        if (input.valueType == "geometry") {
+        if (input.name !== "geometry") {
           inputParams[input.name] = {
             value: input.value,
-            disabled: true,
-          };
-        } else {
-          inputParams[input.name] = {
-            value: input.value,
+            disabled: checkConnector(),
           };
         }
       });
-    }
-    /** Runs through active atom output and checks if it's connected to something*/
-    if (activeAtom.output) {
-      let output = activeAtom.output;
-      if (activeAtom.atomType == "Input") {
-        inputNames[activeAtom.name] = {
-          value: activeAtom.name,
-          label: activeAtom.name,
-          disabled: false,
-          onChange: (value) => {
-            activeAtom.name = value;
-          },
-        };
-      }
-
-      const checkConnector = () => {
-        return activeAtom.output.connectors.length > 0;
-      };
-      outputParams[output.uniqueID] = {
-        value: output.value,
-        label: "Output " + output.name,
-        disabled: true,
-      };
     }
   }
   /** Handles parameter change button click and updates active atom inputs */
   function handleParamChange(newParams) {
     activeAtom.inputs.map((input) => {
-      input.setValue(newParams[input.name]);
-      activeAtom.sendToRender();
+      if (input.name !== "geometry") {
+        input.setValue(newParams[input.name]);
+        activeAtom.sendToRender();
+      }
     });
   }
   const outputParamsConfig = useMemo(() => {
