@@ -23,14 +23,31 @@ import {
 function CreateMode(props) {
   const navigate = useNavigate();
 
-  const [gridParam, setGrid] = useState(true);
-  const [axesParam, setAxes] = useState(true);
-  const [saveState, setSaveState] = useState(0);
-  const [savePopUp, setSavePopUp] = useState(false);
-
   let authorizedUserOcto = props.props.authorizedUserOcto;
   let activeAtom = props.props.activeAtom;
   let setActiveAtom = props.props.setActiveAtom;
+
+  /** State for grid and axes parameters */
+  const [gridParam, setGrid] = useState(true);
+  const [axesParam, setAxes] = useState(true);
+  /** State for save progress bar */
+  const [saveState, setSaveState] = useState(0);
+  const [savePopUp, setSavePopUp] = useState(false);
+
+  /** State for top level molecule */
+  const [currentMoleculeTop, setTop] = useState(false);
+
+  /** Checks if activeAtom is topLevel to render goUp button */
+  useEffect(() => {
+    console.log("active atom is changin");
+    if (GlobalVariables.currentMolecule.atomType == "Molecule") {
+      if (!GlobalVariables.currentMolecule.topLevel) {
+        setTop(true);
+      } else {
+        setTop(false);
+      }
+    }
+  }, [activeAtom]);
 
   /** Display props for replicad renderer  */
   let cad = props.displayProps.cad;
@@ -175,6 +192,7 @@ function CreateMode(props) {
             saveProject={saveProject}
             saveState={saveState}
             setSaveState={setSaveState}
+            currentMoleculeTop={currentMoleculeTop}
           />
           <FlowCanvas
             props={{
@@ -182,6 +200,7 @@ function CreateMode(props) {
               setSavePopUp: setSavePopUp,
               saveProject: saveProject,
               setSaveState: setSaveState,
+              setTop: setTop,
             }}
             displayProps={{
               mesh: mesh,

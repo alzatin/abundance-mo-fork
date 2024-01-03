@@ -4,9 +4,9 @@ import ShareDialog from "./ShareDialog.jsx";
 import { useNavigate } from "react-router-dom";
 
 function TopMenu(props) {
-  const [currentMoleculeTop, setTop] = useState(false);
-
+  let currentMoleculeTop = props.currentMoleculeTop;
   let [shareDialog, setShareDialog] = useState(false);
+
   const navigate = useNavigate();
 
   // objects for navigation items in the top menu
@@ -103,30 +103,22 @@ function TopMenu(props) {
 
   //{checks for top level variable and show go-up button if this is not top molecule
   //i'm not so sure this useeffect is right. put on list to review
-  const TopLevel = (props) => {
-    const ref = useRef();
-    useEffect(() => {
-      if (GlobalVariables.currentMolecule !== undefined) {
-        if (!GlobalVariables.currentMolecule.topLevel) {
-          props.setTop(true);
-        }
-      }
-    }, []);
+  const TopLevel = () => {
     return (
       <>
-        {props.currentMoleculeTop ? (
-          <button
-            className="nav-bar go-up-button menu-nav-button"
-            onClick={GlobalVariables.currentMolecule.goToParentMolecule}
-          >
-            <img
-              className="nav-img thumnail-logo"
-              src={"/imgs/Go Up.svg"}
-              key=""
-              title=""
-            />
-          </button>
-        ) : null}
+        <button
+          className="nav-bar go-up-button menu-nav-button"
+          onClick={() => {
+            GlobalVariables.currentMolecule.goToParentMolecule();
+          }}
+        >
+          <img
+            className="nav-img thumnail-logo"
+            src={"/imgs/Go Up.svg"}
+            key=""
+            title=""
+          />
+        </button>
       </>
     );
   };
@@ -227,7 +219,7 @@ function TopMenu(props) {
         />
       ) : null}
       <ShareDialog shareDialog={shareDialog} setShareDialog={setShareDialog} />
-      <TopLevel currentMoleculeTop={currentMoleculeTop} setTop={setTop} />
+      {currentMoleculeTop ? <TopLevel /> : null}
       <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>
   );

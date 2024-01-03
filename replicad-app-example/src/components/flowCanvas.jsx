@@ -258,12 +258,10 @@ export default memo(function FlowCanvas(props) {
     }
   };
 
-  //why do we need to handle a double click?
+  /*Handles click on a molecule - go down level*/
   const onDoubleClick = (event) => {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.doubleClick(event.clientX, event.clientY);
-      // need it to update active atom so it also updates set top
-      props.props.setActiveAtom(GlobalVariables.currentMolecule);
     });
   };
 
