@@ -305,16 +305,15 @@ export default class Molecule extends Atom {
   pushPropagation() {
     //Only propagate up if
     console.log("pushing propagation in molecule");
-    if (this != GlobalVariables.currentMolecule) {
-      if (typeof this.readOutputAtomPath() == "number") {
-        this.output.setValue(this.readOutputAtomPath());
-      } else {
-        this.output.setValue(this.path);
-      }
-      this.output.ready = true;
+
+    if (typeof this.readOutputAtomPath() == "number") {
+      this.output.setValue(this.readOutputAtomPath());
     } else {
-      this.awaitingPropagationFlag = true;
+      this.output.setValue(this.path);
     }
+    this.output.ready = true;
+
+    //this.awaitingPropagationFlag = true;
 
     //If this molecule is selected, send the updated value to the renderer
     if (this.selected) {
