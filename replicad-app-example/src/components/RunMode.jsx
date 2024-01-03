@@ -45,6 +45,9 @@ function useWindowSize() {
 }
 
 function runMode(props) {
+  // canvas to hide
+  const canvasRef = useRef(500);
+
   //Todo this is not very clean
   let cad = props.displayProps.cad;
   let size = props.displayProps.size;
@@ -66,7 +69,7 @@ function runMode(props) {
   const { id } = useParams();
 
   // Loads project
-  const loadRunProject = function (project) {
+  const loadProject = function (project) {
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
@@ -75,6 +78,13 @@ function runMode(props) {
     GlobalVariables.startTime = new Date().getTime();
 
     var octokit = new Octokit();
+
+    /* not sure what this is doing
+    GlobalVariables.c.moveTo(0, 0);
+    GlobalVariables.c.lineTo(500, 500);
+    GlobalVariables.c.fill();
+    GlobalVariables.c.stroke();
+    */
 
     octokit
       .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
@@ -87,16 +97,20 @@ function runMode(props) {
 
         if (rawFile.filetypeVersion == 1) {
           GlobalVariables.topLevelMolecule.deserialize(rawFile);
-          setActiveAtom(GlobalVariables.topLevelMolecule);
         } else {
           GlobalVariables.topLevelMolecule.deserialize(
             convertFromOldFormat(rawFile)
           );
         }
+        setActiveAtom(GlobalVariables.currentMolecule);
       });
   };
 
   useEffect(() => {
+    GlobalVariables.canvas = canvasRef;
+    console.log(canvasRef);
+    GlobalVariables.c = canvasRef.current.getContext("2d");
+
     var octokit = new Octokit();
     octokit.request("GET /repositories/:id", { id }).then((result) => {
       globalvariables.currentRepo = result.data;
@@ -110,7 +124,7 @@ function runMode(props) {
           atomType: "Molecule",
         });
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-        loadRunProject(GlobalVariables.currentRepo);
+        loadProject(GlobalVariables.currentRepo);
       }
     });
 
@@ -124,6 +138,12 @@ function runMode(props) {
 
   return (
     <>
+      <canvas
+        style={{ display: "none" }}
+        ref={canvasRef}
+        id="flow-canvas"
+        tabIndex={0}
+      ></canvas>
       <ToggleRunCreate
         run={true}
         authorizedUserOcto={authorizedUserOcto}
