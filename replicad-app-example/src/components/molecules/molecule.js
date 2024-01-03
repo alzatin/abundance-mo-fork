@@ -300,7 +300,6 @@ export default class Molecule extends Atom {
    */
   pushPropagation() {
     //Only propagate up if
-    console.log("pushing propagation in molecule");
 
     if (typeof this.readOutputAtomPath() == "number") {
       this.output.setValue(this.readOutputAtomPath());
@@ -696,7 +695,6 @@ export default class Molecule extends Atom {
   }
 
   sendToRender() {
-    console.log("render molecule");
     //Send code to JSxCAD to render
     try {
       GlobalVariables.writeToDisplay(this.output.value);

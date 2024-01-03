@@ -532,10 +532,6 @@ export default class Atom {
     if (deletePath) {
       this.basicThreadValueProcessing({ op: "deletePath", path: this.path }); //Delete the cached geometry
     }
-
-    if (backgroundClickAfter) {
-      GlobalVariables.currentMolecule.backgroundClick();
-    }
   }
 
   /**

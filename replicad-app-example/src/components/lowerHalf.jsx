@@ -37,6 +37,7 @@ export default memo(function LowerHalf(props) {
   let mesh = props.displayProps.mesh;
 
   const windowSize = useWindowSize();
+
   return (
     <>
       <div
