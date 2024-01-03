@@ -178,9 +178,10 @@ export default memo(function FlowCanvas(props) {
         });
       }
       //Save project
-      console.log();
+
       if (e.key == "s") {
-        props.props.saveProject();
+        props.props.setSavePopUp(true);
+        props.props.saveProject(props.props.setSaveState);
       }
       //Opens menu to search for github molecule
       if (e.key == "g") {

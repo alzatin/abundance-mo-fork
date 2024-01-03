@@ -25,6 +25,8 @@ function CreateMode(props) {
 
   const [gridParam, setGrid] = useState(true);
   const [axesParam, setAxes] = useState(true);
+  const [saveState, setSaveState] = useState(0);
+  const [savePopUp, setSavePopUp] = useState(false);
 
   let authorizedUserOcto = props.props.authorizedUserOcto;
   let activeAtom = props.props.activeAtom;
@@ -35,6 +37,121 @@ function CreateMode(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
+
+  /**
+   * Create a commit as part of the saving process.
+   */
+  const createCommit = async function (
+    octokit,
+    { owner, repo, base, changes },
+    setState
+  ) {
+    setState(20);
+    if (!base) {
+      octokit
+        .request("GET /repos/{owner}/{repo}", {
+          owner: owner,
+          repo: repo,
+        })
+        .then((response) => {
+          setState(30);
+          base = response.data.default_branch;
+          octokit.rest.repos
+            .listCommits({
+              owner,
+              repo,
+              sha: base,
+              per_page: 1,
+            })
+            .then((response) => {
+              setState(40);
+              let latestCommitSha = response.data[0].sha;
+              const treeSha = response.data[0].commit.tree.sha;
+              octokit.rest.git
+                .createTree({
+                  owner,
+                  repo,
+                  base_tree: treeSha,
+                  tree: Object.keys(changes.files).map((path) => {
+                    if (changes.files[path] != null) {
+                      return {
+                        path,
+                        mode: "100644",
+                        content: changes.files[path],
+                      };
+                    } else {
+                      return {
+                        path,
+                        mode: "100644",
+                        sha: null,
+                      };
+                    }
+                  }),
+                })
+                .then((response) => {
+                  setState(60);
+                  const newTreeSha = response.data.sha;
+
+                  octokit.rest.git
+                    .createCommit({
+                      owner,
+                      repo,
+                      message: changes.commit,
+                      tree: newTreeSha,
+                      parents: [latestCommitSha],
+                    })
+                    .then((response) => {
+                      setState(80);
+                      latestCommitSha = response.data.sha;
+                      octokit.rest.git
+                        .updateRef({
+                          owner,
+                          repo,
+                          sha: latestCommitSha,
+                          ref: "heads/" + base,
+                          force: true,
+                        })
+                        .then((response) => {
+                          setState(90);
+                          console.warn("Project saved");
+                          setState(100);
+                        });
+                    });
+                });
+            });
+        });
+    }
+  };
+  /**
+   * Saves project by making a commit to the Github repository.
+   */
+  const saveProject = async (setState) => {
+    setState(5);
+
+    var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
+    jsonRepOfProject.filetypeVersion = 1;
+    jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
+    const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
+
+    setState(10);
+    createCommit(
+      authorizedUserOcto,
+      {
+        owner: GlobalVariables.currentUser,
+        repo: GlobalVariables.currentRepo.name,
+        changes: {
+          files: {
+            "BillOfMaterials.md": "bom",
+            "README.md": "readme",
+            "project.svg": "finalSVG",
+            "project.maslowcreate": projectContent,
+          },
+          commit: "Autosave",
+        },
+      },
+      setState
+    );
+  };
 
   if (authorizedUserOcto) {
     if (
@@ -51,9 +168,21 @@ function CreateMode(props) {
             />
           </div>
           <ToggleRunCreate run={false} />
-          <TopMenu authorizedUserOcto={authorizedUserOcto} />
+          <TopMenu
+            authorizedUserOcto={authorizedUserOcto}
+            savePopUp={savePopUp}
+            setSavePopUp={setSavePopUp}
+            saveProject={saveProject}
+            saveState={saveState}
+            setSaveState={setSaveState}
+          />
           <FlowCanvas
-            props={{ setActiveAtom: setActiveAtom }}
+            props={{
+              setActiveAtom: setActiveAtom,
+              setSavePopUp: setSavePopUp,
+              saveProject: saveProject,
+              setSaveState: setSaveState,
+            }}
             displayProps={{
               mesh: mesh,
               setMesh: setMesh,
