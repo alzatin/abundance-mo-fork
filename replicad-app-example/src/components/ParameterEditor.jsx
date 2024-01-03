@@ -51,6 +51,20 @@ export default observer(function ParamsEditor({
       });
     }
   }
+  /** Runs through active atom output and checks if it's connected to something*/
+  if (activeAtom.output) {
+    let output = activeAtom.output;
+    if (activeAtom.atomType == "Input") {
+      inputNames[activeAtom.name] = {
+        value: activeAtom.name,
+        label: activeAtom.name,
+        disabled: false,
+        onChange: (value) => {
+          activeAtom.name = value;
+        },
+      };
+    }
+  }
   /** Handles parameter change button click and updates active atom inputs */
   function handleParamChange(newParams) {
     activeAtom.inputs.map((input) => {
