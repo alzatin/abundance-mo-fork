@@ -110,6 +110,7 @@ function TopMenu(props) {
           className="nav-bar go-up-button menu-nav-button"
           onClick={() => {
             GlobalVariables.currentMolecule.goToParentMolecule();
+            props.setActiveAtom(GlobalVariables.currentMolecule);
           }}
         >
           <img

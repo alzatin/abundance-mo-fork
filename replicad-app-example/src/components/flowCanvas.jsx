@@ -263,6 +263,7 @@ export default memo(function FlowCanvas(props) {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.doubleClick(event.clientX, event.clientY);
     });
+    props.props.setActiveAtom(GlobalVariables.currentMolecule);
   };
 
   /**

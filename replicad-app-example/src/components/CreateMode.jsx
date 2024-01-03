@@ -39,13 +39,8 @@ function CreateMode(props) {
 
   /** Checks if activeAtom is topLevel to render goUp button */
   useEffect(() => {
-    console.log("active atom is changin");
     if (GlobalVariables.currentMolecule.atomType == "Molecule") {
-      if (!GlobalVariables.currentMolecule.topLevel) {
-        setTop(true);
-      } else {
-        setTop(false);
-      }
+      setTop(!activeAtom.topLevel);
     }
   }, [activeAtom]);
 
@@ -193,6 +188,7 @@ function CreateMode(props) {
             saveState={saveState}
             setSaveState={setSaveState}
             currentMoleculeTop={currentMoleculeTop}
+            setActiveAtom={setActiveAtom}
           />
           <FlowCanvas
             props={{
