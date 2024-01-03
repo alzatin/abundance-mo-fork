@@ -133,8 +133,7 @@ export default function (parent, data, index) {
             })
             .show();
         }
-        //console.log(hovered);
-      }, 500);
+      }, 400);
     });
 
     on(a, "mouseleave", function (e) {

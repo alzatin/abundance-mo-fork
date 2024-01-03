@@ -43,7 +43,7 @@ const createCMenu = (targetElement) => {
    */
   cmenu = CMenu(ele.current).config({
     hideAfterClick: true,
-    percent: 0.045,
+    percent: 0.15,
     menus: [
       {
         title: "Actions",

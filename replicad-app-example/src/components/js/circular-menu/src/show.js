@@ -23,7 +23,6 @@ export default function (coordinate) {
   setCoordinate.call(this, coordinate);
 
   classed(this._container, "opened-nav", true);
-  console.log(this);
-  console.log(this._container);
+
   return this;
 }
