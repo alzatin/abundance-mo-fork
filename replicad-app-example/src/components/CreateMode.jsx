@@ -39,7 +39,8 @@ function CreateMode(props) {
 
   /** Checks if activeAtom is topLevel to render goUp button */
   useEffect(() => {
-    if (GlobalVariables.currentMolecule.atomType == "Molecule") {
+    if (activeAtom.atomType == "Molecule") {
+      console.log(currentMoleculeTop);
       setTop(!activeAtom.topLevel);
     }
   }, [activeAtom]);
