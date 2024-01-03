@@ -36,13 +36,6 @@ export default memo(function FlowCanvas(props) {
 
     var octokit = new Octokit();
 
-    /* not sure what this is doing
-    GlobalVariables.c.moveTo(0, 0);
-    GlobalVariables.c.lineTo(500, 500);
-    GlobalVariables.c.fill();
-    GlobalVariables.c.stroke();
-    */
-
     octokit
       .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
         owner: project.owner.login,
@@ -54,12 +47,12 @@ export default memo(function FlowCanvas(props) {
 
         if (rawFile.filetypeVersion == 1) {
           GlobalVariables.topLevelMolecule.deserialize(rawFile);
-          props.props.setActiveAtom(GlobalVariables.topLevelMolecule);
         } else {
           GlobalVariables.topLevelMolecule.deserialize(
             convertFromOldFormat(rawFile)
           );
         }
+        props.props.setActiveAtom(GlobalVariables.currentMolecule);
       });
   };
 
@@ -97,7 +90,7 @@ export default memo(function FlowCanvas(props) {
       atom.update();
     });
   }, []);
-  //there's an error message for the width
+
   const draw = () => {
     GlobalVariables.c.clearRect(
       0,
@@ -174,6 +167,7 @@ export default memo(function FlowCanvas(props) {
       //Copy & Paste
       if (e.key == "c") {
         GlobalVariables.atomsSelected = [];
+        console.log(GlobalVariables.atomsSelected);
         GlobalVariables.currentMolecule.copy();
       }
       if (e.key == "v") {
@@ -184,8 +178,9 @@ export default memo(function FlowCanvas(props) {
         });
       }
       //Save project
+      console.log();
       if (e.key == "s") {
-        GlobalVariables.saveProject();
+        props.props.saveProject();
       }
       //Opens menu to search for github molecule
       if (e.key == "g") {
