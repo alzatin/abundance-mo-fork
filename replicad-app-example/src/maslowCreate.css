@@ -751,6 +751,14 @@ Sidebar navigation
   transform: translateX(0px);
 }
 
+.go-up-button {
+  position: fixed;
+  left: 5px;
+  top: 0;
+  cursor: pointer;
+  border: none;
+}
+
 /* The toggle switch between run and create */
 /* The switch - the box around the slider */
 .switch {

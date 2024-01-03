@@ -96,7 +96,7 @@ export default class Molecule extends Atom {
 
     this.setValues(values);
     //Add the molecule's output
-    /*this.placeAtom(
+    this.placeAtom(
       {
         parentMolecule: this,
         x: GlobalVariables.pixelsToWidth(
@@ -109,7 +109,7 @@ export default class Molecule extends Atom {
         uniqueID: GlobalVariables.generateUniqueID(),
       },
       false
-    );*/
+    );
   }
 
   /**
@@ -198,6 +198,7 @@ export default class Molecule extends Atom {
 
     if (distFromClick < this.radius * 2) {
       GlobalVariables.currentMolecule = this; //set this to be the currently displayed molecule
+
       /**
        * Deselects Atom
        * @type {boolean}
@@ -413,20 +414,22 @@ export default class Molecule extends Atom {
    * Replace the currently displayed molecule with the parent of this molecule...moves the user up one level.
    */
   goToParentMolecule() {
+    console.log("go to parent molecule");
+    console.log(GlobalVariables.currentMolecule);
     //Go to the parent molecule if there is one
-    if (!this.topLevel) {
-      this.nodesOnTheScreen.forEach((atom) => {
-        atom.selected = false;
-      });
-
-      GlobalVariables.currentMolecule = this.parent; //set parent this to be the currently displayed molecule
-
-      //Push any changes up to the next level if there are any changes waiting in the output
-      if (this.awaitingPropagationFlag == true) {
-        this.propagate();
-        this.awaitingPropagationFlag = false;
-      }
+    /*if (!this.topLevel) {
+    this.nodesOnTheScreen.forEach((atom) => {
+      atom.selected = false;
+    });*/
+    //Push any changes up to the next level if there are any changes waiting in the output
+    if (GlobalVariables.currentMolecule.awaitingPropagationFlag == true) {
+      GlobalVariables.currentMolecule.propagate();
+      GlobalVariables.currentMolecule.awaitingPropagationFlag = false;
     }
+
+    GlobalVariables.currentMolecule = GlobalVariables.currentMolecule.parent; //set parent this to be the currently displayed molecule
+
+    //}
   }
 
   /**

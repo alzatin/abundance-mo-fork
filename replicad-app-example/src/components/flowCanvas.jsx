@@ -262,6 +262,8 @@ export default memo(function FlowCanvas(props) {
   const onDoubleClick = (event) => {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.doubleClick(event.clientX, event.clientY);
+      // need it to update active atom so it also updates set top
+      props.props.setActiveAtom(GlobalVariables.currentMolecule);
     });
   };
 

@@ -116,7 +116,7 @@ function TopMenu(props) {
       <>
         {props.currentMoleculeTop ? (
           <button
-            className="nav-bar toggle menu-nav-button"
+            className="nav-bar go-up-button menu-nav-button"
             onClick={GlobalVariables.currentMolecule.goToParentMolecule}
           >
             <img
