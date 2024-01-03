@@ -304,6 +304,7 @@ export default class Molecule extends Atom {
    */
   pushPropagation() {
     //Only propagate up if
+    console.log("pushing propagation in molecule");
     if (this != GlobalVariables.currentMolecule) {
       if (typeof this.readOutputAtomPath() == "number") {
         this.output.setValue(this.readOutputAtomPath());
@@ -656,6 +657,10 @@ export default class Molecule extends Atom {
       //If we have found this molecule's output atom use it to update the path here
       if (atom.atomType == "Output") {
         atom.loadTree();
+        if (this.output) {
+          this.output.value = atom.value;
+          console.log(this.output.value);
+        }
       }
       //If we have found an atom with nothing connected to it
       if (atom.output) {
@@ -664,9 +669,7 @@ export default class Molecule extends Atom {
         }
       }
     });
-    if (this.output) {
-      this.output.value = this.path;
-    }
+
     return this.path;
   }
 
@@ -797,15 +800,12 @@ export default class Molecule extends Atom {
     }
   }
 
-  /**
-   * Sends the output of this molecule to be displayed in the 3D view.
-   */
   sendToRender() {
-    super.sendToRender();
-    if (this.value != null) {
-      if (this.topLevel) {
-        this.basicThreadValueProcessing(this.value, "bounding box");
-      }
+    //Send code to JSxCAD to render
+    try {
+      GlobalVariables.writeToDisplay(this.output.value);
+    } catch (err) {
+      this.setAlert(err);
     }
   }
 }

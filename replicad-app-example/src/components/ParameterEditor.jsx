@@ -40,7 +40,7 @@ export default observer(function ParamsEditor({
         const checkConnector = () => {
           return input.connectors.length > 0;
         };
-        console.log(input);
+
         /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
         if (input.valueType !== "geometry") {
           inputParams[input.name] = {
