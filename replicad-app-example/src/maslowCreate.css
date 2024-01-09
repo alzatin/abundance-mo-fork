@@ -329,7 +329,11 @@ body {
   transform: translate(-50%, -50%);
   transition: opacity 0.5s ease, transform 0.3s;
 }
-
+#git_search {
+  width: 200px;
+  position: fixed;
+  z-index: 5;
+}
 .menu_search_canvas {
   background-color: #e0dcdce8;
   border: none;

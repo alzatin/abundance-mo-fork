@@ -3,6 +3,7 @@ import GlobalVariables from "./js/globalvariables";
 import Molecule from "./molecules/molecule";
 import { createCMenu, cmenu } from "./js/NewMenu.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import GitSearch from "./GitSearch.jsx";
 
 function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
@@ -24,6 +25,8 @@ export default memo(function FlowCanvas(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
+
+  const [searchingGitHub, setSearchingGitHub] = useState(false);
 
   // Loads project
   const loadProject = function (project) {
@@ -185,7 +188,7 @@ export default memo(function FlowCanvas(props) {
       }
       //Opens menu to search for github molecule
       if (e.key == "g") {
-        showGitHubSearch();
+        setSearchingGitHub(true);
       } else {
         GlobalVariables.currentMolecule.placeAtom(
           {
@@ -301,7 +304,7 @@ export default memo(function FlowCanvas(props) {
   }, []);
 
   useEffect(() => {
-    createCMenu(circleMenu);
+    createCMenu(circleMenu, setSearchingGitHub);
   }, []);
 
   return (
@@ -333,16 +336,7 @@ export default memo(function FlowCanvas(props) {
       <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>
 
-        <div id="canvas_menu">
-          <input
-            type="text"
-            id="menuInput"
-            //onBlur="value=''"
-            placeholder="Search for atom.."
-            className="menu_search_canvas"
-          ></input>
-          <ul id="githubList" className="menu_list tabcontent"></ul>
-        </div>
+        <GitSearch searchingGitHub={searchingGitHub} />
       </div>
     </>
   );
