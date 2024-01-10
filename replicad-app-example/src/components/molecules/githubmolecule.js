@@ -66,6 +66,33 @@ export default class GitHubMolecule extends Molecule {
       .then((response) => {
         //content will be base64 encoded
         let valuesToOverwriteInLoadedVersion = {};
+        if (this.topLevel) {
+          //If we are loading this as a stand alone project
+          valuesToOverwriteInLoadedVersion = {
+            atomType: this.atomType,
+            topLevel: this.topLevel,
+          };
+        } else {
+          //If there are stored io values to recover
+          if (this.ioValues != undefined) {
+            valuesToOverwriteInLoadedVersion = {
+              uniqueID: this.uniqueID,
+              x: this.x,
+              y: this.y,
+              atomType: this.atomType,
+              topLevel: this.topLevel,
+              ioValues: this.ioValues,
+            };
+          } else {
+            valuesToOverwriteInLoadedVersion = {
+              uniqueID: this.uniqueID,
+              x: this.x,
+              y: this.y,
+              atomType: this.atomType,
+              topLevel: this.topLevel,
+            };
+          }
+        }
 
         let rawFile = JSON.parse(atob(response.data.content));
         this.deserialize(rawFile, valuesToOverwriteInLoadedVersion, true).then(

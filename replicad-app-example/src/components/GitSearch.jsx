@@ -13,7 +13,6 @@ function GitSearch(props) {
    * @param {object} ev - The event triggered by clicking on a menu item.
    */
   function placeGitHubMolecule(e, item) {
-    console.log("placing github molecule");
     GlobalVariables.currentMolecule.placeAtom(
       {
         x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
@@ -26,6 +25,7 @@ function GitSearch(props) {
       true
     );
     props.setSearchingGitHub(false);
+    setGitRepos([]);
   }
   // conditional query for maslow projects
   const searchGitHub = function () {
