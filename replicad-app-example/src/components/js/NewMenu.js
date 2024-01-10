@@ -7,7 +7,11 @@ import GlobalVariables from "./globalvariables.js";
 var ele = null; //document.querySelector('#circle-menu1')
 var cmenu;
 
-const createCMenu = (targetElement, setSearchingGithub) => {
+const createCMenu = (
+  targetElement,
+  setSearchingGithub,
+  setGitSearchPosition
+) => {
   ele = targetElement;
   // /**
   //      * Runs to create submenus from Global Variables atomCategories. Populates menu objects
@@ -25,13 +29,9 @@ const createCMenu = (targetElement, setSearchingGithub) => {
 
         subMenu.click = function menuClick(e, title) {
           if (title.icon === "GitHubMolecule") {
-            console.log(e);
-            /*
-            var gitSearch = document.getElementById("git_search");
-            if (gitSearch) {
-              gitSearch.style.left = e.x + "px";
-              gitSearch.style.top = e.y + "px";
-            }*/
+            const containerX = parseInt(cmenu._container.style.left, 10);
+            const containerY = parseInt(cmenu._container.style.top, 10);
+            GlobalVariables.lastClick = [containerX, containerY];
             setSearchingGithub(true);
           } else {
             setSearchingGithub(false);

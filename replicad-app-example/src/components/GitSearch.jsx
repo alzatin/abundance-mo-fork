@@ -13,12 +13,11 @@ function GitSearch(props) {
    * @param {object} ev - The event triggered by clicking on a menu item.
    */
   function placeGitHubMolecule(e, item) {
-    props.setSearchingGitHub(false);
-
+    console.log("placing github molecule");
     GlobalVariables.currentMolecule.placeAtom(
       {
-        x: e.clientX,
-        y: e.clientY,
+        x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
+        y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
         parent: GlobalVariables.currentMolecule,
         atomType: "GitHubMolecule",
         projectID: item.id,
@@ -26,6 +25,7 @@ function GitSearch(props) {
       },
       true
     );
+    props.setSearchingGitHub(false);
   }
   // conditional query for maslow projects
   const searchGitHub = function () {
@@ -57,7 +57,6 @@ function GitSearch(props) {
   };
   const handleChange = function (e) {
     searchBarValue = e.target.value;
-    console.log(gitRepos);
   };
 
   const GitList = function () {
@@ -73,7 +72,13 @@ function GitSearch(props) {
   return (
     <>
       {props.searchingGitHub ? (
-        <div id="git_search">
+        <div
+          id="git_search"
+          style={{
+            top: GlobalVariables.lastClick[1] + "px",
+            left: GlobalVariables.lastClick[0] + "px",
+          }}
+        >
           <input
             type="text"
             id="menuInput"

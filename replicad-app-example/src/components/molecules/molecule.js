@@ -491,7 +491,7 @@ export default class Molecule extends Atom {
   deserialize(json, values = {}, forceBeginPropagation = false) {
     //Find the target molecule in the list
     let promiseArray = [];
-    console.log(json);
+
     this.setValues(json); //Grab the values of everything from the passed object
     this.setValues(values); //Over write those values with the passed ones where needed
 
