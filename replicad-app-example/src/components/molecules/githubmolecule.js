@@ -47,91 +47,36 @@ export default class GitHubMolecule extends Molecule {
      * @param {number} x - The x coordinate of the click
      * @param {number} y - The y coordinate of the click
      // */
-  // doubleClick(x,y){
-  // var clickProcessed = false
-  // var distFromClick = GlobalVariables.distBetweenPoints(x, this.x, y, this.y)
-  // if (distFromClick < this.radius){
-  // clickProcessed = true
-  // }
-  // return clickProcessed
-  // }
-  async getProjectByID(id, topLevel, wantfullmolecule) {
-    let octokit = new Octokit();
-    octokit;
-    octokit
-      .request("GET /repositories/:id/contents/project.maslowcreate", { id })
-      .then((response) => {
-        //content will be base64 encoded
-        if (wantfullmolecule) {
-          let rawFile = JSON.parse(atob(response.data.content));
-          console.log(rawFile);
-          return rawFile;
-        } else {
-          let json = atob(response.data.content);
-          return json;
-        }
-      });
+  doubleClick(x, y) {
+    var clickProcessed = false;
+    var distFromClick = GlobalVariables.distBetweenPoints(x, this.x, y, this.y);
+    if (distFromClick < this.radius) {
+      clickProcessed = true;
+    }
+    return clickProcessed;
   }
   /**
    * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
    * @param {number} id - The GitHub project ID for the project to be loaded.
    */
   async loadProjectByID(id) {
-    //Get the repo by ID
-    const json = await this.getProjectByID(id, this.topLevel, true);
+    let octokit = new Octokit();
+    octokit
+      .request("GET /repositories/:id/contents/project.maslowcreate", { id })
+      .then((response) => {
+        //content will be base64 encoded
+        let valuesToOverwriteInLoadedVersion = {};
 
-    //const projectData = await this.getProjectByID(id, this.topLevel, false);
-    const projectData = undefined;
-    if (projectData && json.ioValues.length == 0) {
-      //If this github molecule has no inputs
-      //const projectData = await GlobalVariables.gitHub.getProjectDataByID(id);
-
-      let aPromise = new Promise((resolve) => {
-        console.log("inside git promise");
-        resolve();
+        let rawFile = JSON.parse(atob(response.data.content));
+        this.deserialize(rawFile, valuesToOverwriteInLoadedVersion, true).then(
+          () => {
+            //this.setValues(valuesToOverwriteInLoadedVersion);
+            this.loadTree();
+          }
+        );
+        console.log(rawFile);
+        return rawFile;
       });
-      return aPromise;
-    } else {
-      //Store values that we want to overwrite in the loaded version
-      var valuesToOverwriteInLoadedVersion;
-      if (this.topLevel) {
-        //If we are loading this as a stand alone project
-        valuesToOverwriteInLoadedVersion = {
-          atomType: this.atomType,
-          topLevel: this.topLevel,
-        };
-      } else {
-        //If there are stored io values to recover
-        if (this.ioValues != undefined) {
-          valuesToOverwriteInLoadedVersion = {
-            uniqueID: this.uniqueID,
-            x: this.x,
-            y: this.y,
-            atomType: this.atomType,
-            topLevel: this.topLevel,
-            ioValues: this.ioValues,
-          };
-        } else {
-          valuesToOverwriteInLoadedVersion = {
-            uniqueID: this.uniqueID,
-            x: this.x,
-            y: this.y,
-            atomType: this.atomType,
-            topLevel: this.topLevel,
-          };
-        }
-      }
-
-      const promsie = this.deserialize(
-        json,
-        valuesToOverwriteInLoadedVersion,
-        true
-      ).then(() => {
-        this.setValues(valuesToOverwriteInLoadedVersion);
-        this.loadTree();
-      });
-      return promsie;
-    }
   }
 
   /**

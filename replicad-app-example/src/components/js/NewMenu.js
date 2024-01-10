@@ -26,10 +26,12 @@ const createCMenu = (targetElement, setSearchingGithub) => {
         subMenu.click = function menuClick(e, title) {
           if (title.icon === "GitHubMolecule") {
             console.log(e);
-
+            /*
             var gitSearch = document.getElementById("git_search");
-            gitSearch.style.left = e.x + "px";
-            gitSearch.style.top = e.y + "px";
+            if (gitSearch) {
+              gitSearch.style.left = e.x + "px";
+              gitSearch.style.top = e.y + "px";
+            }*/
             setSearchingGithub(true);
           } else {
             setSearchingGithub(false);

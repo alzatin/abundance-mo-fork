@@ -235,6 +235,7 @@ export default memo(function FlowCanvas(props) {
       return;
     } else {
       cmenu.hide();
+      setSearchingGitHub(false);
 
       var clickHandledByMolecule = false;
       /*Run through all the atoms on the screen and decide if one was clicked*/
@@ -335,8 +336,10 @@ export default memo(function FlowCanvas(props) {
       </div>
       <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>
-
-        <GitSearch searchingGitHub={searchingGitHub} />
+        <GitSearch
+          searchingGitHub={searchingGitHub}
+          setSearchingGitHub={setSearchingGitHub}
+        />
       </div>
     </>
   );
