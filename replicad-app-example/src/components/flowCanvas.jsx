@@ -26,8 +26,8 @@ export default memo(function FlowCanvas(props) {
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
 
+  /** State for github molecule search input */
   const [searchingGitHub, setSearchingGitHub] = useState(false);
-  const [gitSearchPosition, setGitSearchPosition] = useState([0, 0]);
 
   // Loads project
   const loadProject = function (project) {
@@ -307,7 +307,7 @@ export default memo(function FlowCanvas(props) {
   }, []);
 
   useEffect(() => {
-    createCMenu(circleMenu, setSearchingGitHub, setGitSearchPosition);
+    createCMenu(circleMenu, setSearchingGitHub);
   }, []);
 
   return (
@@ -341,7 +341,6 @@ export default memo(function FlowCanvas(props) {
         <GitSearch
           searchingGitHub={searchingGitHub}
           setSearchingGitHub={setSearchingGitHub}
-          gitSearchPosition={gitSearchPosition}
         />
       </div>
     </>

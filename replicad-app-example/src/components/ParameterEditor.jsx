@@ -90,6 +90,18 @@ export default observer(function ParamsEditor({
 
   /** Creates Leva panel with parameters from active atom inputs */
 
+  useControls(
+    () => ({
+      description: {
+        label: "Description",
+        value: activeAtom.description,
+        rows: 6,
+        disabled: true,
+      },
+    }),
+    { store: store1 },
+    [activeAtom]
+  );
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => outputParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => inputNamesConfig, { store: store1 }, [activeAtom]);
@@ -133,6 +145,7 @@ export default observer(function ParamsEditor({
           collapsed={true}
           hideCopyButton
           fill
+          oneLineLabels={true}
           titleBar={{
             title: activeAtom.name || globalvariables.currentRepo.name,
           }}
