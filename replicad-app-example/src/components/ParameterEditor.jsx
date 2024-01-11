@@ -48,7 +48,7 @@ export default observer(function ParamsEditor({
             disabled: checkConnector(),
             onChange: (value) => {
               input.setValue(value);
-              //activeAtom.sendToRender();
+              activeAtom.sendToRender();
             },
           };
         }

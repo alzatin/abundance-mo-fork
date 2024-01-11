@@ -252,6 +252,7 @@ export default memo(function FlowCanvas(props) {
           let idi = atomClicked;
           /* Clicked atom is now the active atom */
           props.props.setActiveAtom(idi);
+
           clickHandledByMolecule = true;
         }
       });

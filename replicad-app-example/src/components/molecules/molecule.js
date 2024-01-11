@@ -311,6 +311,7 @@ export default class Molecule extends Atom {
     //this.awaitingPropagationFlag = true;
 
     //If this molecule is selected, send the updated value to the renderer
+
     this.sendToRender();
   }
 

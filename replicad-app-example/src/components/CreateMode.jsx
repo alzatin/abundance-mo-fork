@@ -193,6 +193,7 @@ function CreateMode(props) {
           <FlowCanvas
             props={{
               setActiveAtom: setActiveAtom,
+              activeAtom: activeAtom,
               setSavePopUp: setSavePopUp,
               saveProject: saveProject,
               setSaveState: setSaveState,
