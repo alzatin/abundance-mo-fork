@@ -156,6 +156,21 @@ function tag(targetID, inputID, TAG) {
   });
 }
 
+function extractTag(targetID, inputID, TAG) {
+  return started.then(() => {
+    let taggedGeometry = { geometry: [], tags: [] };
+    if (library[inputID].tags.includes(TAG)) {
+      console.log("TAG FOUND");
+      taggedGeometry = library[inputID];
+    }
+    library[targetID] = {
+      geometry: taggedGeometry.geometry,
+      tags: taggedGeometry.tags,
+    };
+    return true;
+  });
+}
+
 function assembly(targetID, inputIDs) {
   return started.then(() => {
     const assembly = [];
@@ -277,6 +292,7 @@ expose({
   rotate,
   cut,
   tag,
+  extractTag,
   intersect,
   assembly,
   loftShapes,
