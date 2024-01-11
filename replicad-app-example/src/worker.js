@@ -146,6 +146,16 @@ function intersect(targetID, input1ID, input2ID) {
   });
 }
 
+function tag(targetID, inputID, TAG) {
+  return started.then(() => {
+    library[targetID] = {
+      geometry: library[inputID].geometry,
+      tags: [TAG, ...library[inputID].tags],
+    };
+    return true;
+  });
+}
+
 function assembly(targetID, inputIDs) {
   return started.then(() => {
     const assembly = [];
@@ -265,6 +275,7 @@ expose({
   move,
   rotate,
   cut,
+  tag,
   intersect,
   assembly,
   loftShapes,
