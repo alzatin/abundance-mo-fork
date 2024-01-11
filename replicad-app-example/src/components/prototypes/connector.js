@@ -109,11 +109,17 @@ export default class Connector {
         molecule.inputs.forEach((attachmentPoint) => {
           //For each of their attachment points
           if (attachmentPoint.wasConnectionMade(x, y) && !attachmentMade) {
-            //Check to make sure we haven't already attached somewhere else
-            attachmentMade = true;
-            this.attachmentPoint2 = attachmentPoint;
-            attachmentPoint.attach(this);
-            this.propogate();
+            /** Prevent it from connecting to itself  */
+            if (
+              this.attachmentPoint1.parentMolecule !==
+              attachmentPoint.parentMolecule
+            ) {
+              //Check to make sure we haven't already attached somewhere else
+              attachmentMade = true;
+              this.attachmentPoint2 = attachmentPoint;
+              attachmentPoint.attach(this);
+              this.propogate();
+            }
           }
         });
       });
@@ -198,8 +204,6 @@ export default class Connector {
    */
   propogate() {
     //takes the input and passes it to the output
-    console.log("Conector propogate called");
-    console.log(this.attachmentPoint1.getValue());
     if (this.attachmentPoint1.ready) {
       this.attachmentPoint2.setValue(this.attachmentPoint1.getValue());
     }

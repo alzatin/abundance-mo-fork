@@ -66,11 +66,6 @@ export default class Molecule extends Atom {
      * @type {boolean}
      */
     this.processing = false; //Should be pulled from atom. Docs made me put this here
-    /**
-     * A list of things which should be displayed on the the top level sideBar when in toplevel mode.
-     * @type {array}
-     */
-    this.runModeSidebarAdditions = [];
 
     /**
      * The total number of atoms contained in this molecule
@@ -101,7 +96,7 @@ export default class Molecule extends Atom {
 
     this.setValues(values);
     //Add the molecule's output
-    /*this.placeAtom(
+    this.placeAtom(
       {
         parentMolecule: this,
         x: GlobalVariables.pixelsToWidth(
@@ -114,7 +109,7 @@ export default class Molecule extends Atom {
         uniqueID: GlobalVariables.generateUniqueID(),
       },
       false
-    );*/
+    );
   }
 
   /**
@@ -203,6 +198,7 @@ export default class Molecule extends Atom {
 
     if (distFromClick < this.radius * 2) {
       GlobalVariables.currentMolecule = this; //set this to be the currently displayed molecule
+
       /**
        * Deselects Atom
        * @type {boolean}
@@ -304,21 +300,19 @@ export default class Molecule extends Atom {
    */
   pushPropagation() {
     //Only propagate up if
-    if (this != GlobalVariables.currentMolecule) {
-      if (typeof this.readOutputAtomPath() == "number") {
-        this.output.setValue(this.readOutputAtomPath());
-      } else {
-        this.output.setValue(this.path);
-      }
-      this.output.ready = true;
+
+    if (typeof this.readOutputAtomPath() == "number") {
+      this.output.setValue(this.readOutputAtomPath());
     } else {
-      this.awaitingPropagationFlag = true;
+      this.output.setValue(this.path);
     }
+    this.output.ready = true;
+
+    //this.awaitingPropagationFlag = true;
 
     //If this molecule is selected, send the updated value to the renderer
-    if (this.selected) {
-      this.sendToRender();
-    }
+
+    this.sendToRender();
   }
 
   /**
@@ -347,10 +341,6 @@ export default class Molecule extends Atom {
       this.toProcess = this.toProcess + newInformation[1];
     });
 
-    if (this.topLevel && this.selected) {
-      this.updateSidebar();
-    }
-
     return [this.totalAtomCount, this.toProcess];
   }
 
@@ -360,102 +350,10 @@ export default class Molecule extends Atom {
   setSimplifyFlag(anEvent) {
     this.simplify = anEvent.target.checked;
     this.propagate();
-    this.updateSidebar();
   }
 
   changeUnits(newUnitsIndex) {
     this.unitsIndex = newUnitsIndex;
-    this.updateSidebar();
-  }
-
-  /**
-   * Updates the side bar to display options like 'go to parent' and 'load a different project'. What is displayed depends on if this atom is the top level, and if we are using run mode.
-   */
-  updateSidebar() {
-    //Update the side bar to make it possible to change the molecule name
-
-    var valueList = super.initializeSideBar();
-
-    if (!this.topLevel) {
-      this.createEditableValueListItem(valueList, this, "name", "Name", false);
-    } else if (this.topLevel) {
-      //If we are the top level molecule
-
-      const dropdown = document.createElement("div");
-      valueList.appendChild(dropdown);
-      this.createDropDown(
-        dropdown,
-        this,
-        Object.keys(this.units),
-        this.unitsIndex,
-        "Units",
-        (index) => {
-          this.changeUnits(index);
-        }
-      );
-    }
-
-    //Display the percent loaded while loading
-    const percentLoaded = 100 * (1 - this.toProcess / this.totalAtomCount);
-    if (this.toProcess > 0 && this.topLevel) {
-      this.createNonEditableValueListItem(
-        valueList,
-        { percentLoaded: percentLoaded.toFixed(0) + "%" },
-        "percentLoaded",
-        "Loading"
-      );
-    }
-
-    //removes 3d view menu on background click
-    let viewerBar = document.querySelector("#viewer_bar");
-    if (viewerBar && viewerBar.firstChild) {
-      while (viewerBar.firstChild) {
-        viewerBar.removeChild(viewerBar.firstChild);
-        viewerBar.setAttribute("style", "background-color:none;");
-      }
-    }
-
-    //Add options to set all of the inputs
-    this.inputs.forEach((child) => {
-      if (child.type == "input" && child.valueType != "geometry") {
-        this.createEditableValueListItem(
-          valueList,
-          child,
-          "value",
-          child.name,
-          true
-        );
-      }
-    });
-
-    //Add the check box to simplify
-    this.createCheckbox(
-      valueList,
-      "Simplify output",
-      this.simplify,
-      (anEvent) => {
-        this.setSimplifyFlag(anEvent);
-      }
-    );
-
-    if (this.simplify) {
-      this.createEditableValueListItem(
-        valueList,
-        this,
-        "threshold",
-        "Threshold",
-        true
-      );
-    }
-
-    //Only bother to generate the bom if we are not currently processing data
-    if (this.toProcess == 0) {
-      this.displaySimpleBOM(valueList);
-    }
-
-    this.displaySidebarReadme(valueList);
-
-    return valueList;
   }
 
   /**
@@ -517,18 +415,17 @@ export default class Molecule extends Atom {
    */
   goToParentMolecule() {
     //Go to the parent molecule if there is one
-    if (!this.topLevel) {
-      this.nodesOnTheScreen.forEach((atom) => {
+    if (!GlobalVariables.currentMolecule.topLevel) {
+      GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
         atom.selected = false;
       });
-
-      GlobalVariables.currentMolecule = this.parent; //set parent this to be the currently displayed molecule
-
       //Push any changes up to the next level if there are any changes waiting in the output
-      if (this.awaitingPropagationFlag == true) {
-        this.propagate();
-        this.awaitingPropagationFlag = false;
+      if (GlobalVariables.currentMolecule.awaitingPropagationFlag == true) {
+        GlobalVariables.currentMolecule.propagate();
+        GlobalVariables.currentMolecule.awaitingPropagationFlag = false;
       }
+
+      GlobalVariables.currentMolecule = GlobalVariables.currentMolecule.parent; //set parent this to be the currently displayed molecule
     }
   }
 
@@ -656,6 +553,9 @@ export default class Molecule extends Atom {
       //If we have found this molecule's output atom use it to update the path here
       if (atom.atomType == "Output") {
         atom.loadTree();
+        if (this.output) {
+          this.output.value = atom.value;
+        }
       }
       //If we have found an atom with nothing connected to it
       if (atom.output) {
@@ -664,9 +564,7 @@ export default class Molecule extends Atom {
         }
       }
     });
-    if (this.output) {
-      this.output.value = this.path;
-    }
+
     return this.path;
   }
 
@@ -710,8 +608,10 @@ export default class Molecule extends Atom {
           //If this is a github molecule load it from the web
           if (atom.atomType == "GitHubMolecule") {
             promise = atom.loadProjectByID(atom.projectID);
+
             if (unlock) {
               promise.then(() => {
+                console.log(promise);
                 atom.beginPropagation();
               });
             }
@@ -797,15 +697,12 @@ export default class Molecule extends Atom {
     }
   }
 
-  /**
-   * Sends the output of this molecule to be displayed in the 3D view.
-   */
   sendToRender() {
-    super.sendToRender();
-    if (this.value != null) {
-      if (this.topLevel) {
-        this.basicThreadValueProcessing(this.value, "bounding box");
-      }
+    //Send code to JSxCAD to render
+    try {
+      GlobalVariables.writeToDisplay(this.output.value);
+    } catch (err) {
+      this.setAlert(err);
     }
   }
 }

@@ -7,7 +7,11 @@ import GlobalVariables from "./globalvariables.js";
 var ele = null; //document.querySelector('#circle-menu1')
 var cmenu;
 
-const createCMenu = (targetElement) => {
+const createCMenu = (
+  targetElement,
+  setSearchingGithub,
+  setGitSearchPosition
+) => {
   ele = targetElement;
   // /**
   //      * Runs to create submenus from Global Variables atomCategories. Populates menu objects
@@ -25,8 +29,12 @@ const createCMenu = (targetElement) => {
 
         subMenu.click = function menuClick(e, title) {
           if (title.icon === "GitHubMolecule") {
-            showGitHubSearch(e);
+            const containerX = parseInt(cmenu._container.style.left, 10);
+            const containerY = parseInt(cmenu._container.style.top, 10);
+            GlobalVariables.lastClick = [containerX, containerY];
+            setSearchingGithub(true);
           } else {
+            setSearchingGithub(false);
             e.target.id = title.name;
             placeNewNode(e);
           }
@@ -43,7 +51,7 @@ const createCMenu = (targetElement) => {
    */
   cmenu = CMenu(ele.current).config({
     hideAfterClick: true,
-    percent: 0.045,
+    percent: 0.15,
     menus: [
       {
         title: "Actions",

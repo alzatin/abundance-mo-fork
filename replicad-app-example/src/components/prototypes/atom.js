@@ -532,10 +532,6 @@ export default class Atom {
     if (deletePath) {
       this.basicThreadValueProcessing({ op: "deletePath", path: this.path }); //Delete the cached geometry
     }
-
-    if (backgroundClickAfter) {
-      GlobalVariables.currentMolecule.backgroundClick();
-    }
   }
 
   /**
@@ -726,55 +722,6 @@ export default class Atom {
     });
 
     return ioValue;
-  }
-
-  /**
-   * Creates dropdown with multiple options to select. Used in the sidebar.
-   * @param {object} list - The HTML object to attach the new item to.
-   * @param {object} parent - The parent which has the function to call on the change...this should really be done with a callback function.
-   * @param {array} options - A list of options to display in the drop down.
-   * @param {number} selectedOption - The zero referenced index of the selected option.
-   * @param {string} description - A description of what the dropdown does.
-   * @param {object} Callback function
-   */
-  createDropDown(list, parent, options, selectedOption, description, callback) {
-    var listElement = document.createElement("LI");
-    list.appendChild(listElement);
-
-    //Div which contains the entire element
-    var div = document.createElement("div");
-    listElement.appendChild(div);
-    div.setAttribute("class", "sidebar-item");
-
-    //Left div which displays the label
-    var labelDiv = document.createElement("div");
-    div.appendChild(labelDiv);
-    var labelText = document.createTextNode(description);
-    labelDiv.appendChild(labelText);
-    labelDiv.setAttribute("class", "sidebar-subitem");
-
-    //Right div which is editable and displays the value
-    var valueTextDiv = document.createElement("div");
-    div.appendChild(valueTextDiv);
-    var dropDown = document.createElement("select");
-    options.forEach((option) => {
-      var op = new Option();
-      op.value = options.findIndex((thisOption) => thisOption === option);
-      op.text = option;
-      dropDown.options.add(op);
-    });
-    valueTextDiv.appendChild(dropDown);
-    valueTextDiv.setAttribute("class", "sidebar-subitem");
-
-    dropDown.selectedIndex = selectedOption; //display the current selection
-
-    dropDown.addEventListener(
-      "change",
-      function () {
-        callback(dropDown.value);
-      },
-      false
-    );
   }
 
   /**

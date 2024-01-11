@@ -42,47 +42,40 @@ export default observer(function ParamsEditor({
         };
 
         /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
-        if (input.valueType == "geometry") {
+        if (input.valueType !== "geometry") {
           inputParams[input.name] = {
             value: input.value,
-            disabled: true,
-          };
-        } else {
-          inputParams[input.name] = {
-            value: input.value,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              input.setValue(value);
+              activeAtom.sendToRender();
+            },
           };
         }
       });
     }
-    /** Runs through active atom output and checks if it's connected to something*/
-    if (activeAtom.output) {
-      let output = activeAtom.output;
-      if (activeAtom.atomType == "Input") {
-        inputNames[activeAtom.name] = {
-          value: activeAtom.name,
-          label: activeAtom.name,
-          disabled: false,
-          onChange: (value) => {
-            activeAtom.name = value;
-          },
-        };
-      }
-
-      const checkConnector = () => {
-        return activeAtom.output.connectors.length > 0;
-      };
-      outputParams[output.uniqueID] = {
-        value: output.value,
-        label: "Output " + output.name,
-        disabled: true,
+  }
+  /** Runs through active atom output and checks if it's connected to something*/
+  if (activeAtom.output) {
+    let output = activeAtom.output;
+    if (activeAtom.atomType == "Input") {
+      inputNames[activeAtom.name] = {
+        value: activeAtom.name,
+        label: activeAtom.name,
+        disabled: false,
+        onChange: (value) => {
+          activeAtom.name = value;
+        },
       };
     }
   }
   /** Handles parameter change button click and updates active atom inputs */
   function handleParamChange(newParams) {
     activeAtom.inputs.map((input) => {
-      input.setValue(newParams[input.name]);
-      activeAtom.sendToRender();
+      if (input.name !== "geometry") {
+        input.setValue(newParams[input.name]);
+        //activeAtom.sendToRender();
+      }
     });
   }
   const outputParamsConfig = useMemo(() => {
@@ -96,24 +89,16 @@ export default observer(function ParamsEditor({
   }, [inputNames]);
 
   /** Creates Leva panel with parameters from active atom inputs */
+
   useControls(
-    {
-      _run: {
-        type: "BUTTON",
-        onClick: (get) =>
-          handleParamChange(
-            Object.fromEntries(
-              store1
-                .getVisiblePaths()
-                .filter((f) => f !== "_run")
-                .map((f) => [f, get(f)])
-            )
-          ),
-        settings: { disabled: false },
-        label: "Apply params",
-        transient: false,
+    () => ({
+      description: {
+        label: "Description",
+        value: activeAtom.description,
+        rows: 6,
+        disabled: true,
       },
-    },
+    }),
     { store: store1 },
     [activeAtom]
   );
@@ -160,6 +145,7 @@ export default observer(function ParamsEditor({
           collapsed={true}
           hideCopyButton
           fill
+          oneLineLabels={true}
           titleBar={{
             title: activeAtom.name || globalvariables.currentRepo.name,
           }}

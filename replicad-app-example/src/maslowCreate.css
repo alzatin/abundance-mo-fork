@@ -329,21 +329,37 @@ body {
   transform: translate(-50%, -50%);
   transition: opacity 0.5s ease, transform 0.3s;
 }
-
-.menu_search_canvas {
-  background-color: #e0dcdce8;
-  border: none;
-  margin: auto;
-  text-align: center;
-  border-radius: 2px;
-  height: 1.6rem;
+#git_search {
+  background-color: #27292a;
+  border: 1px solid #c4a3d5;
+  scrollbar-width: thin;
+  border-radius: 5px;
+  color: #eceded;
+  width: 250px;
+  padding: 10px;
+  position: absolute;
+  z-index: 5;
+  max-height: 30%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  text-decoration: none;
+  list-style: none;
 }
 
-.menu_search_canvas:focus {
-  color: white;
-  outline: none;
+#git_search input {
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #c4a3d5;
+  color: #3f4243;
+  width: 200px;
+
+  z-index: 5;
+  height: 25px;
 }
 
+#git_search li:hover {
+  background-color: #000;
+}
 .doc-title {
   font-size: 1.3rem;
   padding: 10px;
@@ -382,10 +398,6 @@ body {
   list-style: none;
   float: left;
   padding-inline-start: 0px;
-}
-
-input.menu_search:focus {
-  outline-width: 0;
 }
 
 /* Style the tabs in the menu*/
@@ -749,6 +761,14 @@ Sidebar navigation
 .menu-nav.show-menu {
   width: 100%;
   transform: translateX(0px);
+}
+
+.go-up-button {
+  position: fixed;
+  left: 5px;
+  top: 0;
+  cursor: pointer;
+  border: none;
 }
 
 /* The toggle switch between run and create */

@@ -3,6 +3,7 @@ import GlobalVariables from "./js/globalvariables";
 import Molecule from "./molecules/molecule";
 import { createCMenu, cmenu } from "./js/NewMenu.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import GitSearch from "./GitSearch.jsx";
 
 function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
@@ -25,6 +26,9 @@ export default memo(function FlowCanvas(props) {
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
 
+  /** State for github molecule search input */
+  const [searchingGitHub, setSearchingGitHub] = useState(false);
+
   // Loads project
   const loadProject = function (project) {
     GlobalVariables.loadedRepo = project;
@@ -35,13 +39,6 @@ export default memo(function FlowCanvas(props) {
     GlobalVariables.startTime = new Date().getTime();
 
     var octokit = new Octokit();
-
-    /* not sure what this is doing
-    GlobalVariables.c.moveTo(0, 0);
-    GlobalVariables.c.lineTo(500, 500);
-    GlobalVariables.c.fill();
-    GlobalVariables.c.stroke();
-    */
 
     octokit
       .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
@@ -54,19 +51,19 @@ export default memo(function FlowCanvas(props) {
 
         if (rawFile.filetypeVersion == 1) {
           GlobalVariables.topLevelMolecule.deserialize(rawFile);
-          props.props.setActiveAtom(GlobalVariables.topLevelMolecule);
         } else {
           GlobalVariables.topLevelMolecule.deserialize(
             convertFromOldFormat(rawFile)
           );
         }
+        props.props.setActiveAtom(GlobalVariables.currentMolecule);
       });
   };
 
   useEffect(() => {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
-      console.log("write to display running");
-      console.log(id);
+      console.log("write to display running " + id);
+
       cad.generateDisplayMesh(id).then((m) => setMesh(m));
     };
 
@@ -97,7 +94,7 @@ export default memo(function FlowCanvas(props) {
       atom.update();
     });
   }, []);
-  //there's an error message for the width
+
   const draw = () => {
     GlobalVariables.c.clearRect(
       0,
@@ -174,6 +171,7 @@ export default memo(function FlowCanvas(props) {
       //Copy & Paste
       if (e.key == "c") {
         GlobalVariables.atomsSelected = [];
+        console.log(GlobalVariables.atomsSelected);
         GlobalVariables.currentMolecule.copy();
       }
       if (e.key == "v") {
@@ -184,12 +182,14 @@ export default memo(function FlowCanvas(props) {
         });
       }
       //Save project
+
       if (e.key == "s") {
-        GlobalVariables.saveProject();
+        props.props.setSavePopUp(true);
+        props.props.saveProject(props.props.setSaveState);
       }
       //Opens menu to search for github molecule
       if (e.key == "g") {
-        showGitHubSearch();
+        setSearchingGitHub(true);
       } else {
         GlobalVariables.currentMolecule.placeAtom(
           {
@@ -236,6 +236,7 @@ export default memo(function FlowCanvas(props) {
       return;
     } else {
       cmenu.hide();
+      setSearchingGitHub(false);
 
       var clickHandledByMolecule = false;
       /*Run through all the atoms on the screen and decide if one was clicked*/
@@ -251,6 +252,7 @@ export default memo(function FlowCanvas(props) {
           let idi = atomClicked;
           /* Clicked atom is now the active atom */
           props.props.setActiveAtom(idi);
+
           clickHandledByMolecule = true;
         }
       });
@@ -262,11 +264,12 @@ export default memo(function FlowCanvas(props) {
     }
   };
 
-  //why do we need to handle a double click?
+  /*Handles click on a molecule - go down level*/
   const onDoubleClick = (event) => {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.doubleClick(event.clientX, event.clientY);
     });
+    props.props.setActiveAtom(GlobalVariables.currentMolecule);
   };
 
   /**
@@ -304,7 +307,7 @@ export default memo(function FlowCanvas(props) {
   }, []);
 
   useEffect(() => {
-    createCMenu(circleMenu);
+    createCMenu(circleMenu, setSearchingGitHub);
   }, []);
 
   return (
@@ -335,17 +338,10 @@ export default memo(function FlowCanvas(props) {
       </div>
       <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>
-
-        <div id="canvas_menu">
-          <input
-            type="text"
-            id="menuInput"
-            //onBlur="value=''"
-            placeholder="Search for atom.."
-            className="menu_search_canvas"
-          ></input>
-          <ul id="githubList" className="menu_list tabcontent"></ul>
-        </div>
+        <GitSearch
+          searchingGitHub={searchingGitHub}
+          setSearchingGitHub={setSearchingGitHub}
+        />
       </div>
     </>
   );
