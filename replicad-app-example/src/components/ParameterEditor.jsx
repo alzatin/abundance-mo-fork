@@ -46,6 +46,10 @@ export default observer(function ParamsEditor({
           inputParams[input.name] = {
             value: input.value,
             disabled: checkConnector(),
+            onChange: (value) => {
+              input.setValue(value);
+              //activeAtom.sendToRender();
+            },
           };
         }
       });
@@ -70,7 +74,7 @@ export default observer(function ParamsEditor({
     activeAtom.inputs.map((input) => {
       if (input.name !== "geometry") {
         input.setValue(newParams[input.name]);
-        activeAtom.sendToRender();
+        //activeAtom.sendToRender();
       }
     });
   }
@@ -85,27 +89,7 @@ export default observer(function ParamsEditor({
   }, [inputNames]);
 
   /** Creates Leva panel with parameters from active atom inputs */
-  useControls(
-    {
-      _run: {
-        type: "BUTTON",
-        onClick: (get) =>
-          handleParamChange(
-            Object.fromEntries(
-              store1
-                .getVisiblePaths()
-                .filter((f) => f !== "_run")
-                .map((f) => [f, get(f)])
-            )
-          ),
-        settings: { disabled: false },
-        label: "Apply params",
-        transient: false,
-      },
-    },
-    { store: store1 },
-    [activeAtom]
-  );
+
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => outputParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => inputNamesConfig, { store: store1 }, [activeAtom]);
