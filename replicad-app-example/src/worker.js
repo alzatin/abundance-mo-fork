@@ -230,6 +230,8 @@ function flattenRemove2DandFuse(chain) {
 function generateDisplayMesh(id) {
   return started.then(() => {
     //Flatten the assembly to remove heirarcy
+    console.log("library");
+    console.log(library[id]);
     const flattened = flattenAssembly(library[id]);
 
     //Here we need to extrude anything which isn't already 3D
@@ -243,7 +245,6 @@ function generateDisplayMesh(id) {
     });
 
     let geometry = chainFuse(cleanedGeometry);
-
     console.log(geometry);
 
     //Try extruding if there is no 3d shape

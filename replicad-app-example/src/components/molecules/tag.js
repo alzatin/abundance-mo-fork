@@ -69,7 +69,7 @@ export default class Tag extends Atom {
   updateValue() {
     try {
       var inputID = this.findIOValue("geometry");
-      var tag = this.findIOValue("Tag String");
+      var tag = this.findIOValue("tag");
 
       GlobalVariables.cad.tag(this.uniqueID, inputID, tag).then(() => {
         this.basicThreadValueProcessing();
