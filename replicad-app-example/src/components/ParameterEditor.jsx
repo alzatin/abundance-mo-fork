@@ -55,7 +55,7 @@ export default observer(function ParamsEditor({
       });
     }
   }
-  /** Runs through active atom output and checks if it's connected to something*/
+  /** if active atom has output*/
   if (activeAtom.output) {
     let output = activeAtom.output;
     if (activeAtom.atomType == "Input") {
@@ -65,6 +65,15 @@ export default observer(function ParamsEditor({
         disabled: false,
         onChange: (value) => {
           activeAtom.name = value;
+        },
+      };
+    } else if (activeAtom.atomType == "Constant") {
+      outputParams[activeAtom.name] = {
+        value: output.value,
+        label: output.name,
+        disabled: false,
+        onChange: (value) => {
+          output.value = value;
         },
       };
     }
