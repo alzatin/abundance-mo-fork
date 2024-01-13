@@ -69,15 +69,7 @@ export default observer(function ParamsEditor({
       };
     }
   }
-  /** Handles parameter change button click and updates active atom inputs */
-  function handleParamChange(newParams) {
-    activeAtom.inputs.map((input) => {
-      if (input.name !== "geometry") {
-        input.setValue(newParams[input.name]);
-        //activeAtom.sendToRender();
-      }
-    });
-  }
+
   const outputParamsConfig = useMemo(() => {
     return { ...outputParams };
   }, [outputParams]);
