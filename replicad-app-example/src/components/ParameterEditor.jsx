@@ -55,7 +55,7 @@ export default observer(function ParamsEditor({
       });
     }
   }
-  /** Runs through active atom output and checks if it's connected to something*/
+  /** if active atom has output*/
   if (activeAtom.output) {
     let output = activeAtom.output;
     if (activeAtom.atomType == "Input") {
@@ -67,17 +67,18 @@ export default observer(function ParamsEditor({
           activeAtom.name = value;
         },
       };
+    } else if (activeAtom.atomType == "Constant") {
+      outputParams[activeAtom.name] = {
+        value: output.value,
+        label: output.name,
+        disabled: false,
+        onChange: (value) => {
+          output.value = value;
+        },
+      };
     }
   }
-  /** Handles parameter change button click and updates active atom inputs */
-  function handleParamChange(newParams) {
-    activeAtom.inputs.map((input) => {
-      if (input.name !== "geometry") {
-        input.setValue(newParams[input.name]);
-        //activeAtom.sendToRender();
-      }
-    });
-  }
+
   const outputParamsConfig = useMemo(() => {
     return { ...outputParams };
   }, [outputParams]);
