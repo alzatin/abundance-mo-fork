@@ -68,15 +68,12 @@ export default class Tag extends Atom {
    */
   updateValue() {
     try {
-      var inputPath = this.findIOValue("geometry");
-      const tag = this.findIOValue("tag");
-      const values = {
-        op: "tag",
-        tag: tag,
-        readPath: inputPath,
-        writePath: this.path,
-      };
-      this.basicThreadValueProcessing(values, "tag");
+      var inputID = this.findIOValue("geometry");
+      var tag = this.findIOValue("tag");
+
+      GlobalVariables.cad.tag(this.uniqueID, inputID, tag).then(() => {
+        this.basicThreadValueProcessing();
+      });
     } catch (err) {
       this.setAlert(err);
     }

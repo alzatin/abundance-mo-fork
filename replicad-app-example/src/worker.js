@@ -146,6 +146,51 @@ function intersect(targetID, input1ID, input2ID) {
   });
 }
 
+function tag(targetID, inputID, TAG) {
+  return started.then(() => {
+    library[targetID] = {
+      geometry: library[inputID].geometry,
+      tags: [TAG, ...library[inputID].tags],
+    };
+    return true;
+  });
+}
+
+function extractTag(targetID, inputID, TAG) {
+  return started.then(() => {
+    let taggedGeometry = extractTags(library[inputID], TAG);
+    library[targetID] = {
+      geometry: taggedGeometry.geometry,
+      tags: taggedGeometry.tags,
+    };
+    return true;
+  });
+}
+
+function extractTags(inputGeometry, TAG) {
+  if (inputGeometry.tags.includes(TAG)) {
+    return inputGeometry;
+  } else if (
+    inputGeometry.geometry.length > 1 &&
+    inputGeometry.geometry[0].geometry != undefined
+  ) {
+    let geometryWithTags = [];
+    inputGeometry.geometry.forEach((subAssembly) => {
+      let extractedGeometry = extractTags(subAssembly, TAG);
+      if (extractedGeometry != false) {
+        geometryWithTags.push(extractedGeometry);
+      }
+    });
+    let thethingtoreturn = {
+      geometry: geometryWithTags,
+      tags: inputGeometry.tags,
+    };
+    return thethingtoreturn;
+  } else {
+    return false;
+  }
+}
+
 function assembly(targetID, inputIDs) {
   return started.then(() => {
     const assembly = [];
@@ -220,6 +265,7 @@ function flattenRemove2DandFuse(chain) {
 function generateDisplayMesh(id) {
   return started.then(() => {
     //Flatten the assembly to remove heirarcy
+
     const flattened = flattenAssembly(library[id]);
 
     //Here we need to extrude anything which isn't already 3D
@@ -233,7 +279,6 @@ function generateDisplayMesh(id) {
     });
 
     let geometry = chainFuse(cleanedGeometry);
-
     console.log(geometry);
 
     //Try extruding if there is no 3d shape
@@ -265,6 +310,8 @@ expose({
   move,
   rotate,
   cut,
+  tag,
+  extractTag,
   intersect,
   assembly,
   loftShapes,
