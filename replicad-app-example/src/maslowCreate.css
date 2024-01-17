@@ -904,11 +904,11 @@ Sidebar navigation
   border: 2px solid #e7ddecc2;
   color: white;
   width: 300px;
-  height: 200px;
   position: absolute;
   left: 0px;
   top: 100px;
   z-index: 10;
+  gap: 10px;
 }
 .GitProjectInfoPanel img {
   width: 100px;
@@ -917,6 +917,7 @@ Sidebar navigation
 }
 .GitInfo {
   display: flex;
+  gap: 10px;
   flex-direction: column;
   justify-content: space-evenly;
   padding: 10px;

@@ -63,8 +63,6 @@ function GitSearch(props) {
   const [panelItem, setPanelItem] = useState({});
 
   const handleMouseOver = (item, key) => {
-    console.log(item.name);
-    console.log(key);
     setPanelItem(item);
     setIsHovering(true);
   };
@@ -125,6 +123,8 @@ function GitSearch(props) {
                 <span>Project Name: {panelItem.name}</span>
                 <span>Owner: {panelItem.owner.login}</span>
                 <span>Description: {panelItem.description || null}</span>
+                <span>PLACEHOLDER FOR README</span>
+                <span>Tags: PLACEHOLDER FOR tags or categories</span>
               </div>
             </div>
           ) : null}
