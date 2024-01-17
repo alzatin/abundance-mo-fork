@@ -152,6 +152,18 @@ function tag(targetID, inputID, TAG) {
       geometry: library[inputID].geometry,
       tags: [TAG, ...library[inputID].tags],
     };
+    console.log(library[targetID]);
+    return true;
+  });
+}
+function bom(targetID, inputID, TAG, BOM) {
+  return started.then(() => {
+    library[targetID] = {
+      geometry: library[inputID].geometry,
+      tags: [TAG, ...library[inputID].tags],
+      bom: [BOM],
+    };
+    console.log(library[targetID]);
     return true;
   });
 }
@@ -198,6 +210,7 @@ function assembly(targetID, inputIDs) {
       assembly.push(library[inputIDs[i]]);
     }
     library[targetID] = { geometry: assembly, tags: [] };
+    console.log(library[targetID]);
     return true;
   });
 }
@@ -311,6 +324,7 @@ expose({
   rotate,
   cut,
   tag,
+  bom,
   extractTag,
   intersect,
   assembly,
