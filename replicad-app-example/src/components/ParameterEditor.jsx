@@ -29,7 +29,7 @@ export default observer(function ParamsEditor({
   let inputParams = {};
   let outputParams = {};
   let inputNames = {};
-
+  let bomParams = {};
   const store1 = useCreateStore();
   const store2 = useCreateStore();
 
@@ -76,9 +76,23 @@ export default observer(function ParamsEditor({
           output.value = value;
         },
       };
+    } else if (activeAtom.atomType == "Add-BOM-Tag") {
+      for (const key in activeAtom.BOMitem) {
+        bomParams[key] = {
+          value: activeAtom.BOMitem[key],
+          label: key,
+          disabled: false,
+          onChange: (value) => {
+            activeAtom.BOMitem[key] = value;
+          },
+        };
+      }
     }
   }
 
+  const bomParamsConfig = useMemo(() => {
+    return { ...bomParams };
+  }, [bomParams]);
   const outputParamsConfig = useMemo(() => {
     return { ...outputParams };
   }, [outputParams]);
@@ -103,6 +117,7 @@ export default observer(function ParamsEditor({
     { store: store1 },
     [activeAtom]
   );
+  useControls(() => bomParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => outputParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => inputNamesConfig, { store: store1 }, [activeAtom]);

@@ -63,7 +63,7 @@ export default class AddBOMTag extends Atom {
     try {
       var inputID = this.findIOValue("geometry");
       var tag = "BOMitem";
-      //var bomList = JSON.stringify(this.BOMitem)
+      bomList = this.BOMitem;
 
       GlobalVariables.cad.tag(this.uniqueID, inputID, tag, bomList).then(() => {
         this.basicThreadValueProcessing();
