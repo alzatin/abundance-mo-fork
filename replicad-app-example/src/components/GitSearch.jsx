@@ -118,7 +118,21 @@ function GitSearch(props) {
                 left: GlobalVariables.lastClick[0] - 350 + "px",
               }}
             >
-              <img src={"/imgs/defaultThumbnail.svg"}></img>
+              <div className="GitInfoLeft">
+                <img src={"/imgs/defaultThumbnail.svg"}></img>
+                <div style={{ display: "flex" }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    style={{ transform: "scale(.7)" }}
+                    width="16"
+                    height="16"
+                  >
+                    <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+                  </svg>
+                  <p>{panelItem.stargazers_count}</p>
+                </div>
+              </div>
+
               <div className="GitInfo">
                 <span>Project Name: {panelItem.name}</span>
                 <span>Owner: {panelItem.owner.login}</span>

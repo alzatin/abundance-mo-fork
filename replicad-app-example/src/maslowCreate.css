@@ -913,6 +913,8 @@ Sidebar navigation
 .GitProjectInfoPanel img {
   width: 100px;
   height: 100px;
+}
+.GitInfoLeft {
   align-self: center;
 }
 .GitInfo {
