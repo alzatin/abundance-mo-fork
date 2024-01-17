@@ -59,12 +59,31 @@ function GitSearch(props) {
     searchBarValue = e.target.value;
   };
 
+  const [isHovering, setIsHovering] = useState(false);
+  const [panelItem, setPanelItem] = useState({});
+
+  const handleMouseOver = (item, key) => {
+    console.log(item.name);
+    console.log(key);
+    setPanelItem(item);
+  };
+  const handleMouseOut = () => {
+    setPanelItem({});
+  };
+
   const GitList = function () {
     return gitRepos.map((item, key) => {
       return (
-        <li onClick={(e) => placeGitHubMolecule(e, item)} key={key}>
-          {item.name}
-        </li>
+        <>
+          <li
+            onClick={(e) => placeGitHubMolecule(e, item)}
+            key={key}
+            onMouseEnter={() => handleMouseOver(item, key)}
+            onMouseLeave={() => handleMouseOut()}
+          >
+            {item.name}
+          </li>
+        </>
       );
     });
   };
@@ -89,6 +108,7 @@ function GitSearch(props) {
             className="menu_search_canvas"
           ></input>
           <GitList />
+          <div className="GitProjectInfoPanel">{panelItem.name}</div>
         </div>
       ) : null}
     </>

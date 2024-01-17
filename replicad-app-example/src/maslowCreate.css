@@ -895,3 +895,13 @@ Sidebar navigation
   z-index: 4;
   color: #c4a3d5;
 }
+
+/*gitmolecule info panel on hover gitmolecule from list*/
+.GitProjectInfoPanel {
+  width: 200px;
+  height: 200px;
+  position: fixed;
+  left: 250px;
+  top: 100px;
+  z-index: 10;
+}
