@@ -232,8 +232,6 @@ function actOnLeafs(assembly, action) {
   }
   //This is a branch
   else {
-    console.log("branch");
-    console.log(assembly);
     let transformedAssembly = [];
     assembly.geometry.forEach((subAssembly) => {
       transformedAssembly.push(actOnLeafs(subAssembly, action));
