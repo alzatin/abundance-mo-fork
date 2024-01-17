@@ -60,20 +60,16 @@ export default class AddBOMTag extends Atom {
    * Set the value to be the BOMitem
    */
   updateValue() {
-    if (this.inputs.every((x) => x.ready)) {
-      try {
-        var inputPath = this.findIOValue("geometry");
-        const values = {
-          op: "item",
-          tag: JSON.stringify(this.BOMitem),
-          readPath: inputPath,
-          writePath: this.path,
-        };
-        this.basicThreadValueProcessing(values);
-        this.clearAlert();
-      } catch (err) {
-        this.setAlert(err);
-      }
+    try {
+      var inputID = this.findIOValue("geometry");
+      var tag = "BOMitem";
+      //var bomList = JSON.stringify(this.BOMitem)
+
+      GlobalVariables.cad.tag(this.uniqueID, inputID, tag, bomList).then(() => {
+        this.basicThreadValueProcessing();
+      });
+    } catch (err) {
+      this.setAlert(err);
     }
   }
 
