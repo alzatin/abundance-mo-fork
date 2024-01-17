@@ -901,6 +901,8 @@ Sidebar navigation
 .GitProjectInfoPanel {
   display: flex;
   background-color: #27292ab0;
+  border: 2px solid #e7ddecc2;
+  color: white;
   width: 300px;
   height: 200px;
   position: absolute;

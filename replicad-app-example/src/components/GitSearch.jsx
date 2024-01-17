@@ -122,8 +122,9 @@ function GitSearch(props) {
             >
               <img src={"/imgs/defaultThumbnail.svg"}></img>
               <div className="GitInfo">
-                <span>{panelItem.name}</span>
-                <span>{panelItem.description || null}</span>
+                <span>Project Name: {panelItem.name}</span>
+                <span>Owner: {panelItem.owner.login}</span>
+                <span>Description: {panelItem.description || null}</span>
               </div>
             </div>
           ) : null}
