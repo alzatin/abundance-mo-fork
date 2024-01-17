@@ -194,10 +194,18 @@ function extractTags(inputGeometry, TAG) {
 function layout(targetID, inputID, TAG, spacing) {
   return started.then(() => {
     let taggedGeometry = extractTags(library[inputID], TAG);
-    library[targetID] = {
+    library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
+      return {
+        /** I'm assumming we are going to try to translate everything for the layout, I don't know how
+         * to translate to a point without having a defined plane  */
+        geometry: [leaf.geometry[0].clone().translate(-10, 0, 0)],
+        tags: leaf.tags,
+      };
+    });
+    /*library[targetID] = {
       geometry: taggedGeometry.geometry,
       tags: taggedGeometry.tags,
-    };
+    };*/
     return true;
   });
 }
@@ -224,6 +232,8 @@ function actOnLeafs(assembly, action) {
   }
   //This is a branch
   else {
+    console.log("branch");
+    console.log(assembly);
     let transformedAssembly = [];
     assembly.geometry.forEach((subAssembly) => {
       transformedAssembly.push(actOnLeafs(subAssembly, action));
