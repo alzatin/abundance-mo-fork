@@ -107,9 +107,11 @@ export default class CutLayout extends Atom {
       var tag = "cutLayout";
       var spacing = this.findIOValue("Spacing");
 
-      GlobalVariables.cad.extractTag(this.uniqueID, inputID, tag).then(() => {
-        this.basicThreadValueProcessing();
-      });
+      GlobalVariables.cad
+        .layout(this.uniqueID, inputID, tag, spacing)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        });
     } catch (err) {
       this.setAlert(err);
     }

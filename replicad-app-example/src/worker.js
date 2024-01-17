@@ -191,6 +191,17 @@ function extractTags(inputGeometry, TAG) {
   }
 }
 
+function layout(targetID, inputID, TAG, spacing) {
+  return started.then(() => {
+    let taggedGeometry = extractTags(library[inputID], TAG);
+    library[targetID] = {
+      geometry: taggedGeometry.geometry,
+      tags: taggedGeometry.tags,
+    };
+    return true;
+  });
+}
+
 function assembly(targetID, inputIDs) {
   return started.then(() => {
     const assembly = [];
@@ -311,6 +322,7 @@ expose({
   rotate,
   cut,
   tag,
+  layout,
   extractTag,
   intersect,
   assembly,
