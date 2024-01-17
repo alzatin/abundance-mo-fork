@@ -66,9 +66,11 @@ function GitSearch(props) {
     console.log(item.name);
     console.log(key);
     setPanelItem(item);
+    setIsHovering(true);
   };
   const handleMouseOut = () => {
     setPanelItem({});
+    setIsHovering(false);
   };
 
   const GitList = function () {
@@ -91,24 +93,40 @@ function GitSearch(props) {
   return (
     <>
       {props.searchingGitHub ? (
-        <div
-          id="git_search"
-          style={{
-            top: GlobalVariables.lastClick[1] + "px",
-            left: GlobalVariables.lastClick[0] + "px",
-          }}
-        >
-          <input
-            type="text"
-            id="menuInput"
-            //onBlur="value=''"
-            onKeyDown={handleKeyDown}
-            onChange={handleChange}
-            placeholder="Search for atom.."
-            className="menu_search_canvas"
-          ></input>
-          <GitList />
-          <div className="GitProjectInfoPanel">{panelItem.name}</div>
+        <div className="search-container">
+          <div
+            id="git_search"
+            style={{
+              top: GlobalVariables.lastClick[1] + "px",
+              left: GlobalVariables.lastClick[0] + "px",
+            }}
+          >
+            <input
+              type="text"
+              id="menuInput"
+              //onBlur="value=''"
+              onKeyDown={handleKeyDown}
+              onChange={handleChange}
+              placeholder="Search for atom.."
+              className="menu_search_canvas"
+            ></input>
+            <GitList />
+          </div>
+          {isHovering ? (
+            <div
+              className="GitProjectInfoPanel"
+              style={{
+                top: GlobalVariables.lastClick[1] - 50 + "px",
+                left: GlobalVariables.lastClick[0] - 350 + "px",
+              }}
+            >
+              <img src={"/imgs/defaultThumbnail.svg"}></img>
+              <div className="GitInfo">
+                <span>{panelItem.name}</span>
+                <span>{panelItem.description || null}</span>
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </>

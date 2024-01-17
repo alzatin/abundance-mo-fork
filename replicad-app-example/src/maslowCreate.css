@@ -329,6 +329,7 @@ body {
   transform: translate(-50%, -50%);
   transition: opacity 0.5s ease, transform 0.3s;
 }
+
 #git_search {
   background-color: #27292a;
   border: 1px solid #c4a3d5;
@@ -898,10 +899,23 @@ Sidebar navigation
 
 /*gitmolecule info panel on hover gitmolecule from list*/
 .GitProjectInfoPanel {
-  width: 200px;
+  display: flex;
+  background-color: #27292ab0;
+  width: 300px;
   height: 200px;
-  position: fixed;
-  left: 250px;
+  position: absolute;
+  left: 0px;
   top: 100px;
   z-index: 10;
+}
+.GitProjectInfoPanel img {
+  width: 100px;
+  height: 100px;
+  align-self: center;
+}
+.GitInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 10px;
 }
