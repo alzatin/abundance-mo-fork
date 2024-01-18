@@ -54,9 +54,7 @@ export default observer(function ParamsEditor({
         }
       });
     }
-  }
-  /** if active atom has output*/
-  if (activeAtom.output) {
+    /** Maps special molecule cases - input, constant, equation, molecule*/
     let output = activeAtom.output;
     if (activeAtom.atomType == "Input") {
       inputNames[activeAtom.name] = {
@@ -67,7 +65,8 @@ export default observer(function ParamsEditor({
           activeAtom.name = value;
         },
       };
-    } else if (activeAtom.atomType == "Constant") {
+    }
+    if (activeAtom.atomType == "Constant") {
       outputParams[activeAtom.name] = {
         value: output.value,
         label: output.name,
@@ -76,7 +75,8 @@ export default observer(function ParamsEditor({
           output.value = value;
         },
       };
-    } else if (activeAtom.atomType == "Add-BOM-Tag") {
+    }
+    if (activeAtom.atomType == "Add-BOM-Tag") {
       for (const key in activeAtom.BOMitem) {
         bomParams[key] = {
           value: activeAtom.BOMitem[key],
@@ -87,6 +87,14 @@ export default observer(function ParamsEditor({
           },
         };
       }
+    }
+    if (activeAtom.atomType == "Molecule") {
+      /**WILL NEED TO ITERATE THROUGH BOM LIST ITEMS AND MAKE LIST OR GRID/MAYBE FOLDERS  */
+      bomParams["BOMlist"] = {
+        value: activeAtom.BOMlist,
+        label: "BOMlist",
+        disabled: false,
+      };
     }
   }
 
