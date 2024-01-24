@@ -152,7 +152,6 @@ function tag(targetID, inputID, TAG) {
       geometry: library[inputID].geometry,
       tags: [TAG, ...library[inputID].tags],
     };
-    console.log(library[targetID]);
     return true;
   });
 }
@@ -161,7 +160,7 @@ function bom(targetID, inputID, TAG, BOM) {
     library[targetID] = {
       geometry: library[inputID].geometry,
       tags: [TAG, ...library[inputID].tags],
-      bom: [BOM],
+      bom: BOM,
     };
     return true;
   });
@@ -181,14 +180,11 @@ function extractTag(targetID, inputID, TAG) {
 /** Function that extracts geometry with BOM tags and returns bomItems*/
 function extractBom(inputID, TAG) {
   let taggedBoms = extractBoms(library[inputID], TAG);
-  console.log(taggedBoms);
   return taggedBoms;
 }
 
 function extractBoms(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
-    console.log("geometry includes tag");
-    console.log(inputGeometry.bom);
     return inputGeometry.bom;
   } else if (
     inputGeometry.geometry.length > 1 &&
@@ -201,8 +197,6 @@ function extractBoms(inputGeometry, TAG) {
         bomArray.push(extractedBoms);
       }
     });
-
-    console.log(bomArray);
     return bomArray;
   } else {
     return false;

@@ -3,6 +3,7 @@ import Connector from "../prototypes/connector.js";
 import GlobalVariables from "../js/globalvariables.js";
 //import saveAs from '../lib/FileSaver.js'
 import { extractBomTags } from "../js/BOM.js";
+import { re } from "mathjs";
 
 /**
  * This class creates the Molecule atom.
@@ -405,6 +406,7 @@ export default class Molecule extends Atom {
     try {
       var tag = "BOMitem";
       let bomList = GlobalVariables.cad.extractBom(this.output.value, tag);
+
       return bomList;
     } catch (err) {
       this.setAlert("Unable to read BOM");
@@ -714,7 +716,9 @@ export default class Molecule extends Atom {
   }
 
   sendToRender() {
-    console.log(this.extractBomTags(this.output.value));
+    this.extractBomTags(this.output.value).then((result) => {
+      console.log(result);
+    });
     //Send code to JSxCAD to render
     try {
       GlobalVariables.writeToDisplay(this.output.value);
