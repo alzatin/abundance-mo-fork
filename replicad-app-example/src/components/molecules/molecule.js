@@ -2,8 +2,6 @@ import Atom from "../prototypes/atom.js";
 import Connector from "../prototypes/connector.js";
 import GlobalVariables from "../js/globalvariables.js";
 //import saveAs from '../lib/FileSaver.js'
-import { extractBomTags } from "../js/BOM.js";
-import { re } from "mathjs";
 
 /**
  * This class creates the Molecule atom.
