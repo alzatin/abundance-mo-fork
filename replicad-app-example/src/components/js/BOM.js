@@ -26,11 +26,7 @@ export class BOMEntry {
      * @type {string}
      */
     this.source = "www.example.com";
-    /**
-     * The total number of this item needed for this part. Should this be removed in favor of  forcing the parts to be modeled? Probably nobody would bother.
-     * @type {number}
-     */
-    this.totalNeeded = this.numberNeeded; //Scaled by the number of this instance
+
     /**
    
      * This atom's height as drawn on the screen
