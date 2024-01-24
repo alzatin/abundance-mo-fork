@@ -91,7 +91,7 @@ export default observer(function ParamsEditor({
     if (activeAtom.atomType == "Molecule") {
       /**WILL NEED TO ITERATE THROUGH BOM LIST ITEMS AND MAKE LIST OR GRID/MAYBE FOLDERS  */
       bomParams["BOMlist"] = {
-        value: activeAtom.BOMlist,
+        value: 0 /*activeAtom.BOMlist*/,
         label: "BOMlist",
         disabled: false,
       };
@@ -169,7 +169,6 @@ export default observer(function ParamsEditor({
           collapsed={true}
           hideCopyButton
           fill
-          oneLineLabels={true}
           titleBar={{
             title: activeAtom.name || globalvariables.currentRepo.name,
           }}

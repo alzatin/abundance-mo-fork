@@ -15,7 +15,7 @@ export class BOMEntry {
      * The number of this item needed.
      * @type {number}
      */
-    this.numberNeeded = 1;
+    /*this.numberNeeded = 1;*/
     /**
      * The cost of one of this item in USD.
      * @type {number}
@@ -30,13 +30,9 @@ export class BOMEntry {
      * The total number of this item needed for this part. Should this be removed in favor of  forcing the parts to be modeled? Probably nobody would bother.
      * @type {number}
      */
-    this.totalNeeded = this.numberNeeded; //Scaled by the number of this instance
+    /*this.totalNeeded = this.numberNeeded; //Scaled by the number of this instance
     /**
-     * This atom's radius as displayed on the screen is 1/72 width
-     * @type {number}
-     */
-    this.radius = 1 / 65;
-    /**
+   
      * This atom's height as drawn on the screen
      */
     this.height;
