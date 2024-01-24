@@ -40,46 +40,6 @@ export class BOMEntry {
 }
 
 /**
- * Computes and returns an array of BOMEntry objects after looking at the tags of a geometry.
- * @param {string} path - The geometry which should be scanned for tags.
- */
-export const extractBomTags = function (path, functionToPlace) {
-  //Extract all of the tags
-  const { answer } = window.ask({ op: "listItems", readPath: path });
-  answer.then((items) => {
-    // Filter for only bomItems
-
-    var bomItems = items.filter((item) => {
-      return item.substring(2, 13) == "BOMitemName";
-    });
-
-    bomItems = bomItems.map(JSON.parse);
-
-    // Consolidate similar items into a single item
-    var compiledArray = [];
-    bomItems.forEach(function (bomElement) {
-      if (!this[bomElement.BOMitemName]) {
-        //If the list of items doesn't already have one of these
-        this[bomElement.BOMitemName] = new BOMEntry(); //Create one
-        this[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
-        this[bomElement.BOMitemName].BOMitemName = bomElement.BOMitemName; //With the information from the item
-        this[bomElement.BOMitemName].source = bomElement.source;
-        compiledArray.push(this[bomElement.BOMitemName]);
-      }
-      this[bomElement.BOMitemName].numberNeeded += bomElement.numberNeeded;
-      this[bomElement.BOMitemName].costUSD += bomElement.costUSD;
-    }, Object.create(null));
-
-    // Alphabetize by source
-    compiledArray = compiledArray.sort((a, b) =>
-      a.source > b.source ? 1 : b.source > a.source ? -1 : 0
-    );
-
-    functionToPlace(compiledArray);
-  });
-};
-
-/**
  * Takes a link and converts it to be an affiliate link if it should be.
  * @param {string} link - The link to check.
  */

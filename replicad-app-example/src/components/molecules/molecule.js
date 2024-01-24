@@ -364,44 +364,7 @@ export default class Molecule extends Atom {
   }
 
   /**
-   * Creates a simple BOM list which cannot be edited. The generated element is added to the passed list.
-   * @param {object} list - The HTML object to append the created element to.
-   WILL PROBABLY DELETE */
-  displaySimpleBOM(list) {
-    try {
-      const placementFunction = (bomList) => {
-        if (bomList.length > 0) {
-          list.appendChild(document.createElement("br"));
-          list.appendChild(document.createElement("br"));
-
-          var div = document.createElement("h3");
-          div.setAttribute("style", "text-align:center;");
-          list.appendChild(div);
-          var valueText = document.createTextNode("Bill Of Materials");
-          div.appendChild(valueText);
-
-          var x = document.createElement("HR");
-          list.appendChild(x);
-
-          bomList.forEach((bomEntry) => {
-            this.createNonEditableValueListItem(
-              list,
-              bomEntry,
-              "numberNeeded",
-              bomEntry.BOMitemName,
-              false
-            );
-          });
-        }
-      };
-
-      // extractBomTags(this.path, placementFunction);
-    } catch (err) {
-      this.setAlert("Unable to read BOM");
-    }
-  }
-
-  /** Extract bom tag geometry and add it to list */
+   * Computes and returns an array of BOMEntry objects after looking at the tags of a geometry.*/
   extractBomTags() {
     try {
       var tag = "BOMitem";
