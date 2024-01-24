@@ -716,9 +716,6 @@ export default class Molecule extends Atom {
   }
 
   sendToRender() {
-    this.extractBomTags(this.output.value).then((result) => {
-      console.log(result);
-    });
     //Send code to JSxCAD to render
     try {
       GlobalVariables.writeToDisplay(this.output.value);
