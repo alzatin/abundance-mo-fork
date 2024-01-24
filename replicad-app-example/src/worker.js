@@ -163,7 +163,6 @@ function bom(targetID, inputID, TAG, BOM) {
       tags: [TAG, ...library[inputID].tags],
       bom: [BOM],
     };
-    console.log(library[targetID]);
     return true;
   });
 }
@@ -177,6 +176,37 @@ function extractTag(targetID, inputID, TAG) {
     };
     return true;
   });
+}
+
+/** Function that extracts geometry with BOM tags and returns bomItems*/
+function extractBom(inputID, TAG) {
+  let taggedBoms = extractBoms(library[inputID], TAG);
+  console.log(taggedBoms);
+  return taggedBoms;
+}
+
+function extractBoms(inputGeometry, TAG) {
+  if (inputGeometry.tags.includes(TAG)) {
+    console.log("geometry includes tag");
+    console.log(inputGeometry.bom);
+    return inputGeometry.bom;
+  } else if (
+    inputGeometry.geometry.length > 1 &&
+    inputGeometry.geometry[0].geometry != undefined
+  ) {
+    let bomArray = [];
+    inputGeometry.geometry.forEach((subAssembly) => {
+      let extractedBoms = extractBoms(subAssembly, TAG);
+      if (extractedBoms != false) {
+        bomArray.push(extractedBoms);
+      }
+    });
+
+    console.log(bomArray);
+    return bomArray;
+  } else {
+    return false;
+  }
 }
 
 function extractTags(inputGeometry, TAG) {
@@ -320,6 +350,7 @@ expose({
   rectangle,
   generateDisplayMesh,
   extrude,
+  extractBom,
   move,
   rotate,
   cut,

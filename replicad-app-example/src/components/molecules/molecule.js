@@ -93,6 +93,11 @@ export default class Molecule extends Atom {
      * @type {array}
      */
     this.unitsIndex = 0;
+    /**
+     * List of BOM items.
+     * @type {array}
+     */
+    this.BOMlist;
 
     this.setValues(values);
   }
@@ -360,7 +365,7 @@ export default class Molecule extends Atom {
   /**
    * Creates a simple BOM list which cannot be edited. The generated element is added to the passed list.
    * @param {object} list - The HTML object to append the created element to.
-   */
+   WILL PROBABLY DELETE */
   displaySimpleBOM(list) {
     try {
       const placementFunction = (bomList) => {
@@ -389,7 +394,18 @@ export default class Molecule extends Atom {
         }
       };
 
-      extractBomTags(this.path, placementFunction);
+      // extractBomTags(this.path, placementFunction);
+    } catch (err) {
+      this.setAlert("Unable to read BOM");
+    }
+  }
+
+  /** Extract bom tag geometry and add it to list */
+  extractBomTags() {
+    try {
+      var tag = "BOMitem";
+      let bomList = GlobalVariables.cad.extractBom(this.output.value, tag);
+      return bomList;
     } catch (err) {
       this.setAlert("Unable to read BOM");
     }
@@ -698,6 +714,7 @@ export default class Molecule extends Atom {
   }
 
   sendToRender() {
+    console.log(this.extractBomTags(this.output.value));
     //Send code to JSxCAD to render
     try {
       GlobalVariables.writeToDisplay(this.output.value);
