@@ -92,7 +92,14 @@ export default observer(function ParamsEditor({
     if (activeAtom.atomType == "Molecule") {
       activeAtom.extractBomTags(activeAtom.output.value).then((result) => {
         if (result != undefined) {
-          console.log(result);
+          result.map((item) => {
+            console.log(item.BOMitemName);
+            bomParams["other"] = {
+              value: item.BOMitemName,
+              label: "me",
+              disabled: false,
+            };
+          });
         }
       });
     }
