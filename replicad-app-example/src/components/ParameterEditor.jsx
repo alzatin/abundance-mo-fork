@@ -92,7 +92,6 @@ export default observer(function ParamsEditor({
       /**WILL NEED TO ITERATE THROUGH BOM LIST ITEMS AND MAKE LIST OR GRID/MAYBE FOLDERS  */
       activeAtom.extractBomTags(activeAtom.output.value).then((result) => {
         result.map((item) => {
-          console.log(item);
           //menu not working
           bomParams[item] = {
             value: item,
