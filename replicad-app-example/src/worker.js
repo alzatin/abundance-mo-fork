@@ -179,10 +179,11 @@ function extractTag(targetID, inputID, TAG) {
 
 /** Function that extracts geometry with BOM tags and returns bomItems*/
 function extractBom(inputID, TAG) {
-  let taggedBoms = extractBoms(library[inputID], TAG);
-  console.log("returning from worker");
-  console.log(taggedBoms);
-  return taggedBoms;
+  // only try to get tags if library entry for molecule exists
+  if (library[inputID]) {
+    let taggedBoms = extractBoms(library[inputID], TAG);
+    return taggedBoms;
+  }
 }
 
 function extractBoms(inputGeometry, TAG) {
@@ -236,7 +237,7 @@ function assembly(targetID, inputIDs) {
       assembly.push(library[inputIDs[i]]);
     }
     library[targetID] = { geometry: assembly, tags: [] };
-    console.log(library[targetID]);
+
     return true;
   });
 }

@@ -516,8 +516,6 @@ export default class Molecule extends Atom {
     if (json.allAtoms) {
       json.allAtoms.forEach((atom) => {
         //Place the atoms
-        console.log(atom);
-
         const promise = this.placeAtom(atom, false);
         promiseArray.push(promise);
         this.setValues([]); //Call set values again with an empty list to trigger loading of IO values from memory

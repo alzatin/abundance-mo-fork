@@ -84,21 +84,16 @@ export default observer(function ParamsEditor({
           disabled: false,
           onChange: (value) => {
             activeAtom.BOMitem[key] = value;
+            activeAtom.updateValue();
           },
         };
       }
     }
     if (activeAtom.atomType == "Molecule") {
-      /**WILL NEED TO ITERATE THROUGH BOM LIST ITEMS AND MAKE LIST OR GRID/MAYBE FOLDERS  */
       activeAtom.extractBomTags(activeAtom.output.value).then((result) => {
-        result.map((item) => {
-          //menu not working
-          bomParams[item] = {
-            value: item,
-            label: item,
-            disabled: false,
-          };
-        });
+        if (result != undefined) {
+          console.log(result);
+        }
       });
     }
   }
