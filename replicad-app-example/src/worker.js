@@ -155,6 +155,16 @@ function tag(targetID, inputID, TAG) {
     return true;
   });
 }
+function bom(targetID, inputID, TAG, BOM) {
+  return started.then(() => {
+    library[targetID] = {
+      geometry: library[inputID].geometry,
+      tags: [TAG, ...library[inputID].tags],
+      bom: BOM,
+    };
+    return true;
+  });
+}
 
 function extractTag(targetID, inputID, TAG) {
   return started.then(() => {
@@ -165,6 +175,35 @@ function extractTag(targetID, inputID, TAG) {
     };
     return true;
   });
+}
+
+/** Function that extracts geometry with BOM tags and returns bomItems*/
+function extractBom(inputID, TAG) {
+  // only try to get tags if library entry for molecule exists
+  if (library[inputID]) {
+    let taggedBoms = extractBoms(library[inputID], TAG);
+    return taggedBoms;
+  }
+}
+
+function extractBoms(inputGeometry, TAG) {
+  if (inputGeometry.tags.includes(TAG)) {
+    return inputGeometry.bom;
+  } else if (
+    inputGeometry.geometry.length > 1 &&
+    inputGeometry.geometry[0].geometry != undefined
+  ) {
+    let bomArray = [];
+    inputGeometry.geometry.forEach((subAssembly) => {
+      let extractedBoms = extractBoms(subAssembly, TAG);
+      if (extractedBoms != false) {
+        bomArray.push(extractedBoms);
+      }
+    });
+    return bomArray;
+  } else {
+    return false;
+  }
 }
 
 function extractTags(inputGeometry, TAG) {
@@ -217,6 +256,7 @@ function assembly(targetID, inputIDs) {
       assembly.push(library[inputIDs[i]]);
     }
     library[targetID] = { geometry: assembly, tags: [] };
+
     return true;
   });
 }
@@ -326,11 +366,13 @@ expose({
   rectangle,
   generateDisplayMesh,
   extrude,
+  extractBom,
   move,
   rotate,
   cut,
   tag,
   layout,
+  bom,
   extractTag,
   intersect,
   assembly,

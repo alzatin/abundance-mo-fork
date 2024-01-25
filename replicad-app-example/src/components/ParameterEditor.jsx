@@ -29,7 +29,7 @@ export default observer(function ParamsEditor({
   let inputParams = {};
   let outputParams = {};
   let inputNames = {};
-
+  let bomParams = {};
   const store1 = useCreateStore();
   const store2 = useCreateStore();
 
@@ -54,9 +54,7 @@ export default observer(function ParamsEditor({
         }
       });
     }
-  }
-  /** if active atom has output*/
-  if (activeAtom.output) {
+    /** Maps special molecule cases - input, constant, equation, molecule*/
     let output = activeAtom.output;
     if (activeAtom.atomType == "Input") {
       inputNames[activeAtom.name] = {
@@ -67,7 +65,8 @@ export default observer(function ParamsEditor({
           activeAtom.name = value;
         },
       };
-    } else if (activeAtom.atomType == "Constant") {
+    }
+    if (activeAtom.atomType == "Constant") {
       outputParams[activeAtom.name] = {
         value: output.value,
         label: output.name,
@@ -77,8 +76,38 @@ export default observer(function ParamsEditor({
         },
       };
     }
+    if (activeAtom.atomType == "Add-BOM-Tag") {
+      for (const key in activeAtom.BOMitem) {
+        bomParams[key] = {
+          value: activeAtom.BOMitem[key],
+          label: key,
+          disabled: false,
+          onChange: (value) => {
+            activeAtom.BOMitem[key] = value;
+            activeAtom.updateValue();
+          },
+        };
+      }
+    }
+    if (activeAtom.atomType == "Molecule") {
+      activeAtom.extractBomTags(activeAtom.output.value).then((result) => {
+        if (result != undefined) {
+          result.map((item) => {
+            console.log(item.BOMitemName);
+            bomParams["other"] = {
+              value: item.BOMitemName,
+              label: "me",
+              disabled: false,
+            };
+          });
+        }
+      });
+    }
   }
 
+  const bomParamsConfig = useMemo(() => {
+    return { ...bomParams };
+  }, [bomParams]);
   const outputParamsConfig = useMemo(() => {
     return { ...outputParams };
   }, [outputParams]);
@@ -103,6 +132,7 @@ export default observer(function ParamsEditor({
     { store: store1 },
     [activeAtom]
   );
+  useControls(() => bomParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => outputParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => inputNamesConfig, { store: store1 }, [activeAtom]);
@@ -146,7 +176,6 @@ export default observer(function ParamsEditor({
           collapsed={true}
           hideCopyButton
           fill
-          oneLineLabels={true}
           titleBar={{
             title: activeAtom.name || globalvariables.currentRepo.name,
           }}
