@@ -68,44 +68,6 @@ function runMode(props) {
   var navigate = useNavigate();
   const { id } = useParams();
 
-  // Loads project
-  const loadProject = function (project) {
-    GlobalVariables.loadedRepo = project;
-    GlobalVariables.currentRepoName = project.name;
-    GlobalVariables.currentRepo = project;
-    GlobalVariables.totalAtomCount = 0;
-    GlobalVariables.numberOfAtomsToLoad = 0;
-    GlobalVariables.startTime = new Date().getTime();
-
-    var octokit = new Octokit();
-
-    /* not sure what this is doing
-    GlobalVariables.c.moveTo(0, 0);
-    GlobalVariables.c.lineTo(500, 500);
-    GlobalVariables.c.fill();
-    GlobalVariables.c.stroke();
-    */
-
-    octokit
-      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
-        owner: project.owner.login,
-        repo: project.name,
-      })
-      .then((response) => {
-        //content will be base64 encoded
-        let rawFile = JSON.parse(atob(response.data.content));
-
-        if (rawFile.filetypeVersion == 1) {
-          GlobalVariables.topLevelMolecule.deserialize(rawFile);
-        } else {
-          GlobalVariables.topLevelMolecule.deserialize(
-            convertFromOldFormat(rawFile)
-          );
-        }
-        setActiveAtom(GlobalVariables.currentMolecule);
-      });
-  };
-
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
     console.log(canvasRef);
@@ -124,7 +86,7 @@ function runMode(props) {
           atomType: "Molecule",
         });
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-        loadProject(GlobalVariables.currentRepo);
+        props.props.loadProject(GlobalVariables.currentRepo);
       }
     });
 
