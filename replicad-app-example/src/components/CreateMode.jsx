@@ -14,6 +14,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { compile } from "mathjs";
+import globalvariables from "./js/globalvariables.js";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -55,8 +56,8 @@ function CreateMode(props) {
   });
 
   const handleBodyClick = (e) => {
-    e.preventDefault();
-    if (e.key == "s") {
+    if (e.metaKey && e.key == "s") {
+      e.preventDefault();
       setSavePopUp(true);
       saveProject(setSaveState);
     }
