@@ -46,6 +46,22 @@ function CreateMode(props) {
     }
   }, [activeAtom]);
 
+  useEffect(() => {
+    window.addEventListener("keydown", handleBodyClick);
+
+    return () => {
+      window.removeEventListener("keydown", handleBodyClick);
+    };
+  });
+
+  const handleBodyClick = (e) => {
+    e.preventDefault();
+    if (e.key == "s") {
+      setSavePopUp(true);
+      saveProject(setSaveState);
+    }
+  };
+
   let bomContent = "";
 
   /** Display props for replicad renderer  */
@@ -323,7 +339,13 @@ function CreateMode(props) {
             ) : null}
 
             <LowerHalf
-              props={{ gridParam: gridParam, axesParam: axesParam }}
+              props={{
+                gridParam: gridParam,
+                axesParam: axesParam,
+                saveProject: saveProject,
+                setSaveState: setSaveState,
+                setSaveState: setSaveState,
+              }}
               displayProps={{
                 mesh: mesh,
                 setMesh: setMesh,
