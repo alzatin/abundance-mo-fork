@@ -707,6 +707,33 @@ export default class Atom {
     }
   }
 
+  /* Create Leva Menu inputs*/
+  createLevaInputs() {
+    console.log("running creation of inputs");
+
+    let inputParams = {};
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
+        if (input.valueType !== "geometry") {
+          inputParams[input.name] = {
+            value: input.value,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              input.setValue(value);
+              this.sendToRender();
+            },
+          };
+        }
+      });
+      return inputParams;
+    }
+  }
   /**
    * Find the value of an input for with a given name.
    * @param {string} ioName - The name of the target attachment point.

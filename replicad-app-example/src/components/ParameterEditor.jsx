@@ -34,26 +34,7 @@ export default observer(function ParamsEditor({
   const store2 = useCreateStore();
 
   if (activeAtom !== null) {
-    /** Runs through active atom inputs and adds IO parameters to default param*/
-    if (activeAtom.inputs) {
-      activeAtom.inputs.map((input) => {
-        const checkConnector = () => {
-          return input.connectors.length > 0;
-        };
-
-        /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
-        if (input.valueType !== "geometry") {
-          inputParams[input.name] = {
-            value: input.value,
-            disabled: checkConnector(),
-            onChange: (value) => {
-              input.setValue(value);
-              activeAtom.sendToRender();
-            },
-          };
-        }
-      });
-    }
+    inputParams = activeAtom.createLevaInputs();
     /** Maps special molecule cases - input, constant, equation, molecule*/
     let output = activeAtom.output;
     if (activeAtom.atomType == "Input") {
@@ -76,19 +57,7 @@ export default observer(function ParamsEditor({
         },
       };
     }
-    if (activeAtom.atomType == "Add-BOM-Tag") {
-      for (const key in activeAtom.BOMitem) {
-        bomParams[key] = {
-          value: activeAtom.BOMitem[key],
-          label: key,
-          disabled: false,
-          onChange: (value) => {
-            activeAtom.BOMitem[key] = value;
-            activeAtom.updateValue();
-          },
-        };
-      }
-    }
+
     if (activeAtom.atomType == "Molecule") {
       activeAtom.extractBomTags(activeAtom.output.value).then((result) => {
         if (result != undefined) {
