@@ -47,16 +47,6 @@ export default observer(function ParamsEditor({
         },
       };
     }
-    if (activeAtom.atomType == "Constant") {
-      outputParams[activeAtom.name] = {
-        value: output.value,
-        label: output.name,
-        disabled: false,
-        onChange: (value) => {
-          output.value = value;
-        },
-      };
-    }
 
     if (activeAtom.atomType == "Molecule") {
       activeAtom.extractBomTags(activeAtom.output.value).then((result) => {

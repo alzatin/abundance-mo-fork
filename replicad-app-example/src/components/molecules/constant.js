@@ -78,6 +78,18 @@ export default class Constant extends Atom {
     super.draw("rect");
   }
 
+  createLevaInputs() {
+    let outputParams = {};
+    outputParams[this.name] = {
+      value: this.output.value,
+      label: this.output.name,
+      disabled: false,
+      onChange: (value) => {
+        this.output.value = value;
+      },
+    };
+    return outputParams;
+  }
   /**
    * Set's the output value and shows the atom output on the 3D view.
    */
