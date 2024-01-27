@@ -37,16 +37,6 @@ export default observer(function ParamsEditor({
     inputParams = activeAtom.createLevaInputs();
     /** Maps special molecule cases - input, constant, equation, molecule*/
     let output = activeAtom.output;
-    if (activeAtom.atomType == "Input") {
-      inputNames[activeAtom.name] = {
-        value: activeAtom.name,
-        label: activeAtom.name,
-        disabled: false,
-        onChange: (value) => {
-          activeAtom.name = value;
-        },
-      };
-    }
 
     if (activeAtom.atomType == "Molecule") {
       activeAtom.extractBomTags(activeAtom.output.value).then((result) => {

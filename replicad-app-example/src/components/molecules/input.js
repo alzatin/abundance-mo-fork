@@ -210,6 +210,18 @@ export default class Input extends Atom {
     return this.value;
   }
 
+  createLevaInputs() {
+    let inputNames = {};
+    inputNames[this.name] = {
+      value: this.name,
+      label: this.name,
+      disabled: false,
+      onChange: (value) => {
+        this.name = value;
+      },
+    };
+    return inputNames;
+  }
   /**
    * Returns the current value being output
    */
