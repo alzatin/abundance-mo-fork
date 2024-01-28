@@ -209,7 +209,7 @@ export default class Input extends Atom {
     });
     return this.value;
   }
-
+  /**Create Leva menu inputs for names of inputs to be editable*/
   createLevaInputs() {
     let inputNames = {};
     inputNames[this.name] = {

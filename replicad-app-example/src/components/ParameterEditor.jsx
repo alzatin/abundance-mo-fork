@@ -34,9 +34,8 @@ export default observer(function ParamsEditor({
   const store2 = useCreateStore();
 
   if (activeAtom !== null) {
+    /** Creates Leva inputs inside each atom */
     inputParams = activeAtom.createLevaInputs();
-    /** Maps special molecule cases - input, constant, equation, molecule*/
-    let output = activeAtom.output;
 
     if (activeAtom.atomType == "Molecule") {
       activeAtom.extractBomTags(activeAtom.output.value).then((result) => {
@@ -57,15 +56,9 @@ export default observer(function ParamsEditor({
   const bomParamsConfig = useMemo(() => {
     return { ...bomParams };
   }, [bomParams]);
-  const outputParamsConfig = useMemo(() => {
-    return { ...outputParams };
-  }, [outputParams]);
   const inputParamsConfig = useMemo(() => {
     return { ...inputParams };
   }, [inputParams]);
-  const inputNamesConfig = useMemo(() => {
-    return { ...inputNames };
-  }, [inputNames]);
 
   /** Creates Leva panel with parameters from active atom inputs */
 
@@ -83,8 +76,6 @@ export default observer(function ParamsEditor({
   );
   useControls(() => bomParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
-  useControls(() => outputParamsConfig, { store: store1 }, [activeAtom]);
-  useControls(() => inputNamesConfig, { store: store1 }, [activeAtom]);
 
   /** Creates Leva panel with grid settings */
   useControls(
