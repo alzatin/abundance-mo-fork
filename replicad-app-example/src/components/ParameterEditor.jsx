@@ -18,17 +18,8 @@ import {
 import { falseDependencies } from "mathjs";
 
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
-export default observer(function ParamsEditor({
-  activeAtom,
-  setActiveAtom,
-  hidden,
-  run,
-  setGrid,
-  setAxes,
-}) {
+export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
   let inputParams = {};
-  let outputParams = {};
-  let inputNames = {};
   let bomParams = {};
   const store1 = useCreateStore();
   const store2 = useCreateStore();
