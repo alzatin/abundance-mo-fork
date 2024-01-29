@@ -706,11 +706,10 @@ export default class Atom {
       this.setAlert(err);
     }
   }
-
-  /* Create Leva Menu inputs*/
+  /**
+   * Create Leva Menu Inputs - returns to ParameterEditor
+   */
   createLevaInputs() {
-    console.log("running creation of inputs");
-
     let inputParams = {};
     /** Runs through active atom inputs and adds IO parameters to default param*/
     if (this.inputs) {
@@ -719,13 +718,14 @@ export default class Atom {
           return input.connectors.length > 0;
         };
 
-        /*Checks for inputs labeled geometry and disables them / (bug: might be storing and deleting geometry as input)*/
+        /* Makes inputs for Io's other than geometry */
         if (input.valueType !== "geometry") {
           inputParams[input.name] = {
             value: input.value,
             disabled: checkConnector(),
             onChange: (value) => {
               input.setValue(value);
+              /** should we run updateValue too? */
               this.sendToRender();
             },
           };

@@ -204,12 +204,15 @@ export default class Input extends Atom {
       if (input.name == this.name) {
         input.loadTree();
         this.value = input.value;
+        /* should we run update value here too*/
         this.output.value = input.value;
       }
     });
     return this.value;
   }
-  /**Create Leva menu inputs for names of inputs to be editable*/
+  /**
+   * Create Leva Menu Inputs for Editable Input Names - returns to ParameterEditor
+   */
   createLevaInputs() {
     let inputNames = {};
     inputNames[this.name] = {

@@ -77,7 +77,9 @@ export default class Constant extends Atom {
   draw() {
     super.draw("rect");
   }
-
+  /**
+   * Create Leva Menu Input - returns to ParameterEditor
+   */
   createLevaInputs() {
     let outputParams = {};
     outputParams[this.name] = {

@@ -158,6 +158,9 @@ export default class Molecule extends Atom {
     GlobalVariables.c.fill();
   }
 
+  /**
+   * Create Leva Menu Inputs for BOM list  - returns to ParameterEditor - will be table or list of totals
+   */
   createLevaBomInputs() {
     let bomParams = [];
     bomParams = this.extractBomTags(this.output.value);
