@@ -14,6 +14,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { compile } from "mathjs";
+import globalvariables from "./js/globalvariables.js";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -45,6 +46,22 @@ function CreateMode(props) {
       setTop(!activeAtom.topLevel);
     }
   }, [activeAtom]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleBodyClick);
+
+    return () => {
+      window.removeEventListener("keydown", handleBodyClick);
+    };
+  });
+
+  const handleBodyClick = (e) => {
+    if (e.metaKey && e.key == "s") {
+      e.preventDefault();
+      setSavePopUp(true);
+      saveProject(setSaveState);
+    }
+  };
 
   let bomContent = "";
 
@@ -336,7 +353,13 @@ function CreateMode(props) {
             ) : null}
 
             <LowerHalf
-              props={{ gridParam: gridParam, axesParam: axesParam }}
+              props={{
+                gridParam: gridParam,
+                axesParam: axesParam,
+                saveProject: saveProject,
+                setSaveState: setSaveState,
+                setSaveState: setSaveState,
+              }}
               displayProps={{
                 mesh: mesh,
                 setMesh: setMesh,

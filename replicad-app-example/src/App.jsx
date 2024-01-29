@@ -54,6 +54,7 @@ export default function ReplicadApp() {
 
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
+
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
