@@ -339,14 +339,14 @@ function CreateMode(props) {
     octokit.request("GET /repositories/:id", { id }).then((result) => {
       GlobalVariables.currentRepoName = result.data.name;
       GlobalVariables.currentRepo = result.data;
-      props.props
+      /*props.props
         .tryLogin()
         .then((result) => {
           navigate(`/${GlobalVariables.currentRepo.id}`);
         })
         .catch((error) => {
           navigate(`/run/${GlobalVariables.currentRepo.id}`);
-        });
+        });*/
     });
 
     //tryLogin();
