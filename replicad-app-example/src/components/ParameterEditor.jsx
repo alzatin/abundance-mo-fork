@@ -27,20 +27,9 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
   if (activeAtom !== null) {
     /** Creates Leva inputs inside each atom */
     inputParams = activeAtom.createLevaInputs();
-
     if (activeAtom.atomType == "Molecule") {
-      activeAtom.extractBomTags(activeAtom.output.value).then((result) => {
-        if (result != undefined) {
-          result.map((item) => {
-            console.log(item.BOMitemName);
-            bomParams["other"] = {
-              value: item.BOMitemName,
-              label: "me",
-              disabled: false,
-            };
-          });
-        }
-      });
+      bomParams = activeAtom.createLevaBomInputs();
+      console.log(bomParams);
     }
   }
 
@@ -65,7 +54,7 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
     { store: store1 },
     [activeAtom]
   );
-  useControls(() => bomParamsConfig, { store: store1 }, [activeAtom]);
+  useControls(() => bomParamsConfig, { store: store2 }, [activeAtom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
 
   /** Creates Leva panel with grid settings */

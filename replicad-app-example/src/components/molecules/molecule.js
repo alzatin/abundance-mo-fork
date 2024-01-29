@@ -158,6 +158,22 @@ export default class Molecule extends Atom {
     GlobalVariables.c.fill();
   }
 
+  createLevaBomInputs() {
+    let bomParams = [];
+    this.extractBomTags(this.output.value).then((result) => {
+      if (result != undefined) {
+        result.map((item) => {
+          bomParams[item.BOMitemName] = {
+            value: item.BOMitemName,
+            label: item.BOMitemName,
+            disabled: false,
+          };
+        });
+        return bomParams;
+      }
+    });
+  }
+
   /**
    * Set the atom's response to a mouse click up. If the atom is moving this makes it stop moving.
    * @param {number} x - The X coordinate of the click
