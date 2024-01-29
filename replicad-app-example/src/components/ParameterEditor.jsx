@@ -76,6 +76,17 @@ export default observer(function ParamsEditor({
         },
       };
     }
+    if (activeAtom.atomType == "Readme") {
+      outputParams[activeAtom.name] = {
+        value: activeAtom.readmeText,
+        label: "Read Me Text",
+        disabled: false,
+        rows: 6,
+        onChange: (value) => {
+          activeAtom.setValue(value);
+        },
+      };
+    }
     if (activeAtom.atomType == "Add-BOM-Tag") {
       for (const key in activeAtom.BOMitem) {
         bomParams[key] = {
