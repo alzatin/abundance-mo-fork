@@ -339,6 +339,7 @@ function CreateMode(props) {
     octokit.request("GET /repositories/:id", { id }).then((result) => {
       GlobalVariables.currentRepoName = result.data.name;
       GlobalVariables.currentRepo = result.data;
+      //auto login - turned off for development
       /*props.props
         .tryLogin()
         .then((result) => {
