@@ -30,6 +30,7 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
     if (activeAtom.atomType == "Molecule") {
       activeAtom.createLevaBomInputs().then((res) => {
         console.log(res);
+        bomParams = res;
       });
     }
   }
@@ -55,7 +56,7 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
     { store: store1 },
     [activeAtom]
   );
-  useControls(() => bomParamsConfig, { store: store2 }, [activeAtom]);
+  useControls(() => bomParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
 
   /** Creates Leva panel with grid settings */
