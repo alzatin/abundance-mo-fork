@@ -160,7 +160,8 @@ export default class Molecule extends Atom {
 
   createLevaBomInputs() {
     let bomParams = [];
-    this.extractBomTags(this.output.value).then((result) => {
+    bomParams = this.extractBomTags(this.output.value);
+    bomParams.then((result) => {
       if (result != undefined) {
         result.map((item) => {
           bomParams[item.BOMitemName] = {
@@ -169,9 +170,9 @@ export default class Molecule extends Atom {
             disabled: false,
           };
         });
-        return bomParams;
       }
     });
+    return bomParams;
   }
 
   /**

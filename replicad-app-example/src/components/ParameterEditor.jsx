@@ -28,8 +28,9 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
     /** Creates Leva inputs inside each atom */
     inputParams = activeAtom.createLevaInputs();
     if (activeAtom.atomType == "Molecule") {
-      bomParams = activeAtom.createLevaBomInputs();
-      console.log(bomParams);
+      activeAtom.createLevaBomInputs().then((res) => {
+        console.log(res);
+      });
     }
   }
 
