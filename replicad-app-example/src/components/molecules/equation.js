@@ -132,6 +132,45 @@ export default class Equation extends Atom {
   }
 
   /**
+   * Create Leva Menu Inputs - returns to ParameterEditor
+   */
+  createLevaInputs() {
+    // recreate inputs
+    let inputParams = {};
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        /* Makes inputs for Io's other than geometry */
+        if (input.valueType !== "geometry") {
+          inputParams[input.name] = {
+            value: input.value,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              input.setValue(value);
+              /** should we run updateValue too? */
+              this.sendToRender();
+            },
+          };
+        }
+        /* Make an input for the equation itself */
+        inputParams["equation"] = {
+          value: activeAtom.currentEquation,
+          label: "Current Equation",
+          disabled: false,
+          onChange: (value) => {
+            //handleEquationInputChange(value);
+          },
+        };
+      });
+      return inputParams;
+    }
+  }
+
+  /**
    * Evaluate the equation adding and removing inputs as needed
    */
   updateValue() {
