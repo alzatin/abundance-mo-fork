@@ -1,24 +1,16 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import { observer } from "mobx-react";
-
-import { useParams } from "react-router-dom";
-import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import globalvariables from "./js/globalvariables";
 
-import {
-  useControls,
-  useStoreContext,
-  useCreateStore,
-  LevaPanel,
-  levaStore,
-  LevaStoreProvider,
-  Leva,
-  folder,
-} from "leva";
-import { falseDependencies } from "mathjs";
+import { useControls, useCreateStore, LevaPanel } from "leva";
 
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
-export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
+export default observer(function ParamsEditor({
+  activeAtom,
+  run,
+  setGrid,
+  setAxes,
+}) {
   let inputParams = {};
   let bomParams = {};
   const store1 = useCreateStore();
@@ -27,15 +19,16 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
   if (activeAtom !== null) {
     /** Creates Leva inputs inside each atom */
     inputParams = activeAtom.createLevaInputs();
+    /** Creates Leva inputs for BOM if active atom is molecule  */
     if (activeAtom.atomType == "Molecule") {
       activeAtom.createLevaBomInputs().then((res) => {
-        console.log(res);
         bomParams = res;
       });
     }
   }
 
   const bomParamsConfig = useMemo(() => {
+    console.log(bomParams);
     return { ...bomParams };
   }, [bomParams]);
   const inputParamsConfig = useMemo(() => {
