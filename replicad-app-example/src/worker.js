@@ -204,6 +204,19 @@ function getStl(targetID, inputID) {
   });
 }
 
+/** STEP*/
+function getStep(targetID, inputID) {
+  return started.then(() => {
+    // Fuse geometry and then blob it
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+    library[targetID] = {
+      geometry: [fusedGeometry.clone().blobSTEP()],
+    };
+    console.log(library[targetID]);
+    return library[targetID].geometry[0];
+  });
+}
+
 function extractBoms(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return inputGeometry.bom;
@@ -387,6 +400,7 @@ expose({
   extractBom,
   getSVG,
   getStl,
+  getStep,
   move,
   rotate,
   cut,
