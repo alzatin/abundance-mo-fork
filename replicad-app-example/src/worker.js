@@ -200,7 +200,7 @@ function getStl(targetID, inputID) {
       geometry: [fusedGeometry.clone().blobSTL()],
     };
     console.log(library[targetID]);
-    return true;
+    return library[targetID].geometry[0];
   });
 }
 

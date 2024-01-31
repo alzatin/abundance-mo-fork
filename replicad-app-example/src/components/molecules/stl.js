@@ -93,14 +93,11 @@ export default class Stl extends Atom {
       let inputID = this.findIOValue("geometry");
       console.log(inputID);
 
-      GlobalVariables.cad.getStl(this.uniqueID, inputID).then(() => {
+      GlobalVariables.cad.getStl(this.uniqueID, inputID).then((result) => {
+        console.log(result);
         this.basicThreadValueProcessing();
+        //saveAs(blob, GlobalVariables.currentMolecule.name+'.stl')
       });
-
-      // answer.then( returnedAnswer => {
-      //     const blob = new Blob([returnedAnswer])
-      //     saveAs(blob, GlobalVariables.currentMolecule.name+'.stl')
-      // })
     } catch (err) {
       this.setAlert(err);
     }
