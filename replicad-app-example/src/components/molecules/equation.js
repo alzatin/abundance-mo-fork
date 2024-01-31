@@ -144,6 +144,23 @@ export default class Equation extends Atom {
           return input.connectors.length > 0;
         };
 
+        /* Make an input for the equation itself */
+        inputParams["equation"] = {
+          value: this.currentEquation,
+          label: "Current Equation",
+          disabled: false,
+          onChange: (value) => {
+            this.setEquation(value);
+          },
+        };
+
+        /* Make an input for the equation itself */
+        inputParams["result"] = {
+          value: this.output.value,
+          label: "Result",
+          disabled: true,
+        };
+
         /* Makes inputs for Io's other than geometry */
         if (input.valueType !== "geometry") {
           inputParams[input.name] = {
@@ -156,15 +173,6 @@ export default class Equation extends Atom {
             },
           };
         }
-        /* Make an input for the equation itself */
-        inputParams["equation"] = {
-          value: activeAtom.currentEquation,
-          label: "Current Equation",
-          disabled: false,
-          onChange: (value) => {
-            //handleEquationInputChange(value);
-          },
-        };
       });
       return inputParams;
     }
