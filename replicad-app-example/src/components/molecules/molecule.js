@@ -159,6 +159,26 @@ export default class Molecule extends Atom {
   }
 
   /**
+   * Create Leva Menu Inputs for BOM list  - returns to ParameterEditor - will be table or list of totals
+   */
+  createLevaBomInputs() {
+    let bomParams = [];
+    bomParams = this.extractBomTags(this.output.value);
+    bomParams.then((result) => {
+      if (result != undefined) {
+        result.map((item) => {
+          bomParams[item.BOMitemName] = {
+            value: item.BOMitemName,
+            label: item.BOMitemName,
+            disabled: false,
+          };
+        });
+      }
+    });
+    return bomParams;
+  }
+
+  /**
    * Set the atom's response to a mouse click up. If the atom is moving this makes it stop moving.
    * @param {number} x - The X coordinate of the click
    * @param {number} y - The Y coordinate of the click

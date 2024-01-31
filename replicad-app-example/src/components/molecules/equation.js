@@ -132,6 +132,53 @@ export default class Equation extends Atom {
   }
 
   /**
+   * Create Leva Menu Inputs - returns to ParameterEditor
+   */
+  createLevaInputs() {
+    // recreate inputs
+    let inputParams = {};
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        /* Make an input for the equation itself */
+        inputParams["equation"] = {
+          value: this.currentEquation,
+          label: "Current Equation",
+          disabled: false,
+          onChange: (value) => {
+            this.setEquation(value);
+          },
+        };
+
+        /* Make an input for the equation itself */
+        inputParams["result"] = {
+          value: this.output.value,
+          label: "Result",
+          disabled: true,
+        };
+
+        /* Makes inputs for Io's other than geometry */
+        if (input.valueType !== "geometry") {
+          inputParams[input.name] = {
+            value: input.value,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              input.setValue(value);
+              /** should we run updateValue too? */
+              this.sendToRender();
+            },
+          };
+        }
+      });
+      return inputParams;
+    }
+  }
+
+  /**
    * Evaluate the equation adding and removing inputs as needed
    */
   updateValue() {
@@ -146,11 +193,6 @@ export default class Equation extends Atom {
 
         this.output.setValue(this.value);
         this.output.ready = true;
-      }
-
-      //Updates the inputs
-      if (this.selected) {
-        this.updateSidebar();
       }
     } catch (err) {
       console.warn(err);
@@ -185,26 +227,6 @@ export default class Equation extends Atom {
   }
 
   /**
-   * Add a dropdown to choose the equation type to the sidebar.
-   */
-  updateSidebar() {
-    //Update the side bar to make it possible to change the molecule name
-
-    var valueList = super.updateSidebar();
-
-    this.createEditableValueListItem(
-      valueList,
-      this,
-      "currentEquation",
-      "output=",
-      false,
-      (newEquation) => {
-        this.setEquation(newEquation);
-      }
-    );
-  }
-
-  /**
    * Set the current equation to be a new value.
    */
   setEquation(newEquation) {
@@ -218,6 +240,6 @@ export default class Equation extends Atom {
   sendToRender() {
     //Send code to jotcad to render
 
-    GlobalVariables.writeToDisplay(this.path);
+    GlobalVariables.writeToDisplay(this.uniqueID);
   }
 }
