@@ -194,6 +194,13 @@ function getSVG(inputID) {
 /** STL*/
 function getStl(inputID) {
   console.log("getStl in worker");
+  return started.then(() => {
+    library[inputID] = {
+      geometry: library[inputID].geometry,
+    };
+    console.log(library[targetID]);
+    return true;
+  });
 }
 
 function extractBoms(inputGeometry, TAG) {
