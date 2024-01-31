@@ -10,6 +10,7 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
   const store1 = useCreateStore();
   const store2 = useCreateStore();
 
+  /*Work around Leva collapse issue */
   /**https://github.com/pmndrs/leva/issues/456#issuecomment-1537510948 */
   const [collapsed, setCollapsed] = useState(true);
   useEffect(() => {
