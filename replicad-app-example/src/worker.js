@@ -186,6 +186,11 @@ function extractBom(inputID, TAG) {
   }
 }
 
+/** Function that extracts geometry with BOM tags and returns bomItems*/
+function getSVG(inputID) {
+  console.log("getSVG in worker");
+}
+
 function extractBoms(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return inputGeometry.bom;
@@ -367,6 +372,7 @@ expose({
   generateDisplayMesh,
   extrude,
   extractBom,
+  getSVG,
   move,
   rotate,
   cut,

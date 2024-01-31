@@ -68,8 +68,6 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
           setGrid(value);
         },
       },
-      buttn: button(() => console.log("button working")),
-
       axes: {
         value: true,
         label: "show axes",

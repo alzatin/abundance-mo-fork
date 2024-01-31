@@ -44,13 +44,6 @@ export default class Svg extends Atom {
 
     this.addIO("input", "geometry", this, "geometry", null);
 
-    //Add a download svg button to the top level atoms side bar in run mode
-    /*GlobalVariables.topLevelMolecule.runModeSidebarAdditions.push((list) => {
-      this.createButton(list, this, "Download SVG", () => {
-        this.downloadSvg();
-      });
-    }); */
-
     this.setValues(values);
   }
 
@@ -94,22 +87,12 @@ export default class Svg extends Atom {
   }
 
   /**
-   * Create a button to download the .svg file.
-   */
-  updateSidebar() {
-    const list = super.updateSidebar();
-    this.createButton(list, this, "Download SVG", () => {
-      this.downloadSvg();
-    });
-  }
-
-  /**
    * Create Leva Menu Input - returns to ParameterEditor
    */
   createLevaInputs() {
     // foo: button((get) => alert(`Number value is ${get('number').toFixed(2)}`))
     let outputParams = {};
-    outputParams["Download SVG"] = button(() => console.log("button working"));
+    outputParams["Download SVG"] = button(() => this.downloadSvg());
     return outputParams;
   }
 
@@ -117,15 +100,15 @@ export default class Svg extends Atom {
    * The function which is called when you press the download button.
    */
   downloadSvg() {
+    console.log("try downloading svg");
     try {
-      const values = { op: "svgOutline", readPath: this.path };
-      const { answer } = window.ask(values);
-      answer.then((result) => {
-        //var enc = new TextDecoder("utf-8");
+      inputValue = this.findIOValue("geometry");
+      GlobalVariables.cad.getSVG(inputValue);
 
-        const blob = new Blob([result]);
-        // saveAs(blob, GlobalVariables.currentMolecule.name+'.svg')
-      });
+      //var enc = new TextDecoder("utf-8");
+
+      //const blob = new Blob([result]);
+      // saveAs(blob, GlobalVariables.currentMolecule.name+'.svg')
     } catch (err) {
       this.setAlert(err);
     }
