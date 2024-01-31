@@ -240,6 +240,6 @@ export default class Equation extends Atom {
   sendToRender() {
     //Send code to jotcad to render
 
-    GlobalVariables.writeToDisplay(this.path);
+    GlobalVariables.writeToDisplay(this.uniqueID);
   }
 }
