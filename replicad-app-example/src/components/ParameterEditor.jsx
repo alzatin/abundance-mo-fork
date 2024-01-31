@@ -11,9 +11,11 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
   const store2 = useCreateStore();
 
   if (activeAtom !== null) {
+
     /** Creates Leva inputs inside each atom */
     inputParams = activeAtom.createLevaInputs();
     /** Creates Leva inputs for BOM if active atom is molecule  */
+
     if (activeAtom.atomType == "Molecule") {
       activeAtom.createLevaBomInputs().then((res) => {
         bomParams = res;
