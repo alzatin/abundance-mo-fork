@@ -28,7 +28,6 @@ export default observer(function ParamsEditor({
   }
 
   const bomParamsConfig = useMemo(() => {
-    console.log(bomParams);
     return { ...bomParams };
   }, [bomParams]);
   const inputParamsConfig = useMemo(() => {
