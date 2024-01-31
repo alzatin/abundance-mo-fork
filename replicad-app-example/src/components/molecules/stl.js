@@ -90,8 +90,12 @@ export default class Stl extends Atom {
    */
   downloadStl() {
     try {
-      inputValue = this.findIOValue("geometry");
-      GlobalVariables.cad.getSTL(inputValue);
+      let inputID = this.findIOValue("geometry");
+      console.log(inputID);
+
+      GlobalVariables.cad.getStl(this.uniqueID, inputID).then(() => {
+        this.basicThreadValueProcessing();
+      });
 
       // answer.then( returnedAnswer => {
       //     const blob = new Blob([returnedAnswer])
