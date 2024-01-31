@@ -1,16 +1,10 @@
 import React, { useRef, useEffect, useMemo } from "react";
-import { observer } from "mobx-react";
 import globalvariables from "./js/globalvariables";
 
 import { useControls, useCreateStore, LevaPanel } from "leva";
 
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
-export default observer(function ParamsEditor({
-  activeAtom,
-  run,
-  setGrid,
-  setAxes,
-}) {
+export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
   let inputParams = {};
   let bomParams = {};
   const store1 = useCreateStore();
