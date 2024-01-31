@@ -86,6 +86,19 @@ export default class Stl extends Atom {
   }
 
   /**
+   * Sends geometry input value to render instead of uniqueID
+   */
+  sendToRender() {
+    //Send code to JSxCAD to render
+    try {
+      let inputID = this.findIOValue("geometry");
+      GlobalVariables.writeToDisplay(inputID);
+    } catch (err) {
+      this.setAlert(err);
+    }
+  }
+
+  /**
    * The function which is called when you press the download button.
    */
   downloadStl() {
