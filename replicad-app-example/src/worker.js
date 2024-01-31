@@ -204,7 +204,7 @@ function getStl(targetID, inputID) {
   });
 }
 
-/** STL*/
+/** STEP*/
 function getStep(targetID, inputID) {
   return started.then(() => {
     // Fuse geometry and then blob it
