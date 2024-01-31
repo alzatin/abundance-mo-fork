@@ -4,7 +4,7 @@ import { button } from "leva";
 import saveAs from "file-saver";
 
 /**
- * This class creates the stl atom which lets you download a .stl file.
+ * This class creates the step atom which lets you download a .stl file.
  */
 export default class Step extends Atom {
   /**
@@ -47,7 +47,7 @@ export default class Step extends Atom {
   }
 
   /**
-   * Draw the svg atom which has a SVG icon.
+   * Draw the svg atom which has a Step icon.
    */
   draw() {
     super.draw("rect");
