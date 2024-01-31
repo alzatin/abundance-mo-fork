@@ -1,5 +1,6 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
+import { button } from "leva";
 //import saveAs from '../lib/FileSaver.js'
 
 /**
@@ -75,13 +76,13 @@ export default class Stl extends Atom {
   updateValue() {}
 
   /**
-   * Create a button to download the .stl file.
+   * Create Leva Menu Input - returns to ParameterEditor
    */
-  updateSidebar() {
-    const list = super.updateSidebar();
-    this.createButton(list, this, "Download STL", () => {
-      this.downloadStl();
-    });
+  createLevaInputs() {
+    // foo: button((get) => alert(`Number value is ${get('number').toFixed(2)}`))
+    let outputParams = {};
+    outputParams["Download STL"] = button(() => this.downloadStl());
+    return outputParams;
   }
 
   /**
@@ -89,8 +90,9 @@ export default class Stl extends Atom {
    */
   downloadStl() {
     try {
-      const values = { op: "stl", readPath: this.findIOValue("geometry") };
-      const { answer } = window.ask(values);
+      inputValue = this.findIOValue("geometry");
+      GlobalVariables.cad.getSTL(inputValue);
+
       // answer.then( returnedAnswer => {
       //     const blob = new Blob([returnedAnswer])
       //     saveAs(blob, GlobalVariables.currentMolecule.name+'.stl')

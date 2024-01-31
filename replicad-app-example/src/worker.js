@@ -186,9 +186,14 @@ function extractBom(inputID, TAG) {
   }
 }
 
-/** Function that extracts geometry with BOM tags and returns bomItems*/
+/** SVG*/
 function getSVG(inputID) {
   console.log("getSVG in worker");
+}
+
+/** STL*/
+function getStl(inputID) {
+  console.log("getStl in worker");
 }
 
 function extractBoms(inputGeometry, TAG) {
@@ -373,6 +378,7 @@ expose({
   extrude,
   extractBom,
   getSVG,
+  getStl,
   move,
   rotate,
   cut,
