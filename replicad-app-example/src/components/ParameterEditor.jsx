@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import globalvariables from "./js/globalvariables";
 
 import { useControls, useCreateStore, LevaPanel } from "leva";
@@ -10,8 +10,16 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
   const store1 = useCreateStore();
   const store2 = useCreateStore();
 
-  if (activeAtom !== null) {
+  /**https://github.com/pmndrs/leva/issues/456#issuecomment-1537510948 */
+  const [collapsed, setCollapsed] = useState(true);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setCollapsed(false);
+    }, 0);
+    return () => clearTimeout(timeoutId);
+  }, []);
 
+  if (activeAtom !== null) {
     /** Creates Leva inputs inside each atom */
     inputParams = activeAtom.createLevaInputs();
     /** Creates Leva inputs for BOM if active atom is molecule  */
@@ -82,8 +90,13 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
       <div className={run ? "paramEditorDivRun" : "paramEditorDiv"}>
         <LevaPanel
           store={store1}
-          hidden={false}
-          collapsed={true}
+          neverHide
+          collapsed={{
+            collapsed,
+            onChange: (value) => {
+              setCollapsed(value);
+            },
+          }}
           hideCopyButton
           fill
           titleBar={{
