@@ -1,7 +1,7 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
 import { button } from "leva";
-//import saveAs from '../lib/FileSaver.js'
+import saveAs from "../lib/FileSaver.js";
 
 /**
  * This class creates the stl atom which lets you download a .stl file.
@@ -96,7 +96,7 @@ export default class Stl extends Atom {
       GlobalVariables.cad.getStl(this.uniqueID, inputID).then((result) => {
         console.log(result);
         this.basicThreadValueProcessing();
-        //saveAs(blob, GlobalVariables.currentMolecule.name+'.stl')
+        saveAs(blob, GlobalVariables.currentMolecule.name + ".stl");
       });
     } catch (err) {
       this.setAlert(err);
