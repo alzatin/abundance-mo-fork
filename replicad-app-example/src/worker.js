@@ -193,25 +193,15 @@ function getSVG(inputID) {
 
 /** STL*/
 function getStl(targetID, inputID) {
-  // if library only has one geometry, try to blob that
-  console.log("getStl in worker");
   return started.then(() => {
-    console.log(library[inputID].geometry[0]);
+    // Fuse geometry and then blob it
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
     library[targetID] = {
-      geometry: [library[inputID].geometry[0].clone().blobSTL()],
+      geometry: [fusedGeometry.clone().blobSTL()],
     };
     console.log(library[targetID]);
     return true;
   });
-  /** 
-   * library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-      return {
-        geometry: [leaf.geometry[0].clone().translate(x, y, z)],
-        tags: leaf.tags,
-      };
-    });
-    return true;
-     */
 }
 
 function extractBoms(inputGeometry, TAG) {
