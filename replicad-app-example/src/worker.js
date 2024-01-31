@@ -186,9 +186,22 @@ function extractBom(inputID, TAG) {
   }
 }
 
-/** Function that extracts geometry with BOM tags and returns bomItems*/
+/** SVG*/
 function getSVG(inputID) {
   console.log("getSVG in worker");
+}
+
+/** STL*/
+function getStl(targetID, inputID) {
+  return started.then(() => {
+    // Fuse geometry and then blob it
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+    library[targetID] = {
+      geometry: [fusedGeometry.clone().blobSTL()],
+    };
+    console.log(library[targetID]);
+    return library[targetID].geometry[0];
+  });
 }
 
 function extractBoms(inputGeometry, TAG) {
@@ -373,6 +386,7 @@ expose({
   extrude,
   extractBom,
   getSVG,
+  getStl,
   move,
   rotate,
   cut,
