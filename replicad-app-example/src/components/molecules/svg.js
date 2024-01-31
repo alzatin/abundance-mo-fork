@@ -1,5 +1,6 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
+import { button } from "leva";
 //import saveAs from '../lib/FileSaver.js'
 
 /**
@@ -44,11 +45,11 @@ export default class Svg extends Atom {
     this.addIO("input", "geometry", this, "geometry", null);
 
     //Add a download svg button to the top level atoms side bar in run mode
-    GlobalVariables.topLevelMolecule.runModeSidebarAdditions.push((list) => {
+    /*GlobalVariables.topLevelMolecule.runModeSidebarAdditions.push((list) => {
       this.createButton(list, this, "Download SVG", () => {
         this.downloadSvg();
       });
-    });
+    }); */
 
     this.setValues(values);
   }
@@ -100,6 +101,16 @@ export default class Svg extends Atom {
     this.createButton(list, this, "Download SVG", () => {
       this.downloadSvg();
     });
+  }
+
+  /**
+   * Create Leva Menu Input - returns to ParameterEditor
+   */
+  createLevaInputs() {
+    // foo: button((get) => alert(`Number value is ${get('number').toFixed(2)}`))
+    let outputParams = {};
+    outputParams["Download SVG"] = button(() => console.log("button working"));
+    return outputParams;
   }
 
   /**

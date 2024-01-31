@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import globalvariables from "./js/globalvariables";
 
-import { useControls, useCreateStore, LevaPanel } from "leva";
+import { useControls, useCreateStore, LevaPanel, button } from "leva";
 
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
 export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
@@ -53,6 +53,7 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
     { store: store1 },
     [activeAtom]
   );
+
   useControls(() => bomParamsConfig, { store: store1 }, [activeAtom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
 
@@ -67,6 +68,8 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
           setGrid(value);
         },
       },
+      buttn: button(() => console.log("button working")),
+
       axes: {
         value: true,
         label: "show axes",
