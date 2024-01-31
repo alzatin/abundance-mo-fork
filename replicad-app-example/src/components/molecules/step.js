@@ -106,11 +106,11 @@ export default class Step extends Atom {
       let inputID = this.findIOValue("geometry");
       console.log(inputID);
 
-      GlobalVariables.cad.getStl(this.uniqueID, inputID).then((result) => {
+      GlobalVariables.cad.getStep(this.uniqueID, inputID).then((result) => {
         let blob = result;
         console.log(result);
         this.basicThreadValueProcessing();
-        saveAs(blob, GlobalVariables.currentMolecule.name + ".step");
+        saveAs(blob, GlobalVariables.currentMolecule.name + ".stp");
       });
     } catch (err) {
       this.setAlert(err);
