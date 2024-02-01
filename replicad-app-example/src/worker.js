@@ -2,7 +2,13 @@ import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC, sketchPolysides } from "replicad";
 import { expose } from "comlink";
-import { sketchCircle, sketchRectangle, loft } from "replicad";
+import {
+  sketchCircle,
+  sketchRectangle,
+  loft,
+  drawText,
+  drawProjection,
+} from "replicad";
 
 // We import our model as a simple function
 import { drawBox } from "./cad";
@@ -187,8 +193,17 @@ function extractBom(inputID, TAG) {
 }
 
 /** SVG*/
-function getSVG(inputID) {
+function getSVG(targetID, inputID) {
   console.log("getSVG in worker");
+  return started.then(() => {
+    // Fuse geometry and then blob it
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+    library[targetID] = {
+      geometry: [fusedGeometry.clone().blobSTL()],
+    };
+    console.log(library[targetID]);
+    return library[targetID].geometry[0];
+  });
 }
 
 /** STL*/
