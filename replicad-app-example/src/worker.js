@@ -179,9 +179,10 @@ function extractTag(targetID, inputID, TAG) {
 
 /** Function that extracts geometry with BOM tags and returns bomItems*/
 function extractBom(inputID, TAG) {
+  let taggedBoms = [];
   // only try to get tags if library entry for molecule exists
   if (library[inputID]) {
-    let taggedBoms = extractBoms(library[inputID], TAG);
+    taggedBoms = extractBoms(library[inputID], TAG);
     return taggedBoms;
   }
 }
@@ -219,7 +220,7 @@ function getStep(targetID, inputID) {
 
 function extractBoms(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
-    return inputGeometry.bom;
+    return [inputGeometry.bom];
   } else if (
     inputGeometry.geometry.length > 1 &&
     inputGeometry.geometry[0].geometry != undefined
