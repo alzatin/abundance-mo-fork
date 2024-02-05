@@ -372,6 +372,7 @@ function generateDisplayMesh(id) {
     //Here we need to extrude anything which isn't already 3D
     var cleanedGeometry = [];
     flattened.forEach((pieceOfGeometry) => {
+      console.log(pieceOfGeometry);
       if (pieceOfGeometry.mesh == undefined) {
         cleanedGeometry.push(pieceOfGeometry.clone().extrude(0.0001));
       } else {
