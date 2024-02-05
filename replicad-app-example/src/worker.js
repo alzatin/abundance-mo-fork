@@ -192,11 +192,10 @@ function getSVG(targetID, inputID) {
   return started.then(() => {
     // Fuse geometry and then blob it
     let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-    library[targetID] = {
-      geometry: [fusedGeometry.clone().blobSTL()],
-    };
+    let topProjection = drawProjection(fusedGeometry, "top");
+    library[targetID] = { geometry: topProjection, tags: [] };
     console.log(library[targetID]);
-    return library[targetID].geometry[0];
+    return true;
   });
 }
 
