@@ -10,26 +10,26 @@
   },
   "dependencies": {
     "@react-three/drei": "^9.97.0",
-    "@react-three/fiber": "8.10.0",
+    "@react-three/fiber": "8.15.16",
     "circular-menu": "^1.0.6",
     "codemirror": "^6.0.1",
-    "comlink": "^4.3.1",
+    "comlink": "^4.4.1",
     "file-saver": "^2.0.5",
-    "mathjs": "^11.6.0",
+    "mathjs": "^12.3.1",
     "oauthio-web": "^0.6.2",
     "octokit": "^3.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "replicad": "^0.14.7",
-    "replicad-opencascadejs": "^0.14.3",
-    "replicad-threejs-helper": "^0.14.4",
+    "replicad": "^0.15.3",
+    "replicad-opencascadejs": "^0.15.2",
+    "replicad-threejs-helper": "^0.15.2",
     "showdown": "^2.1.0",
-    "three": "0.148.0",
-    "uuid": "^9.0.0"
+    "three": "0.161.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "3.0.1",
-    "vite": "^4.5.2"
+    "@vitejs/plugin-react": "4.2.1",
+    "vite": "^5.0.12"
   },
   "browserslist": [
     ">0.2%",
