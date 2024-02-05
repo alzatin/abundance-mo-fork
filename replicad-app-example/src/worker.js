@@ -191,8 +191,10 @@ function extractBom(inputID, TAG) {
 function getSVG(targetID, inputID) {
   return started.then(() => {
     // Fuse geometry and then blob it
-    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-    let topProjection = drawProjection(fusedGeometry, "top");
+    let fusedGeometry = [sketchPolysides(5, 5).clone().extrude(1)];
+    console.log(fusedGeometry);
+    let topProjection = [drawProjection(fusedGeometry[0], "top")];
+
     library[targetID] = { geometry: topProjection, tags: [] };
     console.log(library[targetID]);
     return true;
@@ -321,6 +323,7 @@ function actOnLeafs(assembly, action) {
 
 function flattenAssembly(assembly) {
   var flattened = [];
+  console.log(assembly);
   //This is a leaf
   if (
     assembly.geometry.length == 1 &&

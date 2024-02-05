@@ -73,14 +73,11 @@ export default class Svg extends Atom {
    */
   updateValue() {
     try {
-      var inputPath = this.findIOValue("geometry");
-      const values = {
-        op: "outline",
-        readPath: inputPath,
-        writePath: this.path,
-      };
-
-      this.basicThreadValueProcessing(values);
+      let inputID = this.findIOValue("geometry");
+      GlobalVariables.cad.getSVG(this.uniqueID, inputID).then((result) => {
+        console.log(result);
+        this.basicThreadValueProcessing();
+      });
     } catch (err) {
       this.setAlert(err);
     }
@@ -102,7 +99,7 @@ export default class Svg extends Atom {
   downloadSvg() {
     try {
       let inputID = this.findIOValue("geometry");
-      GlobalVariables.cad.getSVG(this.uniqueID, inputID).then(() => {
+      GlobalVariables.cad.getS(this.uniqueID, inputID).then(() => {
         this.basicThreadValueProcessing();
       });
     } catch (err) {
