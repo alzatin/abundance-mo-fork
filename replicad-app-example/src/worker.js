@@ -193,7 +193,7 @@ function getSVG(targetID, inputID) {
     // Fuse geometry and then blob it
     let fusedGeometry = [sketchPolysides(5, 5).clone().extrude(1)];
     console.log(fusedGeometry);
-    let topProjection = [drawProjection(fusedGeometry[0], "top")];
+    let topProjection = [drawProjection(fusedGeometry[0], "top").visible];
 
     library[targetID] = { geometry: topProjection, tags: [] };
     console.log(library[targetID]);
@@ -323,7 +323,6 @@ function actOnLeafs(assembly, action) {
 
 function flattenAssembly(assembly) {
   var flattened = [];
-  console.log(assembly);
   //This is a leaf
   if (
     assembly.geometry.length == 1 &&
