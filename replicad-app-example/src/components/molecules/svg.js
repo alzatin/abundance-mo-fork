@@ -100,13 +100,10 @@ export default class Svg extends Atom {
    * The function which is called when you press the download button.
    */
   downloadSvg() {
-    console.log("try downloading svg");
     try {
       let inputID = this.findIOValue("geometry");
-      console.log(inputID);
-
-      GlobalVariables.cad.getSvg(this.uniqueID, inputID).then((result) => {
-        console.log(result);
+      GlobalVariables.cad.getSVG(this.uniqueID, inputID).then(() => {
+        this.basicThreadValueProcessing();
       });
     } catch (err) {
       this.setAlert(err);

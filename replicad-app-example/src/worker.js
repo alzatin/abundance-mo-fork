@@ -3,10 +3,8 @@ import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url
 import { setOC, sketchPolysides } from "replicad";
 import { expose } from "comlink";
 import { sketchCircle, sketchRectangle, loft, draw } from "replicad";
-
-//import { drawProjection } from "replicad";
+import { drawProjection } from "replicad";
 //import * as cadTest from "replicad";
-
 // We import our model as a simple function
 import { drawBox } from "./cad";
 
@@ -191,10 +189,14 @@ function extractBom(inputID, TAG) {
 
 /** SVG*/
 function getSVG(targetID, inputID) {
-  console.log("getSVG in worker");
   return started.then(() => {
-    //problem with importing drawProjection from replicad - git issue started on 02/1/2024
-    return true;
+    // Fuse geometry and then blob it
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+    library[targetID] = {
+      geometry: [fusedGeometry.clone().blobSTL()],
+    };
+    console.log(library[targetID]);
+    return library[targetID].geometry[0];
   });
 }
 
