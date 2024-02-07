@@ -200,7 +200,7 @@ function getSVG(targetID, inputID) {
   });
 }
 
-/** Fuses input geometry, draws a top view projection and turns drawing into svg */
+/** Creates SVG when download button is clicked */
 function downSVG(targetID, inputID) {
   return started.then(() => {
     // Fuse geometry and then blob it
