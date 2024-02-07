@@ -2,8 +2,9 @@ import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC, sketchPolysides } from "replicad";
 import { expose } from "comlink";
-import { sketchCircle, sketchRectangle, loft } from "replicad";
-
+import { sketchCircle, sketchRectangle, loft, draw } from "replicad";
+import { drawProjection } from "replicad";
+//import * as cadTest from "replicad";
 // We import our model as a simple function
 import { drawBox } from "./cad";
 
@@ -186,9 +187,28 @@ function extractBom(inputID, TAG) {
   }
 }
 
-/** SVG*/
-function getSVG(inputID) {
-  console.log("getSVG in worker");
+/** Fuses input geometry, draws a top view projection and turns drawing into sketch */
+function getSVG(targetID, inputID) {
+  return started.then(() => {
+    // Fuse geometry and then blob it
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+    let topProjection = [
+      drawProjection(fusedGeometry, "top").visible.sketchOnPlane(),
+    ];
+    library[targetID] = { geometry: topProjection, tags: [] };
+    return true;
+  });
+}
+
+/** Creates SVG when download button is clicked */
+function downSVG(targetID, inputID) {
+  return started.then(() => {
+    // Fuse geometry and then blob it
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+    let topProjection = [drawProjection(fusedGeometry, "top").visible];
+    let svg = topProjection[0].toSVG();
+    return svg;
+  });
 }
 
 /** STL*/
@@ -199,7 +219,6 @@ function getStl(targetID, inputID) {
     library[targetID] = {
       geometry: [fusedGeometry.clone().blobSTL()],
     };
-    console.log(library[targetID]);
     return library[targetID].geometry[0];
   });
 }
@@ -212,7 +231,6 @@ function getStep(targetID, inputID) {
     library[targetID] = {
       geometry: [fusedGeometry.clone().blobSTEP()],
     };
-    console.log(library[targetID]);
     return library[targetID].geometry[0];
   });
 }
@@ -369,7 +387,6 @@ function generateDisplayMesh(id) {
     });
 
     let geometry = chainFuse(cleanedGeometry);
-    console.log(geometry);
 
     //Try extruding if there is no 3d shape
     if (geometry.mesh == undefined) {
@@ -393,6 +410,7 @@ expose({
   createBlob,
   createMesh,
   circle,
+  downSVG,
   regularPolygon,
   rectangle,
   generateDisplayMesh,

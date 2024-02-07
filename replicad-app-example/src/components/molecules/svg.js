@@ -1,7 +1,7 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
 import { button } from "leva";
-//import saveAs from '../lib/FileSaver.js'
+import saveAs from "file-saver";
 
 /**
  * This class creates the svg atom which lets you download a .svg file.
@@ -73,14 +73,10 @@ export default class Svg extends Atom {
    */
   updateValue() {
     try {
-      var inputPath = this.findIOValue("geometry");
-      const values = {
-        op: "outline",
-        readPath: inputPath,
-        writePath: this.path,
-      };
-
-      this.basicThreadValueProcessing(values);
+      let inputID = this.findIOValue("geometry");
+      GlobalVariables.cad.getSVG(this.uniqueID, inputID).then((result) => {
+        this.basicThreadValueProcessing();
+      });
     } catch (err) {
       this.setAlert(err);
     }
@@ -100,15 +96,13 @@ export default class Svg extends Atom {
    * The function which is called when you press the download button.
    */
   downloadSvg() {
-    console.log("try downloading svg");
     try {
-      inputValue = this.findIOValue("geometry");
-      GlobalVariables.cad.getSVG(inputValue);
+      let inputID = this.findIOValue("geometry");
 
-      //var enc = new TextDecoder("utf-8");
-
-      //const blob = new Blob([result]);
-      // saveAs(blob, GlobalVariables.currentMolecule.name+'.svg')
+      GlobalVariables.cad.downSVG(this.uniqueID, inputID).then((result) => {
+        var blob = new Blob([result], { type: "image/svg+xml;charset=utf-8" });
+        saveAs(blob, GlobalVariables.currentMolecule.name + ".svg");
+      });
     } catch (err) {
       this.setAlert(err);
     }
