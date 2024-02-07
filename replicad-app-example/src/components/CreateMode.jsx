@@ -163,7 +163,6 @@ function CreateMode(props) {
         let bomList = [];
         let compileBomItems = [];
         if (result) {
-          console.log(result);
           result.forEach(function (bomElement) {
             if (!bomList[bomElement.BOMitemName]) {
               //If the list of items doesn't already have one of these
