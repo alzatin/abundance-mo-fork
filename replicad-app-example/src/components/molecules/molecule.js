@@ -163,16 +163,26 @@ export default class Molecule extends Atom {
    */
   createLevaBomInputs() {
     let bomParams = [];
+
     bomParams = this.extractBomTags(this.output.value);
     bomParams.then((result) => {
-      if (result != undefined) {
-        result.map((item) => {
+      if (result) {
+        if (result.length > 0) {
+          result.map((item) => {
+            bomParams[item.BOMitemName] = {
+              value: item.BOMitemName,
+              label: item.BOMitemName,
+              disabled: false,
+            };
+          });
+        } else {
+          let item = result;
           bomParams[item.BOMitemName] = {
             value: item.BOMitemName,
             label: item.BOMitemName,
             disabled: false,
           };
-        });
+        }
       }
     });
     return bomParams;
