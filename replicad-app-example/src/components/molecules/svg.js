@@ -75,7 +75,6 @@ export default class Svg extends Atom {
     try {
       let inputID = this.findIOValue("geometry");
       GlobalVariables.cad.getSVG(this.uniqueID, inputID).then((result) => {
-        console.log(result);
         this.basicThreadValueProcessing();
       });
     } catch (err) {
@@ -102,7 +101,6 @@ export default class Svg extends Atom {
 
       GlobalVariables.cad.downSVG(this.uniqueID, inputID).then((result) => {
         var blob = new Blob([result], { type: "image/svg+xml;charset=utf-8" });
-        //this.basicThreadValueProcessing();
         saveAs(blob, GlobalVariables.currentMolecule.name + ".svg");
       });
     } catch (err) {

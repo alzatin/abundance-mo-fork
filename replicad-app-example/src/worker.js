@@ -206,10 +206,7 @@ function downSVG(targetID, inputID) {
     // Fuse geometry and then blob it
     let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
     let topProjection = [drawProjection(fusedGeometry, "top").visible];
-    console.log(topProjection);
     let svg = topProjection[0].toSVG();
-    console.log(svg);
-    //library[targetID] = { geometry: topProjection, tags: [] };
     return svg;
   });
 }
@@ -234,7 +231,6 @@ function getStep(targetID, inputID) {
     library[targetID] = {
       geometry: [fusedGeometry.clone().blobSTEP()],
     };
-    console.log(library[targetID]);
     return library[targetID].geometry[0];
   });
 }
@@ -383,7 +379,6 @@ function generateDisplayMesh(id) {
     //Here we need to extrude anything which isn't already 3D
     var cleanedGeometry = [];
     flattened.forEach((pieceOfGeometry) => {
-      console.log(pieceOfGeometry);
       if (pieceOfGeometry.mesh == undefined) {
         cleanedGeometry.push(pieceOfGeometry.clone().extrude(0.0001));
       } else {
@@ -392,7 +387,6 @@ function generateDisplayMesh(id) {
     });
 
     let geometry = chainFuse(cleanedGeometry);
-    console.log(geometry);
 
     //Try extruding if there is no 3d shape
     if (geometry.mesh == undefined) {
