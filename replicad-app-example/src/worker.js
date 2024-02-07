@@ -191,10 +191,10 @@ function extractBom(inputID, TAG) {
 function getSVG(targetID, inputID) {
   return started.then(() => {
     // Fuse geometry and then blob it
-    let fusedGeometry = [sketchPolysides(5, 5).clone().extrude(1)];
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
     console.log(fusedGeometry);
     let topProjection = [
-      drawProjection(fusedGeometry[0], "top").visible.sketchOnPlane(),
+      drawProjection(fusedGeometry, "top").visible.sketchOnPlane(),
     ];
 
     library[targetID] = { geometry: topProjection, tags: [] };
