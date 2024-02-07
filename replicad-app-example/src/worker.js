@@ -193,7 +193,9 @@ function getSVG(targetID, inputID) {
     // Fuse geometry and then blob it
     let fusedGeometry = [sketchPolysides(5, 5).clone().extrude(1)];
     console.log(fusedGeometry);
-    let topProjection = [drawProjection(fusedGeometry[0], "top").visible];
+    let topProjection = [
+      drawProjection(fusedGeometry[0], "top").visible.sketchOnPlane(),
+    ];
 
     library[targetID] = { geometry: topProjection, tags: [] };
     console.log(library[targetID]);
