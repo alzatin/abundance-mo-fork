@@ -1,7 +1,7 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
 import { button } from "leva";
-//import saveAs from '../lib/FileSaver.js'
+import saveAs from "file-saver";
 
 /**
  * This class creates the svg atom which lets you download a .svg file.
@@ -101,10 +101,9 @@ export default class Svg extends Atom {
       let inputID = this.findIOValue("geometry");
 
       GlobalVariables.cad.downSVG(this.uniqueID, inputID).then((result) => {
-        let blob = result;
-        console.log(blob);
+        var blob = new Blob([result], { type: "image/svg+xml;charset=utf-8" });
         //this.basicThreadValueProcessing();
-        //saveAs(blob, GlobalVariables.currentMolecule.name + ".svg");
+        saveAs(blob, GlobalVariables.currentMolecule.name + ".svg");
       });
     } catch (err) {
       this.setAlert(err);
