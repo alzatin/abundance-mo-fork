@@ -1,10 +1,9 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC, sketchPolysides } from "replicad";
+import { setOC } from "replicad";
 import { expose } from "comlink";
-import { sketchCircle, sketchRectangle, loft, draw } from "replicad";
+import { drawCircle, drawRectangle, drawPolysides, loft } from "replicad";
 import { drawProjection } from "replicad";
-//import * as cadTest from "replicad";
 // We import our model as a simple function
 import { drawBox } from "./cad";
 
@@ -47,14 +46,20 @@ function createMesh(thickness) {
 
 function circle(id, diameter) {
   return started.then(() => {
-    library[id] = { geometry: [sketchCircle(diameter / 2)], tags: [] };
+    library[id] = {
+      geometry: [drawCircle(diameter / 2).sketchOnPlane("XY")],
+      tags: [],
+    };
     return true;
   });
 }
 
 function rectangle(id, x, y) {
   return started.then(() => {
-    library[id] = { geometry: [sketchRectangle(x, y)], tags: [] };
+    library[id] = {
+      geometry: [drawRectangle(x, y).sketchOnPlane("XY")],
+      tags: [],
+    };
     return true;
   });
 }
@@ -62,7 +67,7 @@ function rectangle(id, x, y) {
 function regularPolygon(id, radius, numberOfSides) {
   return started.then(() => {
     library[id] = {
-      geometry: [sketchPolysides(radius, numberOfSides)],
+      geometry: [drawPolysides(radius, numberOfSides).sketchOnPlane("XY")],
       tags: [],
     };
     return true;
