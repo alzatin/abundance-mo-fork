@@ -47,7 +47,7 @@ function createMesh(thickness) {
 function circle(id, diameter) {
   return started.then(() => {
     library[id] = {
-      geometry: [drawCircle(diameter / 2).sketchOnPlane("XY")],
+      geometry: [drawCircle(diameter / 2)],
       tags: [],
     };
     return true;
@@ -57,7 +57,7 @@ function circle(id, diameter) {
 function rectangle(id, x, y) {
   return started.then(() => {
     library[id] = {
-      geometry: [drawRectangle(x, y).sketchOnPlane("XY")],
+      geometry: [drawRectangle(x, y)],
       tags: [],
     };
     return true;
@@ -67,7 +67,7 @@ function rectangle(id, x, y) {
 function regularPolygon(id, radius, numberOfSides) {
   return started.then(() => {
     library[id] = {
-      geometry: [drawPolysides(radius, numberOfSides).sketchOnPlane("XY")],
+      geometry: [drawPolysides(radius, numberOfSides)],
       tags: [],
     };
     return true;
@@ -88,7 +88,9 @@ function extrude(targetID, inputID, height) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[inputID], (leaf) => {
       return {
-        geometry: [leaf.geometry[0].clone().extrude(height)],
+        geometry: [
+          leaf.geometry[0].sketchOnPlane("XY").clone().extrude(height),
+        ],
         tags: leaf.tags,
       };
     });
@@ -322,6 +324,7 @@ function actOnLeafs(assembly, action) {
     assembly.geometry.length == 1 &&
     assembly.geometry[0].geometry == undefined
   ) {
+    console.log(assembly);
     return action(assembly);
   }
   //This is a branch
@@ -385,7 +388,9 @@ function generateDisplayMesh(id) {
     var cleanedGeometry = [];
     flattened.forEach((pieceOfGeometry) => {
       if (pieceOfGeometry.mesh == undefined) {
-        cleanedGeometry.push(pieceOfGeometry.clone().extrude(0.0001));
+        cleanedGeometry.push(
+          pieceOfGeometry.sketchOnPlane("XY").clone().extrude(0.0001)
+        );
       } else {
         cleanedGeometry.push(pieceOfGeometry);
       }
@@ -395,7 +400,7 @@ function generateDisplayMesh(id) {
 
     //Try extruding if there is no 3d shape
     if (geometry.mesh == undefined) {
-      const threeDShape = geometry.clone().extrude(0.0001);
+      const threeDShape = geometry.sketchOnPlane("XY").clone().extrude(0.0001);
       return {
         faces: threeDShape.mesh(),
         edges: threeDShape.meshEdges(),
