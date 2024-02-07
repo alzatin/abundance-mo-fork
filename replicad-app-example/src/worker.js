@@ -1,10 +1,9 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC, sketchPolysides } from "replicad";
+import { setOC } from "replicad";
 import { expose } from "comlink";
-import { sketchCircle, sketchRectangle, loft, draw } from "replicad";
+import { drawCircle, drawRectangle, drawPolysides, loft } from "replicad";
 import { drawProjection } from "replicad";
-//import * as cadTest from "replicad";
 // We import our model as a simple function
 import { drawBox } from "./cad";
 
@@ -47,14 +46,20 @@ function createMesh(thickness) {
 
 function circle(id, diameter) {
   return started.then(() => {
-    library[id] = { geometry: [sketchCircle(diameter / 2)], tags: [] };
+    library[id] = {
+      geometry: [drawCircle(diameter / 2)],
+      tags: [],
+    };
     return true;
   });
 }
 
 function rectangle(id, x, y) {
   return started.then(() => {
-    library[id] = { geometry: [sketchRectangle(x, y)], tags: [] };
+    library[id] = {
+      geometry: [drawRectangle(x, y)],
+      tags: [],
+    };
     return true;
   });
 }
@@ -62,7 +67,7 @@ function rectangle(id, x, y) {
 function regularPolygon(id, radius, numberOfSides) {
   return started.then(() => {
     library[id] = {
-      geometry: [sketchPolysides(radius, numberOfSides)],
+      geometry: [drawPolysides(radius, numberOfSides)],
       tags: [],
     };
     return true;
@@ -83,7 +88,9 @@ function extrude(targetID, inputID, height) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[inputID], (leaf) => {
       return {
-        geometry: [leaf.geometry[0].clone().extrude(height)],
+        geometry: [
+          leaf.geometry[0].sketchOnPlane("XY").clone().extrude(height),
+        ],
         tags: leaf.tags,
       };
     });
@@ -380,7 +387,9 @@ function generateDisplayMesh(id) {
     var cleanedGeometry = [];
     flattened.forEach((pieceOfGeometry) => {
       if (pieceOfGeometry.mesh == undefined) {
-        cleanedGeometry.push(pieceOfGeometry.clone().extrude(0.0001));
+        cleanedGeometry.push(
+          pieceOfGeometry.sketchOnPlane("XY").clone().extrude(0.0001)
+        );
       } else {
         cleanedGeometry.push(pieceOfGeometry);
       }
@@ -390,7 +399,7 @@ function generateDisplayMesh(id) {
 
     //Try extruding if there is no 3d shape
     if (geometry.mesh == undefined) {
-      const threeDShape = geometry.clone().extrude(0.0001);
+      const threeDShape = geometry.sketchOnPlane("XY").clone().extrude(0.0001);
       return {
         faces: threeDShape.mesh(),
         edges: threeDShape.meshEdges(),
