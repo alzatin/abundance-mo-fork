@@ -187,19 +187,30 @@ function extractBom(inputID, TAG) {
   }
 }
 
-/** SVG*/
+/** Fuses input geometry, draws a top view projection and turns drawing into sketch */
 function getSVG(targetID, inputID) {
   return started.then(() => {
     // Fuse geometry and then blob it
     let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-    console.log(fusedGeometry);
     let topProjection = [
       drawProjection(fusedGeometry, "top").visible.sketchOnPlane(),
     ];
-
     library[targetID] = { geometry: topProjection, tags: [] };
-    console.log(library[targetID]);
     return true;
+  });
+}
+
+/** Fuses input geometry, draws a top view projection and turns drawing into svg */
+function downSVG(targetID, inputID) {
+  return started.then(() => {
+    // Fuse geometry and then blob it
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+    let topProjection = [drawProjection(fusedGeometry, "top").visible];
+    console.log(topProjection);
+    let svg = topProjection[0].toSVG();
+    console.log(svg);
+    //library[targetID] = { geometry: topProjection, tags: [] };
+    return svg;
   });
 }
 
@@ -211,7 +222,6 @@ function getStl(targetID, inputID) {
     library[targetID] = {
       geometry: [fusedGeometry.clone().blobSTL()],
     };
-    console.log(library[targetID]);
     return library[targetID].geometry[0];
   });
 }
@@ -406,6 +416,7 @@ expose({
   createBlob,
   createMesh,
   circle,
+  downSVG,
   regularPolygon,
   rectangle,
   generateDisplayMesh,

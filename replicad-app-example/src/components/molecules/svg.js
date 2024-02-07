@@ -99,8 +99,12 @@ export default class Svg extends Atom {
   downloadSvg() {
     try {
       let inputID = this.findIOValue("geometry");
-      GlobalVariables.cad.getS(this.uniqueID, inputID).then(() => {
-        this.basicThreadValueProcessing();
+
+      GlobalVariables.cad.downSVG(this.uniqueID, inputID).then((result) => {
+        let blob = result;
+        console.log(blob);
+        //this.basicThreadValueProcessing();
+        //saveAs(blob, GlobalVariables.currentMolecule.name + ".svg");
       });
     } catch (err) {
       this.setAlert(err);
