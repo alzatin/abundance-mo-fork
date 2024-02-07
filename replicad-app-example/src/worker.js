@@ -324,7 +324,6 @@ function actOnLeafs(assembly, action) {
     assembly.geometry.length == 1 &&
     assembly.geometry[0].geometry == undefined
   ) {
-    console.log(assembly);
     return action(assembly);
   }
   //This is a branch
