@@ -284,7 +284,8 @@ function layout(targetID, inputID, TAG, spacing) {
     let taggedGeometry = extractTags(library[inputID], TAG);
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
       console.log(leaf.geometry);
-      console.log(leaf.geometry[0].boundingBox.height);
+      console.log(leaf.geometry[0].boundingBox);
+      /* store max height start rotating as long as */
       return {
         /** I'm assumming we are going to try to translate everything for the layout, I don't know how
          * to translate to a point without having a defined plane  */
