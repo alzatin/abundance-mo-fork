@@ -294,12 +294,25 @@ function layout(targetID, inputID, TAG, spacing) {
       console.log(leaf.geometry);
       console.log(leaf.geometry[0].boundingBox);
       /* store max height start rotating as long as */
-      return {
-        /** I'm assumming we are going to try to translate everything for the layout, I don't know how
-         * to translate to a point without having a defined plane  */
-        geometry: [leaf.geometry[0].clone().translate(-10, 0, 0)],
-        tags: leaf.tags,
-      };
+      /** check what's bigged depth or width , then */
+      if (
+        leaf.geometry[0].boundingBox.width > leaf.geometry[0].boundingBox.height
+      ) {
+        return {
+          /** I'm assumming we are going to try to translate everything for the layout, I don't know how
+           * to translate to a point without having a defined plane  */
+          geometry: [leaf.geometry[0].clone().rotate(90, [0, 0, 100])],
+          tags: leaf.tags,
+        };
+      } else {
+        /** rotate 90 degrees */
+        return {
+          /** I'm assumming we are going to try to translate everything for the layout, I don't know how
+           * to translate to a point without having a defined plane  */
+          geometry: [leaf.geometry[0].clone().translate(10, 0, 0)],
+          tags: leaf.tags,
+        };
+      }
     });
     /*library[targetID] = {
       geometry: taggedGeometry.geometry,
