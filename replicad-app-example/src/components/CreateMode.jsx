@@ -157,8 +157,8 @@ function CreateMode(props) {
   };
 
   const compileBom = async () => {
-    let compiled = activeAtom
-      .extractBomTags(activeAtom.output.value)
+    let compiled = GlobalVariables.currentMolecule
+      .extractBomTags(GlobalVariables.currentMolecule.output.value)
       .then((result) => {
         let bomList = [];
         let compileBomItems = [];
