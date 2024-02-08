@@ -296,12 +296,12 @@ function layout(targetID, inputID, TAG, spacing) {
       /* store max height start rotating as long as */
       /** check what's bigged depth or width , then */
       if (
-        leaf.geometry[0].boundingBox.width > leaf.geometry[0].boundingBox.height
+        leaf.geometry[0].boundingBox.width < leaf.geometry[0].boundingBox.height
       ) {
         return {
           /** I'm assumming we are going to try to translate everything for the layout, I don't know how
            * to translate to a point without having a defined plane  */
-          geometry: [leaf.geometry[0].clone().rotate(90, [0, 0, 100])],
+          geometry: [leaf.geometry[0].clone().rotate(90, [0, 0, 0], [0, 1, 0])],
           tags: leaf.tags,
         };
       } else {
@@ -309,7 +309,7 @@ function layout(targetID, inputID, TAG, spacing) {
         return {
           /** I'm assumming we are going to try to translate everything for the layout, I don't know how
            * to translate to a point without having a defined plane  */
-          geometry: [leaf.geometry[0].clone().translate(10, 0, 0)],
+          geometry: [leaf.geometry[0].clone().rotate(90, [0, 0, 0], [1, 0, 0])],
           tags: leaf.tags,
         };
       }
