@@ -291,28 +291,38 @@ function layout(targetID, inputID, TAG, spacing) {
   return started.then(() => {
     let taggedGeometry = extractTags(library[inputID], TAG);
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
-      console.log(leaf.geometry);
       console.log(leaf.geometry[0].boundingBox);
       /* store max height start rotating as long as */
       /** check what's bigged depth or width , then */
-      if (
-        leaf.geometry[0].boundingBox.width < leaf.geometry[0].boundingBox.height
-      ) {
-        return {
-          /** I'm assumming we are going to try to translate everything for the layout, I don't know how
-           * to translate to a point without having a defined plane  */
-          geometry: [leaf.geometry[0].clone().rotate(90, [0, 0, 0], [0, 1, 0])],
-          tags: leaf.tags,
-        };
-      } else {
-        /** rotate 90 degrees */
-        return {
-          /** I'm assumming we are going to try to translate everything for the layout, I don't know how
-           * to translate to a point without having a defined plane  */
-          geometry: [leaf.geometry[0].clone().rotate(90, [0, 0, 0], [1, 0, 0])],
-          tags: leaf.tags,
-        };
+
+      let rotatiX = 0;
+      let rotatiY = 0;
+      let newBoxHeight = leaf.geometry[0].boundingBox.depth;
+      for (let i = -1; i > -90; i--) {
+        console.log("loop running");
+        console.log(newBoxHeight);
+        if (
+          leaf.geometry[0].clone().rotate(i - 1, [0, 0, 0], [1, 0, 0])
+            .boundingBox.depth >=
+          leaf.geometry[0].clone().rotate(i, [0, 0, 0], [1, 0, 0]).boundingBox
+            .depth
+        ) {
+          break;
+        }
+        newBoxHeight = leaf.geometry[0].clone().rotate(i, [0, 0, 0], [1, 0, 0])
+          .boundingBox.depth;
+
+        rotatiX = i;
       }
+      console.log(rotatiX);
+      return {
+        /** I'm assumming we are going to try to translate everything for the layout, I don't know how
+         * to translate to a point without having a defined plane  */
+        geometry: [
+          leaf.geometry[0].clone().rotate(rotatiX, [0, 0, 0], [1, 0, 0]),
+        ],
+        tags: leaf.tags,
+      };
     });
     /*library[targetID] = {
       geometry: taggedGeometry.geometry,
@@ -354,6 +364,7 @@ function actOnLeafs(assembly, action) {
 }
 
 function flattenAssembly(assembly) {
+  console.log(assembly);
   var flattened = [];
   //This is a leaf
   if (
@@ -381,10 +392,12 @@ function chainFuse(chain) {
 }
 
 function flattenRemove2DandFuse(chain) {
+  console.log(chain);
   let flattened = flattenAssembly(chain);
 
   //Here we need to remove anything which isn't already 3D
   let cleanedGeometry = [];
+
   flattened.forEach((pieceOfGeometry) => {
     if (pieceOfGeometry.mesh != undefined) {
       cleanedGeometry.push(pieceOfGeometry);
