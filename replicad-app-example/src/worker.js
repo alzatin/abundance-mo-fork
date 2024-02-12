@@ -299,8 +299,6 @@ function layout(targetID, inputID, TAG, spacing) {
       let rotatiY = 0;
       let newBoxHeight = leaf.geometry[0].boundingBox.depth;
       for (let i = -1; i > -90; i--) {
-        console.log("loop running");
-        console.log(newBoxHeight);
         if (
           leaf.geometry[0].clone().rotate(i - 1, [0, 0, 0], [1, 0, 0])
             .boundingBox.depth >=
@@ -309,17 +307,32 @@ function layout(targetID, inputID, TAG, spacing) {
         ) {
           break;
         }
-        newBoxHeight = leaf.geometry[0].clone().rotate(i, [0, 0, 0], [1, 0, 0])
-          .boundingBox.depth;
-
         rotatiX = i;
       }
-      console.log(rotatiX);
+      for (let i = -1; i > -90; i--) {
+        if (
+          leaf.geometry[0]
+            .clone()
+            .rotate(rotatiX, [0, 0, 0], [1, 0, 0])
+            .rotate(i - 1, [0, 0, 0], [0, 1, 0]).boundingBox.depth >=
+          leaf.geometry[0]
+            .clone()
+            .rotate(rotatiX, [0, 0, 0], [1, 0, 0])
+            .rotate(i, [0, 0, 0], [0, 1, 0]).boundingBox.depth
+        ) {
+          break;
+        }
+        rotatiY = i;
+      }
+      console.log(rotatiY);
       return {
         /** I'm assumming we are going to try to translate everything for the layout, I don't know how
          * to translate to a point without having a defined plane  */
         geometry: [
-          leaf.geometry[0].clone().rotate(rotatiX, [0, 0, 0], [1, 0, 0]),
+          leaf.geometry[0]
+            .clone()
+            .rotate(rotatiX, [0, 0, 0], [1, 0, 0])
+            .rotate(rotatiY, [0, 0, 0], [0, 1, 0]),
         ],
         tags: leaf.tags,
       };
