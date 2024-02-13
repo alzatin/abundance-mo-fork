@@ -291,16 +291,13 @@ function layout(targetID, inputID, TAG, spacing) {
   return started.then(() => {
     let taggedGeometry = extractTags(library[inputID], TAG);
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
-      console.log(leaf.geometry[0].boundingBox);
-      /* store max height start rotating as long as */
-      /** check what's bigged depth or width , then */
-
+      /** Angle to rotate in x and y plane */
       let rotatiX = 0;
       let rotatiY = 0;
-      let newBoxHeight = leaf.geometry[0].boundingBox.depth;
+      /** Objects with angle height pairs in x and y plane */
       let heightAngleX = [];
       let heightAngleY = [];
-
+      /** Sorts through key value pairs and returns pair with min value */
       const maxMinVal = (obj) => {
         const sortedEntriesByVal = Object.entries(obj).sort(
           ([, v1], [, v2]) => v1 - v2
@@ -308,7 +305,7 @@ function layout(targetID, inputID, TAG, spacing) {
 
         return sortedEntriesByVal[0];
       };
-
+      /** Checks for lowest possible height by rotating on x */
       for (let i = -1; i > -90; i--) {
         heightAngleX[i] = leaf.geometry[0]
           .clone()
@@ -317,19 +314,18 @@ function layout(targetID, inputID, TAG, spacing) {
 
       rotatiX = Number(maxMinVal(heightAngleX)[0]);
 
+      /** Checks for lowest possible height by rotating on x and then on y*/
+
       for (let i = -1; i > -90; i--) {
         heightAngleY[i] = leaf.geometry[0]
           .clone()
           .rotate(rotatiX, [0, 0, 0], [1, 0, 0])
           .rotate(i, [0, 0, 0], [0, 1, 0]).boundingBox.depth;
       }
-
       rotatiY = Number(maxMinVal(heightAngleY)[0]);
-      console.log(rotatiY);
 
+      /** Returns rotated geometry */
       return {
-        /** I'm assumming we are going to try to translate everything for the layout, I don't know how
-         * to translate to a point without having a defined plane  */
         geometry: [
           leaf.geometry[0]
             .clone()
@@ -339,10 +335,6 @@ function layout(targetID, inputID, TAG, spacing) {
         tags: leaf.tags,
       };
     });
-    /*library[targetID] = {
-      geometry: taggedGeometry.geometry,
-      tags: taggedGeometry.tags,
-    };*/
     return true;
   });
 }
@@ -379,7 +371,6 @@ function actOnLeafs(assembly, action) {
 }
 
 function flattenAssembly(assembly) {
-  console.log(assembly);
   var flattened = [];
   //This is a leaf
   if (
@@ -407,7 +398,6 @@ function chainFuse(chain) {
 }
 
 function flattenRemove2DandFuse(chain) {
-  console.log(chain);
   let flattened = flattenAssembly(chain);
 
   //Here we need to remove anything which isn't already 3D
