@@ -339,23 +339,33 @@ function layout(targetID, inputID, TAG, spacing) {
   });
 }
 
-function assembly(targetID, inputIDs) {
-  console.log(inputIDs);
-  return started.then(() => {
-    const assembly = [];
-    for (let i = 0; i < inputIDs.length; i++) {
-      assembly.push(library[inputIDs[i]]);
-    }
-    /** for as many inputs takes everyhitng that comes after in the array, fuse it and use to cut that piece,
-     * then return it and add it to the assemblyCut
-     */
-    let bottomGeometry = library[inputIDs.shift()].geometry[0];
+function cutAssembly(inputIDs) {
+  if (inputIDs.length == 1) {
+    console.log("assembly has one");
+    return library[inputIDs[0]].geometry;
+  } else if (inputIDs.length > 1) {
+    let bottomID = inputIDs.shift();
     let secondGeometry = library[inputIDs[0]].geometry[0];
-    let cutGeometry = bottomGeometry.clone().cut(secondGeometry);
-    console.log([cutGeometry]);
 
-    library[targetID] = { geometry: [cutGeometry], tags: [] };
+    let bottomGeometry = library[bottomID].geometry[0];
+    let assembly = bottomGeometry.clone().cut(secondGeometry);
 
+    console.log(assembly);
+    //let cuttingGeometry = cutAssembly(inputIDs);
+
+    return [assembly];
+  } else {
+    return false;
+  }
+}
+
+function assembly(targetID, inputIDs) {
+  return started.then(() => {
+    let assembly = cutAssembly(inputIDs);
+    library[targetID] = {
+      geometry: assembly,
+      tags: [],
+    };
     return true;
   });
 }
