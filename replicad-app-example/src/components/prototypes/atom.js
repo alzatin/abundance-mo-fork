@@ -409,7 +409,7 @@ export default class Atom {
         clickProcessed = true;
       }
     });
-    if (this.output) {
+    if (this.output && !atomSelected) {
       if (this.output.clickDown(x, y, clickProcessed) == true) {
         clickProcessed = true;
       }
