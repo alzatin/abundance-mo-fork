@@ -338,15 +338,30 @@ function layout(targetID, inputID, TAG, spacing) {
     return true;
   });
 }
+/** Takes partToCut and cuttingParts and returns a replicad
+ * geometry of part to cut with Cutting parts removed  */
+function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
+  var partCutCopy = library[partToCut].geometry[0];
+  cuttingParts.forEach((cuttingPart) => {
+    partCutCopy = partCutCopy.cut(library[cuttingPart].geometry[0]);
+  });
+  let newID = assemblyID * 10 + index;
+  library[newID] = { geometry: [partCutCopy], tags: library[partToCut].tags };
+
+  return library[newID];
+}
 
 function assembly(targetID, inputIDs) {
   return started.then(() => {
-    const assembly = [];
+    let assembly = [];
     for (let i = 0; i < inputIDs.length; i++) {
-      assembly.push(library[inputIDs[i]]);
+      assembly.push(
+        cutAssembly(inputIDs[i], inputIDs.slice(i + 1), targetID, i)
+      );
     }
-    library[targetID] = { geometry: assembly, tags: [] };
 
+    library[targetID] = { geometry: assembly, tags: [] };
+    console.log(library[targetID]);
     return true;
   });
 }
