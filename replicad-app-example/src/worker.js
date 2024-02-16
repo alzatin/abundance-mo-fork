@@ -346,7 +346,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     partCutCopy = partCutCopy.cut(library[cuttingPart].geometry[0]);
   });
   let newID = assemblyID * 10 + index;
-  library[newID] = { geometry: partCutCopy, tags: library[partToCut].tags };
+  library[newID] = { geometry: [partCutCopy], tags: library[partToCut].tags };
 
   return library[newID];
 }
