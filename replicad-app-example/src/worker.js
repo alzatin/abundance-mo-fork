@@ -359,7 +359,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     cuttingParts.forEach((cuttingPart) => {
       partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
     });
-    console.log(partCutCopy);
+
     let newID = assemblyID * 10 + index;
     library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
 
@@ -371,15 +371,17 @@ function recursiveCut(partToCut, cuttingPart) {
   let cutPart = [];
   if (cuttingPart.geometry.length > 1) {
     cuttingPart.geometry.forEach((part) => {
-      console.log(partToCut);
-      console.log(part);
-      cutPart.push(recursiveCut(partToCut, part));
+      let cutGeometry = recursiveCut(partToCut, part);
+      let randomID = Math.floor(Math.random() * 100000);
+      library[randomID] = { geometry: cutGeometry, tags: [] };
+      cutPart.push(library[randomID]);
     });
+    return cutPart;
   } else {
     //recursive cut running once
     cutPart = partToCut.cut(cuttingPart.geometry[0]);
+    return cutPart;
   }
-  return cutPart;
 }
 
 function assembly(targetID, inputIDs) {
@@ -390,7 +392,7 @@ function assembly(targetID, inputIDs) {
         cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
       );
     }
-
+    console.log(assembly);
     library[targetID] = { geometry: assembly, tags: [] };
     console.log(library[targetID]);
     return true;
@@ -467,6 +469,7 @@ function generateDisplayMesh(id) {
     //Here we need to extrude anything which isn't already 3D
     var cleanedGeometry = [];
     flattened.forEach((pieceOfGeometry) => {
+      console.log(pieceOfGeometry);
       if (pieceOfGeometry.mesh == undefined) {
         cleanedGeometry.push(
           pieceOfGeometry.sketchOnPlane("XY").clone().extrude(0.0001)
