@@ -338,8 +338,8 @@ function layout(targetID, inputID, TAG, spacing) {
     return true;
   });
 }
-/** Takes partToCut and cuttingParts and returns a replicad
- * geometry of part to cut with Cutting parts removed  */
+/** Cut assembly function that takes in a part to cut (library object), cutting parts (unique IDS), assembly id and index */
+/** Returns a new single cut part or an assembly with of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
   if (partToCut.geometry.length > 1) {
     let assemblyToCut = partToCut.geometry;
