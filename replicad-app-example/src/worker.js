@@ -341,45 +341,58 @@ function layout(targetID, inputID, TAG, spacing) {
 /** Cut assembly function that takes in a part to cut (library object), cutting parts (unique IDS), assembly id and index */
 /** Returns a new single cut part or an assembly with of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
+  console.log(partToCut);
+  console.log(cuttingParts);
+  //If the part to cut is an assembly pass back into the function
   if (partToCut.geometry.length > 1) {
     let assemblyToCut = partToCut.geometry;
     let assemblyCut = [];
-    /**for each part in the bottom assembly pass into cutAssembly  */
     assemblyToCut.forEach((part) => {
-      console.log("running through assebly to cut");
       //make sure you fix id
       assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID, assemblyID));
-      console.log(assemblyCut);
     });
     let newID = assemblyID * 10 + index;
     library[newID] = { geometry: assemblyCut, tags: partToCut.tags };
-    console.log(library[newID]);
     return library[newID];
   } else {
-    console.log("making a regular assembly");
     var partCutCopy = partToCut.geometry[0];
     cuttingParts.forEach((cuttingPart) => {
-      partCutCopy = partCutCopy.cut(library[cuttingPart].geometry[0]);
+      partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
     });
+    console.log(partCutCopy);
     let newID = assemblyID * 10 + index;
     library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
 
     return library[newID];
   }
 }
+/** Recursive function that gets passed a solid to cut and a library object that cuts it */
+function recursiveCut(partToCut, cuttingPart) {
+  let cutPart = [];
+  if (cuttingPart.geometry.length > 1) {
+    cuttingPart.geometry.forEach((part) => {
+      console.log(partToCut);
+      console.log(part);
+      cutPart.push(recursiveCut(partToCut, part));
+    });
+  } else {
+    //recursive cut running once
+    cutPart = partToCut.cut(cuttingPart.geometry[0]);
+  }
+  return cutPart;
+}
 
 function assembly(targetID, inputIDs) {
   return started.then(() => {
-    console.log(inputIDs);
     let assembly = [];
     for (let i = 0; i < inputIDs.length; i++) {
       assembly.push(
         cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
       );
     }
-    console.log(assembly);
-    library[targetID] = { geometry: assembly, tags: [] };
 
+    library[targetID] = { geometry: assembly, tags: [] };
+    console.log(library[targetID]);
     return true;
   });
 }
