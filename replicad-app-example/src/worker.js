@@ -341,27 +341,45 @@ function layout(targetID, inputID, TAG, spacing) {
 /** Takes partToCut and cuttingParts and returns a replicad
  * geometry of part to cut with Cutting parts removed  */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
-  var partCutCopy = library[partToCut].geometry[0];
-  cuttingParts.forEach((cuttingPart) => {
-    partCutCopy = partCutCopy.cut(library[cuttingPart].geometry[0]);
-  });
-  let newID = assemblyID * 10 + index;
-  library[newID] = { geometry: [partCutCopy], tags: library[partToCut].tags };
+  if (partToCut.geometry.length > 1) {
+    let assemblyToCut = partToCut.geometry;
+    let assemblyCut = [];
+    /**for each part in the bottom assembly pass into cutAssembly  */
+    assemblyToCut.forEach((part) => {
+      console.log("running through assebly to cut");
+      //make sure you fix id
+      assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID, assemblyID));
+      console.log(assemblyCut);
+    });
+    let newID = assemblyID * 10 + index;
+    library[newID] = { geometry: assemblyCut, tags: partToCut.tags };
+    console.log(library[newID]);
+    return library[newID];
+  } else {
+    console.log("making a regular assembly");
+    var partCutCopy = partToCut.geometry[0];
+    cuttingParts.forEach((cuttingPart) => {
+      partCutCopy = partCutCopy.cut(library[cuttingPart].geometry[0]);
+    });
+    let newID = assemblyID * 10 + index;
+    library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
 
-  return library[newID];
+    return library[newID];
+  }
 }
 
 function assembly(targetID, inputIDs) {
   return started.then(() => {
+    console.log(inputIDs);
     let assembly = [];
     for (let i = 0; i < inputIDs.length; i++) {
       assembly.push(
-        cutAssembly(inputIDs[i], inputIDs.slice(i + 1), targetID, i)
+        cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
       );
     }
-
+    console.log(assembly);
     library[targetID] = { geometry: assembly, tags: [] };
-    console.log(library[targetID]);
+
     return true;
   });
 }
