@@ -359,23 +359,23 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     cuttingParts.forEach((cuttingPart) => {
       partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
     });
-
     let newID = assemblyID * 10 + index;
     library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
-
     return library[newID];
   }
 }
 /** Recursive function that gets passed a solid to cut and a library object that cuts it */
 function recursiveCut(partToCut, cuttingPart) {
   let cutPart = [];
+  let cutGeometry;
   if (cuttingPart.geometry.length > 1) {
     cuttingPart.geometry.forEach((part) => {
-      let cutGeometry = recursiveCut(partToCut, part);
-      let randomID = Math.floor(Math.random() * 100000);
-      library[randomID] = { geometry: cutGeometry, tags: [] };
-      cutPart.push(library[randomID]);
+      cutGeometry = recursiveCut(partToCut, part);
     });
+    let randomID = Math.floor(Math.random() * 100000);
+    library[randomID] = { geometry: cutGeometry, tags: [] };
+    cutPart.push(library[randomID]);
+
     return cutPart;
   } else {
     //recursive cut running once
