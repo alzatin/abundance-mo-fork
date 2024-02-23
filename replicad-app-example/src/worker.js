@@ -341,8 +341,6 @@ function layout(targetID, inputID, TAG, spacing) {
 /** Cut assembly function that takes in a part to cut (library object), cutting parts (unique IDS), assembly id and index */
 /** Returns a new single cut part or an assembly with of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
-  console.log(partToCut);
-  console.log(cuttingParts);
   //If the part to cut is an assembly pass back into the function
   if (partToCut.geometry.length > 1) {
     let assemblyToCut = partToCut.geometry;
@@ -366,18 +364,14 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
 }
 /** Recursive function that gets passed a solid to cut and a library object that cuts it */
 function recursiveCut(partToCut, cuttingPart) {
-  let cutPart = [];
   let cutGeometry;
   if (cuttingPart.geometry.length > 1) {
     cuttingPart.geometry.forEach((part) => {
       cutGeometry = recursiveCut(partToCut, part);
     });
-    let randomID = Math.floor(Math.random() * 100000);
-    library[randomID] = { geometry: cutGeometry, tags: [] };
-    cutPart.push(library[randomID]);
-
-    return cutPart;
+    return cutGeometry;
   } else {
+    let cutPart;
     //recursive cut running once
     cutPart = partToCut.cut(cuttingPart.geometry[0]);
     return cutPart;
