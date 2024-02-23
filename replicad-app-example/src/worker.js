@@ -338,25 +338,39 @@ function layout(targetID, inputID, TAG, spacing) {
     return true;
   });
 }
+// Checks if part is an assembly)
+function isAssembly(part) {
+  if (part.geometry[0].geometry) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 /** Cut assembly function that takes in a part to cut (library object), cutting parts (unique IDS), assembly id and index */
 /** Returns a new single cut part or an assembly with of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
   //If the part to cut is an assembly pass back into the function
-  if (partToCut.geometry.length > 1) {
+  if (isAssembly(partToCut)) {
     let assemblyToCut = partToCut.geometry;
     let assemblyCut = [];
     assemblyToCut.forEach((part) => {
       //make sure you fix id
+      // make new assembly of cut parts
       assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID, assemblyID));
     });
     let newID = assemblyID * 10 + index;
+    //returns new assembly that has been cut
     library[newID] = { geometry: assemblyCut, tags: partToCut.tags };
     return library[newID];
   } else {
+    // if part to cut is a single part send to cutting function with cutting parts
     var partCutCopy = partToCut.geometry[0];
     cuttingParts.forEach((cuttingPart) => {
+      // for each cutting part cut the part
       partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
     });
+    // return new cut part
     let newID = assemblyID * 10 + index;
     library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
     return library[newID];
@@ -364,15 +378,19 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
 }
 /** Recursive function that gets passed a solid to cut and a library object that cuts it */
 function recursiveCut(partToCut, cuttingPart) {
-  let cutGeometry;
-  if (cuttingPart.geometry.length > 1) {
-    cuttingPart.geometry.forEach((part) => {
-      cutGeometry = recursiveCut(partToCut, part);
-    });
+  let cutGeometry = partToCut;
+  if (isAssembly(cuttingPart)) {
+    // if cutting part is an assembly of length >1 pass back into the function to be cut by all the cutting parts
+    //maybe this should be a for loop?
+    for (let i = 0; i < cuttingPart.geometry.length; i++) {
+      console.log("recursive running" + i);
+      cutGeometry = recursiveCut(cutGeometry, cuttingPart.geometry[i]);
+    }
     return cutGeometry;
   } else {
+    // cut and return part
+    console.log(partToCut);
     let cutPart;
-    //recursive cut running once
     cutPart = partToCut.cut(cuttingPart.geometry[0]);
     return cutPart;
   }
