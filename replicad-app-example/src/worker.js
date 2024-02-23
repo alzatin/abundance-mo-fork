@@ -348,15 +348,15 @@ function isAssembly(part) {
 }
 
 /** Cut assembly function that takes in a part to cut (library object), cutting parts (unique IDS), assembly id and index */
-/** Returns a new single cut part or an assembly with of cut parts */
+/** Returns a new single cut part or an assembly of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
-  //If the part to cut is an assembly pass back into the function
+  //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
   if (isAssembly(partToCut)) {
     let assemblyToCut = partToCut.geometry;
     let assemblyCut = [];
     assemblyToCut.forEach((part) => {
       //make sure you fix id
-      // make new assembly of cut parts
+      // make new assembly from cut parts
       assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID, assemblyID));
     });
     let newID = assemblyID * 10 + index;
@@ -379,17 +379,14 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
 /** Recursive function that gets passed a solid to cut and a library object that cuts it */
 function recursiveCut(partToCut, cuttingPart) {
   let cutGeometry = partToCut;
+  // if cutting part is an assembly pass back into the function to be cut by each part in that assembly
   if (isAssembly(cuttingPart)) {
-    // if cutting part is an assembly of length >1 pass back into the function to be cut by all the cutting parts
-    //maybe this should be a for loop?
     for (let i = 0; i < cuttingPart.geometry.length; i++) {
-      console.log("recursive running" + i);
       cutGeometry = recursiveCut(cutGeometry, cuttingPart.geometry[i]);
     }
     return cutGeometry;
   } else {
     // cut and return part
-    console.log(partToCut);
     let cutPart;
     cutPart = partToCut.cut(cuttingPart.geometry[0]);
     return cutPart;
@@ -404,9 +401,7 @@ function assembly(targetID, inputIDs) {
         cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
       );
     }
-    console.log(assembly);
     library[targetID] = { geometry: assembly, tags: [] };
-    console.log(library[targetID]);
     return true;
   });
 }
@@ -481,7 +476,6 @@ function generateDisplayMesh(id) {
     //Here we need to extrude anything which isn't already 3D
     var cleanedGeometry = [];
     flattened.forEach((pieceOfGeometry) => {
-      console.log(pieceOfGeometry);
       if (pieceOfGeometry.mesh == undefined) {
         cleanedGeometry.push(
           pieceOfGeometry.sketchOnPlane("XY").clone().extrude(0.0001)
