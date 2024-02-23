@@ -355,14 +355,13 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     let assemblyToCut = partToCut.geometry;
     let assemblyCut = [];
     assemblyToCut.forEach((part) => {
-      //make sure you fix id
       // make new assembly from cut parts
       assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID, assemblyID));
     });
-    let newID = assemblyID * 10 + index;
+    let subID = assemblyID * 10 + index + Math.random(100); // needs to be randomized?
     //returns new assembly that has been cut
-    library[newID] = { geometry: assemblyCut, tags: partToCut.tags };
-    return library[newID];
+    library[subID] = { geometry: assemblyCut, tags: partToCut.tags };
+    return library[subID];
   } else {
     // if part to cut is a single part send to cutting function with cutting parts
     var partCutCopy = partToCut.geometry[0];
