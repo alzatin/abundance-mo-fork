@@ -26,15 +26,23 @@ export default memo(function FlowCanvas(props) {
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
   let loadProject = props.props.loadProject;
+  let setWireMesh = props.displayProps.setWireMesh;
+  let wireMesh = props.displayProps.wireMesh;
+
+  let activeAtom = props.props.activeAtom;
 
   /** State for github molecule search input */
   const [searchingGitHub, setSearchingGitHub] = useState(false);
 
   useEffect(() => {
+    console.log(GlobalVariables.currentMolecule);
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
 
       cad.generateDisplayMesh(id).then((m) => setMesh(m));
+      cad
+        .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
+        .then((w) => setWireMesh(w));
     };
 
     GlobalVariables.cad = cad;

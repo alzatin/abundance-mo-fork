@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { Wireframe } from "@react-three/drei";
 import * as THREE from "three";
 import InfiniteGrid from "./InfiniteGrid.jsx";
 import Controls from "./ThreeControls.jsx";

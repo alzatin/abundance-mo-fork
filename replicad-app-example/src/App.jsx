@@ -47,9 +47,11 @@ export default function ReplicadApp() {
   };
 
   const [mesh, setMesh] = useState(null);
+  const [wireMesh, setWireMesh] = useState(null);
 
   useEffect(() => {
     cad.createMesh(size).then((m) => setMesh(m));
+    cad.createMesh(size).then((m) => setWireMesh(m));
   }, [size]);
 
   const [isloggedIn, setIsLoggedIn] = useState(false);
@@ -153,6 +155,8 @@ export default function ReplicadApp() {
                   setMesh: setMesh,
                   size: size,
                   cad: cad,
+                  wireMesh: wireMesh,
+                  setWireMesh: setWireMesh,
                 }}
               />
             }
@@ -174,6 +178,8 @@ export default function ReplicadApp() {
                   setMesh: setMesh,
                   size: size,
                   cad: cad,
+                  wireMesh: wireMesh,
+                  setWireMesh: setWireMesh,
                 }}
               />
             }

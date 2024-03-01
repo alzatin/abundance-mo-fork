@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState } from "react";
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
+import WireframeMesh from "./WireframeMesh.jsx";
 import globalvariables from "./js/globalvariables.js";
 
 function useWindowSize() {
@@ -36,6 +37,8 @@ export default memo(function LowerHalf(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
+  let setWireMesh = props.displayProps.setWireMesh;
+  let wireMesh = props.displayProps.wireMesh;
 
   const windowSize = useWindowSize();
 
@@ -55,12 +58,15 @@ export default memo(function LowerHalf(props) {
             height: windowSize.height * 0.6,
           }}
         >
-          {mesh ? (
+          {wireMesh ? (
             <ThreeContext
               gridParam={props.props.gridParam}
               axesParam={props.props.axesParam}
             >
-              <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
+              {
+                //** */ <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
+              }
+              <WireframeMesh edges={wireMesh.edges} faces={wireMesh.faces} />
             </ThreeContext>
           ) : (
             <div

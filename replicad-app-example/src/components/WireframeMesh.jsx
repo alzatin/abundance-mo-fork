@@ -42,18 +42,6 @@ export default React.memo(function ShapeMeshes({ faces, edges }) {
 
   return (
     <group>
-      <mesh geometry={body.current}>
-        {/* the offsets are here to avoid z fighting between the mesh and the lines */}
-        <meshStandardMaterial
-          color="#5a8296"
-          polygonOffset
-          polygonOffsetFactor={2.0}
-          polygonOffsetUnits={1.0}
-        />
-      </mesh>
-      <lineSegments geometry={lines.current}>
-        <lineBasicMaterial color="white" opacity="1" />
-      </lineSegments>
       <lineSegments geometry={wire.current}>
         <lineBasicMaterial color="#3c5a6e" opacity="1" />
       </lineSegments>

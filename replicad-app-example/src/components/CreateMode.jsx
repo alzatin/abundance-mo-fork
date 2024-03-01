@@ -70,6 +70,8 @@ function CreateMode(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
+  let setWireMesh = props.displayProps.setWireMesh;
+  let wireMesh = props.displayProps.wireMesh;
 
   /**
    * Create a commit as part of the saving process.
@@ -300,6 +302,7 @@ function CreateMode(props) {
           />
           <FlowCanvas
             props={{
+              activeAtom: activeAtom,
               loadProject: props.props.loadProject,
               setActiveAtom: setActiveAtom,
               setSavePopUp: setSavePopUp,
@@ -312,6 +315,8 @@ function CreateMode(props) {
               setMesh: setMesh,
               size: size,
               cad: cad,
+              wireMesh: wireMesh,
+              setWireMesh: setWireMesh,
             }}
           />
           <div className="parent flex-parent" id="lowerHalf">
@@ -337,6 +342,8 @@ function CreateMode(props) {
                 setMesh: setMesh,
                 size: size,
                 cad: cad,
+                wireMesh: wireMesh,
+                setWireMesh: setWireMesh,
               }}
             />
           </div>
