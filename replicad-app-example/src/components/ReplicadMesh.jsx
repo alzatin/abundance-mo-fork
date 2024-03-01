@@ -12,7 +12,6 @@ export default React.memo(function ShapeMeshes({ faces, edges }) {
 
   const body = useRef(new BufferGeometry());
   const lines = useRef(new BufferGeometry());
-  const wire = useRef(new WireframeGeometry());
 
   useLayoutEffect(() => {
     // We use the three helpers to synchronise the buffer geometry with the
@@ -21,9 +20,7 @@ export default React.memo(function ShapeMeshes({ faces, edges }) {
     //if (faces) syncFaces(wire.current, faces);
 
     if (edges) syncLines(lines.current, edges);
-    if (edges) syncLines(wire.current, edges);
-    else if (faces)
-      syncLinesFromFaces(lines.current, body.current, wire.current);
+    else if (faces) syncLinesFromFaces(lines.current, body.current);
 
     // We have configured the canvas to only refresh when there is a change,
     // the invalidate function is here to tell it to recompute
@@ -34,7 +31,6 @@ export default React.memo(function ShapeMeshes({ faces, edges }) {
     () => () => {
       body.current.dispose();
       lines.current.dispose();
-      wire.current.dispose();
       invalidate();
     },
     [invalidate]
@@ -45,17 +41,15 @@ export default React.memo(function ShapeMeshes({ faces, edges }) {
       <mesh geometry={body.current}>
         {/* the offsets are here to avoid z fighting between the mesh and the lines */}
         <meshStandardMaterial
-          color="#5a8296"
+          color="#8f7596"
+          opacity={0.5}
           polygonOffset
           polygonOffsetFactor={2.0}
           polygonOffsetUnits={1.0}
         />
       </mesh>
       <lineSegments geometry={lines.current}>
-        <lineBasicMaterial color="white" opacity="1" />
-      </lineSegments>
-      <lineSegments geometry={wire.current}>
-        <lineBasicMaterial color="#3c5a6e" opacity="1" />
+        <lineBasicMaterial color={"#d7d0d9"} opacity={0.75} linewidth={4} />
       </lineSegments>
     </group>
   );
