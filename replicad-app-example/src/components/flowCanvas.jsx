@@ -35,7 +35,6 @@ export default memo(function FlowCanvas(props) {
   const [searchingGitHub, setSearchingGitHub] = useState(false);
 
   useEffect(() => {
-    console.log(GlobalVariables.currentMolecule);
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
 
