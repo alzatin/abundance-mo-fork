@@ -1,6 +1,6 @@
 import React, { useRef, useLayoutEffect, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
-import { BufferGeometry } from "three";
+import { BufferGeometry, WireframeGeometry, LineSegments } from "three";
 import {
   syncFaces,
   syncLines,
@@ -17,6 +17,7 @@ export default React.memo(function ShapeMeshes({ faces, edges }) {
     // We use the three helpers to synchronise the buffer geometry with the
     // new data from the parameters
     if (faces) syncFaces(body.current, faces);
+    //if (faces) syncFaces(wire.current, faces);
 
     if (edges) syncLines(lines.current, edges);
     else if (faces) syncLinesFromFaces(lines.current, body.current);
@@ -40,14 +41,15 @@ export default React.memo(function ShapeMeshes({ faces, edges }) {
       <mesh geometry={body.current}>
         {/* the offsets are here to avoid z fighting between the mesh and the lines */}
         <meshStandardMaterial
-          color="#5a8296"
+          color="#8f7596"
+          opacity={0.5}
           polygonOffset
           polygonOffsetFactor={2.0}
           polygonOffsetUnits={1.0}
         />
       </mesh>
       <lineSegments geometry={lines.current}>
-        <lineBasicMaterial color="#3c5a6e" />
+        <lineBasicMaterial color={"#d7d0d9"} opacity={0.75} linewidth={4} />
       </lineSegments>
     </group>
   );
