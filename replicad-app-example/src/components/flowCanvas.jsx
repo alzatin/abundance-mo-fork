@@ -39,9 +39,14 @@ export default memo(function FlowCanvas(props) {
       console.log("write to display running " + id);
 
       cad.generateDisplayMesh(id).then((m) => setMesh(m));
-      cad
-        .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
-        .then((w) => setWireMesh(w));
+      // if something is connected to the output, set a wireframe mesh
+      if (GlobalVariables.currentMolecule.output.value !== undefined) {
+        cad
+          .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
+          .then((w) => setWireMesh(w));
+      } else {
+        console.warn("no wire to display");
+      }
     };
 
     GlobalVariables.cad = cad;
