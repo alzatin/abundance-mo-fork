@@ -33,6 +33,7 @@ function CreateMode(props) {
   /** State for grid and axes parameters */
   const [gridParam, setGrid] = useState(true);
   const [axesParam, setAxes] = useState(true);
+  const [wireParam, setWire] = useState(true);
   /** State for save progress bar */
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
@@ -326,6 +327,7 @@ function CreateMode(props) {
                 setActiveAtom={setActiveAtom}
                 setGrid={setGrid}
                 setAxes={setAxes}
+                setWire={setWire}
               />
             ) : null}
 
@@ -333,6 +335,7 @@ function CreateMode(props) {
               props={{
                 gridParam: gridParam,
                 axesParam: axesParam,
+                wireParam: wireParam,
                 saveProject: saveProject,
                 setSaveState: setSaveState,
                 setSaveState: setSaveState,
