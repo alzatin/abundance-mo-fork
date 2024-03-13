@@ -131,7 +131,6 @@ export default class GitHubMolecule extends Molecule {
       }
 
       this.beginPropagation(true);
-      // this.updateSidebar();
     });
   }
 
@@ -151,32 +150,6 @@ export default class GitHubMolecule extends Molecule {
     }
   }
 
-  /**
-   * Updates sidebar with buttons for user in runMode
-   */
-  updateSidebar() {
-    const list = super.updateSidebar();
-
-    if (this.topLevel) {
-      this.runModeSidebarAdditions.forEach((sideBarFunction) => {
-        sideBarFunction(list);
-      });
-
-      this.createButton(list, this, "Bill Of Materials", () => {
-        GlobalVariables.gitHub.openBillOfMaterialsPage();
-      });
-      this.createButton(list, this, "Fork", () => {
-        GlobalVariables.gitHub.forkByID(this.projectID);
-      });
-      this.createButton(list, this, "Star", () => {
-        GlobalVariables.gitHub.starProject(this.projectID);
-      });
-    } else {
-      this.createButton(list, this, "Reload", () => {
-        this.reloadMolecule();
-      });
-    }
-  }
 
   /**
    * Save the project information to be loaded. This should use super.serialize() to maintain a connection with Molecule, but it doesn't...should be fixed
