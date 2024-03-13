@@ -9,7 +9,6 @@ now:
 - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
 - Delete circle segment size from molecule build
 - make load bar for creating new project and disable button while project is being created
-- Wireframe visible \_ make on off toggle // maybe implement with drei for more complex wireframe
 - Cut layout should separate by height
 - how do we make loft work ? Hull
 - Can colors be implemented with tags with three js materials
@@ -18,6 +17,7 @@ now:
 mid :
 
 - nest
+  -implement three/drei wireframe?
 - extract tag should have dropdown of existing tags
 - GET request sometimes failing at browsing for projects
 - Face lift for project browse and new project (later)
