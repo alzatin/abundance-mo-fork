@@ -61,9 +61,10 @@ export default class GitHubMolecule extends Molecule {
    */
   async loadProjectByID(id) {
     let octokit = new Octokit();
-    octokit
+    await octokit
       .request("GET /repositories/:id/contents/project.maslowcreate", { id })
       .then((response) => {
+        
         //content will be base64 encoded
         let valuesToOverwriteInLoadedVersion = {};
         if (this.topLevel) {
@@ -94,14 +95,14 @@ export default class GitHubMolecule extends Molecule {
           }
         }
 
-        let rawFile = JSON.parse(atob(response.data.content));
+        let rawFile = JSON.parse(atob(response.data.content))
         this.deserialize(rawFile, valuesToOverwriteInLoadedVersion, true).then(
           () => {
             //this.setValues(valuesToOverwriteInLoadedVersion);
             this.loadTree();
           }
         );
-        console.log(rawFile);
+        
         return rawFile;
       });
   }
