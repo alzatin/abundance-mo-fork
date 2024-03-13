@@ -30,6 +30,7 @@ mid :
 - BOM summary when molecule is active , button to download
 - Fix gitmolecule search bar max quota issue
 - Top molecule - choose units of measurement (Should this be in create new project ? as an extra setting)
+- add thumbnail images for projects
 
 future:
 
