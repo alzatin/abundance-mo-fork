@@ -7,8 +7,6 @@ now:
 - model some things :S
 
 - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
-- Problems placing connector when there’s github molecules in project
-    (need to change order of propagation so that molecule place connector waits for all github molecule connectors to be placed before trying to place git molecule connector?)
 - Make it so that you can rename constants
 - Delete circle segment size from molecule build
 - make load bar for creating new project and disable button while project is being created
