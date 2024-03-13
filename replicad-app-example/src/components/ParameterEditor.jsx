@@ -10,6 +10,7 @@ export default (function ParamsEditor({
   setGrid,
   setAxes,
   setWire,
+  setSolid,
 }) {
   let inputParams = {};
   let bomParams = {};
@@ -69,23 +70,30 @@ export default (function ParamsEditor({
     {
       grid: {
         value: true,
-        label: "Show grid",
+        label: "Show Grid",
         onChange: (value) => {
           setGrid(value);
         },
       },
       axes: {
         value: true,
-        label: "Show axes",
+        label: "Show Axes",
         onChange: (value) => {
           setAxes(value);
         },
       },
       wire: {
         value: true,
-        label: "Show wireframe",
+        label: "Show Wire",
         onChange: (value) => {
           setWire(value);
+        },
+      },
+      solid: {
+        value: true,
+        label: "Show Solid",
+        onChange: (value) => {
+          setSolid(value);
         },
       },
     },
