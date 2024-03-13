@@ -82,6 +82,14 @@ export default class Constant extends Atom {
    */
   createLevaInputs() {
     let outputParams = {};
+    outputParams["constant number"] = {
+      value: this.name,
+      label: "Constant Name",
+      disabled: false,
+      onChange: (value) => {
+        this.name = value;
+      },
+    };
     outputParams[this.name] = {
       value: this.output.value,
       label: this.output.name,
