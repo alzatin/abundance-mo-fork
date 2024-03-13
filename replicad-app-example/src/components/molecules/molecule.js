@@ -509,21 +509,14 @@ export default class Molecule extends Atom {
         //Place the atoms
         const promise = this.placeAtom(atom, false);
         promiseArray.push(promise);
+       
         this.setValues([]); //Call set values again with an empty list to trigger loading of IO values from memory
       });
     }
-
     return Promise.all(promiseArray).then(() => {
+   
       //Once all the atoms are placed we can finish
-
       this.setValues([]); //Call set values again with an empty list to trigger loading of IO values from memory
-
-      //Place the connectors
-      if (json.allConnectors) {
-        json.allConnectors.forEach((connector) => {
-          this.placeConnector(connector);
-        });
-      }
 
       if (this.topLevel) {
         GlobalVariables.totalAtomCount = GlobalVariables.numberOfAtomsToLoad;
@@ -532,6 +525,13 @@ export default class Molecule extends Atom {
         this.loadTree(); //Walks back up the tree from this molecule loading input values from any connected atoms
 
         this.beginPropagation(forceBeginPropagation);
+      }
+  
+      //Place the connectors
+      if (json.allConnectors) {
+        json.allConnectors.forEach((connector) => {
+          this.placeConnector(connector);
+        });
       }
     });
   }
@@ -583,11 +583,11 @@ export default class Molecule extends Atom {
    * @param {boolean} unlock - A flag to indicate if this atom should spawn in the unlocked state.
    */
   async placeAtom(newAtomObj, unlock) {
+    try{
     GlobalVariables.numberOfAtomsToLoad =
       GlobalVariables.numberOfAtomsToLoad + 1; //Indicate that one more atom needs to be loaded
 
-    try {
-      var promise = null;
+      let promise = null;
 
       for (var key in GlobalVariables.availableTypes) {
         if (
@@ -610,20 +610,18 @@ export default class Molecule extends Atom {
           //If this is a molecule, de-serialize it
           if (atom.atomType == "Molecule") {
             promise = atom.deserialize(newAtomObj);
+           
           }
 
           //If this is a github molecule load it from the web
           if (atom.atomType == "GitHubMolecule") {
-            promise = atom.loadProjectByID(atom.projectID);
-
+           promise = await atom.loadProjectByID(atom.projectID)
             if (unlock) {
-              promise.then(() => {
-                console.log(promise);
                 atom.beginPropagation();
-              });
             }
+            
+           
           }
-
           //If this is an output, check to make sure there are no existing outputs, and if there are delete the existing one because there can only be one
           if (atom.atomType == "Output") {
             //Check for existing outputs
@@ -654,19 +652,20 @@ export default class Molecule extends Atom {
                 atom.beginPropagation();
               }
             }
-
+            
             atom.updateValue();
           }
         }
       }
-      return promise;
-    } catch (err) {
+     return promise;
+    }
+     catch (err) {
       console.warn("Unable to place: " + newAtomObj);
       console.warn(err);
       return Promise.resolve();
-    }
+    
   }
-
+  }
   /**
    * Places a new connector within the molecule
    * @param {object} connectorObj - An object representation of the connector specifying its inputs and outputs.
@@ -676,10 +675,12 @@ export default class Molecule extends Atom {
     var inputAttachmentPoint = false;
 
     this.nodesOnTheScreen.forEach((atom) => {
+
       //Check each atom on the screen
       if (atom.uniqueID == connectorObj.ap1ID) {
         //When we have found the output atom
         outputAttachmentPoint = atom.output;
+        
       }
       if (atom.uniqueID == connectorObj.ap2ID) {
         //When we have found the input atom

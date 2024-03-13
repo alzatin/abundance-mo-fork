@@ -61,9 +61,10 @@ export default class GitHubMolecule extends Molecule {
    */
   async loadProjectByID(id) {
     let octokit = new Octokit();
-    octokit
+    await octokit
       .request("GET /repositories/:id/contents/project.maslowcreate", { id })
       .then((response) => {
+        
         //content will be base64 encoded
         let valuesToOverwriteInLoadedVersion = {};
         if (this.topLevel) {
@@ -94,14 +95,14 @@ export default class GitHubMolecule extends Molecule {
           }
         }
 
-        let rawFile = JSON.parse(atob(response.data.content));
+        let rawFile = JSON.parse(atob(response.data.content))
         this.deserialize(rawFile, valuesToOverwriteInLoadedVersion, true).then(
           () => {
             //this.setValues(valuesToOverwriteInLoadedVersion);
             this.loadTree();
           }
         );
-        console.log(rawFile);
+        
         return rawFile;
       });
   }
@@ -130,7 +131,6 @@ export default class GitHubMolecule extends Molecule {
       }
 
       this.beginPropagation(true);
-      // this.updateSidebar();
     });
   }
 
@@ -150,32 +150,6 @@ export default class GitHubMolecule extends Molecule {
     }
   }
 
-  /**
-   * Updates sidebar with buttons for user in runMode
-   */
-  updateSidebar() {
-    const list = super.updateSidebar();
-
-    if (this.topLevel) {
-      this.runModeSidebarAdditions.forEach((sideBarFunction) => {
-        sideBarFunction(list);
-      });
-
-      this.createButton(list, this, "Bill Of Materials", () => {
-        GlobalVariables.gitHub.openBillOfMaterialsPage();
-      });
-      this.createButton(list, this, "Fork", () => {
-        GlobalVariables.gitHub.forkByID(this.projectID);
-      });
-      this.createButton(list, this, "Star", () => {
-        GlobalVariables.gitHub.starProject(this.projectID);
-      });
-    } else {
-      this.createButton(list, this, "Reload", () => {
-        this.reloadMolecule();
-      });
-    }
-  }
 
   /**
    * Save the project information to be loaded. This should use super.serialize() to maintain a connection with Molecule, but it doesn't...should be fixed
