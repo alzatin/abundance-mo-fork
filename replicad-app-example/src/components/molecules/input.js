@@ -206,7 +206,7 @@ export default class Input extends Atom {
     let inputNames = {};
     inputNames[this.name] = {
       value: this.name,
-      label: this.name,
+      label: "Input Name",
       disabled: false,
       onChange: (value) => {
         this.name = value;
