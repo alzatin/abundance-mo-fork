@@ -62,17 +62,6 @@ export default class Input extends Atom {
   }
 
   /**
-   * Updates the side bar to let the user change the atom value. Note that the parent molecule input is set, not this atom's input by changes.
-   */
-  updateSidebar() {
-    //updates the sidebar to display information about this node
-
-    var valueList = super.updateSidebar(); //call the super function
-
-    //this.createEditableValueListItem(valueList,this,'name', 'Name', false)
-  }
-
-  /**
    * Draws the atom on the screen.
    */
   draw() {
@@ -217,7 +206,7 @@ export default class Input extends Atom {
     let inputNames = {};
     inputNames[this.name] = {
       value: this.name,
-      label: this.name,
+      label: "Input Name",
       disabled: false,
       onChange: (value) => {
         this.name = value;
