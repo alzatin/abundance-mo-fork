@@ -7,7 +7,10 @@ now:
 - model some things :S
 
 - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
+
 - Problems placing connector when there’s github molecules in project
+  i think the problem we are having is that the loaded project github molecule ID is different from the uniqueID on the saved project so it's having problems displaying the geometry and placing connectors
+
 - Make it so that you can rename constants
 - make load bar for creating new project and disable button while project is being created
 - Wireframe visible \_ make on off toggle // maybe implement with drei for more complex wireframe
