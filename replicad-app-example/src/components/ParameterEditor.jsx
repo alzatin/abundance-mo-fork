@@ -4,7 +4,14 @@ import globalvariables from "./js/globalvariables";
 import { useControls, useCreateStore, LevaPanel, button } from "leva";
 
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
-export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
+export default (function ParamsEditor({
+  activeAtom,
+  run,
+  setGrid,
+  setAxes,
+  setWire,
+  setSolid,
+}) {
   let inputParams = {};
   let bomParams = {};
   const store1 = useCreateStore();
@@ -63,16 +70,30 @@ export default (function ParamsEditor({ activeAtom, run, setGrid, setAxes }) {
     {
       grid: {
         value: true,
-        label: "show grid",
+        label: "Show Grid",
         onChange: (value) => {
           setGrid(value);
         },
       },
       axes: {
         value: true,
-        label: "show axes",
+        label: "Show Axes",
         onChange: (value) => {
           setAxes(value);
+        },
+      },
+      wire: {
+        value: true,
+        label: "Show Wire",
+        onChange: (value) => {
+          setWire(value);
+        },
+      },
+      solid: {
+        value: true,
+        label: "Show Solid",
+        onChange: (value) => {
+          setSolid(value);
         },
       },
     },
