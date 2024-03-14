@@ -16,7 +16,7 @@ now:
 mid :
 
 - nest
-  -implement three/drei wireframe?
+- implement three/drei wireframe?
 - extract tag should have dropdown of existing tags
 - GET request sometimes failing at browsing for projects
 - Face lift for project browse and new project (later)

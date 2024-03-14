@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useFormStatus, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
@@ -103,6 +103,7 @@ const ShowProjects = (props) => {
   const [projectsLoaded, setStateLoaded] = React.useState(false);
   const [projectPopUp, setNewProjectPopUp] = useState(false);
   const [searchBarValue, setSearchBarValue] = useState("");
+  const [newProjectBar, setNewProjectBar] = useState(0);
   var authorizedUserOcto = props.authorizedUserOcto;
 
   const navigate = useNavigate();
@@ -135,12 +136,7 @@ const ShowProjects = (props) => {
       });
   }, [props.userBrowsing, searchBarValue]);
 
-  const createProject = async () => {
-    const name = document.getElementById("project-name").value;
-    const description = document.getElementById("project-description").value;
-    const licenseText =
-      licenses[document.getElementById("license-options").value];
-
+  const createProject = async ([name, tags, description]) => {
     //Load a blank project
     GlobalVariables.topLevelMolecule = new Molecule({
       x: 0,
@@ -162,6 +158,7 @@ const ShowProjects = (props) => {
         },
       })
       .then((result) => {
+        setNewProjectBar(10);
         //Once we have created the new repo we need to create a file within it to store the project in
         currentRepoName = result.data.name;
         currentUser = GlobalVariables.currentUser;
@@ -183,6 +180,7 @@ const ShowProjects = (props) => {
             content: projectContent,
           })
           .then((result) => {
+            setNewProjectBar(20);
             //Then create the BOM file
             var content = window.btoa(bomHeader); // create a file with just the header in it and base64 encode it
             authorizedUserOcto.rest.repos
@@ -194,6 +192,7 @@ const ShowProjects = (props) => {
                 content: content,
               })
               .then(() => {
+                setNewProjectBar(30);
                 //Then create the README file
                 content = window.btoa(readmeHeader); // create a file with just the word "init" in it and base64 encode it
                 authorizedUserOcto.rest.repos
@@ -205,6 +204,7 @@ const ShowProjects = (props) => {
                     content: content,
                   })
                   .then(() => {
+                    setNewProjectBar(40);
                     authorizedUserOcto.rest.repos
                       .createOrUpdateFileContents({
                         owner: currentUser,
@@ -214,6 +214,7 @@ const ShowProjects = (props) => {
                         content: "",
                       })
                       .then(() => {
+                        setNewProjectBar(50);
                         authorizedUserOcto.rest.repos
                           .createOrUpdateFileContents({
                             owner: currentUser,
@@ -223,6 +224,7 @@ const ShowProjects = (props) => {
                             content: window.btoa("data binary"),
                           })
                           .then(() => {
+                            setNewProjectBar(60);
                             authorizedUserOcto.rest.repos
                               .createOrUpdateFileContents({
                                 owner: currentUser,
@@ -232,6 +234,8 @@ const ShowProjects = (props) => {
                                 content: "",
                               })
                               .then(() => {
+                                setNewProjectBar(70);
+                                let licenseText = ""; // ?
                                 authorizedUserOcto.rest.repos
                                   .createOrUpdateFileContents({
                                     owner: currentUser,
@@ -241,6 +245,8 @@ const ShowProjects = (props) => {
                                     content: window.btoa(licenseText),
                                   })
                                   .then(() => {
+                                    setNewProjectBar(80);
+                                    console.warn("Project Created!");
                                     navigate(
                                       `/${GlobalVariables.currentRepo.id}`
                                     );
@@ -272,63 +278,46 @@ const ShowProjects = (props) => {
     const [projectName, setName] = useState("");
     const [projectTags, setTags] = useState("");
     const [projectDescription, setDescription] = useState("");
+    const [pending, setPending] = useState(""); // useFormStatus(); in the future
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setPending(true);
+      createProject([projectName, projectTags, projectDescription]);
+    };
 
     return (
       <>
-        <div>
-          <div className="form" style={{ color: "whitesmoke" }}>
-            <h1 style={{ fontSize: "1em" }}>NEW PROJECT</h1>
-            <div className="login-form">
-              <div className="form-row">
-                <div className="input-data">
-                  <input
-                    id="project-name"
-                    value={projectName}
-                    onChange={(e) => setName(e.target.value)}
-                    type="text"
-                    required
-                  ></input>
-                  <div className="underline"></div>
-                  <label for="">Project Name</label>
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="input-data">
-                  <input
-                    type="text"
-                    id="project-tags"
-                    value={projectTags}
-                    onChange={(e) => setTags(e.target.value)}
-                  ></input>
-                  <div className="underline"></div>
-                  <label for="">Tags</label>
-                </div>
-              </div>
+        <div className="login-page">
+          <div className="form animate fadeInUp one">
+            <form
+              onSubmit={(e) => {
+                handleSubmit(e);
+              }}
+            >
+              <input
+                name="Project Name"
+                placeholder="Project Name"
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                name="Project Tags"
+                placeholder="Project Tags"
+                onChange={(e) => setTags(e.target.value)}
+              />
               <select id="license-options">
                 {keys_ar.map((opt) => {
                   return <option value={opt}>{opt}</option>;
                 })}
               </select>
-              <div className="form-row">
-                <div className="input-data textarea">
-                  <textarea
-                    id="project-description"
-                    value={projectDescription}
-                    onChange={(e) => setDescription(e.target.value)}
-                    rows="8"
-                    cols="80"
-                  ></textarea>
-                  <br />
-                  <div className="underline"></div>
-                  <label for="">Project Description</label>
-                  <br />
-                  <div className="submit-btn">
-                    <div className="inner"></div>
-                    <button onClick={createProject}>Create Project</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <input
+                placeholder="Project Description"
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <button disabled={pending} type="submit">
+                {pending ? "Submitting..." : "Submit"}
+              </button>
+            </form>
           </div>
         </div>
       </>

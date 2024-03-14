@@ -342,7 +342,6 @@ function CreateMode(props) {
                 saveProject: saveProject,
                 setSaveState: setSaveState,
                 setSaveState: setSaveState,
-                setSolid: setSolid,
               }}
               displayProps={{
                 mesh: mesh,
