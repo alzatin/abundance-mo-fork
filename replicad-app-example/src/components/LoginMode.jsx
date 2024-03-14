@@ -271,6 +271,7 @@ const ShowProjects = (props) => {
   };
   //Replaces the loaded projects if the user clicks on new project button
   const NewProjectPopUp = () => {
+    console.log("new project pop up rerender");
     const keys_ar = [];
     Object.keys(licenses).forEach((key) => {
       keys_ar.push(key);
@@ -298,10 +299,12 @@ const ShowProjects = (props) => {
               <input
                 name="Project Name"
                 placeholder="Project Name"
+                value={projectName}
                 onChange={(e) => setName(e.target.value)}
               />
               <input
                 name="Project Tags"
+                value={projectTags}
                 placeholder="Project Tags"
                 onChange={(e) => setTags(e.target.value)}
               />
@@ -312,6 +315,7 @@ const ShowProjects = (props) => {
               </select>
               <input
                 placeholder="Project Description"
+                value={projectDescription}
                 onChange={(e) => setDescription(e.target.value)}
               />
               <button disabled={pending} type="submit">
