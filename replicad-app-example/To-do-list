@@ -6,7 +6,6 @@ now:
 
     - model some things :S
 
-    - catch for projects if they fail to load
     - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
     - Cut layout should separate by height
     - how do we make loft work ? Hull
