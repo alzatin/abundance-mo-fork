@@ -22,6 +22,7 @@ now:
 mid :
 
     - add labels to molecule
+    - REDO login/browse to use link/reroute
     - - allow filtering of projects
     - nest
     - implement three/drei wireframe?

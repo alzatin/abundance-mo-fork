@@ -103,9 +103,9 @@ const ShowProjects = (props) => {
   const [projectsLoaded, setStateLoaded] = React.useState(false);
   const [projectPopUp, setNewProjectPopUp] = useState(false);
   const [searchBarValue, setSearchBarValue] = useState("");
-  const [newProjectBar, setNewProjectBar] = useState(0);
+  //const [newProjectBar, setNewProjectBar] = useState(0);
   var authorizedUserOcto = props.authorizedUserOcto;
-
+  console.log(projectPopUp);
   const navigate = useNavigate();
 
   // conditional query for maslow projects
@@ -158,7 +158,7 @@ const ShowProjects = (props) => {
         },
       })
       .then((result) => {
-        setNewProjectBar(10);
+        // setNewProjectBar(10);
         //Once we have created the new repo we need to create a file within it to store the project in
         currentRepoName = result.data.name;
         currentUser = GlobalVariables.currentUser;
@@ -180,7 +180,7 @@ const ShowProjects = (props) => {
             content: projectContent,
           })
           .then((result) => {
-            setNewProjectBar(20);
+            // setNewProjectBar(20);
             //Then create the BOM file
             var content = window.btoa(bomHeader); // create a file with just the header in it and base64 encode it
             authorizedUserOcto.rest.repos
@@ -192,7 +192,7 @@ const ShowProjects = (props) => {
                 content: content,
               })
               .then(() => {
-                setNewProjectBar(30);
+                //setNewProjectBar(30);
                 //Then create the README file
                 content = window.btoa(readmeHeader); // create a file with just the word "init" in it and base64 encode it
                 authorizedUserOcto.rest.repos
@@ -204,7 +204,7 @@ const ShowProjects = (props) => {
                     content: content,
                   })
                   .then(() => {
-                    setNewProjectBar(40);
+                    // setNewProjectBar(40);
                     authorizedUserOcto.rest.repos
                       .createOrUpdateFileContents({
                         owner: currentUser,
@@ -214,7 +214,7 @@ const ShowProjects = (props) => {
                         content: "",
                       })
                       .then(() => {
-                        setNewProjectBar(50);
+                        // setNewProjectBar(50);
                         authorizedUserOcto.rest.repos
                           .createOrUpdateFileContents({
                             owner: currentUser,
@@ -224,7 +224,7 @@ const ShowProjects = (props) => {
                             content: window.btoa("data binary"),
                           })
                           .then(() => {
-                            setNewProjectBar(60);
+                            //setNewProjectBar(60);
                             authorizedUserOcto.rest.repos
                               .createOrUpdateFileContents({
                                 owner: currentUser,
@@ -234,7 +234,7 @@ const ShowProjects = (props) => {
                                 content: "",
                               })
                               .then(() => {
-                                setNewProjectBar(70);
+                                //setNewProjectBar(70);
                                 let licenseText = ""; // ?
                                 authorizedUserOcto.rest.repos
                                   .createOrUpdateFileContents({
@@ -245,7 +245,7 @@ const ShowProjects = (props) => {
                                     content: window.btoa(licenseText),
                                   })
                                   .then(() => {
-                                    setNewProjectBar(80);
+                                    // setNewProjectBar(80);
                                     console.warn("Project Created!");
                                     navigate(
                                       `/${GlobalVariables.currentRepo.id}`
@@ -272,58 +272,67 @@ const ShowProjects = (props) => {
   //Replaces the loaded projects if the user clicks on new project button
   const NewProjectPopUp = () => {
     console.log("new project pop up rerender");
+    return (
+      <>
+        <div className="login-page">
+          <div className="form animate fadeInUp one">
+            <NewProjectForm />
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  const NewProjectForm = () => {
     const keys_ar = [];
     Object.keys(licenses).forEach((key) => {
       keys_ar.push(key);
     });
-    const [projectName, setName] = useState("");
-    const [projectTags, setTags] = useState("");
-    const [projectDescription, setDescription] = useState("");
+    const projectRef = useRef();
+    const projectTagsRef = useRef();
+    const projectDescriptionRef = useRef();
     const [pending, setPending] = useState(""); // useFormStatus(); in the future
 
     const handleSubmit = async (e) => {
       e.preventDefault();
       setPending(true);
+      const projectName = projectRef.current.value;
+      const projectTags = projectTagsRef.current.value;
+      const projectDescription = projectDescriptionRef.current.value;
       createProject([projectName, projectTags, projectDescription]);
     };
 
     return (
       <>
-        <div className="login-page">
-          <div className="form animate fadeInUp one">
-            <form
-              onSubmit={(e) => {
-                handleSubmit(e);
-              }}
-            >
-              <input
-                name="Project Name"
-                placeholder="Project Name"
-                value={projectName}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <input
-                name="Project Tags"
-                value={projectTags}
-                placeholder="Project Tags"
-                onChange={(e) => setTags(e.target.value)}
-              />
-              <select id="license-options">
-                {keys_ar.map((opt) => {
-                  return <option value={opt}>{opt}</option>;
-                })}
-              </select>
-              <input
-                placeholder="Project Description"
-                value={projectDescription}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              <button disabled={pending} type="submit">
-                {pending ? "Submitting..." : "Submit"}
-              </button>
-            </form>
-          </div>
-        </div>
+        <form
+          onSubmit={(e) => {
+            console.log("submitting");
+            handleSubmit(e);
+          }}
+        >
+          <input
+            name="Project Name"
+            placeholder="Enter your project name"
+            ref={projectRef}
+          />
+          <input
+            name="Project Tags"
+            ref={projectTagsRef}
+            placeholder="Project Tags"
+          />
+          <select id="license-options">
+            {keys_ar.map((opt) => {
+              return <option value={opt}>{opt}</option>;
+            })}
+          </select>
+          <input
+            placeholder="Project Description"
+            ref={projectDescriptionRef}
+          />
+          <button disabled={pending} type="submit">
+            {pending ? "Submitting..." : "Submit"}
+          </button>
+        </form>
       </>
     );
   };
@@ -460,7 +469,7 @@ const ShowProjects = (props) => {
   const handleSearchChange = (e) => {
     setSearchBarValue(e.target.value);
   };
-
+  console.log("show projects rerender");
   return (
     <>
       <div className="middleBrowse" style={{ marginTop: "35px" }}>
@@ -510,7 +519,7 @@ function LoginMode(props) {
    * @prop {setState} setIsLoggedIn - setState function for isloggedIn
    * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
    * */
-
+  console.log("login mode rerender");
   const [userBrowsing, setBrowsing] = useState(false);
   var currentUser = GlobalVariables.currentUser;
   let popUpContent;
