@@ -125,7 +125,6 @@ const ShowProjects = (props) => {
         },
       })
       .then((result) => {
-        console.log("project request happening");
         var userRepos = [];
         result.data.items.forEach((repo) => {
           userRepos.push(repo);
