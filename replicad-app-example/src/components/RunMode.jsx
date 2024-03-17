@@ -76,7 +76,6 @@ function runMode(props) {
 
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
-    console.log(canvasRef);
     GlobalVariables.c = canvasRef.current.getContext("2d");
 
     var octokit = new Octokit();
@@ -132,10 +131,12 @@ function runMode(props) {
         authorizedUserOcto={authorizedUserOcto}
         tryLogin={tryLogin}
       />
-      <div className="info_run_div">
-        <p>{"Project Name: " + globalvariables.currentRepo.name}</p>
-        <p>{"Repo Owner: " + globalvariables.currentRepo.owner.login}</p>
-      </div>
+      {globalvariables.currentRepo ? (
+        <div className="info_run_div">
+          <p>{"Project Name: " + globalvariables.currentRepo.name}</p>
+          <p>{"Repo Owner: " + globalvariables.currentRepo.owner.login}</p>
+        </div>
+      ) : null}
       <div className="runContainer">
         <div
           className="jscad-container"
