@@ -132,6 +132,11 @@ const ShowProjects = (props) => {
         });
         setNodes([...userRepos]);
         setStateLoaded(true);
+      })
+      .catch((err) => {
+        window.alert(
+          "Error loading projects. Please wait a few minutes then try again."
+        );
       });
   }, [props.userBrowsing, searchBarValue]);
 
