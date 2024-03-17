@@ -4,42 +4,51 @@ to-do-fix
 
 now:
 
-- model some things :S
+    - model some things :S
 
-- weird rerenders in new project creation
-- try/catch for create new project if name already exists
-- catch for projects if they fail to load
-- assemblies self deleting sometimes after moving parts several times: haven’t found bug source
-- make load bar for creating new project and disable button while project is being created
-- Cut layout should separate by height
-- how do we make loft work ? Hull
-- Can colors be implemented with tags with three js materials
-- Bug : LEVA input error ?
+    - weird rerenders in new project creation
+    - try/catch for create new project if name already exists
+    - catch for projects if they fail to load
+    - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
+    - make load bar for creating new project and disable button while project is being created
+    - Cut layout should separate by height
+    - how do we make loft work ? Hull
+    - Can colors be implemented with tags with three js materials
+    - Bug : LEVA input error ?
+    - export molecule to Github
+
+-
 
 mid :
 
-- nest
-- implement three/drei wireframe?
-- extract tag should have dropdown of existing tags
-- GET request sometimes failing at browsing for projects
-- Face lift for project browse and new project (later)
-- Check on accuracy of draw projection in SVG
-- add missing icons BOM,etc, change maslow icon
-- add auto save back
-- goUp molecule still not working collectly
-- some places still have JSCAD code // clean up
-- BOM summary when molecule is active , button to download
-- Fix gitmolecule search bar max quota issue
-- Top molecule - choose units of measurement (Should this be in create new project ? as an extra setting)
-- add thumbnail images for projects
+    - add labels to molecule
+    - - allow filtering of projects
+    - nest
+    - implement three/drei wireframe?
+    - extract tag should have dropdown of existing tags
+    - GET request sometimes failing at browsing for projects
+    - Face lift for project browse and new project (later)
+    - Check on accuracy of draw projection in SVG
+    - add missing icons BOM,etc, change maslow icon
+    - add auto save back
+    - goUp molecule still not working collectly
+    - some places still have JSCAD code // clean up
+    - BOM summary when molecule is active , button to download
+    - Fix gitmolecule search bar max quota issue
+    - Top molecule - choose units of measurement (Should this be in create new project ? as an extra setting)
+    - add thumbnail images for projects
 
 future:
 
-- Zoom in camera on load to bounding box for renderer
-- make sample project with readme walkthrough or sandbox
-- CSS Overhaul , make global fonts, margins, colors
+    - Zoom in camera on load to bounding box for renderer
+    - make sample project with readme walkthrough or sandbox
+    - CSS Overhaul , make global fonts, margins, colors
 
 Qs :
 
-- will changing inputs not damage model if modeled objects are not tied by planes. A.E. if a screw is modeled in the center of a face, if the face changes position will the screw not be left in the wrong place since its location wasn't modeled off the face?
-- in an assembly, would it be useful to have a list of the tags it contains and be able to filter them on/off?
+    Modeling:
+        - What is the most efficient modeling strategy for joinery? , make all parts and on assembly cut one that will in turn cut the other?
+
+    Dev:
+        - will changing inputs not damage model if modeled objects are not tied by planes. A.E. if a screw is modeled in the center of a face, if the face changes position will the screw not be left in the wrong place since its location wasn't modeled off the face?
+        - in an assembly, would it be useful to have a list of the tags it contains and be able to filter them on/off?
