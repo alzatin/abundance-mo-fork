@@ -6,7 +6,7 @@ to-do-fix
 now:
 
     - model some things :S
-
+    - rendering problems when directly linking to run mode
     - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
     - Cut layout should separate by height
     - how do we make loft work ? Hull
