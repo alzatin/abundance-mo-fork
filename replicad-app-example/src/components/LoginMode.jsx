@@ -351,34 +351,20 @@ const ShowProjects = (props) => {
                 style={{ height: "80%", float: "left" }}
               ></img>
             </div>
-
-            {!props.userBrowsing ? (
-              <div
-                className="newProjectDiv"
-                onClick={() => props.setBrowsing(true)}
-              >
-                <span style={{ alignSelf: "center" }}>
-                  Browse Other Projects
-                </span>
-                <img
-                  src="/imgs/defaultThumbnail.svg"
-                  style={{ height: "80%", float: "right" }}
-                ></img>
-              </div>
-            ) : (
-              <div
-                className="newProjectDiv"
-                onClick={() => props.setBrowsing(false)}
-              >
-                <span style={{ alignSelf: "center" }}>
-                  Return to my Projects
-                </span>
-                <img
-                  src="/imgs/defaultThumbnail.svg"
-                  style={{ height: "80%", float: "right" }}
-                ></img>
-              </div>
-            )}
+            <div
+              className="newProjectDiv"
+              onClick={() => props.setBrowsing(!props.userBrowsing)}
+            >
+              <span style={{ alignSelf: "center" }}>
+                {!props.userBrowsing
+                  ? "Browse Other Projects"
+                  : "Return to my Projects"}
+              </span>
+              <img
+                src="/imgs/defaultThumbnail.svg"
+                style={{ height: "80%", float: "right" }}
+              ></img>
+            </div>
           </div>
         ) : null}
         <div className="search-bar-div">
