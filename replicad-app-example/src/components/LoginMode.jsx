@@ -168,6 +168,12 @@ const ShowProjects = (props) => {
             "X-GitHub-Api-Version": "2022-11-28",
           },
         })
+        .catch((err) => {
+          window.alert(
+            "Error creating project. That name might be taken already. Please try again with a different name."
+          );
+          setPending(false);
+        })
         .then((result) => {
           setNewProjectBar(10);
           //Once we have created the new repo we need to create a file within it to store the project in
@@ -257,7 +263,6 @@ const ShowProjects = (props) => {
                                       content: window.btoa(licenseText),
                                     })
                                     .then(() => {
-                                      console.warn("Project Created!");
                                       navigate(
                                         `/${GlobalVariables.currentRepo.id}`
                                       );
@@ -461,7 +466,6 @@ const ShowProjects = (props) => {
   const handleSearchChange = (e) => {
     setSearchBarValue(e.target.value);
   };
-  console.log("show projects rerender");
   return (
     <>
       <div className="middleBrowse" style={{ marginTop: "35px" }}>
@@ -511,7 +515,6 @@ function LoginMode(props) {
    * @prop {setState} setIsLoggedIn - setState function for isloggedIn
    * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
    * */
-  console.log("login mode rerender");
   const [userBrowsing, setBrowsing] = useState(false);
   var currentUser = GlobalVariables.currentUser;
   let popUpContent;

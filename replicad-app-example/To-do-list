@@ -6,7 +6,6 @@ now:
 
     - model some things :S
 
-    - weird rerenders in new project creation
     - try/catch for create new project if name already exists
     - catch for projects if they fail to load
     - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
