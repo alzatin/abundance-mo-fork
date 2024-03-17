@@ -1,5 +1,6 @@
 // // Getting back to old-maslow-create
 
+<!-- prettier-ignore-start -->
 to-do-fix
 
 now:
@@ -16,7 +17,7 @@ now:
     -
 
 mid :
-
+    - BOM summary / fix inputs
     - add labels to molecule
     - REDO login/browse to use link/reroute
     - - allow filtering of projects
@@ -49,3 +50,5 @@ Qs :
     Dev:
         - will changing inputs not damage model if modeled objects are not tied by planes. A.E. if a screw is modeled in the center of a face, if the face changes position will the screw not be left in the wrong place since its location wasn't modeled off the face?
         - in an assembly, would it be useful to have a list of the tags it contains and be able to filter them on/off?
+
+<!-- prettier-ignore-end -->

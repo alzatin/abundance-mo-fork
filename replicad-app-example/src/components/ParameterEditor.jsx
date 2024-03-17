@@ -33,7 +33,6 @@ export default (function ParamsEditor({
     /** Creates Leva inputs for BOM if active atom is molecule  */
 
     if (activeAtom.atomType == "Molecule") {
-      console.log(activeAtom.createLevaBomInputs());
       if (activeAtom.createLevaBomInputs() > 0) {
         activeAtom.createLevaBomInputs().then((res) => {
           bomParams = res;
