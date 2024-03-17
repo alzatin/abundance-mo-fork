@@ -103,7 +103,6 @@ const ShowProjects = (props) => {
   const [projectsLoaded, setStateLoaded] = React.useState(false);
   const [projectPopUp, setNewProjectPopUp] = useState(false);
   const [searchBarValue, setSearchBarValue] = useState("");
-  //const [newProjectBar, setNewProjectBar] = useState(0);
   var authorizedUserOcto = props.authorizedUserOcto;
   const navigate = useNavigate();
 
@@ -126,6 +125,7 @@ const ShowProjects = (props) => {
         },
       })
       .then((result) => {
+        console.log("project request happening");
         var userRepos = [];
         result.data.items.forEach((repo) => {
           userRepos.push(repo);
@@ -335,6 +335,10 @@ const ShowProjects = (props) => {
 
   // Browse display
   const ClassicBrowse = () => {
+    const loadBrowse = () => {
+      props.setBrowsing(!props.userBrowsing);
+      setStateLoaded(true);
+    };
     return (
       <>
         {props.isloggedIn ? (
@@ -351,10 +355,7 @@ const ShowProjects = (props) => {
                 style={{ height: "80%", float: "left" }}
               ></img>
             </div>
-            <div
-              className="newProjectDiv"
-              onClick={() => props.setBrowsing(!props.userBrowsing)}
-            >
+            <div className="newProjectDiv" onClick={() => loadBrowse()}>
               <span style={{ alignSelf: "center" }}>
                 {!props.userBrowsing
                   ? "Browse Other Projects"
@@ -389,9 +390,13 @@ const ShowProjects = (props) => {
           />
         </div>
 
-        <div className="project-item-div">
-          {projectsLoaded ? <AddProject /> : null}
-        </div>
+        {projectsLoaded ? (
+          <div className="project-item-div">
+            <AddProject />
+          </div>
+        ) : (
+          <div>"Loading Projects..."</div>
+        )}
       </>
     );
   };
