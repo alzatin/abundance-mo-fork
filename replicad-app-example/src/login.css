@@ -45,6 +45,10 @@
 .login-page {
   margin: auto;
 }
+
+.login-form {
+  width: 90%;
+}
 .liked {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
@@ -668,4 +672,17 @@
   width: 0;
   opacity: 0;
   transition: 1s ease 0.3s;
+}
+
+/*Create project Bar */
+
+#createBarProgress {
+  width: 100%;
+  background-color: grey;
+}
+
+#createBar {
+  width: 1%;
+  height: 30px;
+  background-color: green;
 }

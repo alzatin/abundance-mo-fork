@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useFormStatus, useRef } from "react";
 import GlobalVariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import Molecule from "./molecules/molecule.js";
@@ -103,8 +103,8 @@ const ShowProjects = (props) => {
   const [projectsLoaded, setStateLoaded] = React.useState(false);
   const [projectPopUp, setNewProjectPopUp] = useState(false);
   const [searchBarValue, setSearchBarValue] = useState("");
+  //const [newProjectBar, setNewProjectBar] = useState(0);
   var authorizedUserOcto = props.authorizedUserOcto;
-
   const navigate = useNavigate();
 
   // conditional query for maslow projects
@@ -135,205 +135,199 @@ const ShowProjects = (props) => {
       });
   }, [props.userBrowsing, searchBarValue]);
 
-  const createProject = async () => {
-    const name = document.getElementById("project-name").value;
-    const description = document.getElementById("project-description").value;
-    const licenseText =
-      licenses[document.getElementById("license-options").value];
-
-    //Load a blank project
-    GlobalVariables.topLevelMolecule = new Molecule({
-      x: 0,
-      y: 0,
-      topLevel: true,
-      name: name,
-      atomType: "Molecule",
-      uniqueID: GlobalVariables.generateUniqueID(),
-    });
-
-    GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-
-    await authorizedUserOcto
-      .request("POST /user/repos", {
-        name: name,
-        description: description,
-        headers: {
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
-      })
-      .then((result) => {
-        //Once we have created the new repo we need to create a file within it to store the project in
-        currentRepoName = result.data.name;
-        currentUser = GlobalVariables.currentUser;
-        GlobalVariables.currentRepo = result.data;
-
-        var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
-        jsonRepOfProject.filetypeVersion = 1;
-        jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
-        const projectContent = window.btoa(
-          JSON.stringify(jsonRepOfProject, null, 4)
-        );
-
-        authorizedUserOcto.rest.repos
-          .createOrUpdateFileContents({
-            owner: currentUser,
-            repo: currentRepoName,
-            path: "project.maslowcreate",
-            message: "initialize repo",
-            content: projectContent,
-          })
-          .then((result) => {
-            //Then create the BOM file
-            var content = window.btoa(bomHeader); // create a file with just the header in it and base64 encode it
-            authorizedUserOcto.rest.repos
-              .createOrUpdateFileContents({
-                owner: currentUser,
-                repo: currentRepoName,
-                path: "BillOfMaterials.md",
-                message: "initialize BOM",
-                content: content,
-              })
-              .then(() => {
-                //Then create the README file
-                content = window.btoa(readmeHeader); // create a file with just the word "init" in it and base64 encode it
-                authorizedUserOcto.rest.repos
-                  .createOrUpdateFileContents({
-                    owner: currentUser,
-                    repo: currentRepoName,
-                    path: "README.md",
-                    message: "initialize README",
-                    content: content,
-                  })
-                  .then(() => {
-                    authorizedUserOcto.rest.repos
-                      .createOrUpdateFileContents({
-                        owner: currentUser,
-                        repo: currentRepoName,
-                        path: "project.svg",
-                        message: "SVG Picture",
-                        content: "",
-                      })
-                      .then(() => {
-                        authorizedUserOcto.rest.repos
-                          .createOrUpdateFileContents({
-                            owner: currentUser,
-                            repo: currentRepoName,
-                            path: ".gitattributes",
-                            message: "Create gitattributes",
-                            content: window.btoa("data binary"),
-                          })
-                          .then(() => {
-                            authorizedUserOcto.rest.repos
-                              .createOrUpdateFileContents({
-                                owner: currentUser,
-                                repo: currentRepoName,
-                                path: "data.json",
-                                message: "Data file",
-                                content: "",
-                              })
-                              .then(() => {
-                                authorizedUserOcto.rest.repos
-                                  .createOrUpdateFileContents({
-                                    owner: currentUser,
-                                    repo: currentRepoName,
-                                    path: "LICENSE.txt",
-                                    message: "Establish license",
-                                    content: window.btoa(licenseText),
-                                  })
-                                  .then(() => {
-                                    navigate(
-                                      `/${GlobalVariables.currentRepo.id}`
-                                    );
-                                  });
-                              });
-                          });
-                      });
-                  });
-              });
-          });
-
-        //Update the project topics
-        authorizedUserOcto.rest.repos.replaceAllTopics({
-          owner: currentUser,
-          repo: currentRepoName,
-          names: ["maslowcreate", "maslowcreate-project"],
-          s: {
-            accept: "application/vnd.github.mercy-preview+json",
-          },
-        });
-      });
-  };
   //Replaces the loaded projects if the user clicks on new project button
   const NewProjectPopUp = () => {
     const keys_ar = [];
     Object.keys(licenses).forEach((key) => {
       keys_ar.push(key);
     });
-    const [projectName, setName] = useState("");
-    const [projectTags, setTags] = useState("");
-    const [projectDescription, setDescription] = useState("");
+    const projectRef = useRef();
+    const projectTagsRef = useRef();
+    const projectDescriptionRef = useRef();
+    const [pending, setPending] = useState(false); // useFormStatus(); in the future
+    const [newProjectBar, setNewProjectBar] = useState(0);
+    // Create a new project and navigate to new project create page
+    const createProject = async ([name, tags, description]) => {
+      //Load a blank project
+      GlobalVariables.topLevelMolecule = new Molecule({
+        x: 0,
+        y: 0,
+        topLevel: true,
+        name: name,
+        atomType: "Molecule",
+        uniqueID: GlobalVariables.generateUniqueID(),
+      });
 
+      GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+
+      await authorizedUserOcto
+        .request("POST /user/repos", {
+          name: name,
+          description: description,
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+        })
+        .then((result) => {
+          setNewProjectBar(10);
+          //Once we have created the new repo we need to create a file within it to store the project in
+          currentRepoName = result.data.name;
+          currentUser = GlobalVariables.currentUser;
+          GlobalVariables.currentRepo = result.data;
+
+          var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
+          jsonRepOfProject.filetypeVersion = 1;
+          jsonRepOfProject.circleSegmentSize =
+            GlobalVariables.circleSegmentSize;
+          const projectContent = window.btoa(
+            JSON.stringify(jsonRepOfProject, null, 4)
+          );
+
+          authorizedUserOcto.rest.repos
+            .createOrUpdateFileContents({
+              owner: currentUser,
+              repo: currentRepoName,
+              path: "project.maslowcreate",
+              message: "initialize repo",
+              content: projectContent,
+            })
+            .then((result) => {
+              setNewProjectBar(20);
+              //Then create the BOM file
+              var content = window.btoa(bomHeader); // create a file with just the header in it and base64 encode it
+              authorizedUserOcto.rest.repos
+                .createOrUpdateFileContents({
+                  owner: currentUser,
+                  repo: currentRepoName,
+                  path: "BillOfMaterials.md",
+                  message: "initialize BOM",
+                  content: content,
+                })
+                .then(() => {
+                  setNewProjectBar(30);
+                  //Then create the README file
+                  content = window.btoa(readmeHeader); // create a file with just the word "init" in it and base64 encode it
+                  authorizedUserOcto.rest.repos
+                    .createOrUpdateFileContents({
+                      owner: currentUser,
+                      repo: currentRepoName,
+                      path: "README.md",
+                      message: "initialize README",
+                      content: content,
+                    })
+                    .then(() => {
+                      setNewProjectBar(40);
+                      authorizedUserOcto.rest.repos
+                        .createOrUpdateFileContents({
+                          owner: currentUser,
+                          repo: currentRepoName,
+                          path: "project.svg",
+                          message: "SVG Picture",
+                          content: "",
+                        })
+                        .then(() => {
+                          setNewProjectBar(50);
+                          authorizedUserOcto.rest.repos
+                            .createOrUpdateFileContents({
+                              owner: currentUser,
+                              repo: currentRepoName,
+                              path: ".gitattributes",
+                              message: "Create gitattributes",
+                              content: window.btoa("data binary"),
+                            })
+                            .then(() => {
+                              setNewProjectBar(60);
+                              authorizedUserOcto.rest.repos
+                                .createOrUpdateFileContents({
+                                  owner: currentUser,
+                                  repo: currentRepoName,
+                                  path: "data.json",
+                                  message: "Data file",
+                                  content: "",
+                                })
+                                .then(() => {
+                                  setNewProjectBar(90);
+                                  let licenseText = ""; // ?
+                                  authorizedUserOcto.rest.repos
+                                    .createOrUpdateFileContents({
+                                      owner: currentUser,
+                                      repo: currentRepoName,
+                                      path: "LICENSE.txt",
+                                      message: "Establish license",
+                                      content: window.btoa(licenseText),
+                                    })
+                                    .then(() => {
+                                      console.warn("Project Created!");
+                                      navigate(
+                                        `/${GlobalVariables.currentRepo.id}`
+                                      );
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+
+          //Update the project topics
+          authorizedUserOcto.rest.repos.replaceAllTopics({
+            owner: currentUser,
+            repo: currentRepoName,
+            names: ["maslowcreate", "maslowcreate-project"],
+            s: {
+              accept: "application/vnd.github.mercy-preview+json",
+            },
+          });
+        });
+    };
+
+    /* Handles form submission for create new project form */
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setPending(true);
+      const projectName = projectRef.current.value;
+      const projectTags = projectTagsRef.current.value;
+      const projectDescription = projectDescriptionRef.current.value;
+      createProject([projectName, projectTags, projectDescription]);
+    };
     return (
       <>
-        <div>
-          <div className="form" style={{ color: "whitesmoke" }}>
-            <h1 style={{ fontSize: "1em" }}>NEW PROJECT</h1>
-            <div className="login-form">
-              <div className="form-row">
-                <div className="input-data">
-                  <input
-                    id="project-name"
-                    value={projectName}
-                    onChange={(e) => setName(e.target.value)}
-                    type="text"
-                    required
-                  ></input>
-                  <div className="underline"></div>
-                  <label for="">Project Name</label>
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="input-data">
-                  <input
-                    type="text"
-                    id="project-tags"
-                    value={projectTags}
-                    onChange={(e) => setTags(e.target.value)}
-                  ></input>
-                  <div className="underline"></div>
-                  <label for="">Tags</label>
-                </div>
-              </div>
+        <div className="login-page">
+          <div className="form animate fadeInUp one">
+            <form
+              onSubmit={(e) => {
+                handleSubmit(e);
+              }}
+            >
+              <input
+                name="Project Name"
+                placeholder="Enter your project name"
+                ref={projectRef}
+              />
+              <input
+                name="Project Tags"
+                ref={projectTagsRef}
+                placeholder="Project Tags"
+              />
               <select id="license-options">
                 {keys_ar.map((opt) => {
                   return <option value={opt}>{opt}</option>;
                 })}
               </select>
-              <div className="form-row">
-                <div className="input-data textarea">
-                  <textarea
-                    id="project-description"
-                    value={projectDescription}
-                    onChange={(e) => setDescription(e.target.value)}
-                    rows="8"
-                    cols="80"
-                  ></textarea>
-                  <br />
-                  <div className="underline"></div>
-                  <label for="">Project Description</label>
-                  <br />
-                  <div className="submit-btn">
-                    <div className="inner"></div>
-                    <button onClick={createProject}>Create Project</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <input
+                placeholder="Project Description"
+                ref={projectDescriptionRef}
+              />
+              <button disabled={pending} type="submit">
+                {pending ? newProjectBar + "%" : "Submit"}
+              </button>
+            </form>
           </div>
         </div>
       </>
     );
   };
+
   // Browse display
   const ClassicBrowse = () => {
     return (
@@ -467,7 +461,7 @@ const ShowProjects = (props) => {
   const handleSearchChange = (e) => {
     setSearchBarValue(e.target.value);
   };
-
+  console.log("show projects rerender");
   return (
     <>
       <div className="middleBrowse" style={{ marginTop: "35px" }}>
@@ -517,7 +511,7 @@ function LoginMode(props) {
    * @prop {setState} setIsLoggedIn - setState function for isloggedIn
    * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
    * */
-
+  console.log("login mode rerender");
   const [userBrowsing, setBrowsing] = useState(false);
   var currentUser = GlobalVariables.currentUser;
   let popUpContent;
