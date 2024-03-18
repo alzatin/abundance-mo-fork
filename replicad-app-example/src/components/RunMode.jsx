@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
+
+import WireframeMesh from "./WireframeMesh.jsx";
 import GlobalVariables from "./js/globalvariables.js";
 import globalvariables from "./js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
@@ -53,10 +55,14 @@ function runMode(props) {
   let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
+  let setWireMesh = props.displayProps.setWireMesh;
+  let wireMesh = props.displayProps.wireMesh;
 
   const [gridParamRun, setGridRun] = useState(true);
   const [axesParamRun, setAxesRun] = useState(true);
   const [isItOwned, setOwned] = useState(false);
+  const [wireParam, setWire] = useState(true);
+  const [solidParam, setSolid] = useState(true);
 
   var authorizedUserOcto = props.props.authorizedUserOcto;
   var setActiveAtom = props.props.setActiveAtom;
@@ -70,7 +76,6 @@ function runMode(props) {
 
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
-    console.log(canvasRef);
     GlobalVariables.c = canvasRef.current.getContext("2d");
 
     var octokit = new Octokit();
@@ -118,16 +123,20 @@ function runMode(props) {
           activeAtom={activeAtom}
           setGrid={setGridRun}
           setAxes={setAxesRun}
+          setWire={setWire}
+          setSolid={setSolid}
         />
       ) : null}
       <RunNavigation
         authorizedUserOcto={authorizedUserOcto}
         tryLogin={tryLogin}
       />
-      <div className="info_run_div">
-        <p>{"Project Name: " + globalvariables.currentRepo.name}</p>
-        <p>{"Repo Owner: " + globalvariables.currentRepo.owner.login}</p>
-      </div>
+      {globalvariables.currentRepo ? (
+        <div className="info_run_div">
+          <p>{"Project Name: " + globalvariables.currentRepo.name}</p>
+          <p>{"Repo Owner: " + globalvariables.currentRepo.owner.login}</p>
+        </div>
+      ) : null}
       <div className="runContainer">
         <div
           className="jscad-container"
@@ -145,7 +154,15 @@ function runMode(props) {
           >
             {mesh ? (
               <ThreeContext gridParam={gridParamRun} axesParam={axesParamRun}>
-                <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
+                {wireParam ? (
+                  <WireframeMesh
+                    edges={wireMesh.edges}
+                    faces={wireMesh.faces}
+                  />
+                ) : null}
+                {solidParam ? (
+                  <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
+                ) : null}
               </ThreeContext>
             ) : (
               <div

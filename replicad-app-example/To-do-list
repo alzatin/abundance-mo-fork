@@ -1,20 +1,23 @@
 // // Getting back to old-maslow-create
 
+<!-- prettier-ignore-start -->
 to-do-fix
 
 now:
 
     - model some things :S
-
+    - rendering problems when directly linking to run mode
     - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
     - Cut layout should separate by height
     - how do we make loft work ? Hull
     - Can colors be implemented with tags with three js materials
     - Bug : LEVA input error ?
     - export molecule to Github
+    - wire fix run
+    -
 
 mid :
-
+    - BOM summary / fix inputs
     - add labels to molecule
     - REDO login/browse to use link/reroute
     - - allow filtering of projects
@@ -47,3 +50,5 @@ Qs :
     Dev:
         - will changing inputs not damage model if modeled objects are not tied by planes. A.E. if a screw is modeled in the center of a face, if the face changes position will the screw not be left in the wrong place since its location wasn't modeled off the face?
         - in an assembly, would it be useful to have a list of the tags it contains and be able to filter them on/off?
+
+<!-- prettier-ignore-end -->

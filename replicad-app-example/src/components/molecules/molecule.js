@@ -163,28 +163,30 @@ export default class Molecule extends Atom {
    */
   createLevaBomInputs() {
     let bomParams = [];
+    if (this.output.value != undefined) {
+      bomParams = this.extractBomTags(this.output.value);
 
-    bomParams = this.extractBomTags(this.output.value);
-    bomParams.then((result) => {
-      if (result) {
-        if (result.length > 0) {
-          result.map((item) => {
+      bomParams.then((result) => {
+        if (result) {
+          if (result.length > 0) {
+            result.map((item) => {
+              bomParams[item.BOMitemName] = {
+                value: item.BOMitemName,
+                label: item.BOMitemName,
+                disabled: false,
+              };
+            });
+          } else {
+            let item = result;
             bomParams[item.BOMitemName] = {
               value: item.BOMitemName,
               label: item.BOMitemName,
               disabled: false,
             };
-          });
-        } else {
-          let item = result;
-          bomParams[item.BOMitemName] = {
-            value: item.BOMitemName,
-            label: item.BOMitemName,
-            disabled: false,
-          };
+          }
         }
-      }
-    });
+      });
+    }
     return bomParams;
   }
 
@@ -509,12 +511,11 @@ export default class Molecule extends Atom {
         //Place the atoms
         const promise = this.placeAtom(atom, false);
         promiseArray.push(promise);
-       
+
         this.setValues([]); //Call set values again with an empty list to trigger loading of IO values from memory
       });
     }
     return Promise.all(promiseArray).then(() => {
-   
       //Once all the atoms are placed we can finish
       this.setValues([]); //Call set values again with an empty list to trigger loading of IO values from memory
 
@@ -526,7 +527,7 @@ export default class Molecule extends Atom {
 
         this.beginPropagation(forceBeginPropagation);
       }
-  
+
       //Place the connectors
       if (json.allConnectors) {
         json.allConnectors.forEach((connector) => {
@@ -583,9 +584,9 @@ export default class Molecule extends Atom {
    * @param {boolean} unlock - A flag to indicate if this atom should spawn in the unlocked state.
    */
   async placeAtom(newAtomObj, unlock) {
-    try{
-    GlobalVariables.numberOfAtomsToLoad =
-      GlobalVariables.numberOfAtomsToLoad + 1; //Indicate that one more atom needs to be loaded
+    try {
+      GlobalVariables.numberOfAtomsToLoad =
+        GlobalVariables.numberOfAtomsToLoad + 1; //Indicate that one more atom needs to be loaded
 
       let promise = null;
 
@@ -610,17 +611,14 @@ export default class Molecule extends Atom {
           //If this is a molecule, de-serialize it
           if (atom.atomType == "Molecule") {
             promise = atom.deserialize(newAtomObj);
-           
           }
 
           //If this is a github molecule load it from the web
           if (atom.atomType == "GitHubMolecule") {
-           promise = await atom.loadProjectByID(atom.projectID)
+            promise = await atom.loadProjectByID(atom.projectID);
             if (unlock) {
-                atom.beginPropagation();
+              atom.beginPropagation();
             }
-            
-           
           }
           //If this is an output, check to make sure there are no existing outputs, and if there are delete the existing one because there can only be one
           if (atom.atomType == "Output") {
@@ -652,19 +650,17 @@ export default class Molecule extends Atom {
                 atom.beginPropagation();
               }
             }
-            
+
             atom.updateValue();
           }
         }
       }
-     return promise;
-    }
-     catch (err) {
+      return promise;
+    } catch (err) {
       console.warn("Unable to place: " + newAtomObj);
       console.warn(err);
       return Promise.resolve();
-    
-  }
+    }
   }
   /**
    * Places a new connector within the molecule
@@ -675,12 +671,10 @@ export default class Molecule extends Atom {
     var inputAttachmentPoint = false;
 
     this.nodesOnTheScreen.forEach((atom) => {
-
       //Check each atom on the screen
       if (atom.uniqueID == connectorObj.ap1ID) {
         //When we have found the output atom
         outputAttachmentPoint = atom.output;
-        
       }
       if (atom.uniqueID == connectorObj.ap2ID) {
         //When we have found the input atom
