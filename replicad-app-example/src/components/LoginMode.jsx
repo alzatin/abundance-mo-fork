@@ -103,7 +103,6 @@ const ShowProjects = (props) => {
   const [projectsLoaded, setStateLoaded] = React.useState(false);
   const [projectPopUp, setNewProjectPopUp] = useState(false);
   const [searchBarValue, setSearchBarValue] = useState("");
-  //const [newProjectBar, setNewProjectBar] = useState(0);
   var authorizedUserOcto = props.authorizedUserOcto;
   const navigate = useNavigate();
 
@@ -132,6 +131,11 @@ const ShowProjects = (props) => {
         });
         setNodes([...userRepos]);
         setStateLoaded(true);
+      })
+      .catch((err) => {
+        window.alert(
+          "Error loading projects. Please wait a few minutes then try again."
+        );
       });
   }, [props.userBrowsing, searchBarValue]);
 
@@ -167,6 +171,12 @@ const ShowProjects = (props) => {
           headers: {
             "X-GitHub-Api-Version": "2022-11-28",
           },
+        })
+        .catch((err) => {
+          window.alert(
+            "Error creating project. That name might be taken already. Please try again with a different name."
+          );
+          setPending(false);
         })
         .then((result) => {
           setNewProjectBar(10);
@@ -257,7 +267,6 @@ const ShowProjects = (props) => {
                                       content: window.btoa(licenseText),
                                     })
                                     .then(() => {
-                                      console.warn("Project Created!");
                                       navigate(
                                         `/${GlobalVariables.currentRepo.id}`
                                       );
@@ -330,6 +339,10 @@ const ShowProjects = (props) => {
 
   // Browse display
   const ClassicBrowse = () => {
+    const loadBrowse = () => {
+      props.setBrowsing(!props.userBrowsing);
+      setStateLoaded(true);
+    };
     return (
       <>
         {props.isloggedIn ? (
@@ -346,34 +359,17 @@ const ShowProjects = (props) => {
                 style={{ height: "80%", float: "left" }}
               ></img>
             </div>
-
-            {!props.userBrowsing ? (
-              <div
-                className="newProjectDiv"
-                onClick={() => props.setBrowsing(true)}
-              >
-                <span style={{ alignSelf: "center" }}>
-                  Browse Other Projects
-                </span>
-                <img
-                  src="/imgs/defaultThumbnail.svg"
-                  style={{ height: "80%", float: "right" }}
-                ></img>
-              </div>
-            ) : (
-              <div
-                className="newProjectDiv"
-                onClick={() => props.setBrowsing(false)}
-              >
-                <span style={{ alignSelf: "center" }}>
-                  Return to my Projects
-                </span>
-                <img
-                  src="/imgs/defaultThumbnail.svg"
-                  style={{ height: "80%", float: "right" }}
-                ></img>
-              </div>
-            )}
+            <div className="newProjectDiv" onClick={() => loadBrowse()}>
+              <span style={{ alignSelf: "center" }}>
+                {!props.userBrowsing
+                  ? "Browse Other Projects"
+                  : "Return to my Projects"}
+              </span>
+              <img
+                src="/imgs/defaultThumbnail.svg"
+                style={{ height: "80%", float: "right" }}
+              ></img>
+            </div>
           </div>
         ) : null}
         <div className="search-bar-div">
@@ -398,9 +394,13 @@ const ShowProjects = (props) => {
           />
         </div>
 
-        <div className="project-item-div">
-          {projectsLoaded ? <AddProject /> : null}
-        </div>
+        {projectsLoaded ? (
+          <div className="project-item-div">
+            <AddProject />
+          </div>
+        ) : (
+          <div>"Loading Projects..."</div>
+        )}
       </>
     );
   };
@@ -461,7 +461,6 @@ const ShowProjects = (props) => {
   const handleSearchChange = (e) => {
     setSearchBarValue(e.target.value);
   };
-  console.log("show projects rerender");
   return (
     <>
       <div className="middleBrowse" style={{ marginTop: "35px" }}>
@@ -511,7 +510,6 @@ function LoginMode(props) {
    * @prop {setState} setIsLoggedIn - setState function for isloggedIn
    * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
    * */
-  console.log("login mode rerender");
   const [userBrowsing, setBrowsing] = useState(false);
   var currentUser = GlobalVariables.currentUser;
   let popUpContent;
