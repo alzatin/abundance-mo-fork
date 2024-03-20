@@ -7,11 +7,9 @@ now:
 
     - model some things :S
     - shortcuts are broken again + need cheat sheet 
-    - change loft name and make new hull molecule as placeholder
     - check that rotation of planes is correct 
     - make catch for background click if there's no output to display 
     - fix assemblies (make is3D function work for assemblies)
-    - split loft and hull into two different molecules 
     - rendering problems when directly linking to run mode
     - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
     - Cut layout should separate by height
@@ -24,6 +22,7 @@ now:
     
 
 mid :
+    - hull (in april? waiting for replicad)
     - BOM summary / fix inputs
     - add labels to molecule
     - REDO login/browse to use link/reroute
