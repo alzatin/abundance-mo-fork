@@ -5,6 +5,7 @@ import CutList from "../molecules/cutlist.js";
 import Circle from "../molecules/circle.js";
 import Color from "../molecules/color.js";
 import CutLayout from "../molecules/cutlayout.js";
+import Hull from "../molecules/hull.js";
 import Rectangle from "../molecules/rectangle.js";
 import Loft from "../molecules/loft.js";
 import Move from "../molecules/move.js";
@@ -78,6 +79,11 @@ class GlobalVariables {
       loft: {
         creator: Loft,
         atomType: "Loft",
+        atomCategory: "Interactions",
+      },
+      hull: {
+        creator: Hull,
+        atomType: "Hull",
         atomCategory: "Interactions",
       },
 
