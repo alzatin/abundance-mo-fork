@@ -47,21 +47,23 @@ function createMesh(thickness) {
 
 function circle(id, diameter) {
   return started.then(() => {
+    const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawCircle(diameter / 2)],
       tags: [],
       plane: "XY",
     };
-    return true;
+    return newPlane;
   });
 }
 
 function rectangle(id, x, y) {
   return started.then(() => {
+    const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawRectangle(x, y)],
       tags: [],
-      plane: "XY",
+      plane: newPlane,
     };
     return true;
   });
@@ -69,10 +71,11 @@ function rectangle(id, x, y) {
 
 function regularPolygon(id, radius, numberOfSides) {
   return started.then(() => {
+    const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawPolysides(radius, numberOfSides)],
       tags: [],
-      plane: "XY",
+      plane: newPlane,
     };
     return true;
   });
@@ -131,11 +134,10 @@ function move(targetID, inputID, x, y, z) {
       });
     } else {
       console.log("not 3d");
-      const newPlane = new Plane().pivot(0, "Y").translate([0, 0, z]);
       library[targetID] = {
         geometry: [library[inputID].geometry[0].translate(x, y, 0)],
         tags: [],
-        plane: newPlane,
+        plane: library[inputID].plane.translate([0, 0, z]),
       };
     }
     return true;
@@ -169,7 +171,7 @@ function rotate(targetID, inputID, x, y, z) {
               .rotate(y, [0, 0, 0], [0, 1, 0]),
           ],
           tags: leaf.tags,
-          plane: leaf.plane.pivot(z, "Y"),
+          plane: leaf.plane.pivot(z, "X"),
         };
       });
     }
