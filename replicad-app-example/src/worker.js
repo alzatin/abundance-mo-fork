@@ -84,16 +84,12 @@ function regularPolygon(id, radius, numberOfSides) {
 function loftShapes(targetID, inputsIDs) {
   return started.then(() => {
     let startPlane = library[inputsIDs[0]].plane;
-    //let endPlane = library[inputID2].plane;
     let arrayOfSketchedGeometry = [];
-
     inputsIDs.forEach((inputID) => {
       arrayOfSketchedGeometry.push(
         library[inputID].geometry[0].sketchOnPlane(library[inputID].plane)
       );
     });
-    console.log(arrayOfSketchedGeometry);
-    console.log(startPlane);
     library[targetID] = {
       geometry: [
         drawCircle(3)
