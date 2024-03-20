@@ -518,7 +518,6 @@ function generateDisplayMesh(id) {
   return started.then(() => {
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
-    console.log(library[id]);
     if (library[id].plane != undefined) {
       sketchPlane = library[id].plane;
     }
