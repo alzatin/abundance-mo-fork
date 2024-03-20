@@ -111,10 +111,10 @@ function extrude(targetID, inputID, height) {
   });
 }
 
-/*function to check if shape has mesh, not sure if it works with assemblies yet*/
+/*function to check if shape has mesh, not for with assemblies yet since we can't assemble drawings*/
 function is3D(input) {
   // is shape 3d
-  if (input.geometry[0].mesh != undefined) {
+  if (input.geometry[0].mesh !== undefined) {
     return true;
   } else {
     return false;
@@ -122,8 +122,6 @@ function is3D(input) {
 }
 
 function move(targetID, inputID, x, y, z) {
-  //maybe we need to check if it's a drawing or a solid/ if it's a drawing we need to
-  // make a whole new plane for y and draw on it, same if it's rotated on the z axis
   return started.then(() => {
     if (is3D(library[inputID])) {
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {

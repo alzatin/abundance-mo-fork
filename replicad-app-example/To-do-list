@@ -6,6 +6,9 @@ to-do-fix
 now:
 
     - model some things :S
+    - loft with a list 
+    - check that rotation of planes is correct 
+    - fix assemblies (make is3D function work for assemblies)
     - split loft and hull into two different molecules 
     - rendering problems when directly linking to run mode
     - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
