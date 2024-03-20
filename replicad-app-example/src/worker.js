@@ -113,8 +113,10 @@ function extrude(targetID, inputID, height) {
 
 /*function to check if shape has mesh, not for with assemblies yet since we can't assemble drawings*/
 function is3D(input) {
-  // is shape 3d
-  if (input.geometry[0].mesh !== undefined) {
+  // if it's an assembly assume it's 3d since our assemblies don't work for drawings right now
+  if (isAssembly(input)) {
+    return true;
+  } else if (input.geometry[0].mesh !== undefined) {
     return true;
   } else {
     return false;
@@ -124,6 +126,7 @@ function is3D(input) {
 function move(targetID, inputID, x, y, z) {
   return started.then(() => {
     if (is3D(library[inputID])) {
+      console.log("is 3d");
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         return {
           geometry: [leaf.geometry[0].clone().translate(x, y, z)],
