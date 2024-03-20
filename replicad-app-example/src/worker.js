@@ -80,17 +80,16 @@ function regularPolygon(id, radius, numberOfSides) {
 
 function loftShapes(targetID, inputID1, inputID2) {
   return started.then(() => {
+    let startPlane = library[inputID1].plane;
+    let endPlane = library[inputID2].plane;
     library[targetID] = {
       geometry: [
         library[inputID1].geometry[0]
-          .sketchOnPlane(library[inputID1].plane)
-          .loftWith(
-            library[inputID2].geometry[0].sketchOnPlane(library[inputID1].plane)
-          ),
+          .sketchOnPlane(startPlane)
+          .loftWith(library[inputID2].geometry[0].sketchOnPlane(endPlane)),
       ],
       tags: [],
     };
-    console.log(library[targetID]);
     return true;
   });
 }
