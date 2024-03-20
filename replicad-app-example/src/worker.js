@@ -135,9 +135,9 @@ function move(targetID, inputID, x, y, z) {
     } else {
       console.log("not 3d");
       library[targetID] = {
-        geometry: [library[inputID].geometry[0].translate(x, y, 0)],
+        geometry: [library[inputID].geometry[0]],
         tags: [],
-        plane: library[inputID].plane.translate([0, 0, z]),
+        plane: library[inputID].plane.translate([x, y, z]),
       };
     }
     return true;
@@ -161,7 +161,6 @@ function rotate(targetID, inputID, x, y, z) {
       });
     } else {
       //might need to establish a way to let it pick the direction of rotation
-      const newPlane = new Plane().pivot(0, "Y").translate([0, 0, 0]);
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         return {
           geometry: [
