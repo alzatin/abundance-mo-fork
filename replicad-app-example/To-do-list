@@ -6,6 +6,7 @@ to-do-fix
 now:
 
     - model some things :S
+    - split loft and hull into two different molecules 
     - rendering problems when directly linking to run mode
     - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
     - Cut layout should separate by height
@@ -14,7 +15,7 @@ now:
     - Bug : LEVA input error ?
     - export molecule to Github
     - wire fix run
-    -
+    
 
 mid :
     - BOM summary / fix inputs

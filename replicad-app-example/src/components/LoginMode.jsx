@@ -320,7 +320,11 @@ const ShowProjects = (props) => {
               />
               <select id="license-options">
                 {keys_ar.map((opt) => {
-                  return <option value={opt}>{opt}</option>;
+                  return (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  );
                 })}
               </select>
               <input
