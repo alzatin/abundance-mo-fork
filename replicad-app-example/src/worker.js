@@ -2,10 +2,11 @@ import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC } from "replicad";
 import { expose } from "comlink";
-import { drawCircle, drawRectangle, drawPolysides, loft } from "replicad";
+import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
 // We import our model as a simple function
 import { drawBox } from "./cad";
+import { i } from "mathjs";
 
 var library = {};
 
@@ -46,19 +47,23 @@ function createMesh(thickness) {
 
 function circle(id, diameter) {
   return started.then(() => {
+    const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawCircle(diameter / 2)],
       tags: [],
+      plane: "XY",
     };
-    return true;
+    return newPlane;
   });
 }
 
 function rectangle(id, x, y) {
   return started.then(() => {
+    const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawRectangle(x, y)],
       tags: [],
+      plane: newPlane,
     };
     return true;
   });
@@ -66,9 +71,11 @@ function rectangle(id, x, y) {
 
 function regularPolygon(id, radius, numberOfSides) {
   return started.then(() => {
+    const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawPolysides(radius, numberOfSides)],
       tags: [],
+      plane: newPlane,
     };
     return true;
   });
@@ -76,10 +83,16 @@ function regularPolygon(id, radius, numberOfSides) {
 
 function loftShapes(targetID, inputID1, inputID2) {
   return started.then(() => {
-    library[targetID] = loft(
-      library[inputID1].geometry,
-      library[inputID2].geometry
-    );
+    let startPlane = library[inputID1].plane;
+    let endPlane = library[inputID2].plane;
+    library[targetID] = {
+      geometry: [
+        library[inputID1].geometry[0]
+          .sketchOnPlane(startPlane)
+          .loftWith(library[inputID2].geometry[0].sketchOnPlane(endPlane)),
+      ],
+      tags: [],
+    };
     return true;
   });
 }
@@ -89,7 +102,7 @@ function extrude(targetID, inputID, height) {
     library[targetID] = actOnLeafs(library[inputID], (leaf) => {
       return {
         geometry: [
-          leaf.geometry[0].sketchOnPlane("XY").clone().extrude(height),
+          leaf.geometry[0].sketchOnPlane(leaf.plane).clone().extrude(height),
         ],
         tags: leaf.tags,
       };
@@ -98,32 +111,70 @@ function extrude(targetID, inputID, height) {
   });
 }
 
+/*function to check if shape has mesh, not for with assemblies yet since we can't assemble drawings*/
+function is3D(input) {
+  // if it's an assembly assume it's 3d since our assemblies don't work for drawings right now
+  if (isAssembly(input)) {
+    return true;
+  } else if (input.geometry[0].mesh !== undefined) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function move(targetID, inputID, x, y, z) {
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-      return {
-        geometry: [leaf.geometry[0].clone().translate(x, y, z)],
-        tags: leaf.tags,
+    if (is3D(library[inputID])) {
+      console.log("is 3d");
+      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [leaf.geometry[0].clone().translate(x, y, z)],
+          tags: leaf.tags,
+        };
+      });
+    } else {
+      console.log("not 3d");
+      library[targetID] = {
+        geometry: [library[inputID].geometry[0]],
+        tags: [],
+        plane: library[inputID].plane.translate([x, y, z]),
       };
-    });
+    }
     return true;
   });
 }
 
 function rotate(targetID, inputID, x, y, z) {
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-      return {
-        geometry: [
-          leaf.geometry[0]
-            .clone()
-            .rotate(x, [0, 0, 0], [1, 0, 0])
-            .rotate(y, [0, 0, 0], [0, 1, 0])
-            .rotate(z, [0, 0, 0], [0, 0, 1]),
-        ],
-        tags: leaf.tags,
-      };
-    });
+    if (is3D(library[inputID])) {
+      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [
+            leaf.geometry[0]
+              .clone()
+              .rotate(x, [0, 0, 0], [1, 0, 0])
+              .rotate(y, [0, 0, 0], [0, 1, 0])
+              .rotate(z, [0, 0, 0], [0, 0, 1]),
+          ],
+          tags: leaf.tags,
+        };
+      });
+    } else {
+      //might need to establish a way to let it pick the direction of rotation
+      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [
+            leaf.geometry[0]
+              .clone()
+              .rotate(x, [0, 0, 0], [1, 0, 0])
+              .rotate(y, [0, 0, 0], [0, 1, 0]),
+          ],
+          tags: leaf.tags,
+          plane: leaf.plane.pivot(z, "X"),
+        };
+      });
+    }
     return true;
   });
 }
@@ -468,7 +519,12 @@ function flattenRemove2DandFuse(chain) {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
-    //Flatten the assembly to remove heirarcy
+    // if there's a different plane than XY sketch there
+    let sketchPlane = "XY";
+    if (library[id].plane != undefined) {
+      sketchPlane = library[id].plane;
+    }
+    //Flatten the assembly to remove hierarchy
 
     const flattened = flattenAssembly(library[id]);
 
@@ -477,7 +533,7 @@ function generateDisplayMesh(id) {
     flattened.forEach((pieceOfGeometry) => {
       if (pieceOfGeometry.mesh == undefined) {
         cleanedGeometry.push(
-          pieceOfGeometry.sketchOnPlane("XY").clone().extrude(0.0001)
+          pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
         );
       } else {
         cleanedGeometry.push(pieceOfGeometry);
@@ -488,7 +544,10 @@ function generateDisplayMesh(id) {
 
     //Try extruding if there is no 3d shape
     if (geometry.mesh == undefined) {
-      const threeDShape = geometry.sketchOnPlane("XY").clone().extrude(0.0001);
+      const threeDShape = geometry
+        .sketchOnPlane(sketchPlane)
+        .clone()
+        .extrude(0.0001);
       return {
         faces: threeDShape.mesh(),
         edges: threeDShape.meshEdges(),
