@@ -90,13 +90,11 @@ function loftShapes(targetID, inputsIDs) {
         library[inputID].geometry[0].sketchOnPlane(library[inputID].plane)
       );
     });
+    let startGeometry = arrayOfSketchedGeometry.shift();
     library[targetID] = {
-      geometry: [
-        drawCircle(3)
-          .sketchOnPlane(startPlane)
-          .loftWith([...arrayOfSketchedGeometry]),
-      ],
+      geometry: [startGeometry.loftWith([...arrayOfSketchedGeometry])],
       tags: [],
+      plane: startPlane,
     };
     return true;
   });

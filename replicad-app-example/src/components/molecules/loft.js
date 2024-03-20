@@ -19,12 +19,12 @@ export default class ShrinkWrap extends Atom {
      * This atom's name
      * @type {string}
      */
-    this.name = "Shrink Wrap";
+    this.name = "Loft";
     /**
      * This atom's type
      * @type {string}
      */
-    this.atomType = "ShrinkWrap";
+    this.atomType = "Loft";
     /**
      * A list of all of the inputs to this molecule. May be passed to the constructor and loaded.
      * @type {array}
