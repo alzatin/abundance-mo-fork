@@ -144,18 +144,35 @@ function move(targetID, inputID, x, y, z) {
 
 function rotate(targetID, inputID, x, y, z) {
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-      return {
-        geometry: [
-          leaf.geometry[0]
-            .clone()
-            .rotate(x, [0, 0, 0], [1, 0, 0])
-            .rotate(y, [0, 0, 0], [0, 1, 0])
-            .rotate(z, [0, 0, 0], [0, 0, 1]),
-        ],
-        tags: leaf.tags,
-      };
-    });
+    if (is3D(library[inputID])) {
+      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [
+            leaf.geometry[0]
+              .clone()
+              .rotate(x, [0, 0, 0], [1, 0, 0])
+              .rotate(y, [0, 0, 0], [0, 1, 0])
+              .rotate(z, [0, 0, 0], [0, 0, 1]),
+          ],
+          tags: leaf.tags,
+        };
+      });
+    } else {
+      //might need to establish a way to let it pick the direction of rotation
+      const newPlane = new Plane().pivot(0, "Y").translate([0, 0, 0]);
+      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [
+            leaf.geometry[0]
+              .clone()
+              .rotate(x, [0, 0, 0], [1, 0, 0])
+              .rotate(y, [0, 0, 0], [0, 1, 0]),
+          ],
+          tags: leaf.tags,
+          plane: leaf.plane.pivot(z, "Y"),
+        };
+      });
+    }
     return true;
   });
 }
