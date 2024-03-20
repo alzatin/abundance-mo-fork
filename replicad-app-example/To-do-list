@@ -14,8 +14,9 @@ now:
     - Can colors be implemented with tags with three js materials
     - Bug : LEVA input error ?
     - export molecule to Github
-    - wire fix run
     - fix project tags for new project
+    - make wire only show if connected to an output
+    - separate big wire from little wire
     
 
 mid :

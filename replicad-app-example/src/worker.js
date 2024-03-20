@@ -2,7 +2,7 @@ import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC } from "replicad";
 import { expose } from "comlink";
-import { drawCircle, drawRectangle, drawPolysides, loft } from "replicad";
+import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
 // We import our model as a simple function
 import { drawBox } from "./cad";
@@ -106,14 +106,39 @@ function extrude(targetID, inputID, height) {
   });
 }
 
+/*function to check if shape has mesh, not sure if it works with assemblies yet*/
+function is3D(input) {
+  // is shape 3d
+  if (input.geometry[0].mesh != undefined) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function move(targetID, inputID, x, y, z) {
+  //maybe we need to check if it's a drawing or a solid/ if it's a drawing we need to
+  // make a whole new plane for y and draw on it, same if it's rotated on the z axis
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-      return {
-        geometry: [leaf.geometry[0].clone().translate(x, y, z)],
-        tags: leaf.tags,
+    if (is3D(library[inputID])) {
+      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [leaf.geometry[0].clone().translate(x, y, z)],
+          tags: leaf.tags,
+        };
+      });
+    } else {
+      console.log("not 3d");
+      const newPlane = new Plane()
+        .pivot(0, "Y")
+        .translate([0, 0, 15])
+        .pivot(30, "Y");
+      library[targetID] = {
+        geometry: [library[inputID].geometry[0]],
+        tags: [],
+        plane: newPlane,
       };
-    });
+    }
     return true;
   });
 }
@@ -476,16 +501,22 @@ function flattenRemove2DandFuse(chain) {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
-    //Flatten the assembly to remove heirarcy
+    // if there's a different plane than XY sketch there
+    let sketchPlane = "XY";
+    if (library[id].plane) {
+      sketchPlane = library[id].plane;
+    }
+    //Flatten the assembly to remove hierarchy
 
     const flattened = flattenAssembly(library[id]);
 
     //Here we need to extrude anything which isn't already 3D
     var cleanedGeometry = [];
     flattened.forEach((pieceOfGeometry) => {
+      console.log(pieceOfGeometry.mesh);
       if (pieceOfGeometry.mesh == undefined) {
         cleanedGeometry.push(
-          pieceOfGeometry.sketchOnPlane("XY").clone().extrude(0.0001)
+          pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
         );
       } else {
         cleanedGeometry.push(pieceOfGeometry);
@@ -496,7 +527,10 @@ function generateDisplayMesh(id) {
 
     //Try extruding if there is no 3d shape
     if (geometry.mesh == undefined) {
-      const threeDShape = geometry.sketchOnPlane("XY").clone().extrude(0.0001);
+      const threeDShape = geometry
+        .sketchOnPlane(sketchPlane)
+        .clone()
+        .extrude(0.0001);
       return {
         faces: threeDShape.mesh(),
         edges: threeDShape.meshEdges(),
