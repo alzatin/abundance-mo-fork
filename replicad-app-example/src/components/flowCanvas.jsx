@@ -126,7 +126,7 @@ export default memo(function FlowCanvas(props) {
      */
     var shortCuts = {
       a: "Assembly",
-      b: "ShrinkWrap", //>
+      b: "Loft", //>
       c: "Copy",
       d: "Difference",
       e: "Extrude",

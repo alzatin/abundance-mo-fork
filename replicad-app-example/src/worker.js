@@ -51,9 +51,9 @@ function circle(id, diameter) {
     library[id] = {
       geometry: [drawCircle(diameter / 2)],
       tags: [],
-      plane: "XY",
+      plane: newPlane,
     };
-    return newPlane;
+    return true;
   });
 }
 
@@ -81,17 +81,20 @@ function regularPolygon(id, radius, numberOfSides) {
   });
 }
 
-function loftShapes(targetID, inputID1, inputID2) {
+function loftShapes(targetID, inputsIDs) {
   return started.then(() => {
-    let startPlane = library[inputID1].plane;
-    let endPlane = library[inputID2].plane;
+    let startPlane = library[inputsIDs[0]].plane;
+    let arrayOfSketchedGeometry = [];
+    inputsIDs.forEach((inputID) => {
+      arrayOfSketchedGeometry.push(
+        library[inputID].geometry[0].sketchOnPlane(library[inputID].plane)
+      );
+    });
+    let startGeometry = arrayOfSketchedGeometry.shift();
     library[targetID] = {
-      geometry: [
-        library[inputID1].geometry[0]
-          .sketchOnPlane(startPlane)
-          .loftWith(library[inputID2].geometry[0].sketchOnPlane(endPlane)),
-      ],
+      geometry: [startGeometry.loftWith([...arrayOfSketchedGeometry])],
       tags: [],
+      plane: startPlane,
     };
     return true;
   });

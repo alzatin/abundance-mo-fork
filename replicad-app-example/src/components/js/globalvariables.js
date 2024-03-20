@@ -6,7 +6,7 @@ import Circle from "../molecules/circle.js";
 import Color from "../molecules/color.js";
 import CutLayout from "../molecules/cutlayout.js";
 import Rectangle from "../molecules/rectangle.js";
-import ShrinkWrap from "../molecules/shrinkwrap.js";
+import Loft from "../molecules/loft.js";
 import Move from "../molecules/move.js";
 import Tag from "../molecules/tag.js";
 import RegularPolygon from "../molecules/regularPolygon.js";
@@ -75,9 +75,9 @@ class GlobalVariables {
       },
       union: { creator: Group, atomType: "Union", atomCategory: "None" },
       group: { creator: Group, atomType: "Group", atomCategory: "None" },
-      shrinkwrap: {
-        creator: ShrinkWrap,
-        atomType: "ShrinkWrap",
+      loft: {
+        creator: Loft,
+        atomType: "Loft",
         atomCategory: "Interactions",
       },
 
