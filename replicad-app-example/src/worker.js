@@ -100,7 +100,7 @@ function extrude(targetID, inputID, height) {
     library[targetID] = actOnLeafs(library[inputID], (leaf) => {
       return {
         geometry: [
-          leaf.geometry[0].sketchOnPlane("XY").clone().extrude(height),
+          leaf.geometry[0].sketchOnPlane(leaf.plane).clone().extrude(height),
         ],
         tags: leaf.tags,
       };
@@ -503,6 +503,7 @@ function generateDisplayMesh(id) {
   return started.then(() => {
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
+    console.log(library[id]);
     if (library[id].plane != undefined) {
       sketchPlane = library[id].plane;
     }
