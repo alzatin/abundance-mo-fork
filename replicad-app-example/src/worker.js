@@ -50,6 +50,7 @@ function circle(id, diameter) {
     library[id] = {
       geometry: [drawCircle(diameter / 2)],
       tags: [],
+      plane: "XY",
     };
     return true;
   });
@@ -60,6 +61,7 @@ function rectangle(id, x, y) {
     library[id] = {
       geometry: [drawRectangle(x, y)],
       tags: [],
+      plane: "XY",
     };
     return true;
   });
@@ -70,6 +72,7 @@ function regularPolygon(id, radius, numberOfSides) {
     library[id] = {
       geometry: [drawPolysides(radius, numberOfSides)],
       tags: [],
+      plane: "XY",
     };
     return true;
   });
@@ -77,13 +80,13 @@ function regularPolygon(id, radius, numberOfSides) {
 
 function loftShapes(targetID, inputID1, inputID2) {
   return started.then(() => {
-    console.log(library[inputID1].geometry[0]);
-    console.log(library[inputID2].geometry[0]);
     library[targetID] = {
       geometry: [
         library[inputID1].geometry[0]
-          .sketchOnPlane()
-          .loftWith(library[inputID2].geometry[0].sketchOnPlane("XY", 15)),
+          .sketchOnPlane(library[inputID1].plane)
+          .loftWith(
+            library[inputID2].geometry[0].sketchOnPlane(library[inputID1].plane)
+          ),
       ],
       tags: [],
     };
@@ -129,12 +132,9 @@ function move(targetID, inputID, x, y, z) {
       });
     } else {
       console.log("not 3d");
-      const newPlane = new Plane()
-        .pivot(0, "Y")
-        .translate([0, 0, 15])
-        .pivot(30, "Y");
+      const newPlane = new Plane().pivot(0, "Y").translate([0, 0, z]);
       library[targetID] = {
-        geometry: [library[inputID].geometry[0]],
+        geometry: [library[inputID].geometry[0].translate(x, y, 0)],
         tags: [],
         plane: newPlane,
       };
@@ -503,7 +503,7 @@ function generateDisplayMesh(id) {
   return started.then(() => {
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
-    if (library[id].plane) {
+    if (library[id].plane != undefined) {
       sketchPlane = library[id].plane;
     }
     //Flatten the assembly to remove hierarchy
@@ -513,7 +513,6 @@ function generateDisplayMesh(id) {
     //Here we need to extrude anything which isn't already 3D
     var cleanedGeometry = [];
     flattened.forEach((pieceOfGeometry) => {
-      console.log(pieceOfGeometry.mesh);
       if (pieceOfGeometry.mesh == undefined) {
         cleanedGeometry.push(
           pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
