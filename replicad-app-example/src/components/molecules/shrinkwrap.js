@@ -118,7 +118,7 @@ export default class ShrinkWrap extends Atom {
         });
 
         GlobalVariables.cad
-          .loftShape(this.uniqueID, inputsList[1], inputsList[1])
+          .loftShapes(this.uniqueID, inputsList[0], inputsList[1])
           .then(() => {
             this.basicThreadValueProcessing();
           });

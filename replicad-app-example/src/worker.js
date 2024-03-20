@@ -6,6 +6,7 @@ import { drawCircle, drawRectangle, drawPolysides, loft } from "replicad";
 import { drawProjection } from "replicad";
 // We import our model as a simple function
 import { drawBox } from "./cad";
+import { i } from "mathjs";
 
 var library = {};
 
@@ -76,10 +77,17 @@ function regularPolygon(id, radius, numberOfSides) {
 
 function loftShapes(targetID, inputID1, inputID2) {
   return started.then(() => {
-    library[targetID] = loft(
-      library[inputID1].geometry,
-      library[inputID2].geometry
-    );
+    console.log(library[inputID1].geometry[0]);
+    console.log(library[inputID2].geometry[0]);
+    library[targetID] = {
+      geometry: [
+        library[inputID1].geometry[0]
+          .sketchOnPlane()
+          .loftWith(library[inputID2].geometry[0].sketchOnPlane("XY", 15)),
+      ],
+      tags: [],
+    };
+    console.log(library[targetID]);
     return true;
   });
 }
