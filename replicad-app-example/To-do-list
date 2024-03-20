@@ -7,13 +7,13 @@ now:
 
     - model some things :S
     - loft with a list 
+    - change loft name and make new hull molecule as placeholder
     - check that rotation of planes is correct 
     - fix assemblies (make is3D function work for assemblies)
     - split loft and hull into two different molecules 
     - rendering problems when directly linking to run mode
     - assemblies self deleting sometimes after moving parts several times: haven’t found bug source
     - Cut layout should separate by height
-    - how do we make loft work ? Hull
     - Can colors be implemented with tags with three js materials
     - Bug : LEVA input error ?
     - export molecule to Github
