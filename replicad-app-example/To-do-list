@@ -6,7 +6,7 @@ to-do-fix
 now:
     - BUG: connector breaking everything - when trying to make a second output connector from an atom that has an inputAtom connected to it or in its line
     - model some things :S
-    - BUG: assembly to assembly with tags in between breaks 
+    - BUG: assembly to assembly with tags in between breaks (maybe extract tag is breaking it?)
     - BUG: i think inputs x and y sometimes end up getting shared with other molecules and accidentally updated, make sure each input has a key 
     - BUG: axis of rotattion is wrong, when we want to rotate a part, it should rotate from its center
     - autosave!
