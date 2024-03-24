@@ -173,10 +173,7 @@ export default class Input extends Atom {
       if (input.name == this.name) {
         //If we have found the matching input
         this.decreaseToProcessCountByOne();
-
         this.value = input.getValue();
-        this.path = this.value;
-
         this.output.waitOnComingInformation(); //Lock all of the dependents
 
         this.output.setValue(this.value);

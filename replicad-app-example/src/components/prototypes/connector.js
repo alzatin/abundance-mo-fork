@@ -196,7 +196,9 @@ export default class Connector {
    * Passes a lock call to the connected input.
    */
   waitOnComingInformation() {
-    this.attachmentPoint2.waitOnComingInformation();
+    if (this.attachmentPoint2) {
+      this.attachmentPoint2.waitOnComingInformation();
+    }
   }
 
   /**
@@ -204,7 +206,7 @@ export default class Connector {
    */
   propogate() {
     //takes the input and passes it to the output
-    if (this.attachmentPoint1.ready) {
+    if (this.attachmentPoint1.ready && this.attachmentPoint2) {
       this.attachmentPoint2.setValue(this.attachmentPoint1.getValue());
     }
   }
