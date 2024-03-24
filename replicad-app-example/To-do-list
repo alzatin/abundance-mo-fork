@@ -6,8 +6,9 @@ to-do-fix
 now:
     - BUG: connector breaking everything - when trying to make a second output connector from an atom that has an inputAtom connected to it or in its line
     - model some things :S
-    - i think inputs x and y sometimes end up getting shared with other molecules and accidentally updated, make sure each input has a key 
-    - axis of rotattion is wrong, when we want to rotate a part, it should rotate from its center
+    - BUG: assembly to assembly with tags in between breaks 
+    - BUG: i think inputs x and y sometimes end up getting shared with other molecules and accidentally updated, make sure each input has a key 
+    - BUG: axis of rotattion is wrong, when we want to rotate a part, it should rotate from its center
     - autosave!
     - shortcuts are broken again + need cheat sheet 
     - check that rotation of planes is correct 
