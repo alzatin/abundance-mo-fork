@@ -4,6 +4,7 @@
 to-do-fix
 
 now:
+    - BUG: tag connector not being placed 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
     - BUG: Not placing tag connectors
     - model some things :S
