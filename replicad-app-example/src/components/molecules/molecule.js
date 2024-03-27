@@ -546,8 +546,6 @@ export default class Molecule extends Atom {
       if (atom.atomType == "Output") {
         atom.loadTree();
         if (this.output) {
-          console.log("output value update");
-          console.log(atom.value);
           this.output.value = atom.value;
         }
       }
