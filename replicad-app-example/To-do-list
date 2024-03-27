@@ -4,6 +4,7 @@
 to-do-fix
 
 now:
+    - BUG: Not placing tag connectors
     - BUG: connector breaking everything - when trying to make a second output connector from an atom that has an inputAtom connected to it or in its line
     - model some things :S
     - BUG: assembly to assembly with tags in between breaks (maybe extract tag is breaking it?)
