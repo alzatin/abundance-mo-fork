@@ -230,11 +230,13 @@ function bom(targetID, inputID, TAG, BOM) {
 
 function extractTag(targetID, inputID, TAG) {
   return started.then(() => {
+    console.log(library[inputID]);
     let taggedGeometry = extractTags(library[inputID], TAG);
     library[targetID] = {
       geometry: taggedGeometry.geometry,
       tags: taggedGeometry.tags,
     };
+    console.log(library[targetID]);
     return true;
   });
 }
@@ -320,10 +322,8 @@ function extractBoms(inputGeometry, TAG) {
 function extractTags(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return inputGeometry;
-  } else if (
-    inputGeometry.geometry.length > 1 &&
-    inputGeometry.geometry[0].geometry != undefined
-  ) {
+  } else if (isAssembly(inputGeometry)) {
+    console.log("extracting tags from assembly");
     let geometryWithTags = [];
     inputGeometry.geometry.forEach((subAssembly) => {
       let extractedGeometry = extractTags(subAssembly, TAG);
@@ -394,6 +394,7 @@ function layout(targetID, inputID, TAG, spacing) {
 }
 // Checks if part is an assembly)
 function isAssembly(part) {
+  console.log(part);
   if (part.geometry[0].geometry) {
     return true;
   } else {
@@ -417,6 +418,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     library[subID] = { geometry: assemblyCut, tags: partToCut.tags };
     return library[subID];
   } else {
+    console.log(partToCut);
     // if part to cut is a single part send to cutting function with cutting parts
     var partCutCopy = partToCut.geometry[0];
     cuttingParts.forEach((cuttingPart) => {
