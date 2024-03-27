@@ -129,7 +129,6 @@ function is3D(input) {
 function move(targetID, inputID, x, y, z) {
   return started.then(() => {
     if (is3D(library[inputID])) {
-      console.log("is 3d");
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         return {
           geometry: [leaf.geometry[0].clone().translate(x, y, z)],
@@ -137,7 +136,6 @@ function move(targetID, inputID, x, y, z) {
         };
       });
     } else {
-      console.log("not 3d");
       library[targetID] = {
         geometry: [library[inputID].geometry[0]],
         tags: [],
@@ -230,13 +228,11 @@ function bom(targetID, inputID, TAG, BOM) {
 
 function extractTag(targetID, inputID, TAG) {
   return started.then(() => {
-    console.log(library[inputID]);
     let taggedGeometry = extractTags(library[inputID], TAG);
     library[targetID] = {
       geometry: taggedGeometry.geometry,
       tags: taggedGeometry.tags,
     };
-    console.log(library[targetID]);
     return true;
   });
 }
@@ -323,7 +319,6 @@ function extractTags(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return inputGeometry;
   } else if (isAssembly(inputGeometry)) {
-    console.log("extracting tags from assembly");
     let geometryWithTags = [];
     inputGeometry.geometry.forEach((subAssembly) => {
       let extractedGeometry = extractTags(subAssembly, TAG);
@@ -398,11 +393,9 @@ function isAssembly(part) {
     if (part.geometry[0].geometry) {
       return true;
     } else {
-      console.log("not an assembly");
       return false;
     }
   } else {
-    console.log("not an assembly");
     return false;
   }
 }
@@ -411,7 +404,7 @@ function isAssembly(part) {
 /** Returns a new single cut part or an assembly of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
   //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
-  console.log(partToCut);
+
   if (isAssembly(partToCut)) {
     let assemblyToCut = partToCut.geometry;
     let assemblyCut = [];
@@ -424,7 +417,6 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     library[subID] = { geometry: assemblyCut, tags: partToCut.tags };
     return library[subID];
   } else {
-    console.log(partCutCopy);
     // if part to cut is a single part send to cutting function with cutting parts
     var partCutCopy = partToCut.geometry[0];
 
@@ -435,7 +427,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     // return new cut part
     let newID = assemblyID * 10 + index;
     library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
-    console.log(library[newID]);
+
     return library[newID];
   }
 }
@@ -464,7 +456,9 @@ function assembly(targetID, inputIDs) {
         cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
       );
     }
+
     library[targetID] = { geometry: assembly, tags: [] };
+
     return true;
   });
 }
