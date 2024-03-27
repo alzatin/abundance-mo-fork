@@ -6,7 +6,7 @@ import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
 // We import our model as a simple function
 import { drawBox } from "./cad";
-import { i } from "mathjs";
+import { i, re } from "mathjs";
 
 var library = {};
 
@@ -176,7 +176,6 @@ function rotate(targetID, inputID, x, y, z) {
         };
       });
     }
-    console.log(library[targetID]);
     return true;
   });
 }
@@ -323,6 +322,7 @@ function extractTags(inputGeometry, TAG) {
     let geometryWithTags = [];
     inputGeometry.geometry.forEach((subAssembly) => {
       let extractedGeometry = extractTags(subAssembly, TAG);
+
       if (extractedGeometry != false) {
         geometryWithTags.push(extractedGeometry);
       }
@@ -452,14 +452,16 @@ function recursiveCut(partToCut, cuttingPart) {
 function assembly(targetID, inputIDs) {
   return started.then(() => {
     let assembly = [];
-    for (let i = 0; i < inputIDs.length; i++) {
-      assembly.push(
-        cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
-      );
+    if (inputIDs.length > 1) {
+      for (let i = 0; i < inputIDs.length; i++) {
+        assembly.push(
+          cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
+        );
+      }
+    } else {
+      assembly.push(library[inputIDs[0]]);
     }
-
     library[targetID] = { geometry: assembly, tags: [] };
-
     return true;
   });
 }
@@ -527,8 +529,6 @@ function flattenRemove2DandFuse(chain) {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
-    console.log(id);
-    console.log(library[id]);
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
     if (library[id].plane != undefined) {

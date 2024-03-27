@@ -239,7 +239,7 @@ export default class Equation extends Atom {
    */
   sendToRender() {
     //Send code to jotcad to render
-
-    GlobalVariables.writeToDisplay(this.uniqueID);
+    //GlobalVariables.writeToDisplay(this.uniqueID);
+    console.log("equation");
   }
 }
