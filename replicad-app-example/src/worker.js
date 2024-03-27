@@ -394,9 +394,10 @@ function layout(targetID, inputID, TAG, spacing) {
 }
 // Checks if part is an assembly)
 function isAssembly(part) {
-  console.log(part);
-  if (part.geometry[0].geometry) {
-    return true;
+  if (part.geometry.length > 0) {
+    if (part.geometry[0].geometry) {
+      return true;
+    }
   } else {
     return false;
   }
@@ -406,6 +407,7 @@ function isAssembly(part) {
 /** Returns a new single cut part or an assembly of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
   //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
+  console.log(partToCut);
   if (isAssembly(partToCut)) {
     let assemblyToCut = partToCut.geometry;
     let assemblyCut = [];
@@ -418,7 +420,6 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     library[subID] = { geometry: assemblyCut, tags: partToCut.tags };
     return library[subID];
   } else {
-    console.log(partToCut);
     // if part to cut is a single part send to cutting function with cutting parts
     var partCutCopy = partToCut.geometry[0];
     cuttingParts.forEach((cuttingPart) => {
