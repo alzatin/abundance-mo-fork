@@ -6,7 +6,7 @@ import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
 // We import our model as a simple function
 import { drawBox } from "./cad";
-import { i } from "mathjs";
+import { i, re } from "mathjs";
 
 var library = {};
 
@@ -129,7 +129,6 @@ function is3D(input) {
 function move(targetID, inputID, x, y, z) {
   return started.then(() => {
     if (is3D(library[inputID])) {
-      console.log("is 3d");
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         return {
           geometry: [leaf.geometry[0].clone().translate(x, y, z)],
@@ -137,7 +136,6 @@ function move(targetID, inputID, x, y, z) {
         };
       });
     } else {
-      console.log("not 3d");
       library[targetID] = {
         geometry: [library[inputID].geometry[0]],
         tags: [],
@@ -320,13 +318,11 @@ function extractBoms(inputGeometry, TAG) {
 function extractTags(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return inputGeometry;
-  } else if (
-    inputGeometry.geometry.length > 1 &&
-    inputGeometry.geometry[0].geometry != undefined
-  ) {
+  } else if (isAssembly(inputGeometry)) {
     let geometryWithTags = [];
     inputGeometry.geometry.forEach((subAssembly) => {
       let extractedGeometry = extractTags(subAssembly, TAG);
+
       if (extractedGeometry != false) {
         geometryWithTags.push(extractedGeometry);
       }
@@ -394,8 +390,12 @@ function layout(targetID, inputID, TAG, spacing) {
 }
 // Checks if part is an assembly)
 function isAssembly(part) {
-  if (part.geometry[0].geometry) {
-    return true;
+  if (part.geometry.length > 0) {
+    if (part.geometry[0].geometry) {
+      return true;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
@@ -405,6 +405,7 @@ function isAssembly(part) {
 /** Returns a new single cut part or an assembly of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
   //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
+
   if (isAssembly(partToCut)) {
     let assemblyToCut = partToCut.geometry;
     let assemblyCut = [];
@@ -419,6 +420,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
   } else {
     // if part to cut is a single part send to cutting function with cutting parts
     var partCutCopy = partToCut.geometry[0];
+
     cuttingParts.forEach((cuttingPart) => {
       // for each cutting part cut the part
       partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
@@ -426,6 +428,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     // return new cut part
     let newID = assemblyID * 10 + index;
     library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
+
     return library[newID];
   }
 }
@@ -449,10 +452,14 @@ function recursiveCut(partToCut, cuttingPart) {
 function assembly(targetID, inputIDs) {
   return started.then(() => {
     let assembly = [];
-    for (let i = 0; i < inputIDs.length; i++) {
-      assembly.push(
-        cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
-      );
+    if (inputIDs.length > 1) {
+      for (let i = 0; i < inputIDs.length; i++) {
+        assembly.push(
+          cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
+        );
+      }
+    } else {
+      assembly.push(library[inputIDs[0]]);
     }
     library[targetID] = { geometry: assembly, tags: [] };
     return true;

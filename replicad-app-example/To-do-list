@@ -4,6 +4,8 @@
 to-do-fix
 
 now:
+    - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
+    - BUG: Not placing tag connectors
     - BUG: connector breaking everything - when trying to make a second output connector from an atom that has an inputAtom connected to it or in its line
     - model some things :S
     - BUG: assembly to assembly with tags in between breaks (maybe extract tag is breaking it?)
@@ -56,6 +58,7 @@ future:
     -  import parts ?
     - make sample project with readme walkthrough or sandbox
     - CSS Overhaul , make global fonts, margins, colors
+    - keyboard commands r-e-10
 
 Qs :
 

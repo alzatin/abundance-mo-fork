@@ -78,4 +78,11 @@ export default class Tag extends Atom {
       this.setAlert(err);
     }
   }
+  /**
+   * Send the value of this atom to the 3D display. Used to display the number
+   */
+  sendToRender() {
+    // do nothing
+    console.log("tag has nothing to render");
+  }
 }
