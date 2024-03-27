@@ -107,7 +107,7 @@ export default class Output extends Atom {
    */
   loadTree() {
     this.path = this.inputs[0].loadTree();
-    this.value = this.path;
+    this.value = this.inputs[0].uniqueID;
     return this.path;
   }
 

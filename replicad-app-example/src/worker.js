@@ -176,6 +176,7 @@ function rotate(targetID, inputID, x, y, z) {
         };
       });
     }
+    console.log(library[targetID]);
     return true;
   });
 }
@@ -526,6 +527,8 @@ function flattenRemove2DandFuse(chain) {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
+    console.log(id);
+    console.log(library[id]);
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
     if (library[id].plane != undefined) {

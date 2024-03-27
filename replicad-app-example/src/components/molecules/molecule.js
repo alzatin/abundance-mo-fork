@@ -378,22 +378,6 @@ export default class Molecule extends Atom {
   }
 
   /**
-   * Used to trigger all of the circle atoms within a molecule and all of the molecules within it to update their value. Used when the number of segments changes.
-   */
-  refreshCircles() {
-    this.nodesOnTheScreen.forEach((atom) => {
-      if (atom.atomType == "Circle") {
-        atom.updateValue();
-      } else if (
-        atom.atomType == "Molecule" ||
-        atom.atomType == "GitHubMolecule"
-      ) {
-        atom.refreshCircles();
-      }
-    });
-  }
-
-  /**
    * Computes and returns an array of BOMEntry objects after looking at the tags of a geometry.*/
   extractBomTags() {
     try {
@@ -562,6 +546,8 @@ export default class Molecule extends Atom {
       if (atom.atomType == "Output") {
         atom.loadTree();
         if (this.output) {
+          console.log("output value update");
+          console.log(atom.value);
           this.output.value = atom.value;
         }
       }
@@ -702,6 +688,7 @@ export default class Molecule extends Atom {
   sendToRender() {
     //Send code to JSxCAD to render
     try {
+      console.log(this.output.value);
       GlobalVariables.writeToDisplay(this.output.value);
     } catch (err) {
       this.setAlert(err);
