@@ -6,10 +6,8 @@ to-do-fix
 now:
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
     - BUG: Not placing tag connectors
-    - BUG: connector breaking everything - when trying to make a second output connector from an atom that has an inputAtom connected to it or in its line
     - model some things :S
-    - BUG: assembly to assembly with tags in between breaks (maybe extract tag is breaking it?)
-    - BUG: i think inputs x and y sometimes end up getting shared with other molecules and accidentally updated, make sure each input has a key 
+    - BUG:if i change leva tag, and immediately click on another tag or extract the value is shared :s 
     - BUG: axis of rotattion is wrong, when we want to rotate a part, it should rotate from its center
     - autosave!
     - shortcuts are broken again + need cheat sheet 
