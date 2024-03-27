@@ -397,8 +397,12 @@ function isAssembly(part) {
   if (part.geometry.length > 0) {
     if (part.geometry[0].geometry) {
       return true;
+    } else {
+      console.log("not an assembly");
+      return false;
     }
   } else {
+    console.log("not an assembly");
     return false;
   }
 }
@@ -420,8 +424,10 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     library[subID] = { geometry: assemblyCut, tags: partToCut.tags };
     return library[subID];
   } else {
+    console.log(partCutCopy);
     // if part to cut is a single part send to cutting function with cutting parts
     var partCutCopy = partToCut.geometry[0];
+
     cuttingParts.forEach((cuttingPart) => {
       // for each cutting part cut the part
       partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
@@ -429,6 +435,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     // return new cut part
     let newID = assemblyID * 10 + index;
     library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
+    console.log(library[newID]);
     return library[newID];
   }
 }
