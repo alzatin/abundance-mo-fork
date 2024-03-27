@@ -7,7 +7,6 @@ now:
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
     - BUG: Not placing tag connectors
     - model some things :S
-    - BUG:if i change leva tag, and immediately click on another tag or extract the value is shared :s 
     - BUG: axis of rotattion is wrong, when we want to rotate a part, it should rotate from its center
     - autosave!
     - shortcuts are broken again + need cheat sheet 
