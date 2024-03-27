@@ -720,8 +720,9 @@ export default class Atom {
 
         /* Makes inputs for Io's other than geometry */
         if (input.valueType !== "geometry") {
-          inputParams[input.name] = {
+          inputParams[this.uniqueID + input.name] = {
             value: input.value,
+            label: input.name,
             disabled: checkConnector(),
             onChange: (value) => {
               input.setValue(value);
