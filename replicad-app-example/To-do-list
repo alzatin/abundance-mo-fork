@@ -9,7 +9,6 @@ now:
     - model some things :S
     - autosave!
     - shortcuts are broken again + need cheat sheet 
-    - check that rotation of planes is correct 
     - make catch for background click if there's no output to display 
     - fix assemblies (make is3D function work for assemblies)
     - rendering problems when directly linking to run mode
