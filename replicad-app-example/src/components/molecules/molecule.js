@@ -686,7 +686,6 @@ export default class Molecule extends Atom {
   sendToRender() {
     //Send code to JSxCAD to render
     try {
-      console.log(this.output.value);
       GlobalVariables.writeToDisplay(this.output.value);
     } catch (err) {
       this.setAlert(err);

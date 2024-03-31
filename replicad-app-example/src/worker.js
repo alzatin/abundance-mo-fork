@@ -172,7 +172,7 @@ function rotate(targetID, inputID, x, y, z) {
               .rotate(y, [0, 0, 0], [0, 1, 0]),
           ],
           tags: leaf.tags,
-          plane: leaf.plane.pivot(z, "X"),
+          plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
         };
       });
     }
@@ -333,7 +333,6 @@ function extractTags(inputGeometry, TAG) {
         geometryWithTags.push(extractedGeometry);
       }
     });
-    console.log(geometryWithTags);
     if (geometryWithTags.length > 0) {
       let thethingtoreturn = {
         geometry: geometryWithTags,
