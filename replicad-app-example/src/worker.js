@@ -150,13 +150,14 @@ function rotate(targetID, inputID, x, y, z) {
   return started.then(() => {
     if (is3D(library[inputID])) {
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        let leafCenter = leaf.geometry[0].boundingBox.center;
         return {
           geometry: [
             leaf.geometry[0]
               .clone()
-              .rotate(x, [0, 0, 0], [1, 0, 0])
-              .rotate(y, [0, 0, 0], [0, 1, 0])
-              .rotate(z, [0, 0, 0], [0, 0, 1]),
+              .rotate(x, leafCenter, [1, 0, 0])
+              .rotate(y, leafCenter, [0, 1, 0])
+              .rotate(z, leafCenter, [0, 0, 1]),
           ],
           tags: leaf.tags,
         };
