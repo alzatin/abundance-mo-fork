@@ -166,7 +166,7 @@ function rotate(targetID, inputID, x, y, z) {
       //might need to establish a way to let it pick the direction of rotation
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         return {
-          geometry: [leaf.geometry[0].clone()],
+          geometry: [leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1])],
           tags: leaf.tags,
           plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
         };
