@@ -229,10 +229,16 @@ function bom(targetID, inputID, TAG, BOM) {
 function extractTag(targetID, inputID, TAG) {
   return started.then(() => {
     let taggedGeometry = extractTags(library[inputID], TAG);
-    library[targetID] = {
-      geometry: taggedGeometry.geometry,
-      tags: taggedGeometry.tags,
-    };
+    console.log(taggedGeometry);
+    if (taggedGeometry != false) {
+      library[targetID] = {
+        geometry: taggedGeometry.geometry,
+        tags: taggedGeometry.tags,
+      };
+    } else {
+      throw new Error("Tag not found");
+    }
+
     return true;
   });
 }
@@ -327,11 +333,16 @@ function extractTags(inputGeometry, TAG) {
         geometryWithTags.push(extractedGeometry);
       }
     });
-    let thethingtoreturn = {
-      geometry: geometryWithTags,
-      tags: inputGeometry.tags,
-    };
-    return thethingtoreturn;
+    console.log(geometryWithTags);
+    if (geometryWithTags.length > 0) {
+      let thethingtoreturn = {
+        geometry: geometryWithTags,
+        tags: inputGeometry.tags,
+      };
+      return thethingtoreturn;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
