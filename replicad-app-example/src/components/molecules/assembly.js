@@ -59,7 +59,7 @@ export default class Assembly extends Atom {
    * Add or delete ports as needed in addition to the normal begin propogation stuff
    */
   beginPropagation() {
-    addOrDeletePorts(this); //Add or remove ports as needed
+    //addOrDeletePorts(this); //Add or remove ports as needed
 
     super.beginPropagation();
   }

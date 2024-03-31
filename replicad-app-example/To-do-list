@@ -4,8 +4,9 @@
 to-do-fix
 
 now:
+    - 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
-    - BUG: Not placing tag connectors
+    - BUG: Not connectors to assembly becuase it deletes attachment point and creates a new one so old attachment point is never found i think
     - model some things :S
     - BUG: axis of rotattion is wrong, when we want to rotate a part, it should rotate from its center
     - autosave!
