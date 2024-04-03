@@ -146,18 +146,19 @@ function move(targetID, inputID, x, y, z) {
   });
 }
 
-function rotate(targetID, inputID, x, y, z) {
+function rotate(targetID, inputID, x, y, z, pivot) {
   return started.then(() => {
     if (is3D(library[inputID])) {
+      console.log(library[inputID]);
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         let leafCenter = leaf.geometry[0].boundingBox.center;
         return {
           geometry: [
             leaf.geometry[0]
               .clone()
-              .rotate(x, leafCenter, [1, 0, 0])
-              .rotate(y, leafCenter, [0, 1, 0])
-              .rotate(z, leafCenter, [0, 0, 1]),
+              .rotate(x, pivot, [1, 0, 0])
+              .rotate(y, pivot, [0, 1, 0])
+              .rotate(z, pivot, [0, 0, 1]),
           ],
           tags: leaf.tags,
         };
@@ -165,8 +166,9 @@ function rotate(targetID, inputID, x, y, z) {
     } else {
       //might need to establish a way to let it pick the direction of rotation
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        console.log(pivot);
         return {
-          geometry: [leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1])],
+          geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
           tags: leaf.tags,
           plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
         };

@@ -17,6 +17,7 @@ export default class Rotate extends Atom {
     this.addIO("input", "y-axis degrees", this, "number", 0);
     this.addIO("input", "z-axis degrees", this, "number", 0);
     this.addIO("output", "geometry", this, "geometry", "");
+    this.addIO("input", "Pivot", this, "array", [0, 0, 0]);
 
     /**
      * This atom's name
@@ -60,6 +61,46 @@ export default class Rotate extends Atom {
   }
 
   /**
+   * Create Leva Menu Inputs - returns to ParameterEditor
+   */
+  createLevaInputs() {
+    let inputParams = {};
+
+    /*inputParams[this.uniqueID + "pivot"] = {
+      value: { x: 0, y: 0, z: 0 },
+      label: "Pivot",
+      onChange: (value) => {
+        this.findIOValue("Pivot").setValue(value);
+        this.sendToRender();
+      },
+    };*/
+
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        /* Makes inputs for Io's other than geometry */
+        if (input.valueType !== "geometry") {
+          inputParams[this.uniqueID + input.name] = {
+            value: input.value,
+            label: input.name,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              input.setValue(value);
+              /** should we run updateValue too? */
+              this.sendToRender();
+            },
+          };
+        }
+      });
+      return inputParams;
+    }
+  }
+
+  /**
    * Pass the input shape to a worker thread to compute the rotation
    */
   updateValue() {
@@ -68,10 +109,13 @@ export default class Rotate extends Atom {
       var x = this.findIOValue("x-axis degrees");
       var y = this.findIOValue("y-axis degrees");
       var z = this.findIOValue("z-axis degrees");
+      var pivot = this.findIOValue("Pivot");
 
-      GlobalVariables.cad.rotate(this.uniqueID, inputID, x, y, z).then(() => {
-        this.basicThreadValueProcessing();
-      });
+      GlobalVariables.cad
+        .rotate(this.uniqueID, inputID, x, y, z, pivot)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        });
     } catch (err) {
       this.setAlert(err);
     }
