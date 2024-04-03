@@ -16,8 +16,6 @@ export default React.memo(function ShapeMeshes({ mesh }) {
 
   useLayoutEffect(() => {
     let meshArray = [];
-    console.log(mesh);
-
     mesh.map((m) => {
       const body = new BufferGeometry();
       const lines = new BufferGeometry();
@@ -34,9 +32,7 @@ export default React.memo(function ShapeMeshes({ mesh }) {
       const thisColor = m.color;
       meshArray.push({ body: thisBody, lines: thisLines, color: thisColor });
     });
-    console.log(meshArray);
     setFullMesh(meshArray);
-    console.log(fullMesh[0] == fullMesh[1]);
     // We have configured the canvas to only refresh when there is a change,
     // the invalidate function is here to tell it to recompute
     invalidate();
@@ -56,7 +52,6 @@ export default React.memo(function ShapeMeshes({ mesh }) {
       {fullMesh.map((m) => {
         return (
           <group>
-            {console.log(m.color)}
             <mesh geometry={m.body}>
               {/* the offsets are here to avoid z fighting between the mesh and the lines */}
               <meshStandardMaterial

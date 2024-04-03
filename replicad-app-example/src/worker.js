@@ -218,7 +218,6 @@ function color(targetID, inputID, color) {
       tags: [...library[inputID].tags],
       color: color,
     };
-    console.log(library[targetID]);
     return true;
   });
 }
@@ -552,7 +551,6 @@ function generateDisplayMesh(id) {
     if (library[id].plane != undefined) {
       sketchPlane = library[id].plane;
     }
-    console.log(library[id]);
     if (library[id].color != undefined) {
       sketchColor = library[id].color;
     }
@@ -571,7 +569,6 @@ function generateDisplayMesh(id) {
         cleanedGeometry.push(pieceOfGeometry);
       }
     });
-    console.log(cleanedGeometry);
     let geometry = chainFuse(cleanedGeometry);
 
     //Try extruding if there is no 3d shape
