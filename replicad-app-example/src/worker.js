@@ -146,36 +146,34 @@ function move(targetID, inputID, x, y, z) {
   });
 }
 
-function rotate(targetID, inputID, x, y, z) {
+function rotate(targetID, inputID, x, y, z, pivot) {
   return started.then(() => {
     if (is3D(library[inputID])) {
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        let leafCenter = leaf.geometry[0].boundingBox.center;
         return {
           geometry: [
             leaf.geometry[0]
               .clone()
-              .rotate(x, [0, 0, 0], [1, 0, 0])
-              .rotate(y, [0, 0, 0], [0, 1, 0])
-              .rotate(z, [0, 0, 0], [0, 0, 1]),
+              .rotate(x, pivot, [1, 0, 0])
+              .rotate(y, pivot, [0, 1, 0])
+              .rotate(z, pivot, [0, 0, 1]),
           ],
           tags: leaf.tags,
+          plane: leaf.plane,
         };
       });
     } else {
       //might need to establish a way to let it pick the direction of rotation
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         return {
-          geometry: [
-            leaf.geometry[0]
-              .clone()
-              .rotate(x, [0, 0, 0], [1, 0, 0])
-              .rotate(y, [0, 0, 0], [0, 1, 0]),
-          ],
+          geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
           tags: leaf.tags,
-          plane: leaf.plane.pivot(z, "X"),
+          plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
         };
       });
     }
+
     return true;
   });
 }
@@ -229,7 +227,6 @@ function bom(targetID, inputID, TAG, BOM) {
 function extractTag(targetID, inputID, TAG) {
   return started.then(() => {
     let taggedGeometry = extractTags(library[inputID], TAG);
-    console.log(taggedGeometry);
     if (taggedGeometry != false) {
       library[targetID] = {
         geometry: taggedGeometry.geometry,
@@ -333,7 +330,6 @@ function extractTags(inputGeometry, TAG) {
         geometryWithTags.push(extractedGeometry);
       }
     });
-    console.log(geometryWithTags);
     if (geometryWithTags.length > 0) {
       let thethingtoreturn = {
         geometry: geometryWithTags,
