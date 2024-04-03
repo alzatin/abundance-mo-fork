@@ -17,7 +17,7 @@ export default class Rotate extends Atom {
     this.addIO("input", "y-axis degrees", this, "number", 0);
     this.addIO("input", "z-axis degrees", this, "number", 0);
     this.addIO("output", "geometry", this, "geometry", "");
-    this.addIO("input", "Pivot", this, "array", [0, 0, 0]);
+    this.addIO("input", "pivot", this, "array", [0, 0, 0]);
 
     /**
      * This atom's name
@@ -109,7 +109,7 @@ export default class Rotate extends Atom {
       var x = this.findIOValue("x-axis degrees");
       var y = this.findIOValue("y-axis degrees");
       var z = this.findIOValue("z-axis degrees");
-      var pivot = this.findIOValue("Pivot");
+      var pivot = this.findIOValue("pivot");
 
       GlobalVariables.cad
         .rotate(this.uniqueID, inputID, x, y, z, pivot)
