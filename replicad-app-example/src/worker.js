@@ -38,10 +38,7 @@ function createMesh(thickness) {
     const box = drawBox(thickness);
     // This is how you get the data structure that the replica-three-helper
     // can synchronize with three BufferGeometry
-    return {
-      faces: box.mesh(),
-      edges: box.meshEdges(),
-    };
+    return [{ faces: box.mesh(), edges: box.meshEdges() }];
   });
 }
 
