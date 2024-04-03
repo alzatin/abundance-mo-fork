@@ -31,7 +31,8 @@ export default React.memo(function ShapeMeshes({ mesh }) {
 
       const thisBody = body;
       const thisLines = lines;
-      meshArray.push({ body: thisBody, lines: thisLines });
+      const thisColor = m.color;
+      meshArray.push({ body: thisBody, lines: thisLines, color: thisColor });
     });
     console.log(meshArray);
     setFullMesh(meshArray);
@@ -55,11 +56,11 @@ export default React.memo(function ShapeMeshes({ mesh }) {
       {fullMesh.map((m) => {
         return (
           <group>
-            {console.log(m.body)}
+            {console.log(m.color)}
             <mesh geometry={m.body}>
               {/* the offsets are here to avoid z fighting between the mesh and the lines */}
               <meshStandardMaterial
-                color="red"
+                color={m.color}
                 opacity={0.5}
                 polygonOffset
                 polygonOffsetFactor={2.0}

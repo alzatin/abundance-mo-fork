@@ -66,6 +66,7 @@ export default class Color extends Atom {
 
     this.addIO("input", "geometry", this, "geometry", null, false, true);
     this.addIO("output", "geometry", this, "geometry", null);
+    this.addIO("input", "color", this, "string", "#ACAFDD");
 
     this.setValues(values);
   }
@@ -121,18 +122,12 @@ export default class Color extends Atom {
    */
   updateValue() {
     try {
-      var inputPath = this.findIOValue("geometry");
-      const values = {
-        op: "color",
-        color:
-          this.colorOptions[
-            Object.keys(this.colorOptions)[this.selectedColorIndex]
-          ],
-        readPath: inputPath,
-        writePath: this.path,
-      };
-      this.basicThreadValueProcessing(values);
-      this.clearAlert();
+      var inputID = this.findIOValue("geometry");
+      var color = this.findIOValue("color");
+
+      GlobalVariables.cad.color(this.uniqueID, inputID, color).then(() => {
+        this.basicThreadValueProcessing();
+      });
     } catch (err) {
       this.setAlert(err);
     }

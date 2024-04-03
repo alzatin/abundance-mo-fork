@@ -210,6 +210,19 @@ function tag(targetID, inputID, TAG) {
     return true;
   });
 }
+
+function color(targetID, inputID, color) {
+  return started.then(() => {
+    library[targetID] = {
+      geometry: library[inputID].geometry,
+      tags: [...library[inputID].tags],
+      color: color,
+    };
+    console.log(library[targetID]);
+    return true;
+  });
+}
+
 function bom(targetID, inputID, TAG, BOM) {
   return started.then(() => {
     library[targetID] = {
@@ -535,8 +548,13 @@ function generateDisplayMesh(id) {
   return started.then(() => {
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
+    let sketchColor = "red";
     if (library[id].plane != undefined) {
       sketchPlane = library[id].plane;
+    }
+    console.log(library[id]);
+    if (library[id].color != undefined) {
+      sketchColor = library[id].color;
     }
     //Flatten the assembly to remove hierarchy
 
@@ -553,12 +571,11 @@ function generateDisplayMesh(id) {
         cleanedGeometry.push(pieceOfGeometry);
       }
     });
-
+    console.log(cleanedGeometry);
     let geometry = chainFuse(cleanedGeometry);
 
     //Try extruding if there is no 3d shape
     if (geometry.mesh == undefined) {
-      console.log("no mesh");
       const threeDShape = geometry
         .sketchOnPlane(sketchPlane)
         .clone()
@@ -576,10 +593,12 @@ function generateDisplayMesh(id) {
         {
           faces: threeDShape.mesh(),
           edges: threeDShape.meshEdges(),
+          color: "pink",
         },
         {
           faces: geometry.mesh(),
           edges: geometry.meshEdges(),
+          color: sketchColor,
         },
       ];
     }
@@ -592,6 +611,7 @@ expose({
   createBlob,
   createMesh,
   circle,
+  color,
   downSVG,
   regularPolygon,
   rectangle,
