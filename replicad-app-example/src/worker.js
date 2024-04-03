@@ -49,6 +49,7 @@ function circle(id, diameter) {
       geometry: [drawCircle(diameter / 2)],
       tags: [],
       plane: newPlane,
+      color: "red",
     };
     return true;
   });
@@ -61,6 +62,7 @@ function rectangle(id, x, y) {
       geometry: [drawRectangle(x, y)],
       tags: [],
       plane: newPlane,
+      color: "red",
     };
     return true;
   });
@@ -73,6 +75,7 @@ function regularPolygon(id, radius, numberOfSides) {
       geometry: [drawPolysides(radius, numberOfSides)],
       tags: [],
       plane: newPlane,
+      color: "red",
     };
     return true;
   });
@@ -92,6 +95,7 @@ function loftShapes(targetID, inputsIDs) {
       geometry: [startGeometry.loftWith([...arrayOfSketchedGeometry])],
       tags: [],
       plane: startPlane,
+      color: library[inputsIDs[0]].color,
     };
     return true;
   });
@@ -105,6 +109,7 @@ function extrude(targetID, inputID, height) {
           leaf.geometry[0].sketchOnPlane(leaf.plane).clone().extrude(height),
         ],
         tags: leaf.tags,
+        color: leaf.color,
       };
     });
     return true;
@@ -137,6 +142,7 @@ function move(targetID, inputID, x, y, z) {
         geometry: [library[inputID].geometry[0]],
         tags: [],
         plane: library[inputID].plane.translate([x, y, z]),
+        color: library[inputID].color,
       };
     }
     return true;
@@ -158,6 +164,7 @@ function rotate(targetID, inputID, x, y, z, pivot) {
           ],
           tags: leaf.tags,
           plane: leaf.plane,
+          color: leaf.color,
         };
       });
     } else {
@@ -167,6 +174,7 @@ function rotate(targetID, inputID, x, y, z, pivot) {
           geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
           tags: leaf.tags,
           plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+          color: leaf.color,
         };
       });
     }
@@ -182,6 +190,7 @@ function cut(targetID, input1ID, input2ID) {
       return {
         geometry: [leaf.geometry[0].clone().cut(cutTemplate)],
         tags: leaf.tags,
+        color: leaf.color,
       };
     });
     return true;
@@ -195,6 +204,7 @@ function intersect(targetID, input1ID, input2ID) {
       return {
         geometry: [leaf.geometry[0].clone().intersect(shapeToIntersectWith)],
         tags: leaf.tags,
+        color: leaf.color,
       };
     });
     return true;
@@ -206,6 +216,7 @@ function tag(targetID, inputID, TAG) {
     library[targetID] = {
       geometry: library[inputID].geometry,
       tags: [TAG, ...library[inputID].tags],
+      color: library[inputID].color,
     };
     return true;
   });
@@ -240,6 +251,7 @@ function extractTag(targetID, inputID, TAG) {
       library[targetID] = {
         geometry: taggedGeometry.geometry,
         tags: taggedGeometry.tags,
+        color: taggedGeometry.color,
       };
     } else {
       throw new Error("Tag not found");
@@ -343,6 +355,7 @@ function extractTags(inputGeometry, TAG) {
       let thethingtoreturn = {
         geometry: geometryWithTags,
         tags: inputGeometry.tags,
+        color: inputGeometry.color,
       };
       return thethingtoreturn;
     } else {
@@ -431,7 +444,11 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     });
     let subID = assemblyID * 10 + index + Math.random(100); // needs to be randomized?
     //returns new assembly that has been cut
-    library[subID] = { geometry: assemblyCut, tags: partToCut.tags };
+    library[subID] = {
+      geometry: assemblyCut,
+      tags: partToCut.tags,
+      color: partToCut.color,
+    };
     return library[subID];
   } else {
     // if part to cut is a single part send to cutting function with cutting parts
@@ -443,7 +460,11 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     });
     // return new cut part
     let newID = assemblyID * 10 + index;
-    library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
+    library[newID] = {
+      geometry: [partCutCopy],
+      tags: partToCut.tags,
+      color: partToCut.color,
+    };
 
     return library[newID];
   }
