@@ -9,25 +9,33 @@ import {
 
 export default React.memo(function ShapeMeshes({ mesh }) {
   const { invalidate } = useThree();
-  const body = useRef(new BufferGeometry());
-  const lines = useRef(new BufferGeometry());
+  //const body = useRef(new BufferGeometry());
+  //const lines = useRef(new BufferGeometry());
+
   const [fullMesh, setFullMesh] = useState([]);
 
   useLayoutEffect(() => {
     let meshArray = [];
+    console.log(mesh);
+
     mesh.map((m) => {
+      const body = new BufferGeometry();
+      const lines = new BufferGeometry();
       // We use the three helpers to synchronise the buffer geometry with the
       // new data from the parameters
-      if (m.faces) syncFaces(body.current, m.faces);
+      if (m.faces) syncFaces(body, m.faces);
       //if (faces) syncFaces(wire.current, faces);
 
-      if (m.edges) syncLines(lines.current, m.edges);
-      else if (m.faces) syncLinesFromFaces(lines.current, body.current);
+      if (m.edges) syncLines(lines, m.edges);
+      else if (m.faces) syncLinesFromFaces(lines, body);
 
-      meshArray.push({ body: body.current, lines: lines.current });
+      const thisBody = body;
+      const thisLines = lines;
+      meshArray.push({ body: thisBody, lines: thisLines });
     });
     console.log(meshArray);
     setFullMesh(meshArray);
+    console.log(fullMesh[0] == fullMesh[1]);
     // We have configured the canvas to only refresh when there is a change,
     // the invalidate function is here to tell it to recompute
     invalidate();
@@ -35,8 +43,8 @@ export default React.memo(function ShapeMeshes({ mesh }) {
 
   useEffect(
     () => () => {
-      body.current.dispose();
-      lines.current.dispose();
+      //body.current.dispose();
+      //lines.current.dispose();
       invalidate();
     },
     [invalidate]
@@ -47,6 +55,7 @@ export default React.memo(function ShapeMeshes({ mesh }) {
       {fullMesh.map((m) => {
         return (
           <group>
+            {console.log(m.body)}
             <mesh geometry={m.body}>
               {/* the offsets are here to avoid z fighting between the mesh and the lines */}
               <meshStandardMaterial

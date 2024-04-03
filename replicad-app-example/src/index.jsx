@@ -6,11 +6,7 @@ import App from "./App.jsx";
 import "replicad-opencascadejs/src/replicad_single.wasm?url";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+root.render(<App />);
 
 // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
 // Learn more: https://vitejs.dev/guide/api-hmr.html

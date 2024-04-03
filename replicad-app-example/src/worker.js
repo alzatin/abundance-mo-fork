@@ -558,25 +558,24 @@ function generateDisplayMesh(id) {
 
     //Try extruding if there is no 3d shape
     if (geometry.mesh == undefined) {
-      console.log("mesh undefined");
+      console.log("no mesh");
       const threeDShape = geometry
         .sketchOnPlane(sketchPlane)
         .clone()
         .extrude(0.0001);
-      const threeDShape2 = geometry
-        .sketchOnPlane(sketchPlane)
-        .clone()
-        .extrude(0.0001)
-        .translate(0, 5, 0);
       return {
         faces: threeDShape.mesh(),
         edges: threeDShape.meshEdges(),
       };
     } else {
+      const threeDShape = drawCircle(17)
+        .sketchOnPlane(sketchPlane)
+        .clone()
+        .extrude(0.0001);
       return [
         {
-          faces: geometry.mesh(),
-          edges: geometry.meshEdges(),
+          faces: threeDShape.mesh(),
+          edges: threeDShape.meshEdges(),
         },
         {
           faces: geometry.mesh(),
