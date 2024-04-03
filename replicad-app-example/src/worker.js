@@ -561,19 +561,31 @@ function generateDisplayMesh(id) {
 
     //Try extruding if there is no 3d shape
     if (geometry.mesh == undefined) {
+      console.log("mesh undefined");
       const threeDShape = geometry
         .sketchOnPlane(sketchPlane)
         .clone()
         .extrude(0.0001);
+      const threeDShape2 = geometry
+        .sketchOnPlane(sketchPlane)
+        .clone()
+        .extrude(0.0001)
+        .translate(0, 5, 0);
       return {
         faces: threeDShape.mesh(),
         edges: threeDShape.meshEdges(),
       };
     } else {
-      return {
-        faces: geometry.mesh(),
-        edges: geometry.meshEdges(),
-      };
+      return [
+        {
+          faces: geometry.mesh(),
+          edges: geometry.meshEdges(),
+        },
+        {
+          faces: geometry.mesh(),
+          edges: geometry.meshEdges(),
+        },
+      ];
     }
   });
 }

@@ -46,7 +46,7 @@ export default function ReplicadApp() {
     FileSaver.saveAs(blob, "thing.step");
   };
 
-  const [mesh, setMesh] = useState(null);
+  const [mesh, setMesh] = useState({});
   const [wireMesh, setWireMesh] = useState(null);
 
   useEffect(() => {
