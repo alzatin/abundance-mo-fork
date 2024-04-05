@@ -226,7 +226,7 @@ function color(targetID, inputID, color) {
   return started.then(() => {
     library[targetID] = {
       geometry: library[inputID].geometry,
-      tags: [...library[inputID].tags],
+      tags: [color, ...library[inputID].tags],
       color: color,
     };
     return true;
@@ -564,6 +564,31 @@ function flattenRemove2DandFuse(chain) {
   return chainFuse(cleanedGeometry);
 }
 
+let colorOptions = {
+  Red: "#FF9065",
+  Orange: "#FFB458",
+  Yellow: "#FFD600",
+  Olive: "#C7DF66",
+  Teal: "#71D1C2",
+  "Light Blue": "#75DBF2",
+  Green: "#A3CE5B",
+  "Lavender ": "#CCABED",
+  Brown: "#CFAB7C",
+  Pink: "#FFB09D",
+  Sand: "#E2C66C",
+  Clay: "#C4D3AC",
+  Blue: "#91C8D5",
+  "Light Green": "#96E1BB",
+  Purple: "#ACAFDD",
+  "Light Purple": "#DFB1E8",
+  Tan: "#F5D3B6",
+  "Mauve ": "#DBADA9",
+  Grey: "#BABABA",
+  Black: "#3C3C3C",
+  White: "#FFFCF7",
+  "Keep Out": "Keep Out",
+};
+
 function generateDisplayMesh(id) {
   return started.then(() => {
     // if there's a different plane than XY sketch there
@@ -575,51 +600,53 @@ function generateDisplayMesh(id) {
     if (library[id].color != undefined) {
       sketchColor = library[id].color;
     }
+    let colorGeometry;
+    let meshArray = [];
     //Flatten the assembly to remove hierarchy
+    Object.values(colorOptions).forEach((color) => {
+      colorGeometry = extractTags(library[id], color);
 
-    const flattened = flattenAssembly(library[id]);
+      if (colorGeometry != false) {
+        console.log(color);
+        const flattened = flattenAssembly(colorGeometry);
 
-    //Here we need to extrude anything which isn't already 3D
-    var cleanedGeometry = [];
-    flattened.forEach((pieceOfGeometry) => {
-      if (pieceOfGeometry.mesh == undefined) {
-        cleanedGeometry.push(
-          pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
-        );
-      } else {
-        cleanedGeometry.push(pieceOfGeometry);
+        //Here we need to extrude anything which isn't already 3D
+        var cleanedGeometry = [];
+        flattened.forEach((pieceOfGeometry) => {
+          if (pieceOfGeometry.mesh == undefined) {
+            cleanedGeometry.push(
+              pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
+            );
+          } else {
+            cleanedGeometry.push(pieceOfGeometry);
+          }
+        });
+        let geometry = chainFuse(cleanedGeometry);
+        meshArray.push(geometry);
       }
     });
-    let geometry = chainFuse(cleanedGeometry);
-
-    //Try extruding if there is no 3d shape
-    if (geometry.mesh == undefined) {
-      const threeDShape = geometry
-        .sketchOnPlane(sketchPlane)
-        .clone()
-        .extrude(0.0001);
-      return {
-        faces: threeDShape.mesh(),
-        edges: threeDShape.meshEdges(),
-      };
-    } else {
-      const threeDShape = drawCircle(17)
-        .sketchOnPlane(sketchPlane)
-        .clone()
-        .extrude(0.0001);
-      return [
-        {
+    console.log(meshArray);
+    let finalMeshes = [];
+    meshArray.forEach((meshgeometry) => {
+      //Try extruding if there is no 3d shape
+      if (meshgeometry.mesh == undefined) {
+        const threeDShape = meshgeometry
+          .sketchOnPlane(sketchPlane)
+          .clone()
+          .extrude(0.0001);
+        return {
           faces: threeDShape.mesh(),
           edges: threeDShape.meshEdges(),
-          color: "pink",
-        },
-        {
-          faces: geometry.mesh(),
-          edges: geometry.meshEdges(),
+        };
+      } else {
+        finalMeshes.push({
+          faces: meshgeometry.mesh(),
+          edges: meshgeometry.meshEdges(),
           color: sketchColor,
-        },
-      ];
-    }
+        });
+      }
+    });
+    return finalMeshes;
   });
 }
 

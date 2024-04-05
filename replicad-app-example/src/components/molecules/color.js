@@ -176,7 +176,6 @@ export default class Color extends Atom {
           };
         }
       });
-      console.log(inputParams);
       return inputParams;
     }
   }
