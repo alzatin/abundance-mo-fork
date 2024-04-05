@@ -49,7 +49,7 @@ function circle(id, diameter) {
       geometry: [drawCircle(diameter / 2)],
       tags: [],
       plane: newPlane,
-      color: "red",
+      color: "#FF9065",
     };
     return true;
   });
@@ -60,9 +60,9 @@ function rectangle(id, x, y) {
     const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawRectangle(x, y)],
-      tags: ["#C7DF66"],
+      tags: [],
       plane: newPlane,
-      color: "red",
+      color: "#FF9065",
     };
     return true;
   });
@@ -75,7 +75,7 @@ function regularPolygon(id, radius, numberOfSides) {
       geometry: [drawPolysides(radius, numberOfSides)],
       tags: [],
       plane: newPlane,
-      color: "red",
+      color: "#FF9065",
     };
     return true;
   });
@@ -339,6 +339,33 @@ function extractBoms(inputGeometry, TAG) {
   }
 }
 
+function extractColors(inputGeometry, color) {
+  if (inputGeometry.color == color) {
+    return inputGeometry;
+  } else if (isAssembly(inputGeometry)) {
+    let geometryWithColor = [];
+    inputGeometry.geometry.forEach((subAssembly) => {
+      let extractedGeometry = extractTags(subAssembly, color);
+
+      if (extractedGeometry != false) {
+        geometryWithColor.push(extractedGeometry);
+      }
+    });
+    if (geometryWithColor.length > 0) {
+      let thethingtoreturn = {
+        geometry: geometryWithColor,
+        tags: inputGeometry.tags,
+        color: color,
+      };
+      return thethingtoreturn;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
 function extractTags(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return inputGeometry;
@@ -593,7 +620,6 @@ function generateDisplayMesh(id) {
   return started.then(() => {
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
-    let sketchColor = "red";
     if (library[id].plane != undefined) {
       sketchPlane = library[id].plane;
     }
@@ -601,7 +627,7 @@ function generateDisplayMesh(id) {
     let meshArray = [];
     //Flatten the assembly to remove hierarchy
     Object.values(colorOptions).forEach((color) => {
-      colorGeometry = extractTags(library[id], color);
+      colorGeometry = extractColors(library[id], color);
 
       if (colorGeometry != false) {
         console.log(color);
