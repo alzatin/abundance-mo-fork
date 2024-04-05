@@ -339,6 +339,7 @@ function extractBoms(inputGeometry, TAG) {
   }
 }
 
+// Functions like Extracttags() but takes color as input
 function extractColors(inputGeometry, color) {
   if (inputGeometry.color == color) {
     return inputGeometry;
@@ -625,12 +626,12 @@ function generateDisplayMesh(id) {
     }
     let colorGeometry;
     let meshArray = [];
-    //Flatten the assembly to remove hierarchy
+    // Iterate through all the color options and see what geometry matches
     Object.values(colorOptions).forEach((color) => {
       colorGeometry = extractColors(library[id], color);
 
       if (colorGeometry != false) {
-        console.log(color);
+        //Flatten the assembly to remove hierarchy
         const flattened = flattenAssembly(colorGeometry);
 
         //Here we need to extrude anything which isn't already 3D
@@ -645,11 +646,13 @@ function generateDisplayMesh(id) {
           }
         });
         let geometry = chainFuse(cleanedGeometry);
+        // Make an array that contains the color and the flattened/cleaned/fused geometry
         meshArray.push({ color: color, geometry: geometry });
       }
     });
-    console.log(meshArray);
+
     let finalMeshes = [];
+    //Iterate through the meshArray and create final meshes with faces, edges and color to pass to display
     meshArray.forEach((meshgeometry) => {
       //Try extruding if there is no 3d shape
       if (meshgeometry.geometry.mesh == undefined) {
