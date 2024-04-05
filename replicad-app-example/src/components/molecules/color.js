@@ -153,7 +153,7 @@ export default class Color extends Atom {
         };
 
         inputParams[this.uniqueID + "color"] = {
-          //value: Object.keys(this.colorOptions)[this.selectedColorIndex],
+          value: Object.keys(this.colorOptions)[this.selectedColorIndex],
           label: "Color",
           options: Object.keys(this.colorOptions),
           onChange: (value) => {

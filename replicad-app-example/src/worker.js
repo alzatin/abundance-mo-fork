@@ -60,7 +60,7 @@ function rectangle(id, x, y) {
     const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawRectangle(x, y)],
-      tags: [],
+      tags: ["#C7DF66"],
       plane: newPlane,
       color: "red",
     };
@@ -597,9 +597,6 @@ function generateDisplayMesh(id) {
     if (library[id].plane != undefined) {
       sketchPlane = library[id].plane;
     }
-    if (library[id].color != undefined) {
-      sketchColor = library[id].color;
-    }
     let colorGeometry;
     let meshArray = [];
     //Flatten the assembly to remove hierarchy
@@ -622,14 +619,14 @@ function generateDisplayMesh(id) {
           }
         });
         let geometry = chainFuse(cleanedGeometry);
-        meshArray.push(geometry);
+        meshArray.push({ color: color, geometry: geometry });
       }
     });
     console.log(meshArray);
     let finalMeshes = [];
     meshArray.forEach((meshgeometry) => {
       //Try extruding if there is no 3d shape
-      if (meshgeometry.mesh == undefined) {
+      if (meshgeometry.geometry.mesh == undefined) {
         const threeDShape = meshgeometry
           .sketchOnPlane(sketchPlane)
           .clone()
@@ -640,9 +637,9 @@ function generateDisplayMesh(id) {
         };
       } else {
         finalMeshes.push({
-          faces: meshgeometry.mesh(),
-          edges: meshgeometry.meshEdges(),
-          color: sketchColor,
+          faces: meshgeometry.geometry.mesh(),
+          edges: meshgeometry.geometry.meshEdges(),
+          color: meshgeometry.color,
         });
       }
     });
