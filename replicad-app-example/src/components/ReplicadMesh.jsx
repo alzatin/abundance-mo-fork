@@ -51,18 +51,19 @@ export default React.memo(function ShapeMeshes({ mesh }) {
     <>
       {fullMesh.map((m) => {
         return (
-          <group>
-            <mesh geometry={m.body}>
+          <group key={"group" + m.color}>
+            <mesh geometry={m.body} key={"mesh" + m.color}>
               {/* the offsets are here to avoid z fighting between the mesh and the lines */}
               <meshStandardMaterial
                 color={m.color}
+                key={"material" + m.color}
                 opacity={0.5}
                 polygonOffset
                 polygonOffsetFactor={2.0}
                 polygonOffsetUnits={1.0}
               />
             </mesh>
-            <lineSegments geometry={m.lines}>
+            <lineSegments key={"lines" + m.color} geometry={m.lines}>
               <lineBasicMaterial
                 color={"#d7d0d9"}
                 opacity={0.75}

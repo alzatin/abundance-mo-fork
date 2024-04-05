@@ -123,7 +123,6 @@ export default class Color extends Atom {
     try {
       var inputID = this.findIOValue("geometry");
       var color = Object.values(this.colorOptions)[this.selectedColorIndex];
-      console.log("Color: " + color);
       GlobalVariables.cad.color(this.uniqueID, inputID, color).then(() => {
         this.basicThreadValueProcessing();
       });
