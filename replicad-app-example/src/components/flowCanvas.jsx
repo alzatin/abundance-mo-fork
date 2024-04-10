@@ -38,7 +38,9 @@ export default memo(function FlowCanvas(props) {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
 
-      cad.generateDisplayMesh(id).then((m) => setMesh(m));
+      cad.generateDisplayMesh(id).then((m) => {
+        setMesh(m);
+      });
       // if something is connected to the output, set a wireframe mesh
       if (GlobalVariables.currentMolecule.output.value !== undefined) {
         cad

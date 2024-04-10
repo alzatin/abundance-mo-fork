@@ -4,13 +4,13 @@
 to-do-fix
 
 now:
-   
+    - i broke wireframe
+    - everything is duplicating when going to run mode and back 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
     - model some things :S
     - autosave!
     - shortcuts are broken again + need cheat sheet 
     - make catch for background click if there's no output to display 
-    - fix assemblies (make is3D function work for assemblies)
     - rendering problems when directly linking to run mode
     - BUG:assemblies self deleting sometimes after moving parts several times: haven’t found bug source
     - Cut layout should separate by height

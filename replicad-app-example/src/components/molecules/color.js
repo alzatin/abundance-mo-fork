@@ -121,18 +121,11 @@ export default class Color extends Atom {
    */
   updateValue() {
     try {
-      var inputPath = this.findIOValue("geometry");
-      const values = {
-        op: "color",
-        color:
-          this.colorOptions[
-            Object.keys(this.colorOptions)[this.selectedColorIndex]
-          ],
-        readPath: inputPath,
-        writePath: this.path,
-      };
-      this.basicThreadValueProcessing(values);
-      this.clearAlert();
+      var inputID = this.findIOValue("geometry");
+      var color = Object.values(this.colorOptions)[this.selectedColorIndex];
+      GlobalVariables.cad.color(this.uniqueID, inputID, color).then(() => {
+        this.basicThreadValueProcessing();
+      });
     } catch (err) {
       this.setAlert(err);
     }
@@ -146,6 +139,45 @@ export default class Color extends Atom {
     this.updateValue();
   }
 
+  /**
+   * Create Leva Menu Inputs - returns to ParameterEditor
+   */
+  createLevaInputs() {
+    let inputParams = {};
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        inputParams[this.uniqueID + "color"] = {
+          value: Object.keys(this.colorOptions)[this.selectedColorIndex],
+          label: "Color",
+          options: Object.keys(this.colorOptions),
+          onChange: (value) => {
+            this.changeColor(Object.keys(this.colorOptions).indexOf(value));
+            this.sendToRender();
+          },
+        };
+
+        /* Makes inputs for Io's other than geometry */
+        if (input.valueType !== "geometry") {
+          inputParams[this.uniqueID + input.name] = {
+            value: input.value,
+            label: input.name,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              input.setValue(value);
+              /** should we run updateValue too? */
+              this.sendToRender();
+            },
+          };
+        }
+      });
+      return inputParams;
+    }
+  }
   /**
    * Create a drop down to choose the color.
    */

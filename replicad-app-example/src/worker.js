@@ -38,10 +38,7 @@ function createMesh(thickness) {
     const box = drawBox(thickness);
     // This is how you get the data structure that the replica-three-helper
     // can synchronize with three BufferGeometry
-    return {
-      faces: box.mesh(),
-      edges: box.meshEdges(),
-    };
+    return [{ faces: box.mesh(), edges: box.meshEdges() }];
   });
 }
 
@@ -52,6 +49,7 @@ function circle(id, diameter) {
       geometry: [drawCircle(diameter / 2)],
       tags: [],
       plane: newPlane,
+      color: "#FF9065",
     };
     return true;
   });
@@ -64,6 +62,7 @@ function rectangle(id, x, y) {
       geometry: [drawRectangle(x, y)],
       tags: [],
       plane: newPlane,
+      color: "#FF9065",
     };
     return true;
   });
@@ -76,6 +75,7 @@ function regularPolygon(id, radius, numberOfSides) {
       geometry: [drawPolysides(radius, numberOfSides)],
       tags: [],
       plane: newPlane,
+      color: "#FF9065",
     };
     return true;
   });
@@ -95,6 +95,7 @@ function loftShapes(targetID, inputsIDs) {
       geometry: [startGeometry.loftWith([...arrayOfSketchedGeometry])],
       tags: [],
       plane: startPlane,
+      color: library[inputsIDs[0]].color,
     };
     return true;
   });
@@ -108,6 +109,7 @@ function extrude(targetID, inputID, height) {
           leaf.geometry[0].sketchOnPlane(leaf.plane).clone().extrude(height),
         ],
         tags: leaf.tags,
+        color: leaf.color,
       };
     });
     return true;
@@ -140,6 +142,7 @@ function move(targetID, inputID, x, y, z) {
         geometry: [library[inputID].geometry[0]],
         tags: [],
         plane: library[inputID].plane.translate([x, y, z]),
+        color: library[inputID].color,
       };
     }
     return true;
@@ -161,6 +164,7 @@ function rotate(targetID, inputID, x, y, z, pivot) {
           ],
           tags: leaf.tags,
           plane: leaf.plane,
+          color: leaf.color,
         };
       });
     } else {
@@ -170,6 +174,7 @@ function rotate(targetID, inputID, x, y, z, pivot) {
           geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
           tags: leaf.tags,
           plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+          color: leaf.color,
         };
       });
     }
@@ -185,6 +190,7 @@ function cut(targetID, input1ID, input2ID) {
       return {
         geometry: [leaf.geometry[0].clone().cut(cutTemplate)],
         tags: leaf.tags,
+        color: leaf.color,
       };
     });
     return true;
@@ -198,6 +204,7 @@ function intersect(targetID, input1ID, input2ID) {
       return {
         geometry: [leaf.geometry[0].clone().intersect(shapeToIntersectWith)],
         tags: leaf.tags,
+        color: leaf.color,
       };
     });
     return true;
@@ -209,10 +216,23 @@ function tag(targetID, inputID, TAG) {
     library[targetID] = {
       geometry: library[inputID].geometry,
       tags: [TAG, ...library[inputID].tags],
+      color: library[inputID].color,
     };
     return true;
   });
 }
+
+function color(targetID, inputID, color) {
+  return started.then(() => {
+    library[targetID] = {
+      geometry: library[inputID].geometry,
+      tags: [color, ...library[inputID].tags],
+      color: color,
+    };
+    return true;
+  });
+}
+
 function bom(targetID, inputID, TAG, BOM) {
   return started.then(() => {
     library[targetID] = {
@@ -231,6 +251,7 @@ function extractTag(targetID, inputID, TAG) {
       library[targetID] = {
         geometry: taggedGeometry.geometry,
         tags: taggedGeometry.tags,
+        color: taggedGeometry.color,
       };
     } else {
       throw new Error("Tag not found");
@@ -318,6 +339,35 @@ function extractBoms(inputGeometry, TAG) {
   }
 }
 
+// Functions like Extracttags() but takes color as input
+function extractColors(inputGeometry, color) {
+  if (inputGeometry.color == color) {
+    return inputGeometry;
+  } else if (isAssembly(inputGeometry)) {
+    let geometryWithColor = [];
+    inputGeometry.geometry.forEach((subAssembly) => {
+      let extractedGeometry = extractColors(subAssembly, color);
+
+      if (extractedGeometry != false) {
+        geometryWithColor.push(extractedGeometry);
+      }
+    });
+
+    if (geometryWithColor.length > 0) {
+      let thethingtoreturn = {
+        geometry: geometryWithColor,
+        tags: inputGeometry.tags,
+        color: color,
+      };
+      return thethingtoreturn;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
 function extractTags(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return inputGeometry;
@@ -334,6 +384,7 @@ function extractTags(inputGeometry, TAG) {
       let thethingtoreturn = {
         geometry: geometryWithTags,
         tags: inputGeometry.tags,
+        color: inputGeometry.color,
       };
       return thethingtoreturn;
     } else {
@@ -422,7 +473,11 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     });
     let subID = assemblyID * 10 + index + Math.random(100); // needs to be randomized?
     //returns new assembly that has been cut
-    library[subID] = { geometry: assemblyCut, tags: partToCut.tags };
+    library[subID] = {
+      geometry: assemblyCut,
+      tags: partToCut.tags,
+      color: partToCut.color,
+    };
     return library[subID];
   } else {
     // if part to cut is a single part send to cutting function with cutting parts
@@ -434,7 +489,11 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     });
     // return new cut part
     let newID = assemblyID * 10 + index;
-    library[newID] = { geometry: [partCutCopy], tags: partToCut.tags };
+    library[newID] = {
+      geometry: [partCutCopy],
+      tags: partToCut.tags,
+      color: partToCut.color,
+    };
 
     return library[newID];
   }
@@ -534,6 +593,31 @@ function flattenRemove2DandFuse(chain) {
   return chainFuse(cleanedGeometry);
 }
 
+let colorOptions = {
+  Red: "#FF9065",
+  Orange: "#FFB458",
+  Yellow: "#FFD600",
+  Olive: "#C7DF66",
+  Teal: "#71D1C2",
+  "Light Blue": "#75DBF2",
+  Green: "#A3CE5B",
+  "Lavender ": "#CCABED",
+  Brown: "#CFAB7C",
+  Pink: "#FFB09D",
+  Sand: "#E2C66C",
+  Clay: "#C4D3AC",
+  Blue: "#91C8D5",
+  "Light Green": "#96E1BB",
+  Purple: "#ACAFDD",
+  "Light Purple": "#DFB1E8",
+  Tan: "#F5D3B6",
+  "Mauve ": "#DBADA9",
+  Grey: "#BABABA",
+  Black: "#3C3C3C",
+  White: "#FFFCF7",
+  "Keep Out": "Keep Out",
+};
+
 function generateDisplayMesh(id) {
   return started.then(() => {
     // if there's a different plane than XY sketch there
@@ -541,40 +625,55 @@ function generateDisplayMesh(id) {
     if (library[id].plane != undefined) {
       sketchPlane = library[id].plane;
     }
-    //Flatten the assembly to remove hierarchy
+    let colorGeometry;
+    let meshArray = [];
+    // Iterate through all the color options and see what geometry matches
+    Object.values(colorOptions).forEach((color) => {
+      colorGeometry = extractColors(library[id], color);
 
-    const flattened = flattenAssembly(library[id]);
+      if (colorGeometry != false) {
+        //Flatten the assembly to remove hierarchy
+        const flattened = flattenAssembly(colorGeometry);
 
-    //Here we need to extrude anything which isn't already 3D
-    var cleanedGeometry = [];
-    flattened.forEach((pieceOfGeometry) => {
-      if (pieceOfGeometry.mesh == undefined) {
-        cleanedGeometry.push(
-          pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
-        );
-      } else {
-        cleanedGeometry.push(pieceOfGeometry);
+        //Here we need to extrude anything which isn't already 3D
+        var cleanedGeometry = [];
+        flattened.forEach((pieceOfGeometry) => {
+          if (pieceOfGeometry.mesh == undefined) {
+            cleanedGeometry.push(
+              pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
+            );
+          } else {
+            cleanedGeometry.push(pieceOfGeometry);
+          }
+        });
+        let geometry = chainFuse(cleanedGeometry);
+        // Make an array that contains the color and the flattened/cleaned/fused geometry
+        meshArray.push({ color: color, geometry: geometry });
       }
     });
 
-    let geometry = chainFuse(cleanedGeometry);
-
-    //Try extruding if there is no 3d shape
-    if (geometry.mesh == undefined) {
-      const threeDShape = geometry
-        .sketchOnPlane(sketchPlane)
-        .clone()
-        .extrude(0.0001);
-      return {
-        faces: threeDShape.mesh(),
-        edges: threeDShape.meshEdges(),
-      };
-    } else {
-      return {
-        faces: geometry.mesh(),
-        edges: geometry.meshEdges(),
-      };
-    }
+    let finalMeshes = [];
+    //Iterate through the meshArray and create final meshes with faces, edges and color to pass to display
+    meshArray.forEach((meshgeometry) => {
+      //Try extruding if there is no 3d shape
+      if (meshgeometry.geometry.mesh == undefined) {
+        const threeDShape = meshgeometry
+          .sketchOnPlane(sketchPlane)
+          .clone()
+          .extrude(0.0001);
+        return {
+          faces: threeDShape.mesh(),
+          edges: threeDShape.meshEdges(),
+        };
+      } else {
+        finalMeshes.push({
+          faces: meshgeometry.geometry.mesh(),
+          edges: meshgeometry.geometry.meshEdges(),
+          color: meshgeometry.color,
+        });
+      }
+    });
+    return finalMeshes;
   });
 }
 
@@ -584,6 +683,7 @@ expose({
   createBlob,
   createMesh,
   circle,
+  color,
   downSVG,
   regularPolygon,
   rectangle,
