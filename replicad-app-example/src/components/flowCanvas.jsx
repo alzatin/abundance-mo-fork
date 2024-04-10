@@ -43,7 +43,7 @@ export default memo(function FlowCanvas(props) {
         setMesh(m);
       });
       // if something is connected to the output, set a wireframe mesh
-      if (GlobalVariables.currentMolecule.output.value !== undefined) {
+      if (typeof GlobalVariables.currentMolecule.output.value == "number") {
         cad
           .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
           .then((w) => setWireMesh(w));
