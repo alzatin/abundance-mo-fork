@@ -72,28 +72,28 @@ export default (function ParamsEditor({
     {
       grid: {
         value: true,
-        label: "Show Grid",
+        label: "Grid",
         onChange: (value) => {
           setGrid(value);
         },
       },
       axes: {
         value: true,
-        label: "Show Axes",
+        label: "Axes",
         onChange: (value) => {
           setAxes(value);
         },
       },
       wire: {
         value: true,
-        label: "Show Output Wire",
+        label: "Output Wire",
         onChange: (value) => {
           setWire(value);
         },
       },
       solid: {
         value: true,
-        label: "Show Solid",
+        label: "Solid",
         onChange: (value) => {
           setSolid(value);
         },
