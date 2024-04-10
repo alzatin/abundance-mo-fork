@@ -30,6 +30,7 @@ export default memo(function FlowCanvas(props) {
   let wireMesh = props.displayProps.wireMesh;
 
   let activeAtom = props.props.activeAtom;
+  let shortCuts = props.props.shortCuts;
 
   /** State for github molecule search input */
   const [searchingGitHub, setSearchingGitHub] = useState(false);
@@ -107,6 +108,8 @@ export default memo(function FlowCanvas(props) {
     //     e.preventDefault()
     // }
 
+    console.log(e.key);
+
     if (e.key == "Backspace" || e.key == "Delete") {
       GlobalVariables.atomsSelected = [];
       //Adds items to the  array that we will use to delete
@@ -121,29 +124,6 @@ export default memo(function FlowCanvas(props) {
         );
       });
     }
-
-    /**
-     * Object containing letters and values used for keyboard shortcuts
-     * @type {object?}
-     */
-    var shortCuts = {
-      a: "Assembly",
-      b: "Loft", //>
-      c: "Copy",
-      d: "Difference",
-      e: "Extrude",
-      g: "GitHub", // Not working yet
-      i: "Input",
-      j: "Translate",
-      k: "Rectangle",
-      l: "Circle",
-      m: "Molecule",
-      s: "Save",
-      v: "Paste",
-      x: "Equation",
-      y: "Code", //is there a more natural code letter? can't seem to prevent command t new tab behavior
-      z: "Undo", //saving this letter
-    };
 
     //Copy /paste listeners
     if (e.key == "Control" || e.key == "Meta") {
@@ -170,6 +150,7 @@ export default memo(function FlowCanvas(props) {
       if (e.key == "g") {
         setSearchingGitHub(true);
       } else {
+        console.log(shortCuts[e.key]);
         GlobalVariables.currentMolecule.placeAtom(
           {
             parentMolecule: GlobalVariables.currentMolecule,

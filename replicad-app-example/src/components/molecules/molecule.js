@@ -330,10 +330,10 @@ export default class Molecule extends Atom {
     this.output.ready = true;
 
     //this.awaitingPropagationFlag = true;
-
     //If this molecule is selected, send the updated value to the renderer
-
-    //this.sendToRender();
+    if (this.atomType == "GitHubMolecule") {
+      this.sendToRender();
+    }
   }
 
   /**
