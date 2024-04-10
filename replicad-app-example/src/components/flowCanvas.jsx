@@ -129,7 +129,7 @@ export default memo(function FlowCanvas(props) {
     if (e.key == "Control" || e.key == "Meta") {
       GlobalVariables.ctrlDown = true;
     }
-    console.log(shortCuts);
+
     if (GlobalVariables.ctrlDown && shortCuts.hasOwnProperty([e.key])) {
       e.preventDefault();
       //Copy & Paste

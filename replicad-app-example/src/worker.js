@@ -185,6 +185,8 @@ function rotate(targetID, inputID, x, y, z, pivot) {
 
 function cut(targetID, input1ID, input2ID) {
   return started.then(() => {
+    console.log(library[input1ID]);
+    console.log(library[input2ID]);
     library[targetID] = actOnLeafs(library[input1ID], (leaf) => {
       const cutTemplate = flattenRemove2DandFuse(library[input2ID]);
       return {

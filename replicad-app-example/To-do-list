@@ -4,26 +4,21 @@
 to-do-fix
 
 now:
+    -  PROPAGATION BUG ! (recreate with github molecules in stool )
     - BUG:move for 3d broken?
     - BUG:molecules being sent to render a lot of times, not sure why so they get rendered with the incorrect input values before the values get propagated and updated 
-    - BUG:i think there's a problem with how difference is working on assemblies 
     - make assembly work for sketch, (to fuse sketch together before extruding)
     - need way to label molecule inside project even if you don't plan to export to github
     - everything is duplicating when going to run mode and back 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
     - model some things :S
     - autosave!
-    - shortcuts are broken again + need cheat sheet 
     - make catch for background click if there's no output to display 
     - rendering problems when directly linking to run mode
-    - BUG:assemblies self deleting sometimes after moving parts several times: haven’t found bug source
     - Cut layout should separate by height
-    - Can colors be implemented with tags with three js materials
-    - Bug : LEVA input error ? - inputs get renamed or not updated, specially when theres 3 or more
+    - Bug : LEVA input error ? 
     - export molecule to Github
     - fix project tags for new project
-    - make wire only show if connected to an output
-    - separate big wire from little wire
     - generate ID function global , fix for cut assemblies ? 
     - keep out
 
