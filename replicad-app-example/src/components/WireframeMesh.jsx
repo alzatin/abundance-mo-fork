@@ -42,7 +42,7 @@ export default React.memo(function ShapeMeshes({ mesh }) {
     <>
       {fullMesh.map((m) => {
         return (
-          <group>
+          <group key={"groupwire" + m.color}>
             <lineSegments geometry={m.lines}>
               <lineBasicMaterial color={"#3c5a6e"} opacity={".75"} />
             </lineSegments>
