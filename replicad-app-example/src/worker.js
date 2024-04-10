@@ -109,6 +109,7 @@ function extrude(targetID, inputID, height) {
           leaf.geometry[0].sketchOnPlane(leaf.plane).clone().extrude(height),
         ],
         tags: leaf.tags,
+        plane: leaf.plane,
         color: leaf.color,
       };
     });
@@ -134,7 +135,9 @@ function move(targetID, inputID, x, y, z) {
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         return {
           geometry: [leaf.geometry[0].clone().translate(x, y, z)],
+          plane: leaf.plane,
           tags: leaf.tags,
+          color: library[inputID].color,
         };
       });
     } else {
