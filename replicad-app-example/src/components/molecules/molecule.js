@@ -545,9 +545,10 @@ export default class Molecule extends Atom {
       //If we have found this molecule's output atom use it to update the path here
       if (atom.atomType == "Output") {
         atom.loadTree();
-        if (this.output) {
+        /* if (this.output) {
+          console.log("this runs initially")
           this.output.value = atom.value;
-        }
+        }*/
       }
       //If we have found an atom with nothing connected to it
       if (atom.output) {
@@ -686,7 +687,11 @@ export default class Molecule extends Atom {
   sendToRender() {
     //Send code to JSxCAD to render
     try {
-      GlobalVariables.writeToDisplay(this.output.value);
+      if (typeof this.output.value == "number") {
+        GlobalVariables.writeToDisplay(this.output.value);
+      } else {
+        throw "No output geometry to render ";
+      }
     } catch (err) {
       this.setAlert(err);
     }
