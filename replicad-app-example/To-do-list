@@ -4,6 +4,9 @@
 to-do-fix
 
 now:
+    - move for 3d broken?
+    - add rotate to shortuts
+    - make assembly work for sketch, (to fuse sketch together before extruding)
     - need way to label molecule inside project even if you don't plan to export to github
     - everything is duplicating when going to run mode and back 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
@@ -15,7 +18,7 @@ now:
     - BUG:assemblies self deleting sometimes after moving parts several times: haven’t found bug source
     - Cut layout should separate by height
     - Can colors be implemented with tags with three js materials
-    - Bug : LEVA input error ?
+    - Bug : LEVA input error ? - inputs get renamed or not updated, specially when theres 3 or more
     - export molecule to Github
     - fix project tags for new project
     - make wire only show if connected to an output
