@@ -86,7 +86,7 @@ export default (function ParamsEditor({
       },
       wire: {
         value: true,
-        label: "Show Wire",
+        label: "Show Output Wire",
         onChange: (value) => {
           setWire(value);
         },

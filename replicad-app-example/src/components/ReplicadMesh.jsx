@@ -7,7 +7,7 @@ import {
   syncLinesFromFaces,
 } from "replicad-threejs-helper";
 
-export default React.memo(function ShapeMeshes({ mesh }) {
+export default React.memo(function ShapeMeshes({ mesh, isSolid }) {
   const { invalidate } = useThree();
   //const body = useRef(new BufferGeometry());
   //const lines = useRef(new BufferGeometry());
@@ -52,22 +52,28 @@ export default React.memo(function ShapeMeshes({ mesh }) {
       {fullMesh.map((m) => {
         return (
           <group key={"group" + m.color}>
-            <mesh geometry={m.body} key={"mesh" + m.color}>
-              {/* the offsets are here to avoid z fighting between the mesh and the lines */}
-              <meshStandardMaterial
-                color={m.color}
-                key={"material" + m.color}
-                opacity={0.5}
-                polygonOffset
-                polygonOffsetFactor={2.0}
-                polygonOffsetUnits={1.0}
-              />
-            </mesh>
-            <lineSegments key={"lines" + m.color} geometry={m.lines}>
+            {isSolid ? (
+              <mesh geometry={m.body} key={"mesh" + m.color}>
+                {/*the offsets are here to avoid z fighting between the mesh and the lines*/}
+                <meshStandardMaterial
+                  color={m.color}
+                  key={"material" + m.color}
+                  opacity={0.5}
+                  polygonOffset
+                  polygonOffsetFactor={2.0}
+                  polygonOffsetUnits={1.0}
+                />
+              </mesh>
+            ) : null}
+            <lineSegments
+              key={"lines" + m.color}
+              geometry={m.lines}
+            ></lineSegments>
+            <lineSegments key={"linesmesh" + m.color} geometry={m.lines}>
               <lineBasicMaterial
-                color={"#d7d0d9"}
-                opacity={0.75}
-                linewidth={4}
+                color={"#3c5a6e"}
+                opacity={"1"}
+                linewidth={8}
               />
             </lineSegments>
           </group>

@@ -13,7 +13,6 @@ export default React.memo(function ShapeMeshes({ mesh }) {
   const [fullMesh, setFullMesh] = useState([]);
 
   useLayoutEffect(() => {
-    console.log(mesh);
     let meshArray = [];
     mesh.map((m) => {
       const wire = new WireframeGeometry();

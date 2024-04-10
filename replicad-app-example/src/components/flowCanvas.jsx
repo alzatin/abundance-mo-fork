@@ -39,7 +39,6 @@ export default memo(function FlowCanvas(props) {
       console.log("write to display running " + id);
 
       cad.generateDisplayMesh(id).then((m) => {
-        console.log(m);
         setMesh(m);
       });
       // if something is connected to the output, set a wireframe mesh
