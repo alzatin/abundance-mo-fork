@@ -346,12 +346,13 @@ function extractColors(inputGeometry, color) {
   } else if (isAssembly(inputGeometry)) {
     let geometryWithColor = [];
     inputGeometry.geometry.forEach((subAssembly) => {
-      let extractedGeometry = extractTags(subAssembly, color);
+      let extractedGeometry = extractColors(subAssembly, color);
 
       if (extractedGeometry != false) {
         geometryWithColor.push(extractedGeometry);
       }
     });
+    console.log(geometryWithColor);
     if (geometryWithColor.length > 0) {
       let thethingtoreturn = {
         geometry: geometryWithColor,
