@@ -42,6 +42,29 @@ function CreateMode(props) {
   /** State for top level molecule */
   const [currentMoleculeTop, setTop] = useState(false);
 
+  /**
+   * Object containing letters and values used for keyboard shortcuts
+   * @type {object?}
+   */
+  var shortCuts = {
+    a: "Assembly",
+    b: "Loft", //>
+    c: "Copy",
+    d: "Difference",
+    e: "Extrude",
+    g: "GitHub", // Not working yet
+    i: "Input",
+    j: "Translate",
+    k: "Rectangle",
+    l: "Circle",
+    m: "Molecule",
+    s: "Save",
+    v: "Paste",
+    x: "Equation",
+    y: "Code", //is there a more natural code letter? can't seem to prevent command t new tab behavior
+    z: "Undo", //saving this letter
+  };
+
   /** Checks if activeAtom is topLevel to render goUp button */
   useEffect(() => {
     if (activeAtom && activeAtom.atomType == "Molecule") {
@@ -292,6 +315,26 @@ function CreateMode(props) {
             />
           </div>
           <ToggleRunCreate run={false} />
+          <button
+            className="round-button"
+            style={{
+              width: "20px",
+              height: "20px",
+              borderRadius: "50%",
+              position: "absolute",
+              top: "44%",
+              right: "1%",
+              opacity: "0.5",
+              transform: "translate(-50%, -50%)",
+            }}
+            onClick={() => {
+              console.log(
+                Object.entries(shortCuts)
+                  .map(([key, value]) => `${key}: ${value}`)
+                  .join("\n")
+              );
+            }}
+          ></button>
           <TopMenu
             authorizedUserOcto={authorizedUserOcto}
             savePopUp={savePopUp}
@@ -311,6 +354,7 @@ function CreateMode(props) {
               saveProject: saveProject,
               setSaveState: setSaveState,
               setTop: setTop,
+              shortCuts: shortCuts,
             }}
             displayProps={{
               mesh: mesh,
