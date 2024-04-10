@@ -352,7 +352,7 @@ function extractColors(inputGeometry, color) {
         geometryWithColor.push(extractedGeometry);
       }
     });
-    console.log(geometryWithColor);
+
     if (geometryWithColor.length > 0) {
       let thethingtoreturn = {
         geometry: geometryWithColor,

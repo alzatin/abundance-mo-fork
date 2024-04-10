@@ -63,9 +63,7 @@ export default memo(function LowerHalf(props) {
               gridParam={props.props.gridParam}
               axesParam={props.props.axesParam}
             >
-              {props.props.wireParam ? (
-                <WireframeMesh edges={wireMesh.edges} faces={wireMesh.faces} />
-              ) : null}
+              {props.props.wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
               {props.props.solidParam ? <ReplicadMesh mesh={mesh} /> : null}
             </ThreeContext>
           ) : (
