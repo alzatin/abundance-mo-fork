@@ -7,8 +7,6 @@ now:
     - BUG:move for 3d broken?
     - BUG:molecules being sent to render a lot of times, not sure why so they get rendered with the incorrect input values before the values get propagated and updated 
     - BUG:i think there's a problem with how difference is working on assemblies 
-    - LEVA BUG :github molecule named the same change each other inputs on leva
-    - add rotate to shortuts
     - make assembly work for sketch, (to fuse sketch together before extruding)
     - need way to label molecule inside project even if you don't plan to export to github
     - everything is duplicating when going to run mode and back 

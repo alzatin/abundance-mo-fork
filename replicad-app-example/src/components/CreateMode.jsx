@@ -55,7 +55,8 @@ function CreateMode(props) {
     g: "GitHub", // Not working yet
     i: "Input",
     j: "Translate",
-    k: "Rectangle",
+    r: "Rotate",
+    u: "Rectangle",
     l: "Circle",
     m: "Molecule",
     s: "Save",
