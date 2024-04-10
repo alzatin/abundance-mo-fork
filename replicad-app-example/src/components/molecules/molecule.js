@@ -256,7 +256,7 @@ export default class Molecule extends Atom {
    */
   updateValue(targetName) {
     //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
-
+    console.log("when is updatevalue in molecule running?");
     //Tell the correct input to update
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
@@ -333,7 +333,7 @@ export default class Molecule extends Atom {
 
     //If this molecule is selected, send the updated value to the renderer
 
-    //this.sendToRender();
+    this.sendToRender();
   }
 
   /**
@@ -686,6 +686,7 @@ export default class Molecule extends Atom {
   sendToRender() {
     //Send code to JSxCAD to render
     try {
+      console.log(this.output.value);
       GlobalVariables.writeToDisplay(this.output.value);
     } catch (err) {
       this.setAlert(err);
