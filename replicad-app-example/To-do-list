@@ -4,7 +4,7 @@
 to-do-fix
 
 now:
-    - i broke wireframe
+    - need way to label molecule inside project even if you don't plan to export to github
     - everything is duplicating when going to run mode and back 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
     - model some things :S
@@ -26,6 +26,7 @@ now:
 
 mid :
 
+    - github search needs css help
     - hull (in april? waiting for replicad)
     - tag drop down for all available tags- warning for no tag found
     - BOM summary / fix inputs
