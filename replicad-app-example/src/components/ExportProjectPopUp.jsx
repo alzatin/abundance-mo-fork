@@ -1,0 +1,284 @@
+import { licenses } from "./js/licenseOptions";
+
+//Replaces the loaded projects if the user clicks on new project button
+const ExportProjectPopUp = () => {
+  const keys_ar = [];
+  let licenses = licenses || {};
+  Object.keys(licenses).forEach((key) => {
+    keys_ar.push(key);
+  });
+  const projectRef = useRef();
+  const projectTagsRef = useRef();
+  const projectDescriptionRef = useRef();
+  const [pending, setPending] = useState(false); // useFormStatus(); in the future
+  const [newProjectBar, setNewProjectBar] = useState(0);
+  // Create a new project and navigate to new project create page
+  const createProject = async ([name, tags, description]) => {
+    //Load a blank project
+    GlobalVariables.topLevelMolecule = new Molecule({
+      x: 0,
+      y: 0,
+      topLevel: true,
+      name: name,
+      atomType: "Molecule",
+      uniqueID: GlobalVariables.generateUniqueID(),
+    });
+
+    GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+
+    await authorizedUserOcto
+      .request("POST /user/repos", {
+        name: name,
+        description: description,
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      })
+      .catch((err) => {
+        window.alert(
+          "Error creating project. That name might be taken already. Please try again with a different name."
+        );
+        setPending(false);
+      })
+      .then((result) => {
+        setNewProjectBar(10);
+        //Once we have created the new repo we need to create a file within it to store the project in
+        currentRepoName = result.data.name;
+        currentUser = GlobalVariables.currentUser;
+        GlobalVariables.currentRepo = result.data;
+
+        var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
+        jsonRepOfProject.filetypeVersion = 1;
+        jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
+        const projectContent = window.btoa(
+          JSON.stringify(jsonRepOfProject, null, 4)
+        );
+
+        authorizedUserOcto.rest.repos
+          .createOrUpdateFileContents({
+            owner: currentUser,
+            repo: currentRepoName,
+            path: "project.maslowcreate",
+            message: "initialize repo",
+            content: projectContent,
+          })
+          .then((result) => {
+            setNewProjectBar(20);
+            //Then create the BOM file
+            var content = window.btoa(bomHeader); // create a file with just the header in it and base64 encode it
+            authorizedUserOcto.rest.repos
+              .createOrUpdateFileContents({
+                owner: currentUser,
+                repo: currentRepoName,
+                path: "BillOfMaterials.md",
+                message: "initialize BOM",
+                content: content,
+              })
+              .then(() => {
+                setNewProjectBar(30);
+                //Then create the README file
+                content = window.btoa(readmeHeader); // create a file with just the word "init" in it and base64 encode it
+                authorizedUserOcto.rest.repos
+                  .createOrUpdateFileContents({
+                    owner: currentUser,
+                    repo: currentRepoName,
+                    path: "README.md",
+                    message: "initialize README",
+                    content: content,
+                  })
+                  .then(() => {
+                    setNewProjectBar(40);
+                    authorizedUserOcto.rest.repos
+                      .createOrUpdateFileContents({
+                        owner: currentUser,
+                        repo: currentRepoName,
+                        path: "project.svg",
+                        message: "SVG Picture",
+                        content: "",
+                      })
+                      .then(() => {
+                        setNewProjectBar(50);
+                        authorizedUserOcto.rest.repos
+                          .createOrUpdateFileContents({
+                            owner: currentUser,
+                            repo: currentRepoName,
+                            path: ".gitattributes",
+                            message: "Create gitattributes",
+                            content: window.btoa("data binary"),
+                          })
+                          .then(() => {
+                            setNewProjectBar(60);
+                            authorizedUserOcto.rest.repos
+                              .createOrUpdateFileContents({
+                                owner: currentUser,
+                                repo: currentRepoName,
+                                path: "data.json",
+                                message: "Data file",
+                                content: "",
+                              })
+                              .then(() => {
+                                setNewProjectBar(90);
+                                let licenseText = ""; // ?
+                                authorizedUserOcto.rest.repos
+                                  .createOrUpdateFileContents({
+                                    owner: currentUser,
+                                    repo: currentRepoName,
+                                    path: "LICENSE.txt",
+                                    message: "Establish license",
+                                    content: window.btoa(licenseText),
+                                  })
+                                  .then(() => {
+                                    navigate(
+                                      `/${GlobalVariables.currentRepo.id}`
+                                    );
+                                  });
+                              });
+                          });
+                      });
+                  });
+              });
+          });
+
+        //Update the project topics
+        authorizedUserOcto.rest.repos.replaceAllTopics({
+          owner: currentUser,
+          repo: currentRepoName,
+          names: ["maslowcreate", "maslowcreate-project"],
+          s: {
+            accept: "application/vnd.github.mercy-preview+json",
+          },
+        });
+      });
+  };
+
+  /**
+   * Export a molecule as a new github project.
+   */
+  const exportCurrentMoleculeToGithub = async function (molecule) {
+    console.log(globalvariables.currentMolecule);
+    console.log(globalvariables.currentRepo);
+    //Get name and description
+    var name = molecule.name;
+    var description = "A stand alone molecule exported from Maslow Create";
+
+    //Create a new repo
+    authorizedUserOcto.repos
+      .createForAuthenticatedUser({
+        name: name,
+        description: description,
+      })
+      .then((result) => {
+        //Once we have created the new repo we need to create a file within it to store the project in
+        var repoName = result.data.name;
+        var id = result.data.id;
+        var path = "project.maslowcreate";
+        var content = window.btoa("init"); // create a file with just the word "init" in it and base64 encode it
+        octokit.repos
+          .createOrUpdateFileContents({
+            owner: currentUser,
+            repo: repoName,
+            path: path,
+            message: "initialize repo",
+            content: content,
+          })
+          .then(() => {
+            //Save the molecule into the newly created repo
+
+            var path = "project.maslowcreate";
+
+            molecule.topLevel = true; //force the molecule to export in the long form as if it were the top level molecule
+            var content = window.btoa(
+              JSON.stringify(molecule.serialize({ molecules: [] }), null, 4)
+            ); //Convert the passed molecule object to a JSON string and then convert it to base64 encoding
+
+            //Get the SHA for the file
+            octokit.repos
+              .getContent({
+                owner: currentUser,
+                repo: repoName,
+                path: path,
+              })
+              .then((result) => {
+                var sha = result.data.sha;
+
+                //Save the repo to the file
+                octokit.repos
+                  .updateFile({
+                    owner: currentUser,
+                    repo: repoName,
+                    path: path,
+                    message: "export Molecule",
+                    content: content,
+                    sha: sha,
+                  })
+                  .then(() => {
+                    //Replace the existing molecule now that we just exported
+                    molecule.replaceThisMoleculeWithGithub(id);
+                  });
+              });
+          });
+
+        //Update the project topics
+        octokit.repos.replaceTopics({
+          owner: currentUser,
+          repo: repoName,
+          names: ["maslowcreate", "maslowcreate-molecule"],
+          headers: {
+            accept: "application/vnd.github.mercy-preview+json",
+          },
+        });
+      });
+  };
+
+  /* Handles form submission for create new project form */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPending(true);
+    const projectName = projectRef.current.value;
+    const projectTags = projectTagsRef.current.value;
+    const projectDescription = projectDescriptionRef.current.value;
+    createProject([projectName, projectTags, projectDescription]);
+  };
+  return (
+    <>
+      <div className="login-page">
+        <div className="form animate fadeInUp one">
+          <form
+            onSubmit={(e) => {
+              handleSubmit(e);
+            }}
+          >
+            <input
+              name="Project Name"
+              placeholder="Enter your project name"
+              ref={projectRef}
+            />
+            <input
+              name="Project Tags"
+              ref={projectTagsRef}
+              placeholder="Project Tags"
+            />
+            <select id="license-options">
+              {keys_ar.map((opt) => {
+                return (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                );
+              })}
+            </select>
+            <input
+              placeholder="Project Description"
+              ref={projectDescriptionRef}
+            />
+            <button disabled={pending} type="submit">
+              {pending ? newProjectBar + "%" : "Submit"}
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default ExportProjectPopUp;

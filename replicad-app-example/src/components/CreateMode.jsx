@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 import { compile } from "mathjs";
 import globalvariables from "./js/globalvariables.js";
+import ExportProjectPopUp from "./exportProjectPopUp.jsx";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -38,6 +39,7 @@ function CreateMode(props) {
   /** State for save progress bar */
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
+  const [exportPopUp, setExportPopUp] = useState(false);
 
   /** State for top level molecule */
   const [currentMoleculeTop, setTop] = useState(false);
@@ -315,6 +317,7 @@ function CreateMode(props) {
               alt="logo"
             />
           </div>
+          {exportPopUp ? <ExportProjectPopUp /> : null}
           <ToggleRunCreate run={false} />
           <button
             className="round-button"
@@ -341,6 +344,7 @@ function CreateMode(props) {
             savePopUp={savePopUp}
             setSavePopUp={setSavePopUp}
             saveProject={saveProject}
+            setExportPopUp={setExportPopUp}
             saveState={saveState}
             setSaveState={setSaveState}
             currentMoleculeTop={currentMoleculeTop}
