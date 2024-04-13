@@ -7,7 +7,6 @@ import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
 import ParamsEditor from "./ParameterEditor.jsx";
 import { BOMEntry } from "./js/BOM.js";
-
 import {
   BrowserRouter as Router,
   useParams,
@@ -15,7 +14,7 @@ import {
 } from "react-router-dom";
 import { compile } from "mathjs";
 import globalvariables from "./js/globalvariables.js";
-import ExportProjectPopUp from "./exportProjectPopUp.jsx";
+import ExportPopUp from "./exportProjectPopUp.jsx";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -225,7 +224,6 @@ function CreateMode(props) {
 
     var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
     jsonRepOfProject.filetypeVersion = 1;
-    jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
     const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
     if (activeAtom.output) {
       compileBom().then((result) => {
@@ -317,7 +315,9 @@ function CreateMode(props) {
               alt="logo"
             />
           </div>
-          {exportPopUp ? <ExportProjectPopUp /> : null}
+          {exportPopUp ? (
+            <ExportPopUp authorizedUserOcto={authorizedUserOcto} />
+          ) : null}
           <ToggleRunCreate run={false} />
           <button
             className="round-button"

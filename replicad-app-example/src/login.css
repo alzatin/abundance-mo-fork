@@ -63,6 +63,12 @@
   cursor: pointer;
 }
 
+.export-div {
+  position: absolute;
+  top: 30%;
+  left: 20%;
+}
+
 .pullDiv {
   display: flex;
   margin-top: 10px;

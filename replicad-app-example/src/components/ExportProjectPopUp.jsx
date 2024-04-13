@@ -1,28 +1,49 @@
 import { licenses } from "./js/licenseOptions";
+import React, { memo, useEffect, useState, useRef } from "react";
+import GlobalVariables from "./js/globalvariables.js";
+
+/**
+ * The name of the current repo.
+ * @type {string}
+ */
+var currentRepoName = null;
+/**
+ * The name of the current user.
+ * @type {string}
+ */
+var currentUser = null;
 
 //Replaces the loaded projects if the user clicks on new project button
-const ExportProjectPopUp = () => {
+const ExportPopUp = (props) => {
   const keys_ar = [];
-  let licenses = licenses || {};
-  Object.keys(licenses).forEach((key) => {
-    keys_ar.push(key);
-  });
+  //let licenses = licenses || {};
+  //Object.keys(licenses).forEach((key) => {
+  //  keys_ar.push(key);
+  //});
   const projectRef = useRef();
   const projectTagsRef = useRef();
   const projectDescriptionRef = useRef();
   const [pending, setPending] = useState(false); // useFormStatus(); in the future
   const [newProjectBar, setNewProjectBar] = useState(0);
+
+  const authorizedUserOcto = props.authorizedUserOcto;
   // Create a new project and navigate to new project create page
-  const createProject = async ([name, tags, description]) => {
-    //Load a blank project
-    GlobalVariables.topLevelMolecule = new Molecule({
-      x: 0,
-      y: 0,
-      topLevel: true,
-      name: name,
-      atomType: "Molecule",
-      uniqueID: GlobalVariables.generateUniqueID(),
-    });
+  const createProject = async ([name, tags, description], molecule) => {
+    // if a molecule is passed to this function then we are exporting a molecule to a new project
+    if (molecule) {
+      GlobalVariables.topLevelMolecule = molecule;
+      molecule.topLevel = true; //force the molecule to export in the long form as if it were the top level molecule
+    } else {
+      //Load a blank project
+      GlobalVariables.topLevelMolecule = new Molecule({
+        x: 0,
+        y: 0,
+        topLevel: true,
+        name: name,
+        atomType: "Molecule",
+        uniqueID: GlobalVariables.generateUniqueID(),
+      });
+    }
 
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
 
@@ -49,7 +70,6 @@ const ExportProjectPopUp = () => {
 
         var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
         jsonRepOfProject.filetypeVersion = 1;
-        jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
         const projectContent = window.btoa(
           JSON.stringify(jsonRepOfProject, null, 4)
         );
@@ -237,11 +257,14 @@ const ExportProjectPopUp = () => {
     const projectName = projectRef.current.value;
     const projectTags = projectTagsRef.current.value;
     const projectDescription = projectDescriptionRef.current.value;
-    createProject([projectName, projectTags, projectDescription]);
+    createProject(
+      [projectName, projectTags, projectDescription],
+      GlobalVariables.currentMolecule
+    );
   };
   return (
     <>
-      <div className="login-page">
+      <div className="login-page export-div">
         <div className="form animate fadeInUp one">
           <form
             onSubmit={(e) => {
@@ -250,7 +273,7 @@ const ExportProjectPopUp = () => {
           >
             <input
               name="Project Name"
-              placeholder="Enter your project name"
+              placeholder="Export this Molecule to Github"
               ref={projectRef}
             />
             <input
@@ -258,7 +281,7 @@ const ExportProjectPopUp = () => {
               ref={projectTagsRef}
               placeholder="Project Tags"
             />
-            <select id="license-options">
+            {/*<select id="license-options">
               {keys_ar.map((opt) => {
                 return (
                   <option key={opt} value={opt}>
@@ -266,7 +289,7 @@ const ExportProjectPopUp = () => {
                   </option>
                 );
               })}
-            </select>
+            </select>*/}
             <input
               placeholder="Project Description"
               ref={projectDescriptionRef}
@@ -281,4 +304,4 @@ const ExportProjectPopUp = () => {
   );
 };
 
-export default ExportProjectPopUp;
+export default ExportPopUp;
