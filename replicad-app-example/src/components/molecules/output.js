@@ -76,8 +76,16 @@ export default class Output extends Atom {
   updateValue() {
     if (this.inputs.every((x) => x.ready)) {
       this.decreaseToProcessCountByOne();
-      this.path = this.findIOValue("number or geometry");
-      this.value = this.path;
+      console.log(this.inputs);
+      try {
+        var inputID = this.findIOValue("number or geometry");
+        console.log(inputID);
+        GlobalVariables.cad.output(this.uniqueID, inputID).then(() => {
+          this.basicThreadValueProcessing();
+        });
+      } catch (err) {
+        this.setAlert(err);
+      }
       //Propagate passes the updated value on while parent.updateValue is called when one of the molecule inputs changes
       this.parent.propagate();
     }
@@ -89,7 +97,7 @@ export default class Output extends Atom {
   sendToRender() {
     //Send code to JSxCAD to render
     try {
-      GlobalVariables.writeToDisplay(this.value);
+      GlobalVariables.writeToDisplay(this.uniqueID);
     } catch (err) {
       this.setAlert(err);
     }

@@ -740,6 +740,7 @@ export default class Atom {
    * @param {string} ioName - The name of the target attachment point.
    */
   findIOValue(ioName) {
+    console.log(ioName);
     ioName = ioName.split("~").join("");
     var ioValue = null;
 

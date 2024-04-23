@@ -110,17 +110,6 @@ export default class Constant extends Atom {
   }
 
   /**
-   * Starts propagation from this atom if it is not waiting for anything up stream.
-   */
-  beginPropagation() {
-    //Check to see if a value already exists. Generate it if it doesn't.
-    if (!GlobalVariables.availablePaths.includes(this.path)) {
-      //Triggers inputs with nothing connected to begin propagation
-      this.updateValue();
-    }
-  }
-
-  /**
    * Sets all the input and output values to match their associated atoms.
    */
   loadTree() {
@@ -135,27 +124,6 @@ export default class Constant extends Atom {
     if (this.evolve) {
       callback(this);
     }
-  }
-
-  /**
-   * Add the value to be saved to the object saved for this molecule.
-   */
-  serialize(values) {
-    //Save the IO value to the serial stream
-    var valuesObj = super.serialize(values);
-
-    valuesObj.ioValues = [
-      {
-        name: "number",
-        ioValue: this.output.getValue(),
-      },
-    ];
-
-    valuesObj.evolve = this.evolve;
-    valuesObj.min = this.min;
-    valuesObj.max = this.max;
-
-    return valuesObj;
   }
 
   /**
