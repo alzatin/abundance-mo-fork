@@ -111,15 +111,6 @@ export default class Output extends Atom {
   }
 
   /**
-   * Sets all the input and output values to match their associated atoms. In this case it sets the path of this and it's parent to be correct.
-   */
-  loadTree() {
-    this.path = this.inputs[0].loadTree();
-    this.value = this.inputs[0].uniqueID;
-    return this.path;
-  }
-
-  /**
    * Override super delete function to prevent output from being deleted
    */
   deleteNode() {}
