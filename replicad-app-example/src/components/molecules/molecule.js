@@ -256,30 +256,37 @@ export default class Molecule extends Atom {
    */
   updateValue(targetName) {
     //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
-
-    console.log("molecule update value");
-    console.log(this.name);
-    //Tell the correct input to update
+    console.log(this.uniqueID);
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
       if (atom.atomType == "Input" && atom.name == targetName) {
         atom.updateValue(); //Tell that input to update it's value
       }
     });
+
+    try {
+      let outputID = this.readOutputID();
+      console.log(outputID);
+      GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
+        this.basicThreadValueProcessing();
+      });
+    } catch (err) {
+      this.setAlert(err);
+    }
   }
 
   /**
    * Reads the path of this molecule's output atom
    */
-  readOutputAtomPath() {
-    var returnPath = "";
+  readOutputID() {
+    var returnOutputID = "";
     this.nodesOnTheScreen.forEach((atom) => {
       //If we have found this molecule's output atom use it to update the path here
       if (atom.atomType == "Output") {
-        returnPath = atom.path;
+        returnOutputID = atom.uniqueID;
       }
     });
-    return returnPath;
+    return returnOutputID;
   }
 
   /**
@@ -318,19 +325,16 @@ export default class Molecule extends Atom {
    */
   pushPropagation() {
     //Only propagate up if
-
-    if (typeof this.readOutputAtomPath() == "number") {
-      this.output.setValue(this.readOutputAtomPath());
+    console.log("pushPropagation called from molecule ");
+    this.updateValue();
+    /*if (typeof this.readOutputID() == "number") {
+      this.output.setValue(this.readOutputID());
     } else {
       this.output.setValue(this.path);
     }
     this.output.ready = true;
-
+*/
     //this.awaitingPropagationFlag = true;
-    //If this molecule is selected, send the updated value to the renderer
-    if (this.atomType == "GitHubMolecule") {
-      this.sendToRender();
-    }
   }
 
   /**
@@ -684,11 +688,7 @@ export default class Molecule extends Atom {
   sendToRender() {
     //Send code to JSxCAD to render
     try {
-      if (typeof this.output.value == "number") {
-        GlobalVariables.writeToDisplay(this.output.value);
-      } else {
-        throw "No output geometry to render ";
-      }
+      GlobalVariables.writeToDisplay(this.uniqueID);
     } catch (err) {
       this.setAlert(err);
     }

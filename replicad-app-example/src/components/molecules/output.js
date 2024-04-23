@@ -75,11 +75,11 @@ export default class Output extends Atom {
    */
   updateValue() {
     if (this.inputs.every((x) => x.ready)) {
+      //still need to understand this
       this.decreaseToProcessCountByOne();
-      console.log(this.inputs);
+
       try {
         var inputID = this.findIOValue("number or geometry");
-        console.log(inputID);
         GlobalVariables.cad.output(this.uniqueID, inputID).then(() => {
           this.basicThreadValueProcessing();
         });

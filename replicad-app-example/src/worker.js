@@ -275,6 +275,18 @@ function output(targetID, inputID) {
     return true;
   });
 }
+function molecule(targetID, inputID) {
+  return started.then(() => {
+    console.log(library[inputID]);
+    if (library[inputID] != undefined) {
+      library[targetID] = library[inputID];
+    } else {
+      throw new Error("output ID is undefined");
+    }
+
+    return true;
+  });
+}
 
 /** Function that extracts geometry with BOM tags and returns bomItems*/
 function extractBom(inputID, TAG) {
@@ -715,6 +727,7 @@ expose({
   tag,
   layout,
   output,
+  molecule,
   bom,
   extractTag,
   intersect,
