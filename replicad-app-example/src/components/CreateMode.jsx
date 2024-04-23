@@ -14,7 +14,7 @@ import {
 } from "react-router-dom";
 import { compile } from "mathjs";
 import globalvariables from "./js/globalvariables.js";
-import ExportPopUp from "./exportProjectPopUp.jsx";
+import ExportPopUp from "./ExportProjectPopUp.jsx";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -316,7 +316,10 @@ function CreateMode(props) {
             />
           </div>
           {exportPopUp ? (
-            <ExportPopUp authorizedUserOcto={authorizedUserOcto} />
+            <ExportPopUp
+              setExportPopUp={setExportPopUp}
+              authorizedUserOcto={authorizedUserOcto}
+            />
           ) : null}
           <ToggleRunCreate run={false} />
           <button
