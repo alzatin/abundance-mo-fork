@@ -257,6 +257,8 @@ export default class Molecule extends Atom {
   updateValue(targetName) {
     //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
 
+    console.log("molecule update value");
+    console.log(this.name);
     //Tell the correct input to update
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
@@ -298,17 +300,12 @@ export default class Molecule extends Atom {
     //Set the output nodes with type 'geometry' to be the generated code
     if (this.simplify) {
       try {
-        this.processing = true;
-        this.processing = false;
         this.pushPropagation();
       } catch (err) {
         this.setAlert(err);
       }
     } else {
       try {
-        this.processing = true;
-
-        this.processing = false;
         this.pushPropagation();
       } catch (err) {
         this.setAlert(err);
