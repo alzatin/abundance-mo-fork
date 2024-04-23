@@ -64,6 +64,7 @@
 }
 
 .export-div {
+  z-index: 5;
   position: absolute;
   top: 30%;
   left: 20%;

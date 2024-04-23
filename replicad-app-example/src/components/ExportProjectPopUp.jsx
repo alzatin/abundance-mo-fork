@@ -45,7 +45,7 @@ const ExportPopUp = (props) => {
   const authorizedUserOcto = props.authorizedUserOcto;
   const setExportPopUp = props.setExportPopUp;
   // Create a new project and navigate to new project create page
-  const createProject = async ([name, tags, description], molecule) => {
+  const exportToGitHub = async ([name, tags, description], molecule) => {
     // if a molecule is passed to this function then we are exporting a molecule to a new project
     if (molecule) {
       GlobalVariables.topLevelMolecule = molecule;
@@ -189,85 +189,6 @@ const ExportPopUp = (props) => {
       });
   };
 
-  /**
-   * Export a molecule as a new github project.
-   */
-  const exportCurrentMoleculeToGithub = async function (molecule) {
-    console.log(globalvariables.currentMolecule);
-    console.log(globalvariables.currentRepo);
-    //Get name and description
-    var name = molecule.name;
-    var description = "A stand alone molecule exported from Maslow Create";
-
-    //Create a new repo
-    authorizedUserOcto.repos
-      .createForAuthenticatedUser({
-        name: name,
-        description: description,
-      })
-      .then((result) => {
-        //Once we have created the new repo we need to create a file within it to store the project in
-        var repoName = result.data.name;
-        var id = result.data.id;
-        var path = "project.maslowcreate";
-        var content = window.btoa("init"); // create a file with just the word "init" in it and base64 encode it
-        octokit.repos
-          .createOrUpdateFileContents({
-            owner: currentUser,
-            repo: repoName,
-            path: path,
-            message: "initialize repo",
-            content: content,
-          })
-          .then(() => {
-            //Save the molecule into the newly created repo
-
-            var path = "project.maslowcreate";
-
-            molecule.topLevel = true; //force the molecule to export in the long form as if it were the top level molecule
-            var content = window.btoa(
-              JSON.stringify(molecule.serialize({ molecules: [] }), null, 4)
-            ); //Convert the passed molecule object to a JSON string and then convert it to base64 encoding
-
-            //Get the SHA for the file
-            octokit.repos
-              .getContent({
-                owner: currentUser,
-                repo: repoName,
-                path: path,
-              })
-              .then((result) => {
-                var sha = result.data.sha;
-
-                //Save the repo to the file
-                octokit.repos
-                  .updateFile({
-                    owner: currentUser,
-                    repo: repoName,
-                    path: path,
-                    message: "export Molecule",
-                    content: content,
-                    sha: sha,
-                  })
-                  .then(() => {
-                    //Replace the existing molecule now that we just exported
-                    molecule.replaceThisMoleculeWithGithub(id);
-                  });
-              });
-          });
-
-        //Update the project topics
-        octokit.repos.replaceTopics({
-          owner: currentUser,
-          repo: repoName,
-          names: ["maslowcreate", "maslowcreate-molecule"],
-          headers: {
-            accept: "application/vnd.github.mercy-preview+json",
-          },
-        });
-      });
-  };
-
   /* Handles form submission for create new project form */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -275,7 +196,7 @@ const ExportPopUp = (props) => {
     const projectName = projectRef.current.value;
     const projectTags = projectTagsRef.current.value;
     const projectDescription = projectDescriptionRef.current.value;
-    createProject(
+    exportToGitHub(
       [projectName, projectTags, projectDescription],
       GlobalVariables.currentMolecule
     );
@@ -284,6 +205,15 @@ const ExportPopUp = (props) => {
     <>
       <div className="login-page export-div">
         <div className="form animate fadeInUp one">
+          <button
+            style={{ width: "3%", display: "block" }}
+            onClick={() => {
+              setExportPopUp(false);
+            }}
+            className="closeButton"
+          >
+            <img></img>
+          </button>
           <form
             onSubmit={(e) => {
               handleSubmit(e);
