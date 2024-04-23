@@ -276,7 +276,7 @@ export default class Molecule extends Atom {
   }
 
   /**
-   * Reads the path of this molecule's output atom
+   * Reads the ID of this molecule's output atom
    */
   readOutputID() {
     var returnOutputID = "";
@@ -304,19 +304,10 @@ export default class Molecule extends Atom {
    * Called when this molecules value changes
    */
   propagate() {
-    //Set the output nodes with type 'geometry' to be the generated code
-    if (this.simplify) {
-      try {
-        this.pushPropagation();
-      } catch (err) {
-        this.setAlert(err);
-      }
-    } else {
-      try {
-        this.pushPropagation();
-      } catch (err) {
-        this.setAlert(err);
-      }
+    try {
+      this.pushPropagation();
+    } catch (err) {
+      this.setAlert(err);
     }
   }
 
@@ -325,16 +316,8 @@ export default class Molecule extends Atom {
    */
   pushPropagation() {
     //Only propagate up if
-    console.log("pushPropagation called from molecule ");
+    console.log("updating molecule value");
     this.updateValue();
-    /*if (typeof this.readOutputID() == "number") {
-      this.output.setValue(this.readOutputID());
-    } else {
-      this.output.setValue(this.path);
-    }
-    this.output.ready = true;
-*/
-    //this.awaitingPropagationFlag = true;
   }
 
   /**
