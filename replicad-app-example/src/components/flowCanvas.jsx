@@ -133,7 +133,6 @@ export default memo(function FlowCanvas(props) {
       //Copy & Paste
       if (e.key == "c") {
         GlobalVariables.atomsSelected = [];
-        console.log(GlobalVariables.atomsSelected);
         GlobalVariables.currentMolecule.copy();
       }
       if (e.key == "v") {
@@ -148,7 +147,6 @@ export default memo(function FlowCanvas(props) {
       if (e.key == "g") {
         setSearchingGitHub(true);
       } else {
-        console.log(shortCuts[e.key]);
         GlobalVariables.currentMolecule.placeAtom(
           {
             parentMolecule: GlobalVariables.currentMolecule,
