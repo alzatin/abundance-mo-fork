@@ -588,6 +588,7 @@ export default class Atom {
    * Displays the atom in 3D and sets the output.
    */
   displayAndPropagate() {
+    console.log("display and propagate in atom");
     //If this has an output write to it
     if (this.output) {
       this.output.setValue(this.uniqueID);
@@ -599,6 +600,8 @@ export default class Atom {
    * Sets the atom to wait on coming information. Basically a pass through, but used for molecules
    */
   waitOnComingInformation() {
+    console.log("wait on coming information in atom");
+    console.log(this);
     if (this.output) {
       this.output.waitOnComingInformation();
     }
@@ -700,7 +703,7 @@ export default class Atom {
             onChange: (value) => {
               if (input.value !== value) {
                 input.setValue(value);
-                this.sendToRender();
+                //this.sendToRender();
               }
             },
           };
@@ -722,6 +725,7 @@ export default class Atom {
         ioValue = child.getValue();
       }
     });
+    console.log(ioValue, ioName);
 
     return ioValue;
   }

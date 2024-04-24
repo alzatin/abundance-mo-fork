@@ -4,6 +4,8 @@
 to-do-fix
 
 now:
+- still loading wrong inputs for github molecules
+ - molecules late rendering, value updating but not sending to update value, maybe need to pass processing flag?
 - ran out of battery but close to exporting (use create project func and pass it as prop to export with changes )
     -  PROPAGATION BUG ! (recreate with github molecules in stool )
     - broke input menu for molecules

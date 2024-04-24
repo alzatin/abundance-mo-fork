@@ -108,8 +108,6 @@ export default memo(function FlowCanvas(props) {
     //     e.preventDefault()
     // }
 
-    console.log(e.key);
-
     if (e.key == "Backspace" || e.key == "Delete") {
       GlobalVariables.atomsSelected = [];
       //Adds items to the  array that we will use to delete
