@@ -251,16 +251,6 @@ class GlobalVariables {
      */
     this.cancelLastDisplayWorker = function () {};
     /**
-     * The last path displayed. Used for updating the display when the controls change.
-     * @type {string}
-     */
-    this.displayedPath = "";
-    /**
-     * A list of all of the paths in this project which can be read from memory
-     * @type {array}
-     */
-    this.availablePaths = [];
-    /**
      * A flag to indicate if a grid should be displayed behind the shape
      * @type {boolean}
      */
@@ -341,8 +331,8 @@ class GlobalVariables {
     return pixels;
   }
   /**
-   * A function which reads from a path and displays the geometry it contains
-   * @param {string} The path to read from
+   * A function which reads the value of a unique ID and passes to display
+   * @param {string} The unique ID to read from
    */
   writeToDisplay(id, resetView = false) {
     console.log("Write to display not set"); //This is a placedholder. It is created in flowCanvas.js
