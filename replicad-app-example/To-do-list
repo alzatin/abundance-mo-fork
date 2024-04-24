@@ -6,6 +6,7 @@ to-do-fix
 now:
 - ran out of battery but close to exporting (use create project func and pass it as prop to export with changes )
     -  PROPAGATION BUG ! (recreate with github molecules in stool )
+    - broke input menu for molecules
     - BUG:molecules being sent to render a lot of times, not sure why so they get rendered with the incorrect input values before the values get propagated and updated 
     - make assembly work for sketch, (to fuse sketch together before extruding)
     - need way to label molecule inside project even if you don't plan to export to github

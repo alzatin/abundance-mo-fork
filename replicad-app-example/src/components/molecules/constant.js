@@ -95,7 +95,7 @@ export default class Constant extends Atom {
       label: this.output.name,
       disabled: false,
       onChange: (value) => {
-        this.output.value = value;
+        this.output.setValue(value);
       },
     };
     return outputParams;

@@ -118,11 +118,6 @@ export default class Atom {
      */
     this.processing = false;
     /**
-     * The path which contains the geometry represented by this atom
-     * @type {string}
-     */
-    this.path = "";
-    /**
      * A function which can be called to cancel the processing being done for this atom.
      * @type {function}
      */
@@ -136,22 +131,6 @@ export default class Atom {
        */
       this[key] = values[key];
     }
-
-    this.generatePath();
-  }
-
-  /**
-   * Generates the path for this atom from it's location in the graph
-   */
-  generatePath() {
-    let levelToInspect = this;
-    let topPath = "";
-    while (!levelToInspect.topLevel) {
-      topPath = "/" + levelToInspect.uniqueID + topPath;
-      levelToInspect = levelToInspect.parent;
-    }
-
-    this.path = "source/" + levelToInspect.uniqueID + topPath + this.atomType;
   }
 
   /**
@@ -164,8 +143,6 @@ export default class Atom {
     for (var key in values) {
       this[key] = values[key];
     }
-
-    this.generatePath();
 
     if (typeof this.ioValues !== "undefined") {
       this.ioValues.forEach((ioValue) => {
@@ -528,10 +505,6 @@ export default class Atom {
       this.parent.nodesOnTheScreen.indexOf(this),
       1
     ); //remove this node from the list
-
-    if (deletePath) {
-      this.basicThreadValueProcessing({ op: "deletePath", path: this.path }); //Delete the cached geometry
-    }
   }
 
   /**
