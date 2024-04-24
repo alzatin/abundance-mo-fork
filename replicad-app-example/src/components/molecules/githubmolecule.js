@@ -64,7 +64,6 @@ export default class GitHubMolecule extends Molecule {
     await octokit
       .request("GET /repositories/:id/contents/project.maslowcreate", { id })
       .then((response) => {
-        
         //content will be base64 encoded
         let valuesToOverwriteInLoadedVersion = {};
         if (this.topLevel) {
@@ -95,14 +94,14 @@ export default class GitHubMolecule extends Molecule {
           }
         }
 
-        let rawFile = JSON.parse(atob(response.data.content))
+        let rawFile = JSON.parse(atob(response.data.content));
         this.deserialize(rawFile, valuesToOverwriteInLoadedVersion, true).then(
           () => {
             //this.setValues(valuesToOverwriteInLoadedVersion);
-            this.loadTree();
+            // this.loadTree();
           }
         );
-        
+
         return rawFile;
       });
   }
@@ -138,18 +137,14 @@ export default class GitHubMolecule extends Molecule {
    * Starts propagation from this atom if it is not waiting for anything up stream.
    */
   beginPropagation(force = false) {
-    //Trigger the inputs to this github molecule if needed
-    if (!GlobalVariables.availablePaths.includes(this.path) || force) {
-      //Tell every atom inside this molecule to begin Propagation
-      super.beginPropagation(force);
-
-      //Triggers inputs with nothing connected to begin propagation
-      this.inputs.forEach((input) => {
-        input.beginPropagation(force);
-      });
-    }
+    console.log("begin propagation in github molecule");
+    //Tell every atom inside this molecule to begin Propagation
+    super.beginPropagation(force);
+    //Triggers inputs with nothing connected to begin propagation
+    this.inputs.forEach((input) => {
+      input.beginPropagation(force);
+    });
   }
-
 
   /**
    * Save the project information to be loaded. This should use super.serialize() to maintain a connection with Molecule, but it doesn't...should be fixed

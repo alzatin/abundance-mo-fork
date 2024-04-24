@@ -64,11 +64,11 @@ export default class Constant extends Atom {
 
     this.decreaseToProcessCountByOne(); //Since there is nothing upstream this needs to be removed from the list here
 
-    //This is done wrong. We should not be saving the value in the io values
+    /* //This is done wrong. We should not be saving the value in the io values
     if (typeof this.ioValues == "object") {
       this.value = this.ioValues[0].ioValue;
       this.output.value = this.value;
-    }
+    }*/
   }
 
   /**
@@ -104,8 +104,10 @@ export default class Constant extends Atom {
    * Set's the output value and shows the atom output on the 3D view.
    */
   updateValue() {
+    // does this make any sense?
+    console.log("update value in constant");
     this.value = this.output.getValue(); //We read from the output because it is set by the sidebar because constants have no inputs
-    this.output.setValue(this.value);
+    //this.output.setValue(this.value);
     this.output.ready = true;
   }
 

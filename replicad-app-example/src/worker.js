@@ -277,7 +277,6 @@ function output(targetID, inputID) {
 }
 function molecule(targetID, inputID) {
   return started.then(() => {
-    console.log(library[inputID]);
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
     } else {

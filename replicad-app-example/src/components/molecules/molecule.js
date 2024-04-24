@@ -257,21 +257,18 @@ export default class Molecule extends Atom {
   updateValue(targetName) {
     //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
     console.log("molecule value updating sending to worker");
+    console.log(this.uniqueID);
+
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
       if (atom.atomType == "Input" && atom.name == targetName) {
         atom.updateValue(); //Tell that input to update it's value
       }
-      if (atom.atomType == "Output") {
-        console.log(atom);
-      }
     });
-
     try {
       let outputID = this.readOutputID();
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
-        console.log("sending to render in updateValue");
         this.sendToRender();
       });
     } catch (err) {
@@ -478,7 +475,7 @@ export default class Molecule extends Atom {
         GlobalVariables.totalAtomCount = GlobalVariables.numberOfAtomsToLoad;
 
         this.census();
-        this.loadTree(); //Walks back up the tree from this molecule loading input values from any connected atoms
+        //this.loadTree(); //Walks back up the tree from this molecule loading input values from any connected atoms
 
         this.beginPropagation(forceBeginPropagation);
       }
