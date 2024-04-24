@@ -257,8 +257,6 @@ export default class Molecule extends Atom {
   updateValue(targetName) {
     //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
 
-    console.log("molecule update value called");
-    console.trace();
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
       if (atom.atomType == "Input" && atom.name == targetName) {
@@ -407,7 +405,6 @@ export default class Molecule extends Atom {
    * Generates and returns a object representation of this molecule and all of its children.
    */
   serialize(offset = { x: 0, y: 0 }) {
-    console.log("are we serializing?");
     var allAtoms = []; //An array of all the atoms contained in this molecule
     var allConnectors = []; //An array of all the connectors contained in this molecule
 
@@ -509,15 +506,10 @@ export default class Molecule extends Atom {
    */
   loadTree() {
     //We want to walk the tree from this's output and anything which has nothing coming out of it. Basically all the graph end points.
-    console.log("loadtree in molecule running");
     this.nodesOnTheScreen.forEach((atom) => {
       //If we have found this molecule's output atom use it to update the path here
       if (atom.atomType == "Output") {
         atom.loadTree();
-        /* if (this.output) {
-          console.log("this runs initially")
-          this.output.value = atom.value;
-        }*/
       }
       //If we have found an atom with nothing connected to it
       if (atom.output) {
