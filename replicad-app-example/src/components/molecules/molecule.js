@@ -256,7 +256,9 @@ export default class Molecule extends Atom {
    */
   updateValue(targetName) {
     //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
-    console.log(this.uniqueID);
+
+    console.log("molecule update value called");
+    console.trace();
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
       if (atom.atomType == "Input" && atom.name == targetName) {
@@ -266,7 +268,6 @@ export default class Molecule extends Atom {
 
     try {
       let outputID = this.readOutputID();
-      console.log(outputID);
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
       });
@@ -305,19 +306,10 @@ export default class Molecule extends Atom {
    */
   propagate() {
     try {
-      this.pushPropagation();
+      this.updateValue();
     } catch (err) {
       this.setAlert(err);
     }
-  }
-
-  /**
-   * Called when this molecules value changes
-   */
-  pushPropagation() {
-    //Only propagate up if
-    console.log("updating molecule value");
-    this.updateValue();
   }
 
   /**
@@ -347,14 +339,6 @@ export default class Molecule extends Atom {
     });
 
     return [this.totalAtomCount, this.toProcess];
-  }
-
-  /**
-   * Called when the simplify check box is checked or unchecked.
-   */
-  setSimplifyFlag(anEvent) {
-    this.simplify = anEvent.target.checked;
-    this.propagate();
   }
 
   changeUnits(newUnitsIndex) {
@@ -423,6 +407,7 @@ export default class Molecule extends Atom {
    * Generates and returns a object representation of this molecule and all of its children.
    */
   serialize(offset = { x: 0, y: 0 }) {
+    console.log("are we serializing?");
     var allAtoms = []; //An array of all the atoms contained in this molecule
     var allConnectors = []; //An array of all the connectors contained in this molecule
 
@@ -524,7 +509,7 @@ export default class Molecule extends Atom {
    */
   loadTree() {
     //We want to walk the tree from this's output and anything which has nothing coming out of it. Basically all the graph end points.
-
+    console.log("loadtree in molecule running");
     this.nodesOnTheScreen.forEach((atom) => {
       //If we have found this molecule's output atom use it to update the path here
       if (atom.atomType == "Output") {
