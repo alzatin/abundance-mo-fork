@@ -588,16 +588,6 @@ export default class AttachmentPoint {
   }
 
   /**
-   * Sets all the input and output values to match their associated atoms.
-   */
-  loadTree() {
-    this.connectors.forEach((connector) => {
-      this.value = connector.loadTree();
-    });
-    return this.value;
-  }
-
-  /**
    * Computes the curent position and then draws the ap on the screen.
    */
   update() {

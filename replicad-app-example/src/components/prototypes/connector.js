@@ -219,13 +219,6 @@ export default class Connector {
   }
 
   /**
-   * Sets all the input and output values to match their associated atoms.
-   */
-  loadTree() {
-    return this.attachmentPoint1.parentMolecule.loadTree();
-  }
-
-  /**
    * Computes the connectors position and draw it to the screen.
    */
   update() {

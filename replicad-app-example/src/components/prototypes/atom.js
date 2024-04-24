@@ -657,19 +657,6 @@ export default class Atom {
   }
 
   /**
-   * Sets all the input and output values to match their associated atoms.
-   */
-  loadTree() {
-    this.inputs.forEach((input) => {
-      input.loadTree();
-    });
-    if (this.output) {
-      this.output.value = this.uniqueID;
-    }
-    return this.uniqueID;
-  }
-
-  /**
    * Send the value of this atom to the 3D display.
    */
   sendToRender() {

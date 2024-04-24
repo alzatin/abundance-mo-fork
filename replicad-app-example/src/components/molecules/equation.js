@@ -201,20 +201,6 @@ export default class Equation extends Atom {
   }
 
   /**
-   * Sets all the input and output values to match their associated atoms.
-   */
-  loadTree() {
-    this.inputs.forEach((input) => {
-      input.loadTree();
-    });
-
-    this.value = this.evaluateEquation();
-    this.output.value = this.value;
-
-    return this.value;
-  }
-
-  /**
    * Add the equation choice to the object which is saved for this molecule
    */
   serialize() {

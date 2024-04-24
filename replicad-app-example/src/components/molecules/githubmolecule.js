@@ -98,7 +98,6 @@ export default class GitHubMolecule extends Molecule {
         this.deserialize(rawFile, valuesToOverwriteInLoadedVersion, true).then(
           () => {
             //this.setValues(valuesToOverwriteInLoadedVersion);
-            // this.loadTree();
           }
         );
 

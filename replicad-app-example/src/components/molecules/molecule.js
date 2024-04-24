@@ -475,7 +475,6 @@ export default class Molecule extends Atom {
         GlobalVariables.totalAtomCount = GlobalVariables.numberOfAtomsToLoad;
 
         this.census();
-        //this.loadTree(); //Walks back up the tree from this molecule loading input values from any connected atoms
 
         this.beginPropagation(forceBeginPropagation);
       }
@@ -501,27 +500,6 @@ export default class Molecule extends Atom {
     });
 
     super.deleteNode(backgroundClickAfter, deletePath, silent);
-  }
-
-  /**
-   * Triggers the loadTree process from this molecules output
-   */
-  loadTree() {
-    //We want to walk the tree from this's output and anything which has nothing coming out of it. Basically all the graph end points.
-    this.nodesOnTheScreen.forEach((atom) => {
-      //If we have found this molecule's output atom use it to update the path here
-      if (atom.atomType == "Output") {
-        atom.loadTree();
-      }
-      //If we have found an atom with nothing connected to it
-      if (atom.output) {
-        if (atom.output.connectors.length == 0) {
-          atom.loadTree();
-        }
-      }
-    });
-
-    return this.path;
   }
 
   /**

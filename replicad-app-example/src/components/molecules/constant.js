@@ -112,13 +112,6 @@ export default class Constant extends Atom {
   }
 
   /**
-   * Sets all the input and output values to match their associated atoms.
-   */
-  loadTree() {
-    return this.value;
-  }
-
-  /**
    * Used to walk back out the tree generating a list of constants...used for evolving
    */
   walkBackForConstants(callback) {
