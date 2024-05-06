@@ -117,8 +117,9 @@ function extrude(targetID, inputID, height) {
   });
 }
 
-/*function to check if shape has mesh, not for with assemblies yet since we can't assemble drawings*/
+/* function to check if shape has mesh, not for with assemblies yet since we can't assemble drawings*/
 function is3D(input) {
+  console.log("is3d running");
   // if it's an assembly assume it's 3d since our assemblies don't work for drawings right now
   if (isAssembly(input)) {
     return true;
@@ -142,9 +143,9 @@ function move(targetID, inputID, x, y, z) {
       });
     } else {
       library[targetID] = {
-        geometry: [library[inputID].geometry[0]],
+        geometry: [library[inputID].geometry[0].translate([x, y])],
         tags: [],
-        plane: library[inputID].plane.translate([x, y, z]),
+        plane: library[inputID].plane.translate([0, 0, z]),
         color: library[inputID].color,
       };
     }
@@ -490,7 +491,6 @@ function isAssembly(part) {
 /** Returns a new single cut part or an assembly of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
   //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
-
   if (isAssembly(partToCut)) {
     let assemblyToCut = partToCut.geometry;
     let assemblyCut = [];
@@ -543,6 +543,7 @@ function recursiveCut(partToCut, cuttingPart) {
 }
 
 function assembly(targetID, inputIDs) {
+  console.log(inputIDs);
   return started.then(() => {
     let assembly = [];
     if (inputIDs.length > 1) {
@@ -555,6 +556,7 @@ function assembly(targetID, inputIDs) {
       assembly.push(library[inputIDs[0]]);
     }
     library[targetID] = { geometry: assembly, tags: [] };
+    console.log(library[targetID]);
     return true;
   });
 }
@@ -661,7 +663,7 @@ function generateDisplayMesh(id) {
       if (colorGeometry != false) {
         //Flatten the assembly to remove hierarchy
         const flattened = flattenAssembly(colorGeometry);
-
+        console.log(flattened);
         //Here we need to extrude anything which isn't already 3D
         var cleanedGeometry = [];
         flattened.forEach((pieceOfGeometry) => {
@@ -673,6 +675,7 @@ function generateDisplayMesh(id) {
             cleanedGeometry.push(pieceOfGeometry);
           }
         });
+        console.log(cleanedGeometry);
         let geometry = chainFuse(cleanedGeometry);
         // Make an array that contains the color and the flattened/cleaned/fused geometry
         meshArray.push({ color: color, geometry: geometry });
@@ -680,6 +683,7 @@ function generateDisplayMesh(id) {
     });
 
     let finalMeshes = [];
+    console.log(meshArray);
     //Iterate through the meshArray and create final meshes with faces, edges and color to pass to display
     meshArray.forEach((meshgeometry) => {
       //Try extruding if there is no 3d shape
