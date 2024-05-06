@@ -117,7 +117,7 @@ function extrude(targetID, inputID, height) {
   });
 }
 
-/*function to check if shape has mesh, not for with assemblies yet since we can't assemble drawings*/
+/* function to check if shape has mesh, not for with assemblies yet since we can't assemble drawings*/
 function is3D(input) {
   // if it's an assembly assume it's 3d since our assemblies don't work for drawings right now
   if (isAssembly(input)) {
@@ -142,9 +142,9 @@ function move(targetID, inputID, x, y, z) {
       });
     } else {
       library[targetID] = {
-        geometry: [library[inputID].geometry[0]],
+        geometry: [library[inputID].geometry[0].translate([x, y])],
         tags: [],
-        plane: library[inputID].plane.translate([x, y, z]),
+        plane: library[inputID].plane.translate([0, 0, z]),
         color: library[inputID].color,
       };
     }
@@ -490,7 +490,6 @@ function isAssembly(part) {
 /** Returns a new single cut part or an assembly of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
   //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
-
   if (isAssembly(partToCut)) {
     let assemblyToCut = partToCut.geometry;
     let assemblyCut = [];
@@ -661,7 +660,6 @@ function generateDisplayMesh(id) {
       if (colorGeometry != false) {
         //Flatten the assembly to remove hierarchy
         const flattened = flattenAssembly(colorGeometry);
-
         //Here we need to extrude anything which isn't already 3D
         var cleanedGeometry = [];
         flattened.forEach((pieceOfGeometry) => {
