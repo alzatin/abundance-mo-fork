@@ -159,6 +159,24 @@ export default class Molecule extends Atom {
   }
 
   /**
+   * Create Leva Menu Input - returns to ParameterEditor
+   */
+  createLevaInputs() {
+    if (this.atomType != "GitHubMolecule") {
+      let outputParams = {};
+      outputParams["molecule name"] = {
+        value: this.name,
+        label: "Molecule Name",
+        disabled: false,
+        onChange: (value) => {
+          this.name = value;
+        },
+      };
+      return outputParams;
+    }
+  }
+
+  /**
    * Create Leva Menu Inputs for BOM list  - returns to ParameterEditor - will be table or list of totals
    */
   createLevaBomInputs() {

@@ -589,7 +589,6 @@ export default class Atom {
    */
   waitOnComingInformation() {
     if (this.output) {
-      console.log("atom output waiting on coming information - from atom.js");
       this.output.waitOnComingInformation();
     }
 
