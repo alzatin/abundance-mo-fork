@@ -104,17 +104,6 @@ export default class Constant extends Atom {
     this.value = this.output.getValue();
     this.output.ready = true;
   }
-
-  /**
-   * Used to walk back out the tree generating a list of constants...used for evolving
-   */
-  walkBackForConstants(callback) {
-    //If this constant can evolve then add it to the target list
-    if (this.evolve) {
-      callback(this);
-    }
-  }
-
   /**
    * Send the value of this atom to the 3D display. Used to display the number
    */
