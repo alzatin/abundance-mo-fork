@@ -585,26 +585,16 @@ export default class Atom {
   }
 
   /**
-   * Displays the atom in 3D and sets the output.
-   */
-  displayAndPropagate() {
-    //console.log("display and propagate in atom");
-    //If this has an output write to it
-    if (this.output) {
-      this.output.setValue(this.uniqueID);
-      this.output.ready = true;
-    }
-  }
-
-  /**
    * Sets the atom to wait on coming information. Basically a pass through, but used for molecules
    */
   waitOnComingInformation() {
     if (this.output) {
+      console.log("atom output waiting on coming information - from atom.js");
       this.output.waitOnComingInformation();
     }
 
     if (this.processing) {
+      console.log("wait on coming info inside atom processing true");
       console.warn("Processing " + this.name + " Canceled");
       this.cancelProcessing();
       this.processing = false;
@@ -632,7 +622,11 @@ export default class Atom {
 
       this.clearAlert();
 
-      this.displayAndPropagate();
+      //If this has an output pass the unique ID to the output
+      if (this.output) {
+        this.output.setValue(this.uniqueID);
+        this.output.ready = true;
+      }
 
       this.processing = false;
     }
