@@ -255,7 +255,6 @@ export default class Molecule extends Atom {
    * Grab values from the inputs and push them out to the input atoms.
    */
   updateValue(targetName) {
-    console.log("update value in molecule");
     //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
