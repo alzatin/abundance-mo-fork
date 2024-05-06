@@ -7,7 +7,6 @@ import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
 import ParamsEditor from "./ParameterEditor.jsx";
 import { BOMEntry } from "./js/BOM.js";
-
 import {
   BrowserRouter as Router,
   useParams,
@@ -15,6 +14,7 @@ import {
 } from "react-router-dom";
 import { compile } from "mathjs";
 import globalvariables from "./js/globalvariables.js";
+import ExportPopUp from "./ExportProjectPopUp.jsx";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -38,6 +38,7 @@ function CreateMode(props) {
   /** State for save progress bar */
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
+  const [exportPopUp, setExportPopUp] = useState(false);
 
   /** State for top level molecule */
   const [currentMoleculeTop, setTop] = useState(false);
@@ -223,7 +224,6 @@ function CreateMode(props) {
 
     var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
     jsonRepOfProject.filetypeVersion = 1;
-    jsonRepOfProject.circleSegmentSize = GlobalVariables.circleSegmentSize;
     const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
     if (activeAtom.output) {
       compileBom().then((result) => {
@@ -315,6 +315,12 @@ function CreateMode(props) {
               alt="logo"
             />
           </div>
+          {exportPopUp ? (
+            <ExportPopUp
+              setExportPopUp={setExportPopUp}
+              authorizedUserOcto={authorizedUserOcto}
+            />
+          ) : null}
           <ToggleRunCreate run={false} />
           <button
             className="round-button"
@@ -341,6 +347,7 @@ function CreateMode(props) {
             savePopUp={savePopUp}
             setSavePopUp={setSavePopUp}
             saveProject={saveProject}
+            setExportPopUp={setExportPopUp}
             saveState={saveState}
             setSaveState={setSaveState}
             currentMoleculeTop={currentMoleculeTop}

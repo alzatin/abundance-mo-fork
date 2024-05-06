@@ -4,8 +4,7 @@
 to-do-fix
 
 now:
-    -  PROPAGATION BUG ! (recreate with github molecules in stool )
-    - BUG:move for 3d broken?
+    -  PROPAGATION BUG ! 
     - BUG:molecules being sent to render a lot of times, not sure why so they get rendered with the incorrect input values before the values get propagated and updated 
     - make assembly work for sketch, (to fuse sketch together before extruding)
     - need way to label molecule inside project even if you don't plan to export to github
@@ -13,7 +12,6 @@ now:
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
     - model some things :S
     - autosave!
-    - make catch for background click if there's no output to display 
     - rendering problems when directly linking to run mode
     - Cut layout should separate by height
     - Bug : LEVA input error ? 

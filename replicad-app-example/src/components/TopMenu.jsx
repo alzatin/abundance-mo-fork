@@ -85,6 +85,16 @@ function TopMenu(props) {
             GlobalVariables.currentRepo.default_branch
         );
       },
+      icon: "Export.svg",
+    },
+    {
+      /**
+       * Open pull request if it's a forked project.
+       */
+      id: "Export",
+      buttonFunc: () => {
+        props.setExportPopUp(true);
+      },
       icon: "Open.svg",
     },
     {
