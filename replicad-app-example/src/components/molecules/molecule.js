@@ -265,30 +265,18 @@ export default class Molecule extends Atom {
     });
   }
 
-  recomputeMolecule() {
+  /**
+   * Reads molecule's output atom ID to recompute the molecule in worker
+   */
+  recomputeMolecule(outputID) {
     console.log("recompute molecule in molecule");
     try {
-      let outputID = this.readOutputID();
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
       });
     } catch (err) {
       this.setAlert(err);
     }
-  }
-
-  /**
-   * Reads the ID of this molecule's output atom
-   */
-  readOutputID() {
-    var returnOutputID = "";
-    this.nodesOnTheScreen.forEach((atom) => {
-      //If we have found this molecule's output atom use it to update the path here
-      if (atom.atomType == "Output") {
-        returnOutputID = atom.uniqueID;
-      }
-    });
-    return returnOutputID;
   }
 
   /**
