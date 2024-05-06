@@ -19,6 +19,7 @@ now:
     - fix project tags for new project
     - generate ID function global , fix for cut assemblies ? 
     - keep out
+    - Combine github export and create project
 
 
 mid :

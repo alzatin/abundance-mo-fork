@@ -75,9 +75,19 @@ export default class Output extends Atom {
    */
   updateValue() {
     if (this.inputs.every((x) => x.ready)) {
+      //still need to understand this
       this.decreaseToProcessCountByOne();
-      this.path = this.findIOValue("number or geometry");
-      this.value = this.path;
+
+      try {
+        var inputID = this.findIOValue("number or geometry");
+        GlobalVariables.cad.output(this.uniqueID, inputID).then(() => {
+          this.basicThreadValueProcessing();
+          //Recompute molecule gets called if we have successfully updated the value of output
+          this.parent.recomputeMolecule(this.uniqueID);
+        });
+      } catch (err) {
+        this.setAlert(err);
+      }
       //Propagate passes the updated value on while parent.updateValue is called when one of the molecule inputs changes
       this.parent.propagate();
     }
@@ -89,7 +99,7 @@ export default class Output extends Atom {
   sendToRender() {
     //Send code to JSxCAD to render
     try {
-      GlobalVariables.writeToDisplay(this.value);
+      GlobalVariables.writeToDisplay(this.uniqueID);
     } catch (err) {
       this.setAlert(err);
     }
@@ -100,15 +110,6 @@ export default class Output extends Atom {
    */
   waitOnComingInformation() {
     this.parent.output.waitOnComingInformation();
-  }
-
-  /**
-   * Sets all the input and output values to match their associated atoms. In this case it sets the path of this and it's parent to be correct.
-   */
-  loadTree() {
-    this.path = this.inputs[0].loadTree();
-    this.value = this.inputs[0].uniqueID;
-    return this.path;
   }
 
   /**

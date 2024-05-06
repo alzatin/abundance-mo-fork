@@ -180,22 +180,6 @@ export default class Input extends Atom {
       }
     });
   }
-
-  /**
-   * Sets all the input and output values to match their associated atoms.
-   */
-  loadTree() {
-    this.parent.inputs.forEach((input) => {
-      //Grab the value for this input from the parent's inputs list
-      if (input.name == this.name) {
-        input.loadTree();
-        this.value = input.value;
-        /* should we run update value here too*/
-        this.output.value = input.value;
-      }
-    });
-    return this.value;
-  }
   /**
    * Create Leva Menu Inputs for Editable Input Names - returns to ParameterEditor
    */

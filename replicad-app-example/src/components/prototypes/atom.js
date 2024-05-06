@@ -118,11 +118,6 @@ export default class Atom {
      */
     this.processing = false;
     /**
-     * The path which contains the geometry represented by this atom
-     * @type {string}
-     */
-    this.path = "";
-    /**
      * A function which can be called to cancel the processing being done for this atom.
      * @type {function}
      */
@@ -136,22 +131,6 @@ export default class Atom {
        */
       this[key] = values[key];
     }
-
-    this.generatePath();
-  }
-
-  /**
-   * Generates the path for this atom from it's location in the graph
-   */
-  generatePath() {
-    let levelToInspect = this;
-    let topPath = "";
-    while (!levelToInspect.topLevel) {
-      topPath = "/" + levelToInspect.uniqueID + topPath;
-      levelToInspect = levelToInspect.parent;
-    }
-
-    this.path = "source/" + levelToInspect.uniqueID + topPath + this.atomType;
   }
 
   /**
@@ -164,8 +143,6 @@ export default class Atom {
     for (var key in values) {
       this[key] = values[key];
     }
-
-    this.generatePath();
 
     if (typeof this.ioValues !== "undefined") {
       this.ioValues.forEach((ioValue) => {
@@ -528,10 +505,6 @@ export default class Atom {
       this.parent.nodesOnTheScreen.indexOf(this),
       1
     ); //remove this node from the list
-
-    if (deletePath) {
-      this.basicThreadValueProcessing({ op: "deletePath", path: this.path }); //Delete the cached geometry
-    }
   }
 
   /**
@@ -612,17 +585,6 @@ export default class Atom {
   }
 
   /**
-   * Displays the atom in 3D and sets the output.
-   */
-  displayAndPropagate() {
-    //If this has an output write to it
-    if (this.output) {
-      this.output.setValue(this.uniqueID);
-      this.output.ready = true;
-    }
-  }
-
-  /**
    * Sets the atom to wait on coming information. Basically a pass through, but used for molecules
    */
   waitOnComingInformation() {
@@ -631,6 +593,7 @@ export default class Atom {
     }
 
     if (this.processing) {
+      console.log("wait on coming info inside atom processing true");
       console.warn("Processing " + this.name + " Canceled");
       this.cancelProcessing();
       this.processing = false;
@@ -658,7 +621,11 @@ export default class Atom {
 
       this.clearAlert();
 
-      this.displayAndPropagate();
+      //If this has an output pass the unique ID to the output
+      if (this.output) {
+        this.output.setValue(this.uniqueID);
+        this.output.ready = true;
+      }
 
       this.processing = false;
     }
@@ -680,19 +647,6 @@ export default class Atom {
       }
     });
     return [1, waiting];
-  }
-
-  /**
-   * Sets all the input and output values to match their associated atoms.
-   */
-  loadTree() {
-    this.inputs.forEach((input) => {
-      input.loadTree();
-    });
-    if (this.output) {
-      this.output.value = this.uniqueID;
-    }
-    return this.uniqueID;
   }
 
   /**
@@ -725,9 +679,10 @@ export default class Atom {
             label: input.name,
             disabled: checkConnector(),
             onChange: (value) => {
-              input.setValue(value);
-              /** should we run updateValue too? */
-              this.sendToRender();
+              if (input.value !== value) {
+                input.setValue(value);
+                this.sendToRender();
+              }
             },
           };
         }
@@ -750,36 +705,5 @@ export default class Atom {
     });
 
     return ioValue;
-  }
-
-  /**
-   * Creates file upload button. Used in the sidebar.
-   * @param {object} list - The HTML object to attach the new item to.
-   * @param {object} parent - The parent which has the function to call on the change...this should really be done with a callback function.
-   * @param {string} buttonText - The text on the button.
-   * @param {object} functionToCall - The function to call when the button is pressed.
-   */
-  createFileUpload(list, parent, buttonText, functionToCall) {
-    var listElement = document.createElement("LI");
-    list.appendChild(listElement);
-
-    //Div which contains the entire element
-    var div = document.createElement("div");
-    listElement.appendChild(div);
-    div.setAttribute("class", "runSideBarDiv");
-
-    //Right div which is button
-    var valueTextDiv = document.createElement("div");
-    div.appendChild(valueTextDiv);
-    var button = document.createElement("input");
-    button.type = "file";
-    var buttonTextNode = document.createTextNode(buttonText);
-    button.setAttribute("class", " browseButton");
-    button.setAttribute("id", buttonText.replace(/\s+/g, "") + "-button");
-    button.appendChild(buttonTextNode);
-    valueTextDiv.appendChild(button);
-    valueTextDiv.setAttribute("class", "sidebar-subitem");
-
-    button.addEventListener("change", functionToCall, false);
   }
 }

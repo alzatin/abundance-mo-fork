@@ -63,12 +63,6 @@ export default class Constant extends Atom {
     this.addIO("output", "number", this, "number", 10);
 
     this.decreaseToProcessCountByOne(); //Since there is nothing upstream this needs to be removed from the list here
-
-    //This is done wrong. We should not be saving the value in the io values
-    if (typeof this.ioValues == "object") {
-      this.value = this.ioValues[0].ioValue;
-      this.output.value = this.value;
-    }
   }
 
   /**
@@ -81,6 +75,7 @@ export default class Constant extends Atom {
    * Create Leva Menu Input - returns to ParameterEditor
    */
   createLevaInputs() {
+    // Create the Leva input for the constant name
     let outputParams = {};
     outputParams["constant number"] = {
       value: this.name,
@@ -90,80 +85,30 @@ export default class Constant extends Atom {
         this.name = value;
       },
     };
-    outputParams[this.name] = {
-      value: this.output.value,
-      label: this.output.name,
+    // Create the Leva input for the constant value
+    outputParams[this.uniqueID + this.name] = {
+      value: this.value,
+      label: this.name,
       disabled: false,
       onChange: (value) => {
-        this.output.value = value;
+        this.output.setValue(value);
+        this.updateValue();
       },
     };
     return outputParams;
   }
   /**
-   * Set's the output value and shows the atom output on the 3D view.
+   * Set's the output value for constant
    */
   updateValue() {
-    this.value = this.output.getValue(); //We read from the output because it is set by the sidebar because constants have no inputs
-    this.output.setValue(this.value);
+    this.value = this.output.getValue();
     this.output.ready = true;
   }
-
-  /**
-   * Starts propagation from this atom if it is not waiting for anything up stream.
-   */
-  beginPropagation() {
-    //Check to see if a value already exists. Generate it if it doesn't.
-    if (!GlobalVariables.availablePaths.includes(this.path)) {
-      //Triggers inputs with nothing connected to begin propagation
-      this.updateValue();
-    }
-  }
-
-  /**
-   * Sets all the input and output values to match their associated atoms.
-   */
-  loadTree() {
-    return this.value;
-  }
-
-  /**
-   * Used to walk back out the tree generating a list of constants...used for evolving
-   */
-  walkBackForConstants(callback) {
-    //If this constant can evolve then add it to the target list
-    if (this.evolve) {
-      callback(this);
-    }
-  }
-
-  /**
-   * Add the value to be saved to the object saved for this molecule.
-   */
-  serialize(values) {
-    //Save the IO value to the serial stream
-    var valuesObj = super.serialize(values);
-
-    valuesObj.ioValues = [
-      {
-        name: "number",
-        ioValue: this.output.getValue(),
-      },
-    ];
-
-    valuesObj.evolve = this.evolve;
-    valuesObj.min = this.min;
-    valuesObj.max = this.max;
-
-    return valuesObj;
-  }
-
   /**
    * Send the value of this atom to the 3D display. Used to display the number
    */
   sendToRender() {
     //Send code to jotcad to render
-
     GlobalVariables.writeToDisplay(this.uniqueID);
   }
 }

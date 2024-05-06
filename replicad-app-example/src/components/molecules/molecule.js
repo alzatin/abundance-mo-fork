@@ -256,10 +256,6 @@ export default class Molecule extends Atom {
    */
   updateValue(targetName) {
     //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
-
-    console.log("molecule update value");
-    console.log(this.name);
-    //Tell the correct input to update
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
       if (atom.atomType == "Input" && atom.name == targetName) {
@@ -269,21 +265,21 @@ export default class Molecule extends Atom {
   }
 
   /**
-   * Reads the path of this molecule's output atom
+   * Reads molecule's output atom ID to recompute the molecule in worker
    */
-  readOutputAtomPath() {
-    var returnPath = "";
-    this.nodesOnTheScreen.forEach((atom) => {
-      //If we have found this molecule's output atom use it to update the path here
-      if (atom.atomType == "Output") {
-        returnPath = atom.path;
-      }
-    });
-    return returnPath;
+  recomputeMolecule(outputID) {
+    console.log("recompute molecule in molecule");
+    try {
+      GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
+        this.basicThreadValueProcessing();
+      });
+    } catch (err) {
+      this.setAlert(err);
+    }
   }
 
   /**
-   * Sets the atom to wait on coming information. Basically a pass through, but used for molecules
+   * Sets atoms to wait on coming information.
    */
   waitOnComingInformation(inputName) {
     this.nodesOnTheScreen.forEach((atom) => {
@@ -297,39 +293,10 @@ export default class Molecule extends Atom {
    * Called when this molecules value changes
    */
   propagate() {
-    //Set the output nodes with type 'geometry' to be the generated code
-    if (this.simplify) {
-      try {
-        this.pushPropagation();
-      } catch (err) {
-        this.setAlert(err);
-      }
-    } else {
-      try {
-        this.pushPropagation();
-      } catch (err) {
-        this.setAlert(err);
-      }
-    }
-  }
-
-  /**
-   * Called when this molecules value changes
-   */
-  pushPropagation() {
-    //Only propagate up if
-
-    if (typeof this.readOutputAtomPath() == "number") {
-      this.output.setValue(this.readOutputAtomPath());
-    } else {
-      this.output.setValue(this.path);
-    }
-    this.output.ready = true;
-
-    //this.awaitingPropagationFlag = true;
-    //If this molecule is selected, send the updated value to the renderer
-    if (this.atomType == "GitHubMolecule") {
-      this.sendToRender();
+    try {
+      this.updateValue();
+    } catch (err) {
+      this.setAlert(err);
     }
   }
 
@@ -360,14 +327,6 @@ export default class Molecule extends Atom {
     });
 
     return [this.totalAtomCount, this.toProcess];
-  }
-
-  /**
-   * Called when the simplify check box is checked or unchecked.
-   */
-  setSimplifyFlag(anEvent) {
-    this.simplify = anEvent.target.checked;
-    this.propagate();
   }
 
   changeUnits(newUnitsIndex) {
@@ -504,7 +463,6 @@ export default class Molecule extends Atom {
         GlobalVariables.totalAtomCount = GlobalVariables.numberOfAtomsToLoad;
 
         this.census();
-        this.loadTree(); //Walks back up the tree from this molecule loading input values from any connected atoms
 
         this.beginPropagation(forceBeginPropagation);
       }
@@ -530,32 +488,6 @@ export default class Molecule extends Atom {
     });
 
     super.deleteNode(backgroundClickAfter, deletePath, silent);
-  }
-
-  /**
-   * Triggers the loadTree process from this molecules output
-   */
-  loadTree() {
-    //We want to walk the tree from this's output and anything which has nothing coming out of it. Basically all the graph end points.
-
-    this.nodesOnTheScreen.forEach((atom) => {
-      //If we have found this molecule's output atom use it to update the path here
-      if (atom.atomType == "Output") {
-        atom.loadTree();
-        /* if (this.output) {
-          console.log("this runs initially")
-          this.output.value = atom.value;
-        }*/
-      }
-      //If we have found an atom with nothing connected to it
-      if (atom.output) {
-        if (atom.output.connectors.length == 0) {
-          atom.loadTree();
-        }
-      }
-    });
-
-    return this.path;
   }
 
   /**
@@ -684,11 +616,7 @@ export default class Molecule extends Atom {
   sendToRender() {
     //Send code to JSxCAD to render
     try {
-      if (typeof this.output.value == "number") {
-        GlobalVariables.writeToDisplay(this.output.value);
-      } else {
-        throw "No output geometry to render ";
-      }
+      GlobalVariables.writeToDisplay(this.uniqueID);
     } catch (err) {
       this.setAlert(err);
     }

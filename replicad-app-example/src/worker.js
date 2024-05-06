@@ -264,6 +264,29 @@ function extractTag(targetID, inputID, TAG) {
   });
 }
 
+function output(targetID, inputID) {
+  return started.then(() => {
+    if (library[inputID] != undefined) {
+      library[targetID] = library[inputID];
+    } else {
+      throw new Error("input ID is undefined");
+    }
+
+    return true;
+  });
+}
+function molecule(targetID, inputID) {
+  return started.then(() => {
+    if (library[inputID] != undefined) {
+      library[targetID] = library[inputID];
+    } else {
+      throw new Error("output ID is undefined");
+    }
+
+    return true;
+  });
+}
+
 /** Function that extracts geometry with BOM tags and returns bomItems*/
 function extractBom(inputID, TAG) {
   let taggedBoms = [];
@@ -449,6 +472,7 @@ function layout(targetID, inputID, TAG, spacing) {
     return true;
   });
 }
+
 // Checks if part is an assembly)
 function isAssembly(part) {
   if (part.geometry.length > 0) {
@@ -701,6 +725,8 @@ expose({
   cut,
   tag,
   layout,
+  output,
+  molecule,
   bom,
   extractTag,
   intersect,

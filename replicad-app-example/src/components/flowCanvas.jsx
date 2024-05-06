@@ -108,8 +108,6 @@ export default memo(function FlowCanvas(props) {
     //     e.preventDefault()
     // }
 
-    console.log(e.key);
-
     if (e.key == "Backspace" || e.key == "Delete") {
       GlobalVariables.atomsSelected = [];
       //Adds items to the  array that we will use to delete
@@ -135,7 +133,6 @@ export default memo(function FlowCanvas(props) {
       //Copy & Paste
       if (e.key == "c") {
         GlobalVariables.atomsSelected = [];
-        console.log(GlobalVariables.atomsSelected);
         GlobalVariables.currentMolecule.copy();
       }
       if (e.key == "v") {
@@ -150,7 +147,6 @@ export default memo(function FlowCanvas(props) {
       if (e.key == "g") {
         setSearchingGitHub(true);
       } else {
-        console.log(shortCuts[e.key]);
         GlobalVariables.currentMolecule.placeAtom(
           {
             parentMolecule: GlobalVariables.currentMolecule,
