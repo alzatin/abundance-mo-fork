@@ -4,10 +4,8 @@
 to-do-fix
 
 now:
-    -  PROPAGATION BUG ! 
-    - BUG:molecules being sent to render a lot of times, not sure why so they get rendered with the incorrect input values before the values get propagated and updated 
-    - make assembly work for sketch, (to fuse sketch together before extruding)
-    - need way to label molecule inside project even if you don't plan to export to github
+    -  Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - aybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
+    - error with github molecules isn't in the svaing of input vals but in the grabbing of them
     - everything is duplicating when going to run mode and back 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
     - model some things :S
