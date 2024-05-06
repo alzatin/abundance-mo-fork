@@ -122,7 +122,6 @@ export default class Assembly extends Atom {
   updateValue() {
     if (this.inputs.every((x) => x.ready)) {
       try {
-        console.log("update value in assemblt");
         var inputValues = [];
         this.inputs.forEach((io) => {
           if (io.connectors.length > 0 && io.type == "input") {
