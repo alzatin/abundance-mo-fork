@@ -256,8 +256,6 @@ export default class Molecule extends Atom {
    */
   updateValue(targetName) {
     //Molecules are fully transparent so we don't wait for all of the inputs to begin processing the things inside
-    console.log("molecule updatevalue");
-
     this.nodesOnTheScreen.forEach((atom) => {
       //Scan all the input atoms
       if (atom.atomType == "Input" && atom.name == targetName) {
@@ -267,7 +265,6 @@ export default class Molecule extends Atom {
   }
 
   recomputeMolecule() {
-    console.log("molecule sent to recompute in worker");
     try {
       let outputID = this.readOutputID();
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {

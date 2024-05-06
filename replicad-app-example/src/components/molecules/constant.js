@@ -105,8 +105,6 @@ export default class Constant extends Atom {
    * Set's the output value and shows the atom output on the 3D view.
    */
   updateValue() {
-    // does this make any sense?
-    console.log("update value in constant");
     this.value = this.output.getValue(); //We read from the output because it is set by the sidebar because constants have no inputs
     //this.output.setValue(this.value);
     this.output.ready = true;
@@ -127,7 +125,6 @@ export default class Constant extends Atom {
    */
   sendToRender() {
     //Send code to jotcad to render
-    console.log(this);
     GlobalVariables.writeToDisplay(this.uniqueID);
   }
 }

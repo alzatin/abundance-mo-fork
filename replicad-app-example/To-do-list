@@ -4,11 +4,7 @@
 to-do-fix
 
 now:
-- still loading wrong inputs for github molecules
- - molecules late rendering, value updating but not sending to update value, maybe need to pass processing flag?
-- ran out of battery but close to exporting (use create project func and pass it as prop to export with changes )
-    -  PROPAGATION BUG ! (recreate with github molecules in stool )
-    - broke input menu for molecules
+    -  PROPAGATION BUG ! 
     - BUG:molecules being sent to render a lot of times, not sure why so they get rendered with the incorrect input values before the values get propagated and updated 
     - make assembly work for sketch, (to fuse sketch together before extruding)
     - need way to label molecule inside project even if you don't plan to export to github
@@ -23,10 +19,11 @@ now:
     - fix project tags for new project
     - generate ID function global , fix for cut assemblies ? 
     - keep out
+    - Combine github export and create project
 
 
 mid :
-    - unique id GENERATOR
+
     - github search needs css help
     - hull (in april? waiting for replicad)
     - tag drop down for all available tags- warning for no tag found
