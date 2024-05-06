@@ -63,12 +63,6 @@ export default class Constant extends Atom {
     this.addIO("output", "number", this, "number", 10);
 
     this.decreaseToProcessCountByOne(); //Since there is nothing upstream this needs to be removed from the list here
-
-    /* //This is done wrong. We should not be saving the value in the io values
-    if (typeof this.ioValues == "object") {
-      this.value = this.ioValues[0].ioValue;
-      this.output.value = this.value;
-    }*/
   }
 
   /**
@@ -81,6 +75,7 @@ export default class Constant extends Atom {
    * Create Leva Menu Input - returns to ParameterEditor
    */
   createLevaInputs() {
+    // Create the Leva input for the constant name
     let outputParams = {};
     outputParams["constant number"] = {
       value: this.name,
@@ -90,6 +85,7 @@ export default class Constant extends Atom {
         this.name = value;
       },
     };
+    // Create the Leva input for the constant value
     outputParams[this.uniqueID + this.name] = {
       value: this.value,
       label: this.name,
@@ -102,11 +98,10 @@ export default class Constant extends Atom {
     return outputParams;
   }
   /**
-   * Set's the output value and shows the atom output on the 3D view.
+   * Set's the output value for constant
    */
   updateValue() {
-    this.value = this.output.getValue(); //We read from the output because it is set by the sidebar because constants have no inputs
-    //this.output.setValue(this.value);
+    this.value = this.output.getValue();
     this.output.ready = true;
   }
 

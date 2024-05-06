@@ -38,8 +38,6 @@ export default class Circle extends Atom {
    * Starts propagation from this atom if it is not waiting for anything up stream.
    */
   beginPropagation(force = false) {
-    //Check to see if a value already exists. Generate it if it doesn't. Only do this for circles and rectangles
-
     //Triggers inputs with nothing connected to begin propagation
     this.inputs.forEach((input) => {
       input.beginPropagation();
@@ -68,7 +66,7 @@ export default class Circle extends Atom {
   }
 
   /**
-   * Super class the default update value function. This function computes the number of points to use for the circle and then calls the worker thread to create the circle.
+   * Update the value of the circle in worker.
    */
   updateValue() {
     try {
