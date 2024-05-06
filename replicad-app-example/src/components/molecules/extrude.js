@@ -69,7 +69,6 @@ export default class Extrude extends Atom {
    */
   updateValue() {
     try {
-      console.log("update value in extrude");
       var inputID = this.findIOValue("geometry");
       var extrudeDistance = this.findIOValue("height");
 

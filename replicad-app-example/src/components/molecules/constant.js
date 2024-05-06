@@ -90,12 +90,13 @@ export default class Constant extends Atom {
         this.name = value;
       },
     };
-    outputParams[this.name] = {
-      value: this.output.value,
-      label: this.output.name,
+    outputParams[this.uniqueID + this.name] = {
+      value: this.value,
+      label: this.name,
       disabled: false,
       onChange: (value) => {
         this.output.setValue(value);
+        this.updateValue();
       },
     };
     return outputParams;
@@ -126,7 +127,7 @@ export default class Constant extends Atom {
    */
   sendToRender() {
     //Send code to jotcad to render
-
+    console.log(this);
     GlobalVariables.writeToDisplay(this.uniqueID);
   }
 }

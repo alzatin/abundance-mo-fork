@@ -97,7 +97,7 @@ export default class GitHubMolecule extends Molecule {
         let rawFile = JSON.parse(atob(response.data.content));
         this.deserialize(rawFile, valuesToOverwriteInLoadedVersion, true).then(
           () => {
-            //this.setValues(valuesToOverwriteInLoadedVersion);
+            this.setValues(valuesToOverwriteInLoadedVersion);
           }
         );
 

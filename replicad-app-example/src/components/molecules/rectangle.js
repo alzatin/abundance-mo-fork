@@ -71,7 +71,6 @@ export default class Rectangle extends Atom {
    */
   updateValue() {
     try {
-      console.log("update value in rectangle");
       var xVal = this.findIOValue("x length");
       var yVal = this.findIOValue("y length");
 

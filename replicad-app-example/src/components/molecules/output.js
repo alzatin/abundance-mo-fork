@@ -82,6 +82,8 @@ export default class Output extends Atom {
         var inputID = this.findIOValue("number or geometry");
         GlobalVariables.cad.output(this.uniqueID, inputID).then(() => {
           this.basicThreadValueProcessing();
+          console.log(this);
+          this.parent.recomputeMolecule();
         });
       } catch (err) {
         this.setAlert(err);
