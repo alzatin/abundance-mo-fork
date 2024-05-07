@@ -24,11 +24,9 @@ I do not advice to just clone the multirepo and then run from packages (it
 needs some magic with the multi repo logic, this is not great).
 
 What I would advice you do to is copy the sample app out of the multirepo and
-then install and run. So something in that spirit:
+then install and run. So something in that spirit:...this has alredy been done for you.
 
 ```sh
-git clone git@github.com:sgenoud/replicad.git
-cp -r replicad/packages/replicad-app-example .
 cd replicad-app-example
 npm install
 npm start
