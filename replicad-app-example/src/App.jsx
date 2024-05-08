@@ -7,9 +7,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation,
-  useParams,
-  useNavigate,
 } from "react-router-dom";
 
 import FileSaver from "file-saver";
