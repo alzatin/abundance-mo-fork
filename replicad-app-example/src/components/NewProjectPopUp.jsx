@@ -34,6 +34,7 @@ const NewProjectPopUp = (props) => {
    */
   const authorizedUserOcto = props.authorizedUserOcto;
   const setExportPopUp = props.setExportPopUp;
+  const exporting = props.exporting;
 
   const keys_ar = [];
   Object.keys(licenses).forEach((key) => {
@@ -49,10 +50,23 @@ const NewProjectPopUp = (props) => {
   //Progress bar for creating a new project
   const [newProjectBar, setNewProjectBar] = useState(0);
 
-  // Create a new project and navigate to new project create page
-  const createProject = async ([name, tags, description], molecule) => {
-    // if a molecule is passed to this function then we are exporting a molecule to a new project
-    if (molecule !== undefined) {
+  /**
+   * Create a new project or exports current molecule to github and navigate to new project create page
+   * * @param {string} name - Project Name
+   * @param {array} tags - Array of tags
+   * @param {string} description - Project Description
+   * @param {object} molecule - If there's an existing molecule to export
+   * @param {boolean} exporting - If exporting a molecule
+   *
+   */
+  const createProject = async (
+    [name, tags, description],
+    molecule,
+    exporting
+  ) => {
+    // If there is a molecule and we are exporting replace current top molecule
+    if (molecule !== undefined && exporting) {
+      console.log("exporting");
       GlobalVariables.topLevelMolecule = molecule;
       molecule.topLevel = true; //force the molecule to export in the long form as if it were the top level molecule
     } else {
@@ -194,7 +208,7 @@ const NewProjectPopUp = (props) => {
       });
   };
 
-  /* Handles form submission for create new project form */
+  /* Handles form submission for create new/ export project form */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPending(true);
@@ -205,7 +219,11 @@ const NewProjectPopUp = (props) => {
     if (GlobalVariables.currentMolecule) {
       var molecule = GlobalVariables.currentMolecule;
     }
-    createProject([projectName, projectTags, projectDescription], molecule);
+    createProject(
+      [projectName, projectTags, projectDescription],
+      molecule,
+      exporting
+    );
   };
   return (
     <>

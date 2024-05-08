@@ -281,6 +281,7 @@ const ShowProjects = (props) => {
         <NewProjectPopUp
           setExportPopUp={setExportPopUp}
           authorizedUserOcto={authorizedUserOcto}
+          exporting={false}
         />
       ) : (
         <ClassicBrowse />

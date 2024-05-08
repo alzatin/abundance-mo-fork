@@ -320,6 +320,7 @@ function CreateMode(props) {
           {exportPopUp ? (
             <NewProjectPopUp
               setExportPopUp={setExportPopUp}
+              exporting={true}
               authorizedUserOcto={authorizedUserOcto}
             />
           ) : null}
