@@ -86,6 +86,7 @@ function CreateMode(props) {
   useEffect(() => {
     //Implementing the setInterval method
     const myInterval = setInterval(() => {
+      setSavePopUp(true);
       saveProject(setSaveState);
     }, 60000);
 
@@ -357,7 +358,6 @@ function CreateMode(props) {
             authorizedUserOcto={authorizedUserOcto}
             savePopUp={savePopUp}
             setSavePopUp={setSavePopUp}
-            saveProject={saveProject}
             setExportPopUp={setExportPopUp}
             saveState={saveState}
             setSaveState={setSaveState}
@@ -370,7 +370,6 @@ function CreateMode(props) {
               loadProject: props.props.loadProject,
               setActiveAtom: setActiveAtom,
               setSavePopUp: setSavePopUp,
-              saveProject: saveProject,
               setSaveState: setSaveState,
               setTop: setTop,
               shortCuts: shortCuts,
@@ -402,7 +401,6 @@ function CreateMode(props) {
                 axesParam: axesParam,
                 wireParam: wireParam,
                 solidParam: solidParam,
-                saveProject: saveProject,
                 setSaveState: setSaveState,
                 setSaveState: setSaveState,
               }}
