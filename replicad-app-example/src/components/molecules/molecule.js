@@ -162,9 +162,10 @@ export default class Molecule extends Atom {
    * Create Leva Menu Input - returns to ParameterEditor
    */
   createLevaInputs() {
+    let inputParams = {};
+    // If this is not a gitHUb molecules, add a name input
     if (this.atomType != "GitHubMolecule") {
-      let outputParams = {};
-      outputParams["molecule name"] = {
+      inputParams["molecule name"] = {
         value: this.name,
         label: "Molecule Name",
         disabled: false,
@@ -172,7 +173,30 @@ export default class Molecule extends Atom {
           this.name = value;
         },
       };
-      return outputParams;
+    }
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        /* Makes inputs for Io's other than geometry */
+        if (input.valueType !== "geometry") {
+          inputParams[this.uniqueID + input.name] = {
+            value: input.value,
+            label: input.name,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              if (input.value !== value) {
+                input.setValue(value);
+                this.sendToRender();
+              }
+            },
+          };
+        }
+      });
+      return inputParams;
     }
   }
 

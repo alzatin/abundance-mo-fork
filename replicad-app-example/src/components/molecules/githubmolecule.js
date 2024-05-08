@@ -133,19 +133,6 @@ export default class GitHubMolecule extends Molecule {
   }
 
   /**
-   * Starts propagation from this atom if it is not waiting for anything up stream.
-   */
-  beginPropagation(force = false) {
-    console.log("begin propagation in github molecule");
-    //Tell every atom inside this molecule to begin Propagation
-    super.beginPropagation(force);
-    //Triggers inputs with nothing connected to begin propagation
-    this.inputs.forEach((input) => {
-      input.beginPropagation(force);
-    });
-  }
-
-  /**
    * Save the project information to be loaded. This should use super.serialize() to maintain a connection with Molecule, but it doesn't...should be fixed
    */
   serialize() {

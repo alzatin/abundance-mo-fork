@@ -14,7 +14,7 @@ import {
 } from "react-router-dom";
 import { compile } from "mathjs";
 import globalvariables from "./js/globalvariables.js";
-import ExportPopUp from "./ExportProjectPopUp.jsx";
+import NewProjectPopUp from "./NewProjectPopUp.jsx";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -30,6 +30,9 @@ function CreateMode(props) {
   let activeAtom = props.props.activeAtom;
   let setActiveAtom = props.props.setActiveAtom;
 
+  const exportPopUp = props.props.exportPopUp;
+  const setExportPopUp = props.props.setExportPopUp;
+
   /** State for grid and axes parameters */
   const [gridParam, setGrid] = useState(true);
   const [axesParam, setAxes] = useState(true);
@@ -38,7 +41,6 @@ function CreateMode(props) {
   /** State for save progress bar */
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
-  const [exportPopUp, setExportPopUp] = useState(false);
 
   /** State for top level molecule */
   const [currentMoleculeTop, setTop] = useState(false);
@@ -316,8 +318,9 @@ function CreateMode(props) {
             />
           </div>
           {exportPopUp ? (
-            <ExportPopUp
+            <NewProjectPopUp
               setExportPopUp={setExportPopUp}
+              exporting={true}
               authorizedUserOcto={authorizedUserOcto}
             />
           ) : null}

@@ -56,6 +56,7 @@ export default function ReplicadApp() {
 
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
+  const [exportPopUp, setExportPopUp] = useState(false);
 
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
@@ -136,6 +137,8 @@ export default function ReplicadApp() {
                 tryLogin={tryLogin}
                 setIsLoggedIn={setIsLoggedIn}
                 isloggedIn={isloggedIn}
+                exportPopUp={exportPopUp}
+                setExportPopUp={setExportPopUp}
               />
             }
           />
@@ -149,6 +152,8 @@ export default function ReplicadApp() {
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
                   loadProject: loadProject,
+                  exportPopUp: exportPopUp,
+                  setExportPopUp: setExportPopUp,
                 }}
                 displayProps={{
                   mesh: mesh,
