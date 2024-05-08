@@ -12,8 +12,6 @@ import {
   useParams,
   useNavigate,
 } from "react-router-dom";
-import { compile } from "mathjs";
-import globalvariables from "./js/globalvariables.js";
 import NewProjectPopUp from "./NewProjectPopUp.jsx";
 
 /**
@@ -30,6 +28,7 @@ function CreateMode(props) {
   let activeAtom = props.props.activeAtom;
   let setActiveAtom = props.props.setActiveAtom;
 
+  // new project form pop up state
   const exportPopUp = props.props.exportPopUp;
   const setExportPopUp = props.props.setExportPopUp;
 
@@ -38,6 +37,7 @@ function CreateMode(props) {
   const [axesParam, setAxes] = useState(true);
   const [wireParam, setWire] = useState(true);
   const [solidParam, setSolid] = useState(true);
+
   /** State for save progress bar */
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
@@ -78,11 +78,20 @@ function CreateMode(props) {
 
   useEffect(() => {
     window.addEventListener("keydown", handleBodyClick);
-
     return () => {
       window.removeEventListener("keydown", handleBodyClick);
     };
   });
+
+  useEffect(() => {
+    //Implementing the setInterval method
+    const myInterval = setInterval(() => {
+      saveProject(setSaveState);
+    }, 60000);
+
+    //Clearing the interval
+    return () => clearInterval(myInterval);
+  }, []);
 
   const handleBodyClick = (e) => {
     if (e.metaKey && e.key == "s") {
@@ -101,7 +110,6 @@ function CreateMode(props) {
   let mesh = props.displayProps.mesh;
   let setWireMesh = props.displayProps.setWireMesh;
   let wireMesh = props.displayProps.wireMesh;
-
   /**
    * Create a commit as part of the saving process.
    */
@@ -415,7 +423,6 @@ function CreateMode(props) {
     }
   } else {
     /** get repository from github by the id in the url */
-
     console.warn("You are not logged in");
     const { id } = useParams();
     var octokit = new Octokit();
