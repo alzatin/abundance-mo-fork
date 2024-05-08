@@ -358,6 +358,7 @@ function CreateMode(props) {
             authorizedUserOcto={authorizedUserOcto}
             savePopUp={savePopUp}
             setSavePopUp={setSavePopUp}
+            saveProject={saveProject}
             setExportPopUp={setExportPopUp}
             saveState={saveState}
             setSaveState={setSaveState}
