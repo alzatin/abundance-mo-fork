@@ -8,7 +8,7 @@ now:
     - everything is duplicating when going to run mode and back. (i think it's loading the project again but not deleting old atoms) 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
     - model some things :S
-    - autosave!
+    - fake background click when project is first loaded 
     - rendering problems when directly linking to run mode
     - Cut layout should separate by height
     - Bug : LEVA input error ? - seems like its wire 
