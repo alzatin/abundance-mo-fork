@@ -6,15 +6,23 @@ import { EditorView, keymap } from "@codemirror/view";
 import { defaultKeymap } from "@codemirror/commands";
 
 export default function CodeWindow(props) {
-  const doc = "Hello World";
   const [docvalue, setdocValue] = useState("");
   const extensions = [keymap.of(defaultKeymap)];
+
+  useEffect(() => {
+    console.log("useEffect");
+    if (props.activeAtom != null) {
+      console.log(props.activeAtom);
+      setdocValue(props.activeAtom.code);
+      console.log(props.activeAtom.code);
+    }
+  }, [props.activeAtom]);
 
   return (
     <div id="code-window" className=" code-off login-page export-div">
       <ReactCodeEditor
-        width="200px"
-        height="200px"
+        width="600px"
+        height="300px"
         extensions={extensions}
         value={docvalue}
         onChange={(value) => {
@@ -26,6 +34,9 @@ export default function CodeWindow(props) {
         onClick={() => props.activeAtom.updateValue(docvalue)}
       >
         Save Code
+      </button>
+      <button type="button" onClick={() => console.log("close editor")}>
+        Close Editor
       </button>
     </div>
   );

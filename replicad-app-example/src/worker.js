@@ -225,6 +225,15 @@ function tag(targetID, inputID, TAG) {
   });
 }
 
+function code(targetID, codeBlock, inputIDs) {
+  return started.then(() => {
+    console.log(inputIDs);
+    console.log(codeBlock);
+
+    return true;
+  });
+}
+
 function color(targetID, inputID, color) {
   return started.then(() => {
     library[targetID] = {

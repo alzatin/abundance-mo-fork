@@ -94,66 +94,35 @@ export default class Code extends Atom {
   updateValue(value) {
     console.log("update value in code");
     console.log(value);
-    try {
-      this.parseInputs();
+    // if you get passed a value then set it to the code
+    if (value) {
+      this.code = value;
+    }
+    //Parse the inputs
+    this.parseInputs();
 
-      var argumentsArray = {};
+    if (this.inputs.every((x) => x.ready)) {
+      try {
+        var inputValues = [];
+        this.inputs.forEach((io) => {
+          if (io.connectors.length > 0 && io.type == "input") {
+            inputValues.push(io.getValue());
+          }
+        });
+        console.log(inputValues);
+        GlobalVariables.cad
+          .code(this.uniqueID, this.code, inputValues)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          });
+
+        /*var argumentsArray = {};
       this.inputs.forEach((input) => {
         argumentsArray[input.name] = input.value;
-      });
-
-      const values = {
-        op: "code",
-        code: this.code,
-        paths: argumentsArray,
-        writePath: this.path,
-      };
-
-      var go = true;
-      this.inputs.forEach((input) => {
-        if (!input.ready) {
-          go = false;
-        }
-      });
-      if (go) {
-        //Then we update the value
-
-        this.waitOnComingInformation(); //This sends a chain command through the tree to lock all the inputs which are down stream of this one. It also cancels anything processing if this atom was doing a calculation already.
-
-        /**
-         * Indicates that this atom is computing
-         * @type {boolean}
-         */
-        this.processing = true;
-        this.decreaseToProcessCountByOne();
-
-        this.clearAlert();
-
-        const { answer, terminate } = window.ask(values);
-        answer.then((result) => {
-          if (result.success) {
-            if (result.type == "path") {
-              this.displayAndPropagate();
-            } else {
-              if (this.output) {
-                this.output.setValue(result.value);
-                this.output.ready = true;
-              }
-            }
-          } else {
-            this.setAlert("Unable to compute");
-          }
-          this.processing = false;
-        });
-
-        /**
-         * This can be called to interrupt the computation
-         * @type {function}
-         */
-        this.cancelProcessing = terminate;
+      });*/
+      } catch (err) {
+        this.setAlert(err);
       }
-    } catch (err) {
-      this.setAlert(err);
     }
   }
 
