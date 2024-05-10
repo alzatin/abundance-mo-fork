@@ -88,16 +88,15 @@ export default class Code extends Atom {
     return outputParams;
   }
 
+  updateCode(code) {
+    this.code = code;
+    this.updateValue();
+  }
+
   /**
    * Grab the code as a text string and execute it.
    */
   updateValue(value) {
-    console.log("update value in code");
-    console.log(value);
-    // if you get passed a value then set it to the code
-    if (value) {
-      this.code = value;
-    }
     //Parse the inputs
     this.parseInputs();
 
@@ -194,17 +193,5 @@ export default class Code extends Atom {
     const codeWindow = document.getElementById("code-window");
     codeWindow.classList.remove("code-off");
     console.log(codeWindow);
-  }
-
-  /**
-   * Save the input code to be loaded next time
-   */
-  serialize(values) {
-    //Save the readme text to the serial stream
-    var valuesObj = super.serialize(values);
-
-    valuesObj.code = this.code;
-
-    return valuesObj;
   }
 }

@@ -31,7 +31,7 @@ export default function CodeWindow(props) {
       />
       <button
         type="button"
-        onClick={() => props.activeAtom.updateValue(docvalue)}
+        onClick={() => props.activeAtom.updateCode(docvalue)}
       >
         Save Code
       </button>

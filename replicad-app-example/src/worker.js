@@ -718,6 +718,7 @@ expose({
   createMesh,
   circle,
   color,
+  code,
   downSVG,
   regularPolygon,
   rectangle,
