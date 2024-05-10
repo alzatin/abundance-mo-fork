@@ -7,6 +7,7 @@ import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
 import ParamsEditor from "./ParameterEditor.jsx";
 import { BOMEntry } from "./js/BOM.js";
+import CodeWindow from "./codeWindow.jsx";
 import {
   BrowserRouter as Router,
   useParams,
@@ -364,6 +365,7 @@ function CreateMode(props) {
             currentMoleculeTop={currentMoleculeTop}
             setActiveAtom={setActiveAtom}
           />
+          <CodeWindow activeAtom={activeAtom} />
           <FlowCanvas
             props={{
               activeAtom: activeAtom,

@@ -1,6 +1,7 @@
 import Atom from "../prototypes/atom.js";
-//import CodeMirror from 'codemirror'
+
 import GlobalVariables from "../js/globalvariables.js";
+import { button } from "leva";
 
 /**
  * The Code molecule type adds support for executing arbitrary jsxcad code.
@@ -27,13 +28,13 @@ export default class Code extends Atom {
      * A description of this atom
      * @type {string}
      */
-    this.description = "Defines a JSxCAD code block.";
+    this.description = "Defines a Replicad code block.";
     /**
      * The code contained within the atom stored as a string.
      * @type {string}
      */
     this.code =
-      "//You can learn more about all of the available methods at https://jsxcad.js.org/app/UserGuide.html \n//Inputs:[Input1, Input2];\n\n\nreturn Orb(10)";
+      "//You can learn more about all of the available methods at https://replicad.xyz/docs/introapp/UserGuide.html \n//Inputs:[Input1, Input2];\n\n\nreturn Orb(10)";
 
     this.addIO("output", "geometry", this, "geometry", "");
 
@@ -81,10 +82,18 @@ export default class Code extends Atom {
     }
   }
 
+  createLevaInputs() {
+    let outputParams = {};
+    outputParams["Edit Code"] = button(() => this.editCode());
+    return outputParams;
+  }
+
   /**
    * Grab the code as a text string and execute it.
    */
-  updateValue() {
+  updateValue(value) {
+    console.log("update value in code");
+    console.log(value);
     try {
       this.parseInputs();
 
@@ -213,45 +222,9 @@ export default class Code extends Atom {
    * Called to trigger editing the code atom
    */
   editCode() {
-    //Remove everything in the popup now
-    const popup = document.getElementById("projects-popup");
-    while (popup.firstChild) {
-      popup.removeChild(popup.firstChild);
-    }
-
-    popup.classList.remove("off");
-
-    //Add a title
-    // var codeMirror = CodeMirror(popup, {
-    //     value: this.code,
-    //     mode:  "javascript",
-    //     lineNumbers: true,
-    //     gutter: true,
-    //     lineWrapping: true
-    // })
-
-    var form = document.createElement("form");
-    popup.appendChild(form);
-    var button = document.createElement("button");
-    button.setAttribute("type", "button");
-    button.appendChild(document.createTextNode("Save Code"));
-    button.addEventListener("click", () => {
-      //this.code = codeMirror.getDoc().getValue('\n')
-      this.updateValue();
-      popup.classList.add("off");
-    });
-    form.appendChild(button);
-  }
-
-  /**
-   * Add a button to open the code editor to the side bar
-   */
-  updateSidebar() {
-    var valueList = super.updateSidebar();
-
-    this.createButton(valueList, this, "Edit Code", () => {
-      this.editCode();
-    });
+    const codeWindow = document.getElementById("code-window");
+    codeWindow.classList.remove("code-off");
+    console.log(codeWindow);
   }
 
   /**
