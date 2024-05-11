@@ -34,7 +34,7 @@ export default class Code extends Atom {
      * @type {string}
      */
     this.code =
-      "//You can learn more about all of the available methods at https://replicad.xyz/docs/introapp/UserGuide.html \n//Inputs:[Input1, Input2];\n\n\nreturn Orb(10)";
+      "//Learn more about all of the available methods at https://replicad.xyz/docs/introapp/UserGuide.html \n//Inputs:[Input1, Input2];\n\n\nreturn [drawRectangle(10,10)]\n//what you return should be an array of geometries\n ";
 
     this.addIO("output", "geometry", this, "geometry", "");
 
@@ -112,7 +112,7 @@ export default class Code extends Atom {
         this.inputs.forEach((input) => {
           argumentsArray[input.name] = input.value;
         });
-        console.log(inputValues);
+
         GlobalVariables.cad
           .code(this.uniqueID, this.code, inputValues, argumentsArray)
           .then(() => {

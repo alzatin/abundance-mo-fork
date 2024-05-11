@@ -225,9 +225,8 @@ function tag(targetID, inputID, TAG) {
   });
 }
 
-function code(targetID, codeBlock, inputIDs, argumentsArray) {
+function code(targetID, code, inputIDs, argumentsArray) {
   return started.then(() => {
-    console.log(argumentsArray);
     let keys1 = [];
     let inputValues = [];
     for (const [key, value] of Object.entries(argumentsArray)) {
@@ -235,12 +234,10 @@ function code(targetID, codeBlock, inputIDs, argumentsArray) {
       inputValues.push(value);
     }
 
-    function codeFunction(...keys1) {
-      //not sure how to execute the code block
-      return eval(codeBlock);
-    }
-
-    let result = codeFunction(...inputValues);
+    var result = eval(
+      "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
+    );
+    console.log(result);
 
     library[targetID] = {
       geometry: result,
