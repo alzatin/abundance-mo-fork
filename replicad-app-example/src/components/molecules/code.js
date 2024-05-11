@@ -191,6 +191,22 @@ export default class Code extends Atom {
   editCode() {
     const codeWindow = document.getElementById("code-window");
     codeWindow.classList.remove("code-off");
-    console.log(codeWindow);
+  }
+
+  closeEditor() {
+    const codeWindow = document.getElementById("code-window");
+    codeWindow.classList.add("code-off");
+  }
+
+  /**
+   * Save the input code to be loaded next time
+   */
+  serialize(values) {
+    //Save the readme text to the serial stream
+    var valuesObj = super.serialize(values);
+
+    valuesObj.code = this.code;
+
+    return valuesObj;
   }
 }

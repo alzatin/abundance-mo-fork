@@ -32,7 +32,7 @@ export default function CodeWindow(props) {
       >
         Save Code
       </button>
-      <button type="button" onClick={() => console.log("close editor")}>
+      <button type="button" onClick={() => props.activeAtom.closeEditor()}>
         Close Editor
       </button>
     </div>
