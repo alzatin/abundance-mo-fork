@@ -233,19 +233,16 @@ function code(targetID, code, argumentsArray) {
       keys1.push(`${key}`);
       inputValues.push(value);
     }
-
+    // revisit this eval/ Is this the right/safest way to do this?
     var result = eval(
       "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
     );
-    console.log(result);
 
     library[targetID] = {
       geometry: result,
       tags: [],
       color: "#FF9065",
     };
-
-    console.log(library[targetID]);
 
     return true;
   });
