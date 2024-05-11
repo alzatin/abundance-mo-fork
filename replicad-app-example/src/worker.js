@@ -225,10 +225,30 @@ function tag(targetID, inputID, TAG) {
   });
 }
 
-function code(targetID, codeBlock, inputIDs) {
+function code(targetID, codeBlock, inputIDs, argumentsArray) {
   return started.then(() => {
-    console.log(inputIDs);
-    console.log(codeBlock);
+    console.log(argumentsArray);
+    let keys1 = [];
+    let inputValues = [];
+    for (const [key, value] of Object.entries(argumentsArray)) {
+      keys1.push(`${key}`);
+      inputValues.push(value);
+    }
+
+    function codeFunction(...keys1) {
+      //not sure how to execute the code block
+      return eval(codeBlock);
+    }
+
+    let result = codeFunction(...inputValues);
+
+    library[targetID] = {
+      geometry: result,
+      tags: [],
+      color: "#FF9065",
+    };
+
+    console.log(library[targetID]);
 
     return true;
   });

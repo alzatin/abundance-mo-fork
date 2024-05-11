@@ -108,17 +108,16 @@ export default class Code extends Atom {
             inputValues.push(io.getValue());
           }
         });
+        var argumentsArray = {};
+        this.inputs.forEach((input) => {
+          argumentsArray[input.name] = input.value;
+        });
         console.log(inputValues);
         GlobalVariables.cad
-          .code(this.uniqueID, this.code, inputValues)
+          .code(this.uniqueID, this.code, inputValues, argumentsArray)
           .then(() => {
             this.basicThreadValueProcessing();
           });
-
-        /*var argumentsArray = {};
-      this.inputs.forEach((input) => {
-        argumentsArray[input.name] = input.value;
-      });*/
       } catch (err) {
         this.setAlert(err);
       }
