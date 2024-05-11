@@ -34,7 +34,7 @@ export default class Code extends Atom {
      * @type {string}
      */
     this.code =
-      "//Learn more about all of the available methods at https://replicad.xyz/docs/introapp/UserGuide.html \n//Inputs:[Input1, Input2];\n\n\nreturn [drawRectangle(10,10)]\n//what you return should be an array of geometries\n ";
+      "//Inputs:[Input1, Input2];\n\n\nreturn [drawRectangle(5,10)]\n//what you return should be a replicad geometry\n\nLearn more about all of the available methods at \n https://replicad.xyz/docs/introapp/UserGuide.html \n";
 
     this.addIO("output", "geometry", this, "geometry", "");
 
