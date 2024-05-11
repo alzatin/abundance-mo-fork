@@ -121,6 +121,12 @@ const ShowProjects = (props) => {
       props.setBrowsing(!props.userBrowsing);
       setStateLoaded(true);
     };
+    const handleSearchChange = (e) => {
+      if (e.code == "Enter") {
+        setSearchBarValue(e.target.value);
+      }
+    };
+    const [searchBarType, setSearchBarType] = useState(searchBarValue);
     return (
       <>
         {props.isloggedIn ? (
@@ -153,10 +159,13 @@ const ShowProjects = (props) => {
         <div className="search-bar-div">
           <input
             type="text"
-            contentEditable="true"
-            value={searchBarValue}
-            onChange={handleSearchChange}
-            placeholder="Search for project.."
+            key="project-search-bar"
+            placeholder={searchBarType}
+            value={searchBarType}
+            onChange={(e) => setSearchBarType(e.target.value)}
+            onKeyDown={(e) => {
+              handleSearchChange(e);
+            }}
             className="menu_search searchButton"
             id="project_search"
           />
@@ -236,9 +245,6 @@ const ShowProjects = (props) => {
     window.open(url, "_blank", "noreferrer");
   };
 
-  const handleSearchChange = (e) => {
-    setSearchBarValue(e.target.value);
-  };
   return (
     <>
       <div className="middleBrowse" style={{ marginTop: "35px" }}>
