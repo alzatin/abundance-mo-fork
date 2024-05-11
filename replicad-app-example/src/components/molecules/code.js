@@ -114,7 +114,7 @@ export default class Code extends Atom {
         });
 
         GlobalVariables.cad
-          .code(this.uniqueID, this.code, inputValues, argumentsArray)
+          .code(this.uniqueID, this.code, argumentsArray)
           .then(() => {
             this.basicThreadValueProcessing();
           });

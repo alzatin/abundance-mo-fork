@@ -225,7 +225,7 @@ function tag(targetID, inputID, TAG) {
   });
 }
 
-function code(targetID, code, inputIDs, argumentsArray) {
+function code(targetID, code, argumentsArray) {
   return started.then(() => {
     let keys1 = [];
     let inputValues = [];
