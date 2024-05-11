@@ -88,8 +88,7 @@ const ShowProjects = (props) => {
     if (props.user == "" || props.userBrowsing) {
       query = searchBarValue + " topic:maslowcreate";
     } else {
-      query =
-        searchBarValue + "fork:true user:" + props.user + " topic:maslowcreate";
+      query = searchBarValue + " user:" + props.user + " topic:maslowcreate";
     }
     octokit = new Octokit();
     octokit
