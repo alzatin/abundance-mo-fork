@@ -3,7 +3,7 @@ import { licenses } from "./js/licenseOptions.js";
 import GlobalVariables from "./js/globalvariables.js";
 import Molecule from "./molecules/molecule.js";
 import { useNavigate } from "react-router-dom";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 //Replaces the loaded projects if the user clicks on new project button
 const NewProjectPopUp = (props) => {
   /**
@@ -236,9 +236,9 @@ const NewProjectPopUp = (props) => {
   const options = [
     { value: "maslowcreate", label: "maslowcreate" },
     { value: "maslowcreate-project", label: "maslowcreate-project" },
-    { value: "maslowcreate-action", label: "action" },
-    { value: "maslowcreate-joinery", label: "joinery" },
-    { value: "maslowcreate-furniture", label: "furniture" },
+    { value: "maslowcreate-action", label: "maslowcreate-action" },
+    { value: "maslowcreate-joinery", label: "maslowcreate-joinery" },
+    { value: "maslowcreate-furniture", label: "maslowcreate-furniture" },
   ];
   return (
     <>
@@ -263,7 +263,7 @@ const NewProjectPopUp = (props) => {
               placeholder="Project Name"
               ref={projectRef}
             />
-            <Select
+            <CreatableSelect
               defaultValue={[options[0], options[1]]}
               isMulti
               name="Topics"
