@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-three/drei": "^9.97.0",
     "@react-three/fiber": "8.15.16",
+    "@uiw/react-codemirror": "^4.22.0",
     "circular-menu": "^1.0.6",
     "codemirror": "^6.0.1",
     "comlink": "^4.4.1",
@@ -22,6 +23,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "^6.22.3",
+    "react-select": "^5.8.0",
     "replicad": "^0.15.3",
     "replicad-opencascadejs": "^0.15.2",
     "replicad-threejs-helper": "^0.15.2",
