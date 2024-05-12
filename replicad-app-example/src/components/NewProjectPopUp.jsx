@@ -221,12 +221,10 @@ const NewProjectPopUp = (props) => {
       projectTags.push(topic[`value`]);
     });
 
-    console.log(projectTags);
-
     if (GlobalVariables.currentMolecule) {
       var molecule = GlobalVariables.currentMolecule;
     }
-
+    // Calls the create new project function and creates a new github repo with user input
     createProject(
       [projectName, projectTags, projectDescription],
       molecule,
@@ -237,7 +235,7 @@ const NewProjectPopUp = (props) => {
     { value: "maslowcreate", label: "maslowcreate" },
     { value: "maslowcreate-project", label: "maslowcreate-project" },
     { value: "maslowcreate-action", label: "maslowcreate-action" },
-    { value: "maslowcreate-joinery", label: "maslowcreate-joinery" },
+    { value: "maslowcreate-examples", label: "maslowcreate-examples" },
     { value: "maslowcreate-furniture", label: "maslowcreate-furniture" },
   ];
   return (
@@ -263,15 +261,6 @@ const NewProjectPopUp = (props) => {
               placeholder="Project Name"
               ref={projectRef}
             />
-            <CreatableSelect
-              defaultValue={[options[0], options[1]]}
-              isMulti
-              name="Topics"
-              options={options}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              ref={projectTagsRef}
-            />
             {/*<select id="license-options">
               {keys_ar.map((opt) => {
                 return (
@@ -284,6 +273,15 @@ const NewProjectPopUp = (props) => {
             <input
               placeholder="Project Description"
               ref={projectDescriptionRef}
+            />
+            <CreatableSelect
+              defaultValue={[options[0], options[1]]}
+              isMulti
+              name="Project Topics"
+              options={options}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              ref={projectTagsRef}
             />
             <button disabled={pending} type="submit">
               {pending ? newProjectBar + "%" : "Submit/Export to Github"}

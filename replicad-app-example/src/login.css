@@ -64,6 +64,7 @@
 }
 
 .export-div {
+  width: 70%;
   z-index: 5;
   position: absolute;
   top: 30%;
@@ -562,6 +563,11 @@
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+}
+
+.basic-multi-select {
+  margin: 0px 0px 5px 0px;
+  width: 100%;
 }
 
 .browseButton:hover {
