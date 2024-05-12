@@ -428,7 +428,6 @@ function extractTags(inputGeometry, TAG) {
 function layout(targetID, inputID, TAG, spacing) {
   return started.then(() => {
     let taggedGeometry = extractTags(library[inputID], TAG);
-    console.log(taggedGeometry);
     let shapenum = 0;
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
       shapenum++;
@@ -463,7 +462,6 @@ function layout(targetID, inputID, TAG, spacing) {
           .rotate(i, [0, 0, 0], [0, 1, 0]).boundingBox.depth;
       }
       rotatiY = Number(maxMinVal(heightAngleY)[0]);
-      console.log(leaf.geometry[0].boundingBox);
 
       // Finding how much to move the geometry to center at the origin
       let movex =
@@ -490,14 +488,13 @@ function layout(targetID, inputID, TAG, spacing) {
             .clone()
             .rotate(rotatiX, alteredGeometry.boundingBox.center, [1, 0, 0])
             .rotate(rotatiY, alteredGeometry.boundingBox.center, [0, 1, 0])
-            .translate(shapenum * 30, 0, 0),
+            .translate(shapenum * spacing, 0, 0),
         ],
         tags: leaf.tags,
         color: leaf.color,
         plane: leaf.plane,
       };
     });
-    console.log(library[targetID]);
     return true;
   });
 }
