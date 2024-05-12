@@ -65,7 +65,6 @@ const NewProjectPopUp = (props) => {
     molecule,
     exporting
   ) => {
-    console.log(tags);
     // If there is a molecule and we are exporting replace current top molecule
     if (molecule !== undefined && exporting) {
       GlobalVariables.topLevelMolecule = molecule;

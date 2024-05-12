@@ -14,7 +14,7 @@ now:
     - Bug : LEVA input error ? - seems like its wire 
     - fix project tags for new project
     - generate ID function global , fix for cut assemblies ? 
-    - keep out
+    - keep out molecule 
     - sort out files /organize 
     - document better
 
@@ -23,7 +23,8 @@ mid :
 
     - github search needs css help
     - hull (in april? waiting for replicad)
-    - tag drop down for all available tags- warning for no tag found
+    - tag drop down for all available maslowtopics-
+    - dropdown for tags inside createMode- warning for no tag found
     - BOM summary / fix inputs
     - add labels to molecule
     - REDO login/browse to use link/reroute
