@@ -156,7 +156,7 @@ export default function ReplicadApp() {
                 props={{
                   isloggedIn: isloggedIn,
                   setActiveAtom: setActiveAtom,
-                  activeAtom: activeAtom,
+                  activeAtom: GlobalVariables.currentMolecule,
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
                   loadProject: loadProject,

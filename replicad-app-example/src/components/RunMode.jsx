@@ -94,9 +94,6 @@ function runMode(props) {
           atomType: "Molecule",
         });
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-        console.log("running load on run mode");
-
-        console.log(GlobalVariables.currentRepo, GlobalVariables.loadedRepo);
         props.props.loadProject(GlobalVariables.currentRepo);
       }
     });
@@ -108,8 +105,6 @@ function runMode(props) {
       setOwned(true);
     }
   }, []);
-  console.log(mesh);
-  console.log(mesh == wireMesh);
 
   return (
     <>
@@ -164,7 +159,7 @@ function runMode(props) {
               <ThreeContext gridParam={gridParamRun} axesParam={axesParamRun}>
                 {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
 
-                <ReplicadMesh mesh={mesh} isSolid={solidParam} />
+                <ReplicadMesh mesh={wireMesh} isSolid={solidParam} />
               </ThreeContext>
             ) : (
               <div
