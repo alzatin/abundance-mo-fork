@@ -83,6 +83,7 @@ function runMode(props) {
       globalvariables.currentRepo = result.data;
       /** Only run loadproject() if the project is different from what is already loaded  */
       if (
+        !GlobalVariables.loadedRepo ||
         globalvariables.currentRepo.name !== GlobalVariables.loadedRepo.name
       ) {
         //Load a blank project
