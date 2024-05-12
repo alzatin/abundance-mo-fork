@@ -102,6 +102,8 @@ function runMode(props) {
       setOwned(true);
     }
   }, []);
+  console.log(mesh);
+  console.log(mesh == wireMesh);
 
   return (
     <>
@@ -152,12 +154,11 @@ function runMode(props) {
               height: windowSize.height,
             }}
           >
-            {mesh ? (
+            {wireMesh ? (
               <ThreeContext gridParam={gridParamRun} axesParam={axesParamRun}>
                 {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
-                {solidParam ? (
-                  <ReplicadMesh mesh={mesh} isSolid={props.props.solidParam} />
-                ) : null}
+
+                <ReplicadMesh mesh={mesh} isSolid={solidParam} />
               </ThreeContext>
             ) : (
               <div
