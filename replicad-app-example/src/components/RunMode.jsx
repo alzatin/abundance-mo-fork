@@ -82,7 +82,9 @@ function runMode(props) {
     octokit.request("GET /repositories/:id", { id }).then((result) => {
       globalvariables.currentRepo = result.data;
       /** Only run loadproject() if the project is different from what is already loaded  */
-      if (globalvariables.currentRepo !== GlobalVariables.loadedRepo) {
+      if (
+        globalvariables.currentRepo.name !== GlobalVariables.loadedRepo.name
+      ) {
         //Load a blank project
         GlobalVariables.topLevelMolecule = new Molecule({
           x: 0,
@@ -91,6 +93,9 @@ function runMode(props) {
           atomType: "Molecule",
         });
         GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+        console.log("running load on run mode");
+
+        console.log(GlobalVariables.currentRepo, GlobalVariables.loadedRepo);
         props.props.loadProject(GlobalVariables.currentRepo);
       }
     });
