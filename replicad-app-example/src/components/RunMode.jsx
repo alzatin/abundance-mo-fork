@@ -154,14 +154,9 @@ function runMode(props) {
           >
             {mesh ? (
               <ThreeContext gridParam={gridParamRun} axesParam={axesParamRun}>
-                {wireParam ? (
-                  <WireframeMesh
-                    edges={wireMesh.edges}
-                    faces={wireMesh.faces}
-                  />
-                ) : null}
+                {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
                 {solidParam ? (
-                  <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
+                  <ReplicadMesh mesh={mesh} isSolid={props.props.solidParam} />
                 ) : null}
               </ThreeContext>
             ) : (
