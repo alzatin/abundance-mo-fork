@@ -429,7 +429,9 @@ function layout(targetID, inputID, TAG, spacing) {
   return started.then(() => {
     let taggedGeometry = extractTags(library[inputID], TAG);
     console.log(taggedGeometry);
+    let shapenum = 0;
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
+      shapenum++;
       /** Angle to rotate in x and y plane */
       let rotatiX = 0;
       let rotatiY = 0;
@@ -441,7 +443,6 @@ function layout(targetID, inputID, TAG, spacing) {
         const sortedEntriesByVal = Object.entries(obj).sort(
           ([, v1], [, v2]) => v1 - v2
         );
-
         return sortedEntriesByVal[0];
       };
       /** Checks for lowest possible height by rotating on x */
@@ -463,6 +464,8 @@ function layout(targetID, inputID, TAG, spacing) {
       }
       rotatiY = Number(maxMinVal(heightAngleY)[0]);
       console.log(leaf.geometry[0].boundingBox);
+
+      // Finding how much to move the geometry to center at the origin
       let movex =
         (leaf.geometry[0].boundingBox.bounds[0][0] +
           leaf.geometry[0].boundingBox.bounds[1][0]) /
@@ -475,14 +478,10 @@ function layout(targetID, inputID, TAG, spacing) {
         (leaf.geometry[0].boundingBox.bounds[0][2] +
           leaf.geometry[0].boundingBox.bounds[1][2]) /
         2;
-
-      console.log(movex);
-
+      // Geometry centered at origin xyz
       let alteredGeometry = leaf.geometry[0]
         .clone()
         .translate(-movex, -movey, -movez);
-
-      console.log(alteredGeometry.boundingBox);
 
       /** Returns rotated geometry */
       return {
@@ -490,7 +489,8 @@ function layout(targetID, inputID, TAG, spacing) {
           alteredGeometry
             .clone()
             .rotate(rotatiX, alteredGeometry.boundingBox.center, [1, 0, 0])
-            .rotate(rotatiY, alteredGeometry.boundingBox.center, [0, 1, 0]),
+            .rotate(rotatiY, alteredGeometry.boundingBox.center, [0, 1, 0])
+            .translate(shapenum * 30, 0, 0),
         ],
         tags: leaf.tags,
         color: leaf.color,
