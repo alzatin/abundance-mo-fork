@@ -225,6 +225,29 @@ function tag(targetID, inputID, TAG) {
   });
 }
 
+function code(targetID, code, argumentsArray) {
+  return started.then(() => {
+    let keys1 = [];
+    let inputValues = [];
+    for (const [key, value] of Object.entries(argumentsArray)) {
+      keys1.push(`${key}`);
+      inputValues.push(value);
+    }
+    // revisit this eval/ Is this the right/safest way to do this?
+    var result = eval(
+      "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
+    );
+
+    library[targetID] = {
+      geometry: result,
+      tags: [],
+      color: "#FF9065",
+    };
+
+    return true;
+  });
+}
+
 function color(targetID, inputID, color) {
   return started.then(() => {
     library[targetID] = {
@@ -709,6 +732,7 @@ expose({
   createMesh,
   circle,
   color,
+  code,
   downSVG,
   regularPolygon,
   rectangle,
