@@ -15,15 +15,15 @@ now:
     - rendering problems when directly linking to run mode
     - Cut layout should separate by height
     - Bug : LEVA input error ? - seems like its wire 
-    - fix project tags for new project
     - generate ID function global , fix for cut assemblies ? 
     - keep out molecule 
     - sort out files /organize 
     - document better
+    
 
 
 mid :
-
+    - fix shortcut button
     - github search needs css help
     - hull (in april? waiting for replicad)
     - tag drop down for all available maslowtopics-

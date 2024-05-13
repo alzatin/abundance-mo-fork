@@ -64,7 +64,10 @@ export default memo(function FlowCanvas(props) {
     GlobalVariables.c = canvasRef.current.getContext("2d");
 
     /** Only run loadproject() if the project is different from what is already loaded  */
-    if (GlobalVariables.currentRepo !== GlobalVariables.loadedRepo) {
+    if (
+      !GlobalVariables.loadedRepo ||
+      GlobalVariables.currentRepo.name !== GlobalVariables.loadedRepo.name
+    ) {
       //Load a blank project
       GlobalVariables.topLevelMolecule = new Molecule({
         x: 0,
@@ -73,6 +76,7 @@ export default memo(function FlowCanvas(props) {
         atomType: "Molecule",
       });
       GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+      console.log("running load on create mode");
       loadProject(GlobalVariables.currentRepo);
     }
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {

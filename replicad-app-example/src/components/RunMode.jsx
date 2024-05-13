@@ -82,7 +82,10 @@ function runMode(props) {
     octokit.request("GET /repositories/:id", { id }).then((result) => {
       globalvariables.currentRepo = result.data;
       /** Only run loadproject() if the project is different from what is already loaded  */
-      if (globalvariables.currentRepo !== GlobalVariables.loadedRepo) {
+      if (
+        !GlobalVariables.loadedRepo ||
+        globalvariables.currentRepo.name !== GlobalVariables.loadedRepo.name
+      ) {
         //Load a blank project
         GlobalVariables.topLevelMolecule = new Molecule({
           x: 0,
@@ -152,17 +155,11 @@ function runMode(props) {
               height: windowSize.height,
             }}
           >
-            {mesh ? (
+            {wireMesh ? (
               <ThreeContext gridParam={gridParamRun} axesParam={axesParamRun}>
-                {wireParam ? (
-                  <WireframeMesh
-                    edges={wireMesh.edges}
-                    faces={wireMesh.faces}
-                  />
-                ) : null}
-                {solidParam ? (
-                  <ReplicadMesh edges={mesh.edges} faces={mesh.faces} />
-                ) : null}
+                {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
+
+                <ReplicadMesh mesh={wireMesh} isSolid={solidParam} />
               </ThreeContext>
             ) : (
               <div
