@@ -26,19 +26,11 @@ const init = async () => {
 };
 const started = init();
 
-function createBlob(thickness) {
-  // note that you might want to do some caching for more complex models
-  return started.then(() => {
-    return drawBox(thickness).blobSTEP();
-  });
-}
-
 function createMesh(thickness) {
   return started.then(() => {
-    const box = drawBox(thickness);
     // This is how you get the data structure that the replica-three-helper
     // can synchronize with three BufferGeometry
-    return [{ faces: box.mesh(), edges: box.meshEdges() }];
+    return [];
   });
 }
 
@@ -221,6 +213,29 @@ function tag(targetID, inputID, TAG) {
       tags: [TAG, ...library[inputID].tags],
       color: library[inputID].color,
     };
+    return true;
+  });
+}
+
+function code(targetID, code, argumentsArray) {
+  return started.then(() => {
+    let keys1 = [];
+    let inputValues = [];
+    for (const [key, value] of Object.entries(argumentsArray)) {
+      keys1.push(`${key}`);
+      inputValues.push(value);
+    }
+    // revisit this eval/ Is this the right/safest way to do this?
+    var result = eval(
+      "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
+    );
+
+    library[targetID] = {
+      geometry: result,
+      tags: [],
+      color: "#FF9065",
+    };
+
     return true;
   });
 }
@@ -705,10 +720,10 @@ function generateDisplayMesh(id) {
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
 expose({
-  createBlob,
   createMesh,
   circle,
   color,
+  code,
   downSVG,
   regularPolygon,
   rectangle,

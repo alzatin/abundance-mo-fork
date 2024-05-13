@@ -1,6 +1,7 @@
 import Atom from "../prototypes/atom.js";
-//import CodeMirror from 'codemirror'
+
 import GlobalVariables from "../js/globalvariables.js";
+import { button } from "leva";
 
 /**
  * The Code molecule type adds support for executing arbitrary jsxcad code.
@@ -27,13 +28,13 @@ export default class Code extends Atom {
      * A description of this atom
      * @type {string}
      */
-    this.description = "Defines a JSxCAD code block.";
+    this.description = "Defines a Replicad code block.";
     /**
      * The code contained within the atom stored as a string.
      * @type {string}
      */
     this.code =
-      "//You can learn more about all of the available methods at https://jsxcad.js.org/app/UserGuide.html \n//Inputs:[Input1, Input2];\n\n\nreturn Orb(10)";
+      "//Inputs:[Input1, Input2];\n\n\nreturn [drawRectangle(5,10)]\n//what you return should be a replicad geometry\n\nLearn more about all of the available methods at \n https://replicad.xyz/docs/introapp/UserGuide.html \n";
 
     this.addIO("output", "geometry", this, "geometry", "");
 
@@ -81,70 +82,45 @@ export default class Code extends Atom {
     }
   }
 
+  createLevaInputs() {
+    let outputParams = {};
+    outputParams["Edit Code"] = button(() => this.editCode());
+    return outputParams;
+  }
+
+  updateCode(code) {
+    this.code = code;
+    this.updateValue();
+  }
+
   /**
    * Grab the code as a text string and execute it.
    */
-  updateValue() {
-    try {
-      this.parseInputs();
+  updateValue(value) {
+    //Parse the inputs
+    this.parseInputs();
 
-      var argumentsArray = {};
-      this.inputs.forEach((input) => {
-        argumentsArray[input.name] = input.value;
-      });
-
-      const values = {
-        op: "code",
-        code: this.code,
-        paths: argumentsArray,
-        writePath: this.path,
-      };
-
-      var go = true;
-      this.inputs.forEach((input) => {
-        if (!input.ready) {
-          go = false;
-        }
-      });
-      if (go) {
-        //Then we update the value
-
-        this.waitOnComingInformation(); //This sends a chain command through the tree to lock all the inputs which are down stream of this one. It also cancels anything processing if this atom was doing a calculation already.
-
-        /**
-         * Indicates that this atom is computing
-         * @type {boolean}
-         */
-        this.processing = true;
-        this.decreaseToProcessCountByOne();
-
-        this.clearAlert();
-
-        const { answer, terminate } = window.ask(values);
-        answer.then((result) => {
-          if (result.success) {
-            if (result.type == "path") {
-              this.displayAndPropagate();
-            } else {
-              if (this.output) {
-                this.output.setValue(result.value);
-                this.output.ready = true;
-              }
-            }
-          } else {
-            this.setAlert("Unable to compute");
+    if (this.inputs.every((x) => x.ready)) {
+      try {
+        var inputValues = [];
+        this.inputs.forEach((io) => {
+          if (io.connectors.length > 0 && io.type == "input") {
+            inputValues.push(io.getValue());
           }
-          this.processing = false;
+        });
+        var argumentsArray = {};
+        this.inputs.forEach((input) => {
+          argumentsArray[input.name] = input.value;
         });
 
-        /**
-         * This can be called to interrupt the computation
-         * @type {function}
-         */
-        this.cancelProcessing = terminate;
+        GlobalVariables.cad
+          .code(this.uniqueID, this.code, argumentsArray)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          });
+      } catch (err) {
+        this.setAlert(err);
       }
-    } catch (err) {
-      this.setAlert(err);
     }
   }
 
@@ -213,45 +189,13 @@ export default class Code extends Atom {
    * Called to trigger editing the code atom
    */
   editCode() {
-    //Remove everything in the popup now
-    const popup = document.getElementById("projects-popup");
-    while (popup.firstChild) {
-      popup.removeChild(popup.firstChild);
-    }
-
-    popup.classList.remove("off");
-
-    //Add a title
-    // var codeMirror = CodeMirror(popup, {
-    //     value: this.code,
-    //     mode:  "javascript",
-    //     lineNumbers: true,
-    //     gutter: true,
-    //     lineWrapping: true
-    // })
-
-    var form = document.createElement("form");
-    popup.appendChild(form);
-    var button = document.createElement("button");
-    button.setAttribute("type", "button");
-    button.appendChild(document.createTextNode("Save Code"));
-    button.addEventListener("click", () => {
-      //this.code = codeMirror.getDoc().getValue('\n')
-      this.updateValue();
-      popup.classList.add("off");
-    });
-    form.appendChild(button);
+    const codeWindow = document.getElementById("code-window");
+    codeWindow.classList.remove("code-off");
   }
 
-  /**
-   * Add a button to open the code editor to the side bar
-   */
-  updateSidebar() {
-    var valueList = super.updateSidebar();
-
-    this.createButton(valueList, this, "Edit Code", () => {
-      this.editCode();
-    });
+  closeEditor() {
+    const codeWindow = document.getElementById("code-window");
+    codeWindow.classList.add("code-off");
   }
 
   /**
