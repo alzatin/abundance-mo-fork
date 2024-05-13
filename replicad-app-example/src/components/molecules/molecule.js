@@ -51,16 +51,6 @@ export default class Molecule extends Atom {
      */
     this.topLevel = false;
     /**
-     * A flag to indicate if this molecule should simplify it's output.
-     * @type {boolean}
-     */
-    this.simplify = false;
-    /**
-     * The threshold for simplification. This is the maximum fraction of vertices which will be removed.
-     * @type {float}
-     */
-    this.threshold = 0.8;
-    /**
      * A flag to indicate if this molecule is currently processing.
      * @type {boolean}
      */

@@ -3,6 +3,7 @@ import { licenses } from "./js/licenseOptions.js";
 import GlobalVariables from "./js/globalvariables.js";
 import Molecule from "./molecules/molecule.js";
 import { useNavigate } from "react-router-dom";
+import CreatableSelect from "react-select/creatable";
 //Replaces the loaded projects if the user clicks on new project button
 const NewProjectPopUp = (props) => {
   /**
@@ -66,7 +67,6 @@ const NewProjectPopUp = (props) => {
   ) => {
     // If there is a molecule and we are exporting replace current top molecule
     if (molecule !== undefined && exporting) {
-      console.log("exporting");
       GlobalVariables.topLevelMolecule = molecule;
       molecule.topLevel = true; //force the molecule to export in the long form as if it were the top level molecule
     } else {
@@ -80,7 +80,6 @@ const NewProjectPopUp = (props) => {
         uniqueID: GlobalVariables.generateUniqueID(),
       });
     }
-
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
 
     await authorizedUserOcto
@@ -115,7 +114,7 @@ const NewProjectPopUp = (props) => {
             owner: currentUser,
             repo: currentRepoName,
             path: "project.maslowcreate",
-            message: "initialize repo",
+            message: "Initialize repo",
             content: projectContent,
           })
           .then((result) => {
@@ -173,7 +172,7 @@ const NewProjectPopUp = (props) => {
                                 content: "",
                               })
                               .then(() => {
-                                setNewProjectBar(90);
+                                setNewProjectBar(80);
                                 let licenseText = ""; // ?
                                 authorizedUserOcto.rest.repos
                                   .createOrUpdateFileContents({
@@ -184,10 +183,20 @@ const NewProjectPopUp = (props) => {
                                     content: window.btoa(licenseText),
                                   })
                                   .then(() => {
-                                    setExportPopUp(false);
-                                    navigate(
-                                      `/${GlobalVariables.currentRepo.id}`
-                                    );
+                                    setNewProjectBar(90);
+
+                                    authorizedUserOcto.rest.repos
+                                      .replaceAllTopics({
+                                        owner: currentUser,
+                                        repo: currentRepoName,
+                                        names: tags,
+                                      })
+                                      .then(() => {
+                                        setExportPopUp(false);
+                                        navigate(
+                                          `/${GlobalVariables.currentRepo.id}`
+                                        );
+                                      });
                                   });
                               });
                           });
@@ -195,16 +204,6 @@ const NewProjectPopUp = (props) => {
                   });
               });
           });
-
-        //Update the project topics
-        authorizedUserOcto.rest.repos.replaceAllTopics({
-          owner: currentUser,
-          repo: currentRepoName,
-          names: ["maslowcreate", "maslowcreate-project"],
-          s: {
-            accept: "application/vnd.github.mercy-preview+json",
-          },
-        });
       });
   };
 
@@ -213,18 +212,31 @@ const NewProjectPopUp = (props) => {
     e.preventDefault();
     setPending(true);
     const projectName = projectRef.current.value;
-    const projectTags = projectTagsRef.current.value;
+    const projectTagArray = projectTagsRef.current.getValue();
     const projectDescription = projectDescriptionRef.current.value;
+    const projectTags = [];
+
+    projectTagArray.forEach((topic) => {
+      projectTags.push(topic[`value`]);
+    });
 
     if (GlobalVariables.currentMolecule) {
       var molecule = GlobalVariables.currentMolecule;
     }
+    // Calls the create new project function and creates a new github repo with user input
     createProject(
       [projectName, projectTags, projectDescription],
       molecule,
       exporting
     );
   };
+  const options = [
+    { value: "maslowcreate", label: "maslowcreate" },
+    { value: "maslowcreate-project", label: "maslowcreate-project" },
+    { value: "maslowcreate-action", label: "maslowcreate-action" },
+    { value: "maslowcreate-examples", label: "maslowcreate-examples" },
+    { value: "maslowcreate-furniture", label: "maslowcreate-furniture" },
+  ];
   return (
     <>
       <div className="login-page export-div">
@@ -248,11 +260,6 @@ const NewProjectPopUp = (props) => {
               placeholder="Project Name"
               ref={projectRef}
             />
-            <input
-              name="Project Tags"
-              ref={projectTagsRef}
-              placeholder="Project Tags"
-            />
             {/*<select id="license-options">
               {keys_ar.map((opt) => {
                 return (
@@ -265,6 +272,15 @@ const NewProjectPopUp = (props) => {
             <input
               placeholder="Project Description"
               ref={projectDescriptionRef}
+            />
+            <CreatableSelect
+              defaultValue={[options[0], options[1]]}
+              isMulti
+              name="Project Topics"
+              options={options}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              ref={projectTagsRef}
             />
             <button disabled={pending} type="submit">
               {pending ? newProjectBar + "%" : "Submit/Export to Github"}
