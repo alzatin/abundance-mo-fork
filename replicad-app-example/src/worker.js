@@ -186,6 +186,7 @@ function cut(targetID, input1ID, input2ID) {
         geometry: [leaf.geometry[0].clone().cut(cutTemplate)],
         tags: leaf.tags,
         color: leaf.color,
+        plane: leaf.plane,
       };
     });
     return true;
@@ -200,6 +201,7 @@ function intersect(targetID, input1ID, input2ID) {
         geometry: [leaf.geometry[0].clone().intersect(shapeToIntersectWith)],
         tags: leaf.tags,
         color: leaf.color,
+        plane: leaf.plane,
       };
     });
     return true;
@@ -212,6 +214,7 @@ function tag(targetID, inputID, TAG) {
       geometry: library[inputID].geometry,
       tags: [TAG, ...library[inputID].tags],
       color: library[inputID].color,
+      plane: library[inputID].plane,
     };
     return true;
   });
@@ -246,6 +249,7 @@ function color(targetID, inputID, color) {
       geometry: library[inputID].geometry,
       tags: [color, ...library[inputID].tags],
       color: color,
+      plane: library[inputID].plane,
     };
     return true;
   });
@@ -439,7 +443,9 @@ function extractTags(inputGeometry, TAG) {
 function layout(targetID, inputID, TAG, spacing) {
   return started.then(() => {
     let taggedGeometry = extractTags(library[inputID], TAG);
+    let shapenum = 0;
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
+      shapenum++;
       /** Angle to rotate in x and y plane */
       let rotatiX = 0;
       let rotatiY = 0;
@@ -451,11 +457,10 @@ function layout(targetID, inputID, TAG, spacing) {
         const sortedEntriesByVal = Object.entries(obj).sort(
           ([, v1], [, v2]) => v1 - v2
         );
-
         return sortedEntriesByVal[0];
       };
       /** Checks for lowest possible height by rotating on x */
-      for (let i = -1; i > -90; i--) {
+      for (let i = 0; i > -90; i--) {
         heightAngleX[i] = leaf.geometry[0]
           .clone()
           .rotate(i, [0, 0, 0], [1, 0, 0]).boundingBox.depth;
@@ -465,7 +470,7 @@ function layout(targetID, inputID, TAG, spacing) {
 
       /** Checks for lowest possible height by rotating on x and then on y*/
 
-      for (let i = -1; i > -90; i--) {
+      for (let i = 0; i > -90; i--) {
         heightAngleY[i] = leaf.geometry[0]
           .clone()
           .rotate(rotatiX, [0, 0, 0], [1, 0, 0])
@@ -473,15 +478,36 @@ function layout(targetID, inputID, TAG, spacing) {
       }
       rotatiY = Number(maxMinVal(heightAngleY)[0]);
 
+      // Finding how much to move the geometry to center at the origin
+      let movex =
+        (leaf.geometry[0].boundingBox.bounds[0][0] +
+          leaf.geometry[0].boundingBox.bounds[1][0]) /
+        2;
+      let movey =
+        (leaf.geometry[0].boundingBox.bounds[0][1] +
+          leaf.geometry[0].boundingBox.bounds[1][1]) /
+        2;
+      let movez =
+        (leaf.geometry[0].boundingBox.bounds[0][2] +
+          leaf.geometry[0].boundingBox.bounds[1][2]) /
+        2;
+      // Geometry centered at origin xyz
+      let alteredGeometry = leaf.geometry[0]
+        .clone()
+        .translate(-movex, -movey, -movez);
+
       /** Returns rotated geometry */
       return {
         geometry: [
-          leaf.geometry[0]
+          alteredGeometry
             .clone()
-            .rotate(rotatiX, [0, 0, 0], [1, 0, 0])
-            .rotate(rotatiY, [0, 0, 0], [0, 1, 0]),
+            .rotate(rotatiX, alteredGeometry.boundingBox.center, [1, 0, 0])
+            .rotate(rotatiY, alteredGeometry.boundingBox.center, [0, 1, 0])
+            .translate(shapenum * spacing, 0, 0),
         ],
         tags: leaf.tags,
+        color: leaf.color,
+        plane: leaf.plane,
       };
     });
     return true;
