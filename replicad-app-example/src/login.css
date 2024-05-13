@@ -361,7 +361,7 @@
   z-index: 10;
 }
 
-.login-popup.off {
+.code-off {
   top: -200%;
   left: -200%;
 }
