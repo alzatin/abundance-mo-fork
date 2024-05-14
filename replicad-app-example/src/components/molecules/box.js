@@ -93,7 +93,7 @@ export default class Box extends Atom {
   /**
    * When mouse moves and Ctrl is down updates value for box width and height
    */
-  clickMove(x, y) {
+  mouseMove(x, y) {
     // if(GlobalVariables.ctrlDown){
     /**
      * Sets new box end to click target
