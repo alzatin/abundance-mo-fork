@@ -24,7 +24,7 @@ export default class AttachmentPoint {
      * This atom's current radius as displayed.
      * @type {number}
      */
-    this.radius = 1 / 60;
+    this.radius = 1 / 80;
     /**
      * When the mouse is hovering where should the AP move in X
      * @type {number}
