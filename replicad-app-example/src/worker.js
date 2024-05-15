@@ -4,6 +4,7 @@ import { setOC } from "replicad";
 import { expose } from "comlink";
 import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
+import globalvariables from "./components/js/globalvariables";
 // We import our model as a simple function
 import { drawBox } from "./cad";
 import { i, re } from "mathjs";
@@ -538,7 +539,8 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       // make new assembly from cut parts
       assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID, assemblyID));
     });
-    let subID = assemblyID * 10 + index + Math.random(100); // needs to be randomized?
+
+    let subID = globalvariables.generateUniqueID();
     //returns new assembly that has been cut
     library[subID] = {
       geometry: assemblyCut,

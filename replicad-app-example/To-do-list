@@ -19,7 +19,7 @@ now:
     - Cut layout should separate by height
     - Bug : LEVA input error ? - seems like its wire 
     - generate ID function global , fix for cut assemblies ? 
-    - keep out molecule 
+    - keep out molecule own icon?
     - sort out files /organize 
     - document better
     
