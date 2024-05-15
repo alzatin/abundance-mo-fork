@@ -10,7 +10,7 @@ now:
     - (if we are going to start creating github molecules that are action/tools, we need to fix tags and filtering systems first or soon?)
 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
-    
+
     - model some things :S [deckle box, stool] > need to start creating new actions with gitmolecules otherwise it's very hard to model anything.
     
     - fake background click when project is first loaded 
@@ -25,6 +25,7 @@ now:
 
 
 mid :
+    - replicad packing? 
     - fix shortcut button
     - github search needs css help
     - hull (in april? waiting for replicad)
