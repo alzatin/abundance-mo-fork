@@ -26,6 +26,8 @@ now:
 
 
 mid :
+
+    - BUG: if we create multiple inputs without changing the name, they won't show in menu 
     - replicad packing? 
     - fix shortcut button
     - github search needs css help
