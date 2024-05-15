@@ -108,6 +108,9 @@ export default class Code extends Atom {
     }
   }
 
+  /**
+   * Called when code editor save button is clicked. Updates the code and value of the atom.
+   */
   updateCode(code) {
     this.code = code;
     this.updateValue();

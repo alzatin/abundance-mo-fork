@@ -29,20 +29,19 @@ mid :
     - fix shortcut button
     - github search needs css help
     - hull (in april? waiting for replicad)
-    - tag drop down for all available maslowtopics-
-    - dropdown for tags inside createMode- warning for no tag found
+    - tag drop downs for extract tag
+    - github topic filter search
     - BOM summary / fix inputs
     - add labels to molecule
     - REDO login/browse to use link/reroute
-    - - allow filtering of projects
+    - allow filtering of projects
     - nest
     - implement three/drei wireframe?
-    - extract tag should have dropdown of existing tags
     - GET request sometimes failing at browsing for projects
     - Face lift for project browse and new project (later)
     - Check on accuracy of draw projection in SVG
     - add missing icons BOM,etc, change maslow icon
-    - goUp molecule still not working collectly
+    - goUp molecule still not working correctly
     - some places still have JSCAD code // clean up
     - BOM summary when molecule is active , button to download
     - Fix gitmolecule search bar max quota issue
