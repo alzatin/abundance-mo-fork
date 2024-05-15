@@ -85,11 +85,11 @@ function CreateMode(props) {
   });
 
   useEffect(() => {
-    //Implementing the setInterval method
+    //Set autosave interval
     const myInterval = setInterval(() => {
       setSavePopUp(true);
       saveProject(setSaveState);
-    }, 90000);
+    }, 120000);
 
     //Clearing the interval
     return () => clearInterval(myInterval);
