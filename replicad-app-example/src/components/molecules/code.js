@@ -83,8 +83,6 @@ export default class Code extends Atom {
   }
 
   createLevaInputs() {
-    console.log("gets called on update value");
-    console.log(this.inputs);
     let inputParams = {};
     /** Runs through active atom inputs and adds IO parameters to default param*/
     if (this.inputs) {
@@ -96,7 +94,7 @@ export default class Code extends Atom {
         inputParams[this.uniqueID + input.name] = {
           value: input.value,
           label: input.name,
-          disabled: false,
+          disabled: checkConnector(),
           onChange: (value) => {
             if (input.value !== value) {
               input.setValue(value);
@@ -206,11 +204,6 @@ export default class Code extends Atom {
   editCode() {
     const codeWindow = document.getElementById("code-window");
     codeWindow.classList.remove("code-off");
-  }
-
-  closeEditor() {
-    const codeWindow = document.getElementById("code-window");
-    codeWindow.classList.add("code-off");
   }
 
   /**

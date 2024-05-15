@@ -15,6 +15,11 @@ export default function CodeWindow(props) {
     }
   }, [props.activeAtom]);
 
+  function closeEditor() {
+    const codeWindow = document.getElementById("code-window");
+    codeWindow.classList.add("code-off");
+  }
+
   return (
     <div id="code-window" className=" code-off login-page export-div">
       <ReactCodeEditor
@@ -32,7 +37,7 @@ export default function CodeWindow(props) {
       >
         Save Code
       </button>
-      <button type="button" onClick={() => props.activeAtom.closeEditor()}>
+      <button type="button" onClick={() => closeEditor()}>
         Close Editor
       </button>
     </div>
