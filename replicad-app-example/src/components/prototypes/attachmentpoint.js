@@ -21,7 +21,8 @@ export default class AttachmentPoint {
      */
     this.expandedRadius = false;
     /**
-     * This atom's current radius as displayed.
+     * The radius of the clickable area of this Attachment Point. Larger than
+     * the display radius to make it easier to "hit" when attaching a connector.
      * @type {number}
      */
     this.radius = 1 / 80;
@@ -132,7 +133,7 @@ export default class AttachmentPoint {
        */
       this[key] = values[key];
     }
-    this.unexpand(); // Initially hide all connection points.
+    this.unexpand(); // Initially hide this attachment point.
   }
 
   /**
