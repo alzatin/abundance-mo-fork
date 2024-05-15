@@ -4,6 +4,7 @@
 to-do-fix
 
 now:
+    - keep messing with code/ fix input errors
     -  Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - aybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
     - (if we are going to start creating github molecules that are action/tools, we need to fix tags and filtering systems first or soon?)
      Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - aybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?

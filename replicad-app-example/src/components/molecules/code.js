@@ -83,9 +83,31 @@ export default class Code extends Atom {
   }
 
   createLevaInputs() {
-    let outputParams = {};
-    outputParams["Edit Code"] = button(() => this.editCode());
-    return outputParams;
+    console.log("gets called on update value");
+    console.log(this.inputs);
+    let inputParams = {};
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        inputParams[this.uniqueID + input.name] = {
+          value: input.value,
+          label: input.name,
+          disabled: false,
+          onChange: (value) => {
+            if (input.value !== value) {
+              input.setValue(value);
+              this.sendToRender();
+            }
+          },
+        };
+      });
+      inputParams["Edit Code"] = button(() => this.editCode());
+      return inputParams;
+    }
   }
 
   updateCode(code) {
@@ -139,14 +161,7 @@ export default class Code extends Atom {
       //Add any inputs which are needed
       for (var variable in variables) {
         if (!this.inputs.some((input) => input.Name === variables[variable])) {
-          this.addIO(
-            "input",
-            variables[variable],
-            this,
-            "geometry",
-            null,
-            ready
-          );
+          this.addIO("input", variables[variable], this, "geometry", 10, ready);
         }
       }
 

@@ -228,6 +228,7 @@ function code(targetID, code, argumentsArray) {
       keys1.push(`${key}`);
       inputValues.push(value);
     }
+    console.log(inputValues);
     // revisit this eval/ Is this the right/safest way to do this?
     var result = eval(
       "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
