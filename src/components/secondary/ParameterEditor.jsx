@@ -126,6 +126,7 @@ export default (function ParamsEditor({
           fill
           titleBar={{
             title: activeAtom.name || globalvariables.currentRepo.name,
+            drag: false,
           }}
           theme={{
             colors: {
@@ -155,6 +156,7 @@ export default (function ParamsEditor({
           hideCopyButton
           titleBar={{
             title: "Render Settings",
+            drag: false,
           }}
           theme={{
             colors: {
