@@ -115,13 +115,14 @@ function GitSearch(props) {
               placeholder="Search for atom.."
               className="menu_search_canvas"
             ></input>
+            <label for="id_select"> Topic </label>
             <select
               ref={maslowTopic}
               id="searchType"
               className="menu_search_canvas"
             >
               {topics.map((topic) => {
-                return <option value={topic}>{topic}</option>;
+                return <option value={topic.value}>{topic.label}</option>;
               })}
             </select>
             <GitList />
