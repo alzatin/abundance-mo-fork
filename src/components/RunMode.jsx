@@ -3,14 +3,14 @@ import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 
 import WireframeMesh from "./WireframeMesh.jsx";
-import GlobalVariables from "./js/globalvariables.js";
-import globalvariables from "./js/globalvariables.js";
+import GlobalVariables from "../js/globalvariables.js";
+import globalvariables from "../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 
 import ToggleRunCreate from "./ToggleRunCreate.jsx";
 import ParamsEditor from "./ParameterEditor.jsx";
 import RunNavigation from "./RunNavigation.jsx";
-import Molecule from "./molecules/molecule.js";
+import Molecule from "../molecules/molecule.js";
 import {
   BrowserRouter as Router,
   Link,

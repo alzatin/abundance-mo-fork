@@ -4,7 +4,7 @@ import { setOC } from "replicad";
 import { expose } from "comlink";
 import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
-import globalvariables from "./components/js/globalvariables";
+import globalvariables from "./js/globalvariables";
 
 var library = {};
 

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { OrbitControls, GizmoHelper, GizmoViewport } from "@react-three/drei";
 
 const Controls = React.memo(

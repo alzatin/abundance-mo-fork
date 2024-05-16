@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import GlobalVariables from "./js/globalvariables.js";
+import GlobalVariables from "../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-import { Link, useNavigate } from "react-router-dom";
-import globalvariables from "./js/globalvariables.js";
+import { Link } from "react-router-dom";
+import globalvariables from "../js/globalvariables.js";
 import NewProjectPopUp from "./NewProjectPopUp.jsx";
 
 /**

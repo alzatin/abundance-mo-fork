@@ -1,6 +1,6 @@
-import React, { useRef, useLayoutEffect, useEffect, useState } from "react";
+import React, { useLayoutEffect, useEffect, useState } from "react";
 import { useThree } from "@react-three/fiber";
-import { BufferGeometry, WireframeGeometry, LineSegments } from "three";
+import { BufferGeometry } from "three";
 import {
   syncFaces,
   syncLines,

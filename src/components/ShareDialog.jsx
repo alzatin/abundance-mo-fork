@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import GlobalVariables from "./js/globalvariables.js";
+import GlobalVariables from "../js/globalvariables.js";
 
 function ShareDialog(props) {
   return (

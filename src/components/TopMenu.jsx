@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState, useRef } from "react";
-import GlobalVariables from "./js/globalvariables.js";
+import GlobalVariables from "../js/globalvariables.js";
 import ShareDialog from "./ShareDialog.jsx";
 import { useNavigate } from "react-router-dom";
 

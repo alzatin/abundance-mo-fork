@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import GlobalVariables from "./js/globalvariables.js";
+import GlobalVariables from "../js/globalvariables.js";
 import { Link } from "react-router-dom";
-import globalvariables from "./js/globalvariables.js";
+import globalvariables from "../js/globalvariables.js";
 
 function ToggleRunCreate(props) {
   const [runModeon, setRunMode] = useState(props.run);

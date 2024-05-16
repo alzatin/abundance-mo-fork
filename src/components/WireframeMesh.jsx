@@ -1,11 +1,7 @@
 import React, { useRef, useLayoutEffect, useEffect, useState } from "react";
 import { useThree } from "@react-three/fiber";
 import { WireframeGeometry } from "three";
-import {
-  syncFaces,
-  syncLines,
-  syncLinesFromFaces,
-} from "replicad-threejs-helper";
+import { syncLines, syncLinesFromFaces } from "replicad-threejs-helper";
 
 export default React.memo(function ShapeMeshes({ mesh }) {
   const { invalidate } = useThree();

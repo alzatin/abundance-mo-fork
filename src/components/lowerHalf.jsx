@@ -2,7 +2,6 @@ import React, { memo, useEffect, useState } from "react";
 import ThreeContext from "./ThreeContext.jsx";
 import ReplicadMesh from "./ReplicadMesh.jsx";
 import WireframeMesh from "./WireframeMesh.jsx";
-import globalvariables from "./js/globalvariables.js";
 
 function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match

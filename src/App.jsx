@@ -10,15 +10,17 @@ import {
 
 import FileSaver from "file-saver";
 import { wrap } from "comlink";
-import GlobalVariables from "./components/js/globalvariables.js";
+import GlobalVariables from "./js/globalvariables.js";
 import LoginMode from "./components/LoginMode.jsx";
 import RunMode from "./components/RunMode.jsx";
 import CreateMode from "./components/CreateMode.jsx";
 import cadWorker from "./worker.js?worker";
-import "./maslowCreate.css";
-import "./menuIcons.css";
-import "./login.css";
-import "./codemirror.css";
+
+/*Import style scripts*/
+import "./styles/maslowCreate.css";
+import "./styles//menuIcons.css";
+import "./styles//login.css";
+import "./styles//codemirror.css";
 /**
  * The octokit instance which allows authenticated interaction with GitHub.
  * @type {object}

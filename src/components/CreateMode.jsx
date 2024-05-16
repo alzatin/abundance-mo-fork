@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import GlobalVariables from "./js/globalvariables.js";
+import GlobalVariables from "../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import ToggleRunCreate from "./ToggleRunCreate.jsx";
 import TopMenu from "./TopMenu.jsx";
 import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
 import ParamsEditor from "./ParameterEditor.jsx";
-import { BOMEntry } from "./js/BOM.js";
+import { BOMEntry } from "../js/BOM.js";
 import CodeWindow from "./codeWindow.jsx";
 import {
   BrowserRouter as Router,

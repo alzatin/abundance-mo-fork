@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, useRef } from "react";
-import GlobalVariables from "./js/globalvariables";
-import Molecule from "./molecules/molecule";
-import { createCMenu, cmenu } from "./js/NewMenu.js";
+import GlobalVariables from "../js/globalvariables";
+import Molecule from "../molecules/molecule";
+import { createCMenu, cmenu } from "../js/NewMenu.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import GitSearch from "./GitSearch.jsx";
 

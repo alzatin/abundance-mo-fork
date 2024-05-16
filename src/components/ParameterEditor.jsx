@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import globalvariables from "./js/globalvariables";
+import globalvariables from "../js/globalvariables";
 
 import { useControls, useCreateStore, LevaPanel, button } from "leva";
 
