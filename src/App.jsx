@@ -8,12 +8,11 @@ import {
   Route,
 } from "react-router-dom";
 
-import FileSaver from "file-saver";
 import { wrap } from "comlink";
 import GlobalVariables from "./js/globalvariables.js";
-import LoginMode from "./components/LoginMode.jsx";
-import RunMode from "./components/RunMode.jsx";
-import CreateMode from "./components/CreateMode.jsx";
+import LoginMode from "./components/main-routes/LoginMode.jsx";
+import RunMode from "./components/main-routes/RunMode.jsx";
+import CreateMode from "./components/main-routes/CreateMode.jsx";
 import cadWorker from "./worker.js?worker";
 
 /*Import style scripts*/

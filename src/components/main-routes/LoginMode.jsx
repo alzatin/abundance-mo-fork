@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import GlobalVariables from "../js/globalvariables.js";
+import GlobalVariables from "../../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { Link } from "react-router-dom";
-import globalvariables from "../js/globalvariables.js";
-import NewProjectPopUp from "./NewProjectPopUp.jsx";
+import globalvariables from "../../js/globalvariables.js";
+import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
 
 /**
  * The octokit instance which allows interaction with GitHub.

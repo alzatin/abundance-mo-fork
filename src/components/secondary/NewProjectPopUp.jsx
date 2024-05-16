@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { licenses } from "../js/licenseOptions.js";
-import GlobalVariables from "../js/globalvariables.js";
-import Molecule from "../molecules/molecule.js";
+import { licenses } from "../../js/licenseOptions.js";
+import GlobalVariables from "../../js/globalvariables.js";
+import Molecule from "../../molecules/molecule.js";
 import { useNavigate } from "react-router-dom";
 import CreatableSelect from "react-select/creatable";
 //Replaces the loaded projects if the user clicks on new project button

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ShareDialog from "./ShareDialog.jsx";
 import { useNavigate } from "react-router-dom";
-import GlobalVariables from "../js/globalvariables.js";
+import GlobalVariables from "../../js/globalvariables.js";
 
 //navigation svg icons - turn into key pairs later
 let shareSvg = (

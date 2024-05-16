@@ -1,9 +1,9 @@
 import React, { memo, useEffect, useState, useRef } from "react";
-import GlobalVariables from "../js/globalvariables";
-import Molecule from "../molecules/molecule";
-import { createCMenu, cmenu } from "../js/NewMenu.js";
+import GlobalVariables from "../../js/globalvariables.js";
+import Molecule from "../../molecules/molecule.js";
+import { createCMenu, cmenu } from "../../js/NewMenu.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-import GitSearch from "./GitSearch.jsx";
+import GitSearch from "../secondary/GitSearch.jsx";
 
 function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");

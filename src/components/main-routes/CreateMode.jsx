@@ -1,19 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
-import GlobalVariables from "../js/globalvariables.js";
+import GlobalVariables from "../../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-import ToggleRunCreate from "./ToggleRunCreate.jsx";
-import TopMenu from "./TopMenu.jsx";
+import ToggleRunCreate from "../secondary/ToggleRunCreate.jsx";
+import TopMenu from "../secondary/TopMenu.jsx";
 import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
-import ParamsEditor from "./ParameterEditor.jsx";
-import { BOMEntry } from "../js/BOM.js";
-import CodeWindow from "./codeWindow.jsx";
+import ParamsEditor from "../secondary/ParameterEditor.jsx";
+import { BOMEntry } from "../../js/BOM.js";
+import CodeWindow from "../secondary/codeWindow.jsx";
 import {
   BrowserRouter as Router,
   useParams,
   useNavigate,
 } from "react-router-dom";
-import NewProjectPopUp from "./NewProjectPopUp.jsx";
+import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
