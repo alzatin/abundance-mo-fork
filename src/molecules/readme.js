@@ -58,21 +58,6 @@ export default class Readme extends Atom {
   }
 
   /**
-   * Add a place to edit the readme text to the sidebar*/
-  updateSidebar() {
-    var valueList = super.updateSidebar(); //call the super function
-    this.createEditableValueListItem(
-      valueList,
-      this,
-      "readmeText",
-      "Notes",
-      false
-    );
-    this.createCheckbox(valueList, "Global", this.global, (event) => {
-      this.global = event.target.checked;
-    });
-  }
-  /**
    * Draw the readme atom with // icon.
    */
   draw() {
