@@ -2,11 +2,13 @@ import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "../../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { re } from "mathjs";
+import topics from "../../js/maslowTopics.js";
 
 function GitSearch(props) {
   let searchBarValue = "";
   var [gitRepos, setGitRepos] = useState([]);
   var [loadingGit, setLoadingGit] = useState(false);
+  const maslowTopic = useRef(null);
 
   /**
    * Runs when a menu option is clicked to place a new atom from searching on GitHub.
@@ -29,7 +31,12 @@ function GitSearch(props) {
   }
   // conditional query for maslow projects
   const searchGitHub = function () {
-    var query = searchBarValue + " topic:maslowcreate";
+    console.log(maslowTopic.current.value);
+    var query =
+      searchBarValue +
+      " topic:maslowcreate" +
+      " topic:" +
+      maslowTopic.current.value;
     let octokit = new Octokit();
     octokit
       .request("GET /search/repositories", {
@@ -108,6 +115,15 @@ function GitSearch(props) {
               placeholder="Search for atom.."
               className="menu_search_canvas"
             ></input>
+            <select
+              ref={maslowTopic}
+              id="searchType"
+              className="menu_search_canvas"
+            >
+              {topics.map((topic) => {
+                return <option value={topic}>{topic}</option>;
+              })}
+            </select>
             <GitList />
           </div>
           {isHovering ? (
