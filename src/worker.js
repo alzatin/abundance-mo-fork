@@ -5,9 +5,6 @@ import { expose } from "comlink";
 import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
 import globalvariables from "./components/js/globalvariables";
-// We import our model as a simple function
-import { drawBox } from "./cad";
-import { i, re } from "mathjs";
 
 var library = {};
 
