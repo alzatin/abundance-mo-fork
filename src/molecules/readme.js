@@ -85,6 +85,23 @@ export default class Readme extends Atom {
   }
 
   /**
+   * Creates the Leva input for this atom
+   */
+  createLevaInputs() {
+    let inputParams = {};
+
+    inputParams[this.name + this.uniqueID] = {
+      value: this.readmeText,
+      label: this.name,
+      rows: 10,
+      onChange: (value) => {
+        this.setValue(value);
+      },
+    };
+    return inputParams;
+  }
+
+  /**
    * Provides this molecules contribution to the global Readme
    */
   requestReadme() {
@@ -93,6 +110,13 @@ export default class Readme extends Atom {
     } else {
       return [];
     }
+  }
+
+  /**
+   * Skip write to display when this atom is clicked
+   */
+  sendToRender() {
+    console.log("nothing to render in readme");
   }
 
   /**
