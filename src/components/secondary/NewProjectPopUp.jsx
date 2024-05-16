@@ -4,6 +4,7 @@ import GlobalVariables from "../../js/globalvariables.js";
 import Molecule from "../../molecules/molecule.js";
 import { useNavigate } from "react-router-dom";
 import CreatableSelect from "react-select/creatable";
+import topics from "../../js/maslowTopics.js";
 //Replaces the loaded projects if the user clicks on new project button
 const NewProjectPopUp = (props) => {
   /**
@@ -236,13 +237,7 @@ const NewProjectPopUp = (props) => {
       exporting
     );
   };
-  const options = [
-    { value: "maslowcreate", label: "maslowcreate" },
-    { value: "maslowcreate-project", label: "maslowcreate-project" },
-    { value: "maslowcreate-action", label: "maslowcreate-action" },
-    { value: "maslowcreate-examples", label: "maslowcreate-examples" },
-    { value: "maslowcreate-furniture", label: "maslowcreate-furniture" },
-  ];
+  console.log(topics);
   return (
     <>
       <div className="login-page export-div">
@@ -280,10 +275,10 @@ const NewProjectPopUp = (props) => {
               ref={projectDescriptionRef}
             />
             <CreatableSelect
-              defaultValue={[options[0], options[1]]}
+              defaultValue={[topics[0], topics[1]]}
               isMulti
               name="Project Topics"
-              options={options}
+              options={topics}
               className="basic-multi-select"
               classNamePrefix="select"
               ref={projectTagsRef}
