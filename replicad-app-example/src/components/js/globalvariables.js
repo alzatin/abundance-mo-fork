@@ -347,10 +347,13 @@ class GlobalVariables {
   }
 
   /**
-   * A function to generate a unique ID value. Currently uses random which does not gurintee that it will be unique.
+   * A function to generate a unique ID value.
    */
   generateUniqueID() {
-    return Math.floor(Math.random() * 900000) + 100000;
+    const dateString = new Date().getTime();
+    const randomness = Math.floor(Math.random() * 1000);
+    const newID = dateString + randomness;
+    return newID;
   }
 
   /**
