@@ -265,7 +265,7 @@ const NewProjectPopUp = (props) => {
             }}
           >
             <h2>Create a New Project</h2>
-            <label for="project-name">Project Name</label>
+            <label htmlFor="project-name">Project Name</label>
             <input
               name="Project Name"
               placeholder="This will be your GitHub repository name"
@@ -282,7 +282,7 @@ const NewProjectPopUp = (props) => {
                 );
               })}
             </select>
-            <label for="measure-units">Units</label>
+            <label htmlFor="measure-units">Units</label>
             <select id="measure-units" ref={projectUnits}>
               <option key={"inchesop"} value={"Inches"}>
                 Inches
@@ -291,12 +291,12 @@ const NewProjectPopUp = (props) => {
                 MM
               </option>
             </select>
-            <label for="project-description">Project Description</label>
+            <label htmlFor="project-description">Project Description</label>
             <input
               placeholder="Project Description"
               ref={projectDescriptionRef}
             />
-            <label for="project-tags">Project Topics</label>
+            <label htmlFor="project-tags">Project Topics</label>
             <CreatableSelect
               defaultValue={[topics[0], topics[1]]}
               isMulti

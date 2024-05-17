@@ -36,6 +36,7 @@ const InitialLog = (props) => {
             <button
               type="button"
               id="loginButton"
+              className="submit-btn"
               onClick={props.tryLogin}
               style={{ height: "40px" }}
             >
@@ -62,6 +63,7 @@ const InitialLog = (props) => {
             onClick={() => {
               props.setBrowsing(true);
             }}
+            className="submit-btn"
             id="browseNonGit"
             style={{ padding: "0 30px" }}
           >

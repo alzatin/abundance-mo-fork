@@ -45,10 +45,6 @@
 .login-page {
   margin: auto;
 }
-
-.login-form {
-  width: 90%;
-}
 .liked {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
@@ -63,11 +59,19 @@
   cursor: pointer;
 }
 
-.export-div {
+.code-window-div {
   width: 80%;
   z-index: 5;
   top: 30%;
+  position: absolute;
   left: 20%;
+}
+
+.export-div {
+  width: 80%;
+  z-index: 5;
+  top: 20%;
+  left: 10%;
 }
 .export-div label {
   float: left;
