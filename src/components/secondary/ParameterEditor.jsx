@@ -56,7 +56,7 @@ export default (function ParamsEditor({
         label: "Description",
         value: activeAtom.description,
         rows: 6,
-        disabled: true,
+        disabled: false,
       },
     }),
     { store: store1 },

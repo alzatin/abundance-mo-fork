@@ -58,21 +58,6 @@ export default class Readme extends Atom {
   }
 
   /**
-   * Add a place to edit the readme text to the sidebar*/
-  updateSidebar() {
-    var valueList = super.updateSidebar(); //call the super function
-    this.createEditableValueListItem(
-      valueList,
-      this,
-      "readmeText",
-      "Notes",
-      false
-    );
-    this.createCheckbox(valueList, "Global", this.global, (event) => {
-      this.global = event.target.checked;
-    });
-  }
-  /**
    * Draw the readme atom with // icon.
    */
   draw() {
@@ -100,6 +85,23 @@ export default class Readme extends Atom {
   }
 
   /**
+   * Creates the Leva input for this atom
+   */
+  createLevaInputs() {
+    let inputParams = {};
+
+    inputParams[this.name + this.uniqueID] = {
+      value: this.readmeText,
+      label: this.name,
+      rows: 10,
+      onChange: (value) => {
+        this.setValue(value);
+      },
+    };
+    return inputParams;
+  }
+
+  /**
    * Provides this molecules contribution to the global Readme
    */
   requestReadme() {
@@ -108,6 +110,13 @@ export default class Readme extends Atom {
     } else {
       return [];
     }
+  }
+
+  /**
+   * Skip write to display when this atom is clicked
+   */
+  sendToRender() {
+    console.log("nothing to render in readme");
   }
 
   /**
