@@ -797,11 +797,19 @@ Sidebar navigation
 
 /*new leva sidebar */
 .paramEditorDiv {
+  max-height: 45%;
   position: absolute;
-  top: 52%;
+  top: 53%;
   left: 10px;
   width: 280px;
   z-index: 3;
+  overflow-x: auto;
+  box-sizing: content-box;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+}
+.paramEditorDiv::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
 }
 
 .paramEditorDivRun {
