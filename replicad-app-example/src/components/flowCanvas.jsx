@@ -99,7 +99,7 @@ export default memo(function FlowCanvas(props) {
 
   const mouseMove = (e) => {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
-      molecule.clickMove(e.clientX, e.clientY);
+      molecule.mouseMove(e.clientX, e.clientY);
     });
   };
 
