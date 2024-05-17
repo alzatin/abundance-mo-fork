@@ -48,6 +48,7 @@ const NewProjectPopUp = (props) => {
   const projectTagsRef = useRef();
   const projectDescriptionRef = useRef();
   const projectLicenseRef = useRef();
+  const projectUnits = useRef();
   const [pending, setPending] = useState(false); // useFormStatus(); in the future
 
   //Progress bar for creating a new project
@@ -63,7 +64,7 @@ const NewProjectPopUp = (props) => {
    *
    */
   const createProject = async (
-    [name, tags, description, license],
+    [name, tags, description, license, units],
     molecule,
     exporting
   ) => {
@@ -222,6 +223,7 @@ const NewProjectPopUp = (props) => {
     const projectDescription = projectDescriptionRef.current.value;
     const projectTags = [];
     const projectLicense = projectLicenseRef.current.value;
+    const projectUnits = projectUnits.current.value;
 
     projectTagArray.forEach((topic) => {
       projectTags.push(topic[`value`]);
@@ -232,12 +234,18 @@ const NewProjectPopUp = (props) => {
     }
     // Calls the create new project function and creates a new github repo with user input
     createProject(
-      [projectName, projectTags, projectDescription, projectLicense],
+      [
+        projectName,
+        projectTags,
+        projectDescription,
+        projectLicense,
+        projectUnits,
+      ],
       molecule,
       exporting
     );
   };
-  console.log(topics);
+
   return (
     <>
       <div className="login-page export-div">
@@ -269,6 +277,14 @@ const NewProjectPopUp = (props) => {
                   </option>
                 );
               })}
+            </select>
+            <select id="measure-units" ref={projectUnits}>
+              <option key={"inchesop"} value={"Inches"}>
+                Inches
+              </option>
+              <option key={"millop"} value={"MM"}>
+                MM
+              </option>
             </select>
             <input
               placeholder="Project Description"
