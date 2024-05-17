@@ -1,0 +1,74 @@
+// // Getting back to old-maslow-create
+
+<!-- prettier-ignore-start -->
+to-do-fix
+
+now:
+
+    - re add licences to create new project
+    - leva menu overflows and becomes unusable after 6 or 7 inputs
+
+    -  Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - maybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
+
+    - (if we are going to start creating github molecules that are action/tools, we need to fix tags and filtering systems first or soon?)
+
+    - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
+
+    - model some things :S [deckle box, stool] > need to start creating new actions with gitmolecules otherwise it's very hard to model anything.
+    
+    - fake background click when project is first loaded 
+    - rendering problems when directly linking to run mode
+    - Cut layout should separate by height
+    - Bug : LEVA input error ? - seems like its wire 
+    - generate ID function global , fix for cut assemblies ? 
+    - keep out molecule own icon?
+    - sort out files /organize 
+    - document better
+    
+
+
+mid :
+
+    - BUG: if we create multiple inputs without changing the name, they won't show in menu 
+    - replicad packing? 
+    - fix shortcut button
+    - github search needs css help
+    - hull (in april? waiting for replicad)
+    - tag drop downs for extract tag
+    - github topic filter search
+    - BOM summary / fix inputs
+    - add labels to molecule
+    - REDO login/browse to use link/reroute
+    - allow filtering of projects
+    - nest
+    - implement three/drei wireframe?
+    - GET request sometimes failing at browsing for projects
+    - Face lift for project browse and new project (later)
+    - Check on accuracy of draw projection in SVG
+    - add missing icons BOM,etc, change maslow icon
+    - goUp molecule still not working correctly
+    - some places still have JSCAD code // clean up
+    - BOM summary when molecule is active , button to download
+    - Fix gitmolecule search bar max quota issue
+    - Top molecule - choose units of measurement (Should this be in create new project ? as an extra setting)
+    - add thumbnail images for projects
+
+future:
+
+    - Zoom in camera on load to bounding box for renderer
+    -  import parts ?
+    - make sample project with readme walkthrough or sandbox
+    - CSS Overhaul , make global fonts, margins, colors
+    - keyboard commands r-e-10
+
+Qs :
+  
+
+    Modeling:
+        - What is the most efficient modeling strategy for joinery? , make all parts and on assembly cut one that will in turn cut the other?
+
+    Dev:
+        - will changing inputs not damage model if modeled objects are not tied by planes. A.E. if a screw is modeled in the center of a face, if the face changes position will the screw not be left in the wrong place since its location wasn't modeled off the face?
+        - in an assembly, would it be useful to have a list of the tags it contains and be able to filter them on/off?
+
+<!-- prettier-ignore-end -->
