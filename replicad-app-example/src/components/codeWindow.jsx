@@ -1,10 +1,12 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import ReactCodeEditor from "@uiw/react-codemirror";
-import { EditorState } from "@codemirror/state";
-import { EditorView, keymap } from "@codemirror/view";
+import { keymap } from "@codemirror/view";
 import { defaultKeymap } from "@codemirror/commands";
 
+/*
+ * CodeWindow component is a code editor window that allows the user to edit the code of the active code atom.
+ */
 export default function CodeWindow(props) {
   const [docvalue, setdocValue] = useState("");
   const extensions = [keymap.of(defaultKeymap)];
@@ -14,6 +16,14 @@ export default function CodeWindow(props) {
       setdocValue(props.activeAtom.code);
     }
   }, [props.activeAtom]);
+
+  /**
+   * Closes the code editor window.
+   */
+  function closeEditor() {
+    const codeWindow = document.getElementById("code-window");
+    codeWindow.classList.add("code-off");
+  }
 
   return (
     <div id="code-window" className=" code-off login-page export-div">
@@ -32,7 +42,7 @@ export default function CodeWindow(props) {
       >
         Save Code
       </button>
-      <button type="button" onClick={() => props.activeAtom.closeEditor()}>
+      <button type="button" onClick={() => closeEditor()}>
         Close Editor
       </button>
     </div>

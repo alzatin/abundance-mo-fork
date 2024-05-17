@@ -4,11 +4,14 @@
 to-do-fix
 
 now:
-    -  Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - aybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
+    - leva menu overflows and becomes unusable after 6 or 7 inputs
+
+    -  Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - maybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
+
     - (if we are going to start creating github molecules that are action/tools, we need to fix tags and filtering systems first or soon?)
-     Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - aybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
-    - everything is duplicating when going to run mode and back. (i think it's loading the project again but not deleting old atoms) 
+
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
+
     - model some things :S [deckle box, stool] > need to start creating new actions with gitmolecules otherwise it's very hard to model anything.
     
     - fake background click when project is first loaded 
@@ -23,23 +26,25 @@ now:
 
 
 mid :
+
+    - BUG: if we create multiple inputs without changing the name, they won't show in menu 
+    - replicad packing? 
     - fix shortcut button
     - github search needs css help
     - hull (in april? waiting for replicad)
-    - tag drop down for all available maslowtopics-
-    - dropdown for tags inside createMode- warning for no tag found
+    - tag drop downs for extract tag
+    - github topic filter search
     - BOM summary / fix inputs
     - add labels to molecule
     - REDO login/browse to use link/reroute
-    - - allow filtering of projects
+    - allow filtering of projects
     - nest
     - implement three/drei wireframe?
-    - extract tag should have dropdown of existing tags
     - GET request sometimes failing at browsing for projects
     - Face lift for project browse and new project (later)
     - Check on accuracy of draw projection in SVG
     - add missing icons BOM,etc, change maslow icon
-    - goUp molecule still not working collectly
+    - goUp molecule still not working correctly
     - some places still have JSCAD code // clean up
     - BOM summary when molecule is active , button to download
     - Fix gitmolecule search bar max quota issue

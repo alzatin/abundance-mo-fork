@@ -185,7 +185,7 @@ export default class Input extends Atom {
    */
   createLevaInputs() {
     let inputNames = {};
-    inputNames[this.name] = {
+    inputNames[this.name + this.uniqueID] = {
       value: this.name,
       label: "Input Name",
       disabled: false,

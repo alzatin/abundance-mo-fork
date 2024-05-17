@@ -682,7 +682,7 @@ let colorOptions = {
   Grey: "#BABABA",
   Black: "#3C3C3C",
   White: "#FFFCF7",
-  "Keep Out": "Keep Out",
+  "Keep Out": "#E0E0E0",
 };
 
 function generateDisplayMesh(id) {

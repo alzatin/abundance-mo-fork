@@ -34,7 +34,7 @@ export default class Code extends Atom {
      * @type {string}
      */
     this.code =
-      "//Inputs:[Input1, Input2];\n\n\nreturn [drawRectangle(5,10)]\n//what you return should be a replicad geometry\n\nLearn more about all of the available methods at \n https://replicad.xyz/docs/introapp/UserGuide.html \n";
+      "//Inputs:[Input1, Input2];\n\n\nreturn [drawRectangle(5,10)]\n//what you return should be a replicad geometry\n\n//Learn more about all of the available methods at \n //https://replicad.xyz/docs/introapp/UserGuide.html \n";
 
     this.addIO("output", "geometry", this, "geometry", "");
 
@@ -83,11 +83,34 @@ export default class Code extends Atom {
   }
 
   createLevaInputs() {
-    let outputParams = {};
-    outputParams["Edit Code"] = button(() => this.editCode());
-    return outputParams;
+    let inputParams = {};
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        inputParams[this.uniqueID + input.name] = {
+          value: input.value,
+          label: input.name,
+          disabled: checkConnector(),
+          onChange: (value) => {
+            if (input.value !== value) {
+              input.setValue(value);
+              this.sendToRender();
+            }
+          },
+        };
+      });
+      inputParams["Edit Code"] = button(() => this.editCode());
+      return inputParams;
+    }
   }
 
+  /**
+   * Called when code editor save button is clicked. Updates the code and value of the atom.
+   */
   updateCode(code) {
     this.code = code;
     this.updateValue();
@@ -139,14 +162,7 @@ export default class Code extends Atom {
       //Add any inputs which are needed
       for (var variable in variables) {
         if (!this.inputs.some((input) => input.Name === variables[variable])) {
-          this.addIO(
-            "input",
-            variables[variable],
-            this,
-            "geometry",
-            null,
-            ready
-          );
+          this.addIO("input", variables[variable], this, "geometry", 10, ready);
         }
       }
 
@@ -191,11 +207,6 @@ export default class Code extends Atom {
   editCode() {
     const codeWindow = document.getElementById("code-window");
     codeWindow.classList.remove("code-off");
-  }
-
-  closeEditor() {
-    const codeWindow = document.getElementById("code-window");
-    codeWindow.classList.add("code-off");
   }
 
   /**
