@@ -46,6 +46,7 @@ const NewProjectPopUp = (props) => {
   const projectRef = useRef();
   const projectTagsRef = useRef();
   const projectDescriptionRef = useRef();
+  const projectLicenseRef = useRef();
   const [pending, setPending] = useState(false); // useFormStatus(); in the future
 
   //Progress bar for creating a new project
@@ -61,7 +62,7 @@ const NewProjectPopUp = (props) => {
    *
    */
   const createProject = async (
-    [name, tags, description],
+    [name, tags, description, license],
     molecule,
     exporting
   ) => {
@@ -180,7 +181,11 @@ const NewProjectPopUp = (props) => {
                                     repo: currentRepoName,
                                     path: "LICENSE.txt",
                                     message: "Establish license",
-                                    content: window.btoa(licenseText),
+                                    content: window.btoa(
+                                      GlobalVariables.toBinaryStr(
+                                        licenses[license]
+                                      )
+                                    ),
                                   })
                                   .then(() => {
                                     setNewProjectBar(90);
@@ -215,6 +220,7 @@ const NewProjectPopUp = (props) => {
     const projectTagArray = projectTagsRef.current.getValue();
     const projectDescription = projectDescriptionRef.current.value;
     const projectTags = [];
+    const projectLicense = projectLicenseRef.current.value;
 
     projectTagArray.forEach((topic) => {
       projectTags.push(topic[`value`]);
@@ -225,7 +231,7 @@ const NewProjectPopUp = (props) => {
     }
     // Calls the create new project function and creates a new github repo with user input
     createProject(
-      [projectName, projectTags, projectDescription],
+      [projectName, projectTags, projectDescription, projectLicense],
       molecule,
       exporting
     );
@@ -260,7 +266,7 @@ const NewProjectPopUp = (props) => {
               placeholder="Project Name"
               ref={projectRef}
             />
-            {/*<select id="license-options">
+            <select id="license-options" ref={projectLicenseRef}>
               {keys_ar.map((opt) => {
                 return (
                   <option key={opt} value={opt}>
@@ -268,7 +274,7 @@ const NewProjectPopUp = (props) => {
                   </option>
                 );
               })}
-            </select>*/}
+            </select>
             <input
               placeholder="Project Description"
               ref={projectDescriptionRef}

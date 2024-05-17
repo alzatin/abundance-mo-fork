@@ -330,6 +330,19 @@ class GlobalVariables {
     let pixels = this.canvas.current.height * height;
     return pixels;
   }
+
+  /**
+   * A function to encode strings that contain characters outside of latin range so they can pass through btoa
+   * @param {str} The string to encode
+   */
+  toBinaryStr(str) {
+    const encoder = new TextEncoder();
+    // 1: split the UTF-16 string into an array of bytes
+    const charCodes = encoder.encode(str);
+    // 2: concatenate byte data to create a binary string
+    return String.fromCharCode(...charCodes);
+  }
+
   /**
    * A function which reads the value of a unique ID and passes to display
    * @param {string} The unique ID to read from
