@@ -31,7 +31,6 @@ function GitSearch(props) {
   }
   // conditional query for maslow projects
   const searchGitHub = function () {
-    console.log(maslowTopic.current.value);
     var query =
       searchBarValue +
       " topic:maslowcreate" +
