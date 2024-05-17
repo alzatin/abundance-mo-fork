@@ -7,6 +7,7 @@ now:
 
     - re add licences to create new project XXX
     - leva menu overflows and becomes unusable after 6 or 7 inputs xXX
+    - FIX README
 
     -  Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - maybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
 
@@ -20,7 +21,7 @@ now:
     - rendering problems when directly linking to run mode
     - Cut layout should separate by height
     - Bug : LEVA input error ? - seems like its wire 
-    - generate ID function global , fix for cut assemblies ? 
+    - generate ID function global , fix for cut assemblies ? XXX
     - keep out molecule own icon?
     - sort out files /organize 
     - document better
