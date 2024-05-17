@@ -264,11 +264,15 @@ const NewProjectPopUp = (props) => {
               handleSubmit(e);
             }}
           >
+            <h2>Create a New Project</h2>
+            <label for="project-name">Project Name</label>
             <input
               name="Project Name"
-              placeholder="Project Name"
+              placeholder="This will be your GitHub repository name"
               ref={projectRef}
+              required
             />
+            <label for="license-options">License</label>
             <select id="license-options" ref={projectLicenseRef}>
               {keys_ar.map((opt) => {
                 return (
@@ -278,6 +282,7 @@ const NewProjectPopUp = (props) => {
                 );
               })}
             </select>
+            <label for="measure-units">Units</label>
             <select id="measure-units" ref={projectUnits}>
               <option key={"inchesop"} value={"Inches"}>
                 Inches
@@ -286,10 +291,12 @@ const NewProjectPopUp = (props) => {
                 MM
               </option>
             </select>
+            <label for="project-description">Project Description</label>
             <input
               placeholder="Project Description"
               ref={projectDescriptionRef}
             />
+            <label for="project-tags">Project Topics</label>
             <CreatableSelect
               defaultValue={[topics[0], topics[1]]}
               isMulti
@@ -299,7 +306,7 @@ const NewProjectPopUp = (props) => {
               classNamePrefix="select"
               ref={projectTagsRef}
             />
-            <button disabled={pending} type="submit">
+            <button className="submit-button" disabled={pending} type="submit">
               {pending ? newProjectBar + "%" : "Submit/Export to Github"}
             </button>
           </form>
