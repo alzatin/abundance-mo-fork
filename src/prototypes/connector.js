@@ -131,11 +131,12 @@ export default class Connector {
   }
 
   /**
-   * clickMove runs while the connector is being created. As long as the mouse is pressed down, the end of the connector stays attached to the mouse.
+   * Handle movements of the mouse while connector is being created. As long as the mouse is pressed down,
+   * the end of the connector stays attached to the mouse.
    * @param {number} x - The x cordinate of the click
    * @param {number} y - The y cordinate of the click
    */
-  clickMove(x, y) {
+  mouseMove(x, y) {
     if (this.isMoving == true) {
       /**
        * The s cordinate of the end of the connector.
