@@ -5,16 +5,9 @@ to-do-fix
 
 now:
 
-    - re add licences to create new project XXX
-    - leva menu overflows and becomes unusable after 6 or 7 inputs xXX
+    - NEED HELP: Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - maybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
 
-    - FIX README
-
-    -  Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - maybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
-
-    - (if we are going to start creating github molecules that are action/tools, we need to fix tags and filtering systems first or soon?)
-
-    - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking.
+    - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking. (this.alert message not working )
 
     - model some things :S [deckle box, stool] > need to start creating new actions with gitmolecules otherwise it's very hard to model anything.
     
@@ -22,15 +15,13 @@ now:
     - rendering problems when directly linking to run mode
     - Cut layout should separate by height
     - Bug : LEVA input error ? - seems like its wire 
-    - generate ID function global , fix for cut assemblies ? XXX
     - keep out molecule own icon?
-    - sort out files /organize 
     - document better
     
 
 
 mid :
-
+    - our own filtering?
     - BUG: if we create multiple inputs without changing the name, they won't show in menu 
     - replicad packing? 
     - fix shortcut button
