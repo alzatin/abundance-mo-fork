@@ -21,10 +21,11 @@ export default class AttachmentPoint {
      */
     this.expandedRadius = false;
     /**
-     * This atom's current radius as displayed.
+     * The radius of the clickable area of this Attachment Point. Larger than
+     * the display radius to make it easier to "hit" when attaching a connector.
      * @type {number}
      */
-    this.radius = 1 / 60;
+    this.radius = 1 / 80;
     /**
      * When the mouse is hovering where should the AP move in X
      * @type {number}
@@ -132,7 +133,7 @@ export default class AttachmentPoint {
        */
       this[key] = values[key];
     }
-    this.clickMove(0, 0); //trigger a refresh to get all the current values
+    this.unexpand(); // Initially hide this attachment point.
   }
 
   /**
@@ -298,7 +299,7 @@ export default class AttachmentPoint {
 
     if (
       GlobalVariables.distBetweenPoints(xInPixels, x, yInPixels, y) <
-        this.defaultRadius &&
+      this.defaultRadius &&
       !clickProcessed
     ) {
       if (this.type == "output") {
@@ -347,7 +348,7 @@ export default class AttachmentPoint {
    * @param {number} x - The x coordinate of the click
    * @param {number} y - The y coordinate of the click
    */
-  clickMove(x, y) {
+  mouseMove(x, y) {
     let xInPixels = GlobalVariables.widthToPixels(this.x);
     let yInPixels = GlobalVariables.heightToPixels(this.y);
     let radiusInPixels = GlobalVariables.widthToPixels(this.radius);
@@ -362,9 +363,11 @@ export default class AttachmentPoint {
     var distFromClick = Math.abs(
       GlobalVariables.distBetweenPoints(parentXInPixels, x, parentYInPixels, y)
     );
+
+    let activationBoundary = parentRadiusInPixels * 3.5;
     //If we are close to the attachment point move it to it's hover location to make it accessible
-    if (distFromClick < parentRadiusInPixels * 2.7 && this.type == "input") {
-      this.expandOut(distFromClick);
+    if (distFromClick < activationBoundary && this.type == "input") {
+      this.expandOut(activationBoundary);
       this.showHoverText = true;
     } else if (
       distFromClick < parentRadiusInPixels * 1.5 &&
@@ -372,7 +375,7 @@ export default class AttachmentPoint {
     ) {
       this.showHoverText = true;
     } else {
-      this.reset();
+      this.unexpand();
       this.expandedRadius = false;
     }
     //Expand it if you are close enough to make connection
@@ -386,14 +389,15 @@ export default class AttachmentPoint {
     }
 
     this.connectors.forEach((connector) => {
-      connector.clickMove(x, y);
+      connector.mouseMove(x, y);
     });
   }
 
   /**
-   * I'm not sure what this does. Can it be deleted?
+   * Unexpands this attachment point, eg: when the app starts, when the mouse
+   * is moved out of the expansion range, etc.
    */
-  reset() {
+  unexpand() {
     if (this.type == "input") {
       this.offsetX = -1 * this.parentMolecule.radius;
       this.offsetY = this.defaultOffsetY;
@@ -403,42 +407,30 @@ export default class AttachmentPoint {
 
   /**
    * Handles mouse click down. If the click is inside the AP it's connectors are selected if it is an input.
-   * @param {number} cursorDistance - The distance the cursor is from the attachment point.
+   * @param {number} boundary - The maximum distance for attachement points to be from their parent, in pixels.
    */
-  expandOut(cursorDistance) {
-    let radiusInPixels = GlobalVariables.widthToPixels(this.radius);
-
+  expandOut(boundary) {
     const inputList = this.parentMolecule.inputs.filter(
       (input) => input.type == "input"
     );
     const attachmentPointNumber = inputList.indexOf(this);
     const anglePerIO = Math.PI / (inputList.length + 1);
+    // TODO: refactor our radius values. This / 2.7 seems arbitrary but it gets picked up in draw and is
+    // used as the actual drawn radius.
+    // Reduce radius to ensure that the entire attachment point is inside boundary.
+    const hoverRadius = boundary - GlobalVariables.widthToPixels(this.parentMolecule.radius) / 2.7;
+
     // angle correction so that it centers menu adjusting to however many attachment points there are
     const angleCorrection = -Math.PI / 2 - anglePerIO;
     this.hoverOffsetY =
-      12 *
-      this.parentMolecule.radius *
+      hoverRadius *
       Math.sin(attachmentPointNumber * anglePerIO - angleCorrection);
     this.hoverOffsetX =
-      4 *
-      this.parentMolecule.radius *
+      hoverRadius *
       Math.cos(attachmentPointNumber * anglePerIO - angleCorrection);
-    cursorDistance = Math.max(cursorDistance, radiusInPixels * 2); //maxes cursor distance so we can hover over each attachment without expansion movement
-    //this.offset uses radius in pixels before translating to pixels because that's also the value that limits cursor distance
-    this.offsetX = GlobalVariables.widthToPixels(
-      radiusInPixels *
-        1.2 *
-        this.hoverOffsetX *
-        this.parentMolecule.radius *
-        GlobalVariables.pixelsToWidth((radiusInPixels * 3) / cursorDistance)
-    );
-    this.offsetY = GlobalVariables.heightToPixels(
-      radiusInPixels *
-        2.1 *
-        this.hoverOffsetY *
-        this.parentMolecule.radius *
-        GlobalVariables.pixelsToHeight((radiusInPixels * 3) / cursorDistance)
-    );
+
+    this.offsetX = GlobalVariables.pixelsToWidth(this.hoverOffsetX);
+    this.offsetY = GlobalVariables.pixelsToHeight(this.hoverOffsetY);
   }
 
   /**
@@ -492,7 +484,7 @@ export default class AttachmentPoint {
     //this function returns itself if the coordinates passed in are within itself
     if (
       GlobalVariables.distBetweenPoints(xInPixels, x, yInPixels, y) <
-        radiusInPixels &&
+      radiusInPixels &&
       this.type == "input"
     ) {
       //If we have released the mouse here and this is an input...

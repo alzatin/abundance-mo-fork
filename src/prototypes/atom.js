@@ -437,11 +437,13 @@ export default class Atom {
   }
 
   /**
-   * Set the atom's response to a mouse click and drag. Moves the atom around the screen.
+   * Handle change in position of the mouse. If this atom is currently being moved it's position will be
+   * dragged along with the mouse.
+   * Also forwards the mouse move event to children of this atom so they can react if needed.
    * @param {number} x - The X cordinate of the click
    * @param {number} y - The Y cordinate of the click
    */
-  clickMove(x, y) {
+  mouseMove(x, y) {
     let xInPixels = GlobalVariables.widthToPixels(this.x);
     let yInPixels = GlobalVariables.heightToPixels(this.y);
     let radiusInPixels = GlobalVariables.widthToPixels(this.radius);
@@ -451,10 +453,10 @@ export default class Atom {
     }
 
     this.inputs.forEach((child) => {
-      child.clickMove(x, y);
+      child.mouseMove(x, y);
     });
     if (this.output) {
-      this.output.clickMove(x, y);
+      this.output.mouseMove(x, y);
     }
 
     var distFromClick = GlobalVariables.distBetweenPoints(
