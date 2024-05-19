@@ -48,7 +48,7 @@ const NewProjectPopUp = (props) => {
   const projectTagsRef = useRef();
   const projectDescriptionRef = useRef();
   const projectLicenseRef = useRef();
-  const projectUnits = useRef();
+  const projectUnitsRef = useRef();
   const [pending, setPending] = useState(false); // useFormStatus(); in the future
 
   //Progress bar for creating a new project
@@ -223,7 +223,7 @@ const NewProjectPopUp = (props) => {
     const projectDescription = projectDescriptionRef.current.value;
     const projectTags = [];
     const projectLicense = projectLicenseRef.current.value;
-    const projectUnits = projectUnits.current.value;
+    const projectUnits = projectUnitsRef.current.value;
 
     projectTagArray.forEach((topic) => {
       projectTags.push(topic[`value`]);
@@ -272,7 +272,7 @@ const NewProjectPopUp = (props) => {
               ref={projectRef}
               required
             />
-            <label for="license-options">License</label>
+            <label htmlFor="license-options">License</label>
             <select id="license-options" ref={projectLicenseRef}>
               {keys_ar.map((opt) => {
                 return (
@@ -283,7 +283,7 @@ const NewProjectPopUp = (props) => {
               })}
             </select>
             <label htmlFor="measure-units">Units</label>
-            <select id="measure-units" ref={projectUnits}>
+            <select id="measure-units" ref={projectUnitsRef}>
               <option key={"inchesop"} value={"Inches"}>
                 Inches
               </option>
