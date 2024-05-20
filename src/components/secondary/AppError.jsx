@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 /**
  * An ErrorBoundary component which is the error handler of last resort for any
  * errors which occur while the app is running and are not handled elsewhere.
- * 
+ *
  * There are two major categories of such error.
  * 1) errors which occur in child components during rendering.
  *    Relevant reading: https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary
  * 2) errors which occur in promises that don't have a trailing catch clause.
- *    More info on the "unhandled rejection" event: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch#description 
+ *    More info on the "unhandled rejection" event: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch#description
+ *
+ * Closing an error popup will restore the app UI but does nothing to resolve the
+ * underlying error.
  */
 export default class AppError extends React.Component {
   constructor(props) {
     super(props);
     this.state = { error: null };
-    // Bind the onUnhandledRejection function so that it can update the AppError instance
-    // state from it's scope.
+    // Bind the onUnhandledRejection function to this context so that it can update this.state.
     this.onUnhandledRejection = this.onUnhandledRejection.bind(this);
   }
 
   static getDerivedStateFromError(error) {
     // Update this.state so the next render will show the fallback UI.
-    // error.message and error.stack
-    console.log(error);
-    return { error: {'message': error.message, 'stack': error.stack} };
+    return { error: { 'message': error.message, 'stack': error.stack } };
   }
 
   onUnhandledRejection(event) {
-    this.setState({ error: {'type': event.reason.name, 'message': event.reason.message, 'stack': event.reason.stack } });
-    console.log(this)
+    this.setState({
+      error: {
+        'type': event.reason.name,
+        'message': event.reason.message,
+        'stack': event.reason.stack
+      }
+    });
+    // Log to console since this is a more informative representation than just the data displayed on screen.
     console.log(event);
   }
 
@@ -69,6 +75,8 @@ export default class AppError extends React.Component {
       </>);
     }
 
+    // Make this component invisible when there's no error, or after the alert has
+    // been dismissed.
     return this.props.children;
   }
 }
