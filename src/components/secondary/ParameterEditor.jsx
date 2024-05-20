@@ -30,6 +30,11 @@ export default (function ParamsEditor({
     return () => clearTimeout(timeoutId);
   }, []);
 
+  if (activeAtom !== null) {
+    /** Creates Leva inputs inside each atom */
+    inputParams = activeAtom.createLevaInputs();
+  }
+
   const bomParamsConfig = useMemo(() => {
     return { ...compiledBom };
   }, [compiledBom]);

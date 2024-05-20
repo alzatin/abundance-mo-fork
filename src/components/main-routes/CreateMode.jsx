@@ -14,7 +14,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
-
+import { button } from "leva";
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
  * a user has been authorized access to a project.
@@ -96,6 +96,7 @@ function CreateMode(props) {
     return () => clearInterval(myInterval);
   }, []);
 
+  /** Compile BOM when activeAtom is a molecule and sets new state to trigger menu rerender */
   useEffect(() => {
     if (activeAtom) {
       if (activeAtom.atomType == "Molecule") {
@@ -104,12 +105,16 @@ function CreateMode(props) {
           let bomParams = {};
           result.map((item) => {
             bomParams[item.BOMitemName] = {
-              value: item.BOMitemName,
-              label: item.BOMitemName,
-              disabled: false,
+              value: item.costUSD + " USD",
+              label: item.BOMitemName + "(x" + item.numberNeeded + ")",
+              disabled: true,
             };
-            setCompiledBom(bomParams);
           });
+          bomParams["Download List of Materials"] = button(() =>
+            console.log("print out BOM soon")
+          );
+
+          setCompiledBom(bomParams);
         });
       }
     }

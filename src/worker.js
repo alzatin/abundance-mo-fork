@@ -259,6 +259,7 @@ function bom(targetID, inputID, TAG, BOM) {
       geometry: library[inputID].geometry,
       tags: [TAG, ...library[inputID].tags],
       bom: BOM,
+      color: library[inputID].color,
     };
     return true;
   });
@@ -309,6 +310,7 @@ function extractBom(inputID, TAG) {
   let taggedBoms = [];
   // only try to get tags if library entry for molecule exists
   if (library[inputID]) {
+    console.log(library[inputID]);
     taggedBoms = extractBoms(library[inputID], TAG);
     return taggedBoms;
   }
@@ -364,19 +366,19 @@ function getStep(targetID, inputID) {
 
 function extractBoms(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
-    return [inputGeometry.bom];
+    return inputGeometry.bom;
   } else if (
     inputGeometry.geometry.length >= 1 &&
     inputGeometry.geometry[0].geometry != undefined
   ) {
     let bomArray = [];
     inputGeometry.geometry.forEach((subAssembly) => {
-      console.log(subAssembly);
       let extractedBoms = extractBoms(subAssembly, TAG);
       if (extractedBoms != false) {
         bomArray.push(extractedBoms);
       }
     });
+    console.log(bomArray);
     return bomArray;
   } else {
     return false;
@@ -544,6 +546,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       geometry: assemblyCut,
       tags: partToCut.tags,
       color: partToCut.color,
+      bom: partToCut.bom,
     };
     return library[subID];
   } else {
@@ -560,6 +563,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       geometry: [partCutCopy],
       tags: partToCut.tags,
       color: partToCut.color,
+      bom: partToCut.bom,
     };
 
     return library[newID];

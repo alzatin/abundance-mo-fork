@@ -836,8 +836,8 @@ Sidebar navigation
 }
 .bomEditorDiv {
   position: absolute;
-  top: 70%;
-  left: 25px;
+  top: 47%;
+  left: 300px;
   width: 280px;
   z-index: 3;
 }
