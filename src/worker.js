@@ -366,11 +366,12 @@ function extractBoms(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return [inputGeometry.bom];
   } else if (
-    inputGeometry.geometry.length > 1 &&
+    inputGeometry.geometry.length >= 1 &&
     inputGeometry.geometry[0].geometry != undefined
   ) {
     let bomArray = [];
     inputGeometry.geometry.forEach((subAssembly) => {
+      console.log(subAssembly);
       let extractedBoms = extractBoms(subAssembly, TAG);
       if (extractedBoms != false) {
         bomArray.push(extractedBoms);

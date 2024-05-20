@@ -14,8 +14,10 @@ export default (function ParamsEditor({
 }) {
   let inputParams = {};
   let bomParams = {};
+
   const store1 = useCreateStore();
   const store2 = useCreateStore();
+  const store3 = useCreateStore();
 
   /*Work around Leva collapse issue */
   /**https://github.com/pmndrs/leva/issues/456#issuecomment-1537510948 */
@@ -33,11 +35,10 @@ export default (function ParamsEditor({
     /** Creates Leva inputs for BOM if active atom is molecule  */
 
     if (activeAtom.atomType == "Molecule") {
-      if (activeAtom.createLevaBomInputs() > 0) {
-        activeAtom.createLevaBomInputs().then((res) => {
-          bomParams = res;
-        });
-      }
+      activeAtom.createLevaBomInputs().then((res) => {
+        console.log(res);
+        bomParams = res;
+      });
     }
   }
 
@@ -63,7 +64,7 @@ export default (function ParamsEditor({
     [activeAtom]
   );
 
-  useControls(() => bomParamsConfig, { store: store1 }, [activeAtom]);
+  useControls(() => bomParamsConfig, { store: store3 }, [bomParams]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
 
   /** Creates Leva panel with grid settings */
@@ -150,6 +151,36 @@ export default (function ParamsEditor({
       <div className={run ? "gridEditorDivRun" : "gridEditorDiv"}>
         <LevaPanel
           store={store2}
+          fill
+          hidden={false}
+          collapsed={true}
+          hideCopyButton
+          titleBar={{
+            title: "Render Settings",
+            drag: false,
+          }}
+          theme={{
+            colors: {
+              elevation1: "#3F4243",
+              elevation2: "var(--bg-color)",
+              elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
+
+              highlight1: "#C4A3D5",
+              highlight2: "#ededed",
+              highlight3: "#ededed",
+
+              accent1: "#C4A3D5",
+              accent2: "#88748F", //apply button
+              accent3: "#88748F",
+
+              vivid1: "red",
+            },
+          }}
+        />
+      </div>
+      <div className={run ? "gridEditorDivRun" : "gridEditorDiv"}>
+        <LevaPanel
+          store={store3}
           fill
           hidden={false}
           collapsed={true}

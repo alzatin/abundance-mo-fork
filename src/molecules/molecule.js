@@ -194,32 +194,34 @@ export default class Molecule extends Atom {
    * Create Leva Menu Inputs for BOM list  - returns to ParameterEditor - will be table or list of totals
    */
   createLevaBomInputs() {
-    let bomParams = [];
-    if (this.output.value != undefined) {
-      bomParams = this.extractBomTags(this.output.value);
-
-      bomParams.then((result) => {
-        if (result) {
-          if (result.length > 0) {
-            result.map((item) => {
+    return new Promise((resolve) => {
+      let bomParams = [];
+      if (this.output.value != undefined) {
+        var tag = "BOMitem";
+        GlobalVariables.cad
+          .extractBom(this.output.value, tag)
+          .then((result) => {
+            if (result.length > 0) {
+              result.map((item) => {
+                bomParams[item.BOMitemName] = {
+                  value: item.BOMitemName,
+                  label: item.BOMitemName,
+                  disabled: false,
+                };
+              });
+            } else {
+              let item = result;
               bomParams[item.BOMitemName] = {
                 value: item.BOMitemName,
                 label: item.BOMitemName,
                 disabled: false,
               };
-            });
-          } else {
-            let item = result;
-            bomParams[item.BOMitemName] = {
-              value: item.BOMitemName,
-              label: item.BOMitemName,
-              disabled: false,
-            };
-          }
-        }
-      });
-    }
-    return bomParams;
+            }
+            console.log("BOM Params", bomParams);
+            resolve(bomParams);
+          });
+      }
+    });
   }
 
   /**
@@ -363,19 +365,6 @@ export default class Molecule extends Atom {
 
   changeUnits(newUnitsIndex) {
     this.unitsIndex = newUnitsIndex;
-  }
-
-  /**
-   * Computes and returns an array of BOMEntry objects after looking at the tags of a geometry.*/
-  extractBomTags() {
-    try {
-      var tag = "BOMitem";
-      let bomList = GlobalVariables.cad.extractBom(this.output.value, tag);
-
-      return bomList;
-    } catch (err) {
-      this.setAlert("Unable to read BOM");
-    }
   }
 
   /**
