@@ -26,7 +26,7 @@ export default function CodeWindow(props) {
   }
 
   return (
-    <div id="code-window" className=" code-off login-page export-div">
+    <div id="code-window" className=" code-off login-page code-window-div">
       <ReactCodeEditor
         width="600px"
         height="300px"
