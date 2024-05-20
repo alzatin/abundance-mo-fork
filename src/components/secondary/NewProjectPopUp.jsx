@@ -48,6 +48,7 @@ const NewProjectPopUp = (props) => {
   const projectTagsRef = useRef();
   const projectDescriptionRef = useRef();
   const projectLicenseRef = useRef();
+  const projectUnitsRef = useRef();
   const [pending, setPending] = useState(false); // useFormStatus(); in the future
 
   //Progress bar for creating a new project
@@ -63,7 +64,7 @@ const NewProjectPopUp = (props) => {
    *
    */
   const createProject = async (
-    [name, tags, description, license],
+    [name, tags, description, license, units],
     molecule,
     exporting
   ) => {
@@ -222,6 +223,7 @@ const NewProjectPopUp = (props) => {
     const projectDescription = projectDescriptionRef.current.value;
     const projectTags = [];
     const projectLicense = projectLicenseRef.current.value;
+    const projectUnits = projectUnitsRef.current.value;
 
     projectTagArray.forEach((topic) => {
       projectTags.push(topic[`value`]);
@@ -232,12 +234,18 @@ const NewProjectPopUp = (props) => {
     }
     // Calls the create new project function and creates a new github repo with user input
     createProject(
-      [projectName, projectTags, projectDescription, projectLicense],
+      [
+        projectName,
+        projectTags,
+        projectDescription,
+        projectLicense,
+        projectUnits,
+      ],
       molecule,
       exporting
     );
   };
-  console.log(topics);
+
   return (
     <>
       <div className="login-page export-div">
@@ -256,11 +264,15 @@ const NewProjectPopUp = (props) => {
               handleSubmit(e);
             }}
           >
+            <h2>Create a New Project</h2>
+            <label htmlFor="project-name">Project Name</label>
             <input
               name="Project Name"
-              placeholder="Project Name"
+              placeholder="This will be your GitHub repository name"
               ref={projectRef}
+              required
             />
+            <label htmlFor="license-options">License</label>
             <select id="license-options" ref={projectLicenseRef}>
               {keys_ar.map((opt) => {
                 return (
@@ -270,10 +282,21 @@ const NewProjectPopUp = (props) => {
                 );
               })}
             </select>
+            <label htmlFor="measure-units">Units</label>
+            <select id="measure-units" ref={projectUnitsRef}>
+              <option key={"inchesop"} value={"Inches"}>
+                Inches
+              </option>
+              <option key={"millop"} value={"MM"}>
+                MM
+              </option>
+            </select>
+            <label htmlFor="project-description">Project Description</label>
             <input
               placeholder="Project Description"
               ref={projectDescriptionRef}
             />
+            <label htmlFor="project-tags">Project Topics</label>
             <CreatableSelect
               defaultValue={[topics[0], topics[1]]}
               isMulti
@@ -283,7 +306,7 @@ const NewProjectPopUp = (props) => {
               classNamePrefix="select"
               ref={projectTagsRef}
             />
-            <button disabled={pending} type="submit">
+            <button className="submit-button" disabled={pending} type="submit">
               {pending ? newProjectBar + "%" : "Submit/Export to Github"}
             </button>
           </form>
