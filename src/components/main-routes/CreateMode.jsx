@@ -101,7 +101,6 @@ function CreateMode(props) {
     if (activeAtom) {
       if (activeAtom.atomType == "Molecule") {
         compileBom().then((result) => {
-          console.log(result);
           let bomParams = {};
           result.map((item) => {
             bomParams[item.BOMitemName] = {

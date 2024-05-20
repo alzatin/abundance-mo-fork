@@ -310,7 +310,6 @@ function extractBom(inputID, TAG) {
   let taggedBoms = [];
   // only try to get tags if library entry for molecule exists
   if (library[inputID]) {
-    console.log(library[inputID]);
     taggedBoms = extractBoms(library[inputID], TAG);
     return taggedBoms;
   }
@@ -378,7 +377,6 @@ function extractBoms(inputGeometry, TAG) {
         bomArray.push(extractedBoms);
       }
     });
-    console.log(bomArray);
     return bomArray;
   } else {
     return false;
