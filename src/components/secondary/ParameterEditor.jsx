@@ -36,7 +36,6 @@ export default (function ParamsEditor({
 
     if (activeAtom.atomType == "Molecule") {
       activeAtom.createLevaBomInputs().then((res) => {
-        console.log(res);
         bomParams = res;
       });
     }
@@ -178,36 +177,38 @@ export default (function ParamsEditor({
           }}
         />
       </div>
-      <div className={run ? "gridEditorDivRun" : "gridEditorDiv"}>
-        <LevaPanel
-          store={store3}
-          fill
-          hidden={false}
-          collapsed={true}
-          hideCopyButton
-          titleBar={{
-            title: "Render Settings",
-            drag: false,
-          }}
-          theme={{
-            colors: {
-              elevation1: "#3F4243",
-              elevation2: "var(--bg-color)",
-              elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
+      {activeAtom.atomType == "Molecule" ? (
+        <div className={run ? "bomEditorDivRun" : "bomEditorDiv"}>
+          <LevaPanel
+            store={store3}
+            fill
+            hidden={false}
+            collapsed={true}
+            hideCopyButton
+            titleBar={{
+              title: "Bill of Materials",
+              drag: false,
+            }}
+            theme={{
+              colors: {
+                elevation1: "#3F4243",
+                elevation2: "var(--bg-color)",
+                elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
 
-              highlight1: "#C4A3D5",
-              highlight2: "#ededed",
-              highlight3: "#ededed",
+                highlight1: "#C4A3D5",
+                highlight2: "#ededed",
+                highlight3: "#ededed",
 
-              accent1: "#C4A3D5",
-              accent2: "#88748F", //apply button
-              accent3: "#88748F",
+                accent1: "#C4A3D5",
+                accent2: "#88748F", //apply button
+                accent3: "#88748F",
 
-              vivid1: "red",
-            },
-          }}
-        />
-      </div>
+                vivid1: "red",
+              },
+            }}
+          />
+        </div>
+      ) : null}
     </>
   );
 });

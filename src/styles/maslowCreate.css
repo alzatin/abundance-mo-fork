@@ -834,6 +834,20 @@ Sidebar navigation
   width: 280px;
   z-index: 3;
 }
+.bomEditorDiv {
+  position: absolute;
+  top: 70%;
+  left: 25px;
+  width: 280px;
+  z-index: 3;
+}
+.bomEditorDivRun {
+  position: absolute;
+  top: 15%;
+  right: 10px;
+  width: 280px;
+  z-index: 3;
+}
 
 /* Run Navigation */
 

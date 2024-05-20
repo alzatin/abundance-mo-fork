@@ -191,6 +191,19 @@ export default class Molecule extends Atom {
   }
 
   /**
+   * Computes and returns an array of BOMEntry objects after looking at the tags of a geometry.*/
+  extractBomTags() {
+    try {
+      var tag = "BOMitem";
+      let bomList = GlobalVariables.cad.extractBom(this.output.value, tag);
+
+      return bomList;
+    } catch (err) {
+      this.setAlert("Unable to read BOM");
+    }
+  }
+
+  /**
    * Create Leva Menu Inputs for BOM list  - returns to ParameterEditor - will be table or list of totals
    */
   createLevaBomInputs() {
