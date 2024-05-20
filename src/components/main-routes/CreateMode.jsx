@@ -110,7 +110,7 @@ function CreateMode(props) {
             };
           });
           bomParams["Download List of Materials"] = button(() =>
-            console.log("print out BOM soon")
+            console.log(result)
           );
 
           setCompiledBom(bomParams);
