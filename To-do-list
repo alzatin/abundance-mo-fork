@@ -4,7 +4,7 @@
 to-do-fix
 
 now:
-    - BOM PARAM LEVA    
+    - BUG: When in runmode, molecule isn't considered the activeatom so BOM will not show  
     - NEED HELP: Github molecule not loading correct values. problem is that even though value in IOs are correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - maybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking. (this.alert message not working )
