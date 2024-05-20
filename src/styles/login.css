@@ -45,10 +45,6 @@
 .login-page {
   margin: auto;
 }
-
-.login-form {
-  width: 90%;
-}
 .liked {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
@@ -63,12 +59,27 @@
   cursor: pointer;
 }
 
-.export-div {
-  width: 70%;
+.code-window-div {
+  width: 80%;
   z-index: 5;
-  position: absolute;
   top: 30%;
+  position: absolute;
   left: 20%;
+}
+
+.export-div {
+  width: 80%;
+  z-index: 5;
+  top: 20%;
+  left: 10%;
+}
+.export-div label {
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  text-align: left;
+  width: 100%;
+  color: #ffffff8a;
 }
 
 .pullDiv {
@@ -200,8 +211,8 @@
   background: #f2f2f2;
   width: 100%;
   border: 0;
-  margin: 0 0 15px;
-  padding: 15px;
+  margin: 0 0 10px;
+  padding: 10px;
   box-sizing: border-box;
   font-size: 14px;
 }
@@ -217,16 +228,25 @@
   box-sizing: border-box;
   font-size: 14px;
 }
-.form button,
+.form h2 {
+  color: #ffffff;
+  font-size: 20px;
+  margin-bottom: 5px;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+}
+.submit-button,
 .submit-btn {
   height: 40px;
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
+  margin-top: 3px;
   outline: 0;
   background: #444;
   width: 100%;
-  border: 0;
+  border: 1;
   border-radius: 2px;
+  border-color: #ffffff;
   color: #ffffff;
   font-size: 14px;
   -webkit-transition: all 0.3 ease;
@@ -255,20 +275,19 @@
 }
 
 .closeButton {
-  overflow: hidden;
   position: absolute;
-  margin-bottom: 50px;
   top: 5px;
   right: 5px;
   border: none;
-  padding: 0;
-  width: 2em;
   height: 2em;
-  border-radius: 50%;
   background: transparent;
-  color: #434445;
   font: inherit;
-  text-indent: 100%;
+  cursor: pointer;
+  margin-top: 3px;
+  border-color: #ffffff;
+  color: #ffffff;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
   cursor: pointer;
 
   &:focus {
