@@ -944,3 +944,7 @@ Sidebar navigation
 .errorPopup .label {
   font-weight: bold;
 }
+
+.errorPopup button {
+  background-color:  #3f4243ef;
+}
