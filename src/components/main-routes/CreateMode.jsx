@@ -45,6 +45,7 @@ function CreateMode(props) {
 
   /** State for top level molecule */
   const [currentMoleculeTop, setTop] = useState(false);
+  const [compiledBom, setCompiledBom] = useState({});
 
   /**
    * Object containing letters and values used for keyboard shortcuts
@@ -94,6 +95,25 @@ function CreateMode(props) {
     //Clearing the interval
     return () => clearInterval(myInterval);
   }, []);
+
+  useEffect(() => {
+    if (activeAtom) {
+      if (activeAtom.atomType == "Molecule") {
+        compileBom().then((result) => {
+          console.log(result);
+          let bomParams = {};
+          result.map((item) => {
+            bomParams[item.BOMitemName] = {
+              value: item.BOMitemName,
+              label: item.BOMitemName,
+              disabled: false,
+            };
+            setCompiledBom(bomParams);
+          });
+        });
+      }
+    }
+  }, [activeAtom]);
 
   const handleBodyClick = (e) => {
     if (e.metaKey && e.key == "s") {
@@ -394,6 +414,7 @@ function CreateMode(props) {
                 setAxes={setAxes}
                 setWire={setWire}
                 setSolid={setSolid}
+                compiledBom={compiledBom}
               />
             ) : null}
 

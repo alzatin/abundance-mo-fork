@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import globalvariables from "../../js/globalvariables";
 
 import { useControls, useCreateStore, LevaPanel, button } from "leva";
+//import { c } from "vite/dist/node/types.d-FdqQ54oU";
 
 /**Creates new collapsible sidebar with Leva - edited from Replicad's ParamsEditor.jsx */
 export default (function ParamsEditor({
@@ -11,9 +12,9 @@ export default (function ParamsEditor({
   setAxes,
   setWire,
   setSolid,
+  compiledBom,
 }) {
   let inputParams = {};
-  let bomParams = {};
 
   const store1 = useCreateStore();
   const store2 = useCreateStore();
@@ -29,21 +30,9 @@ export default (function ParamsEditor({
     return () => clearTimeout(timeoutId);
   }, []);
 
-  if (activeAtom !== null) {
-    /** Creates Leva inputs inside each atom */
-    inputParams = activeAtom.createLevaInputs();
-    /** Creates Leva inputs for BOM if active atom is molecule  */
-
-    if (activeAtom.atomType == "Molecule") {
-      activeAtom.createLevaBomInputs().then((res) => {
-        bomParams = res;
-      });
-    }
-  }
-
   const bomParamsConfig = useMemo(() => {
-    return { ...bomParams };
-  }, [bomParams]);
+    return { ...compiledBom };
+  }, [compiledBom]);
   const inputParamsConfig = useMemo(() => {
     return { ...inputParams };
   }, [inputParams]);
@@ -63,7 +52,7 @@ export default (function ParamsEditor({
     [activeAtom]
   );
 
-  useControls(() => bomParamsConfig, { store: store3 }, [bomParams]);
+  useControls(() => bomParamsConfig, { store: store3 }, [compiledBom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
 
   /** Creates Leva panel with grid settings */
