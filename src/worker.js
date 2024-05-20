@@ -259,6 +259,7 @@ function bom(targetID, inputID, TAG, BOM) {
       geometry: library[inputID].geometry,
       tags: [TAG, ...library[inputID].tags],
       bom: BOM,
+      color: library[inputID].color,
     };
     return true;
   });
@@ -364,9 +365,9 @@ function getStep(targetID, inputID) {
 
 function extractBoms(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
-    return [inputGeometry.bom];
+    return inputGeometry.bom;
   } else if (
-    inputGeometry.geometry.length > 1 &&
+    inputGeometry.geometry.length >= 1 &&
     inputGeometry.geometry[0].geometry != undefined
   ) {
     let bomArray = [];
@@ -543,6 +544,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       geometry: assemblyCut,
       tags: partToCut.tags,
       color: partToCut.color,
+      bom: partToCut.bom,
     };
     return library[subID];
   } else {
@@ -559,6 +561,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       geometry: [partCutCopy],
       tags: partToCut.tags,
       color: partToCut.color,
+      bom: partToCut.bom,
     };
 
     return library[newID];

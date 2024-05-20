@@ -14,7 +14,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
-
+import { button } from "leva";
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
  * a user has been authorized access to a project.
@@ -45,6 +45,7 @@ function CreateMode(props) {
 
   /** State for top level molecule */
   const [currentMoleculeTop, setTop] = useState(false);
+  const [compiledBom, setCompiledBom] = useState({});
 
   /**
    * Object containing letters and values used for keyboard shortcuts
@@ -94,6 +95,29 @@ function CreateMode(props) {
     //Clearing the interval
     return () => clearInterval(myInterval);
   }, []);
+
+  /** Compile BOM when activeAtom is a molecule and sets new state to trigger menu rerender */
+  useEffect(() => {
+    if (activeAtom) {
+      if (activeAtom.atomType == "Molecule") {
+        compileBom().then((result) => {
+          let bomParams = {};
+          result.map((item) => {
+            bomParams[item.BOMitemName] = {
+              value: item.costUSD + " USD",
+              label: item.BOMitemName + "(x" + item.numberNeeded + ")",
+              disabled: true,
+            };
+          });
+          bomParams["Download List of Materials"] = button(() =>
+            console.log(result)
+          );
+
+          setCompiledBom(bomParams);
+        });
+      }
+    }
+  }, [activeAtom]);
 
   const handleBodyClick = (e) => {
     if (e.metaKey && e.key == "s") {
@@ -394,6 +418,7 @@ function CreateMode(props) {
                 setAxes={setAxes}
                 setWire={setWire}
                 setSolid={setSolid}
+                compiledBom={compiledBom}
               />
             ) : null}
 

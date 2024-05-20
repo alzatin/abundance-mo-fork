@@ -4,8 +4,8 @@
 to-do-fix
 
 now:
-
-    - NEED HELP: Github molecule not loading correct values. problem is that even though value in IOs in correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - maybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
+    - BUG: When in runmode, molecule isn't considered the activeatom so BOM will not show  
+    - NEED HELP: Github molecule not loading correct values. problem is that even though value in IOs are correctly stored when it computes in the worker using the output of the molecule it saves the object to the library with whatever values it gets first and shows that until an update value triggers a rerender ? - maybe what we need to do is make a copy with its own set of atoms and output and if needed it can be updated from github ?
 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking. (this.alert message not working )
 
@@ -15,7 +15,6 @@ now:
     - rendering problems when directly linking to run mode
     - Cut layout should separate by height
     - Bug : LEVA input error ? - seems like its wire 
-    - keep out molecule own icon?
     - document better
     
 
@@ -43,7 +42,7 @@ mid :
     - some places still have JSCAD code // clean up
     - BOM summary when molecule is active , button to download
     - Fix gitmolecule search bar max quota issue
-    - Top molecule - choose units of measurement (Should this be in create new project ? as an extra setting)
+    - Top molecule - choose units of measurement 
     - add thumbnail images for projects
 
 future:
