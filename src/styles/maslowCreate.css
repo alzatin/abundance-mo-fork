@@ -932,3 +932,15 @@ Sidebar navigation
   justify-content: space-evenly;
   padding: 10px;
 }
+
+.errorPopup {
+  background: #ffffff;
+  width: 90%;
+  margin: 30px auto 100px;
+  padding: 30px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.errorPopup .label {
+  font-weight: bold;
+}
