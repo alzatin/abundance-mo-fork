@@ -4,7 +4,6 @@ import { setOC } from "replicad";
 import { expose } from "comlink";
 import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
-import globalvariables from "./js/globalvariables";
 
 var library = {};
 
@@ -23,6 +22,16 @@ const init = async () => {
   return true;
 };
 const started = init();
+
+/**
+ * A function to generate a unique ID value.
+ */
+function generateUniqueID() {
+  const dateString = new Date().getTime();
+  const randomness = Math.floor(Math.random() * 1000);
+  const newID = dateString + randomness;
+  return newID;
+}
 
 function createMesh(thickness) {
   return started.then(() => {
@@ -538,7 +547,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID, assemblyID));
     });
 
-    let subID = globalvariables.generateUniqueID();
+    let subID = generateUniqueID();
     //returns new assembly that has been cut
     library[subID] = {
       geometry: assemblyCut,
