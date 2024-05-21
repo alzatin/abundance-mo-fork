@@ -97,23 +97,26 @@ function CreateMode(props) {
   }, []);
 
   /** Compile BOM when activeAtom is a molecule and sets new state to trigger menu rerender */
+  /** Should this be in flowcanvas so that it runs after project is loaded? */
   useEffect(() => {
-    if (activeAtom) {
+    if (GlobalVariables.currentMolecule != undefined && activeAtom) {
       if (activeAtom.atomType == "Molecule") {
         compileBom().then((result) => {
           let bomParams = {};
-          result.map((item) => {
-            bomParams[item.BOMitemName] = {
-              value: item.costUSD + " USD",
-              label: item.BOMitemName + "(x" + item.numberNeeded + ")",
-              disabled: true,
-            };
-          });
-          bomParams["Download List of Materials"] = button(() =>
-            console.log(result)
-          );
+          if (result != undefined) {
+            result.map((item) => {
+              bomParams[item.BOMitemName] = {
+                value: item.costUSD + " USD",
+                label: item.BOMitemName + "(x" + item.numberNeeded + ")",
+                disabled: true,
+              };
+            });
+            bomParams["Download List of Materials"] = button(() =>
+              console.log(result)
+            );
 
-          setCompiledBom(bomParams);
+            setCompiledBom(bomParams);
+          }
         });
       }
     }
@@ -222,35 +225,37 @@ function CreateMode(props) {
   };
 
   const compileBom = async () => {
-    let compiled = GlobalVariables.currentMolecule
-      .extractBomTags(GlobalVariables.currentMolecule.output.value)
-      .then((result) => {
-        let bomList = [];
-        let compileBomItems = [];
-        if (result) {
-          result.forEach(function (bomElement) {
-            if (!bomList[bomElement.BOMitemName]) {
-              //If the list of items doesn't already have one of these
-              bomList[bomElement.BOMitemName] = new BOMEntry(); //Create one
-              bomList[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
-              bomList[bomElement.BOMitemName].BOMitemName =
-                bomElement.BOMitemName; //With the information from the item
-              bomList[bomElement.BOMitemName].source = bomElement.source;
-              compileBomItems.push(bomList[bomElement.BOMitemName]);
-            }
-            bomList[bomElement.BOMitemName].numberNeeded +=
-              bomElement.numberNeeded;
-            bomList[bomElement.BOMitemName].costUSD += bomElement.costUSD;
-          });
+    if (GlobalVariables.currentMolecule.output.value) {
+      let compiled = GlobalVariables.currentMolecule
+        .extractBomTags(GlobalVariables.currentMolecule.output.value)
+        .then((result) => {
+          let bomList = [];
+          let compileBomItems = [];
+          if (result) {
+            result.forEach(function (bomElement) {
+              if (!bomList[bomElement.BOMitemName]) {
+                //If the list of items doesn't already have one of these
+                bomList[bomElement.BOMitemName] = new BOMEntry(); //Create one
+                bomList[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
+                bomList[bomElement.BOMitemName].BOMitemName =
+                  bomElement.BOMitemName; //With the information from the item
+                bomList[bomElement.BOMitemName].source = bomElement.source;
+                compileBomItems.push(bomList[bomElement.BOMitemName]);
+              }
+              bomList[bomElement.BOMitemName].numberNeeded +=
+                bomElement.numberNeeded;
+              bomList[bomElement.BOMitemName].costUSD += bomElement.costUSD;
+            });
 
-          // Alphabetize by source
-          compileBomItems = compileBomItems.sort((a, b) =>
-            a.source > b.source ? 1 : b.source > a.source ? -1 : 0
-          );
-          return compileBomItems;
-        }
-      });
-    return compiled;
+            // Alphabetize by source
+            compileBomItems = compileBomItems.sort((a, b) =>
+              a.source > b.source ? 1 : b.source > a.source ? -1 : 0
+            );
+            return compileBomItems;
+          }
+        });
+      return compiled;
+    }
   };
   /**
    * Saves project by making a commit to the Github repository.
