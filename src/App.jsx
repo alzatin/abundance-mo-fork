@@ -14,7 +14,6 @@ import LoginMode from "./components/main-routes/LoginMode.jsx";
 import RunMode from "./components/main-routes/RunMode.jsx";
 import CreateMode from "./components/main-routes/CreateMode.jsx";
 import cadWorker from "./worker.js?worker";
-import AppError from './components/secondary/AppError.jsx';
 
 /*Import style scripts*/
 import "./styles/maslowCreate.css";
@@ -111,73 +110,71 @@ export default function ReplicadApp() {
 
   return (
     <main>
-      <AppError>
-        <BrowserRouter>
-          <Routes>
-            <Route
-              exact
-              path="/"
-              element={
-                <LoginMode
-                  authorizedUserOcto={authorizedUserOcto}
-                  tryLogin={tryLogin}
-                  setIsLoggedIn={setIsLoggedIn}
-                  isloggedIn={isloggedIn}
-                  exportPopUp={exportPopUp}
-                  setExportPopUp={setExportPopUp}
-                />
-              }
-            />
-            <Route
-              path="/:id"
-              element={
-                <CreateMode
-                  props={{
-                    activeAtom: activeAtom,
-                    setActiveAtom: setActiveAtom,
-                    authorizedUserOcto: authorizedUserOcto,
-                    tryLogin: tryLogin,
-                    loadProject: loadProject,
-                    exportPopUp: exportPopUp,
-                    setExportPopUp: setExportPopUp,
-                  }}
-                  displayProps={{
-                    mesh: mesh,
-                    setMesh: setMesh,
-                    size: size,
-                    cad: cad,
-                    wireMesh: wireMesh,
-                    setWireMesh: setWireMesh,
-                  }}
-                />
-              }
-            />
-            <Route
-              path="/run/:id"
-              element={
-                <RunMode
-                  props={{
-                    isloggedIn: isloggedIn,
-                    setActiveAtom: setActiveAtom,
-                    activeAtom: GlobalVariables.currentMolecule,
-                    authorizedUserOcto: authorizedUserOcto,
-                    tryLogin: tryLogin,
-                    loadProject: loadProject,
-                  }}
-                  displayProps={{
-                    mesh: mesh,
-                    setMesh: setMesh,
-                    size: size,
-                    cad: cad,
-                    wireMesh: wireMesh,
-                    setWireMesh: setWireMesh,
-                  }}
-                />
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </AppError>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={
+              <LoginMode
+                authorizedUserOcto={authorizedUserOcto}
+                tryLogin={tryLogin}
+                setIsLoggedIn={setIsLoggedIn}
+                isloggedIn={isloggedIn}
+                exportPopUp={exportPopUp}
+                setExportPopUp={setExportPopUp}
+              />
+            }
+          />
+          <Route
+            path="/:id"
+            element={
+              <CreateMode
+                props={{
+                  activeAtom: activeAtom,
+                  setActiveAtom: setActiveAtom,
+                  authorizedUserOcto: authorizedUserOcto,
+                  tryLogin: tryLogin,
+                  loadProject: loadProject,
+                  exportPopUp: exportPopUp,
+                  setExportPopUp: setExportPopUp,
+                }}
+                displayProps={{
+                  mesh: mesh,
+                  setMesh: setMesh,
+                  size: size,
+                  cad: cad,
+                  wireMesh: wireMesh,
+                  setWireMesh: setWireMesh,
+                }}
+              />
+            }
+          />
+          <Route
+            path="/run/:id"
+            element={
+              <RunMode
+                props={{
+                  isloggedIn: isloggedIn,
+                  setActiveAtom: setActiveAtom,
+                  activeAtom: GlobalVariables.currentMolecule,
+                  authorizedUserOcto: authorizedUserOcto,
+                  tryLogin: tryLogin,
+                  loadProject: loadProject,
+                }}
+                displayProps={{
+                  mesh: mesh,
+                  setMesh: setMesh,
+                  size: size,
+                  cad: cad,
+                  wireMesh: wireMesh,
+                  setWireMesh: setWireMesh,
+                }}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </main>
   );
 }
