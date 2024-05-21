@@ -83,7 +83,7 @@ function GitSearch(props) {
         <>
           <li
             onClick={(e) => placeGitHubMolecule(e, item)}
-            key={key}
+            key={item.id}
             onMouseEnter={() => handleMouseOver(item, key)}
             onMouseLeave={() => handleMouseOut()}
           >
@@ -114,14 +114,18 @@ function GitSearch(props) {
               placeholder="Search for atom.."
               className="menu_search_canvas"
             ></input>
-            <label for="id_select"> Topic </label>
+            <label htmlFor="id_select"> Topic </label>
             <select
               ref={maslowTopic}
               id="searchType"
               className="menu_search_canvas"
             >
               {topics.map((topic) => {
-                return <option value={topic.value}>{topic.label}</option>;
+                return (
+                  <option key={topic.label} value={topic.value}>
+                    {topic.label}
+                  </option>
+                );
               })}
             </select>
             <GitList />

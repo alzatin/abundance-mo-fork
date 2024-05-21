@@ -268,7 +268,7 @@ const NewProjectPopUp = (props) => {
             <label htmlFor="project-name">Project Name</label>
             <input
               name="Project Name"
-              placeholder="This will be your GitHub repository name"
+              placeholder="Project Name"
               ref={projectRef}
               required
             />
