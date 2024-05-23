@@ -1,6 +1,8 @@
 import Atom from "../prototypes/atom.js";
 import Connector from "../prototypes/connector.js";
 import GlobalVariables from "../js/globalvariables.js";
+
+import { Octokit } from "https://esm.sh/octokit@2.0.19";
 //import saveAs from '../lib/FileSaver.js'
 
 /**
@@ -475,6 +477,50 @@ export default class Molecule extends Atom {
       }
     });
   }
+  /**
+   * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
+   * @param {number} id - The GitHub project ID for the project to be loaded.
+   */
+  async loadProjectByID(id) {
+    let octokit = new Octokit();
+    await octokit
+      .request("GET /repositories/:id/contents/project.maslowcreate", { id })
+      .then((response) => {
+        //content will be base64 encoded
+        let valuesToOverwriteInLoadedVersion = {};
+
+        //If there are stored io values to recover
+        if (this.ioValues != undefined) {
+          valuesToOverwriteInLoadedVersion = {
+            uniqueID: GlobalVariables.generateUniqueID(),
+            x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
+            y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
+            atomType: "GitHubMolecule",
+            topLevel: true,
+            ioValues: this.ioValues,
+          };
+        } else {
+          valuesToOverwriteInLoadedVersion = {
+            atomType: "GitHubMolecule",
+            projectID: item.id,
+            uniqueID: GlobalVariables.generateUniqueID(),
+            x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
+            y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
+            atomType: this.atomType,
+            topLevel: true,
+          };
+        }
+        let rawFile = JSON.parse(atob(response.data.content));
+
+        GlobalVariables.currentMolecule.placeAtom(
+          rawFile,
+          true,
+          valuesToOverwriteInLoadedVersion
+        );
+
+        return rawFile;
+      });
+  }
 
   /**
    * Delete this molecule and everything in it.
@@ -497,7 +543,8 @@ export default class Molecule extends Atom {
    * @param {object} typesList - A dictionary of all of the available types with references to their constructors
    * @param {boolean} unlock - A flag to indicate if this atom should spawn in the unlocked state.
    */
-  async placeAtom(newAtomObj, unlock) {
+  async placeAtom(newAtomObj, unlock, values) {
+    console.log(newAtomObj);
     try {
       GlobalVariables.numberOfAtomsToLoad =
         GlobalVariables.numberOfAtomsToLoad + 1; //Indicate that one more atom needs to be loaded
@@ -523,13 +570,12 @@ export default class Molecule extends Atom {
           }
 
           //If this is a molecule, de-serialize it
-          if (atom.atomType == "Molecule") {
-            promise = atom.deserialize(newAtomObj);
-          }
+          if (
+            atom.atomType == "Molecule" ||
+            atom.atomType == "GitHubMolecule"
+          ) {
+            promise = atom.deserialize(newAtomObj, values, true);
 
-          //If this is a github molecule load it from the web
-          if (atom.atomType == "GitHubMolecule") {
-            promise = await atom.loadProjectByID(atom.projectID);
             if (unlock) {
               atom.beginPropagation();
             }

@@ -15,17 +15,7 @@ function GitSearch(props) {
    * @param {object} ev - The event triggered by clicking on a menu item.
    */
   function placeGitHubMolecule(e, item) {
-    GlobalVariables.currentMolecule.placeAtom(
-      {
-        x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
-        y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
-        parent: GlobalVariables.currentMolecule,
-        atomType: "GitHubMolecule",
-        projectID: item.id,
-        uniqueID: GlobalVariables.generateUniqueID(),
-      },
-      true
-    );
+    GlobalVariables.currentMolecule.loadProjectByID(item.id).then(result);
     props.setSearchingGitHub(false);
     setGitRepos([]);
   }

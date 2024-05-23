@@ -373,7 +373,7 @@ export default class Atom {
       this.isMoving = true;
       this.selected = true;
       atomSelected = this;
-
+      console.log(atomSelected);
       this.sendToRender();
     }
     //Deselect this if it wasn't clicked on, unless control is held
