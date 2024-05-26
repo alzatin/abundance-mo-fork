@@ -496,7 +496,7 @@ export default class Molecule extends Atom {
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
             atomType: "GitHubMolecule",
-            topLevel: true,
+            topLevel: this.topLevel,
             ioValues: this.ioValues,
           };
         } else {
@@ -506,8 +506,7 @@ export default class Molecule extends Atom {
             uniqueID: GlobalVariables.generateUniqueID(),
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
-            atomType: this.atomType,
-            topLevel: true,
+            topLevel: this.topLevel,
           };
         }
         let rawFile = JSON.parse(atob(response.data.content));
@@ -517,8 +516,6 @@ export default class Molecule extends Atom {
           true,
           valuesToOverwriteInLoadedVersion
         );
-
-        return rawFile;
       });
   }
 
@@ -544,7 +541,6 @@ export default class Molecule extends Atom {
    * @param {boolean} unlock - A flag to indicate if this atom should spawn in the unlocked state.
    */
   async placeAtom(newAtomObj, unlock, values) {
-    console.log(newAtomObj);
     try {
       GlobalVariables.numberOfAtomsToLoad =
         GlobalVariables.numberOfAtomsToLoad + 1; //Indicate that one more atom needs to be loaded
