@@ -304,31 +304,65 @@ class GlobalVariables {
   }
 
   /**
-   * A function to generate a pixel value for 0-1 location on screen depending on screen width
-   * @param {number} width 0-1
+   * Snaps the given x,y coordinates to the nearest point within the canvas boundaries. Where x
+   * and y are width fraction and heigh fraction respectively.
+   * @param {} x 
+   * @param {*} y 
+   * @return a tuple of [snapped x position, snapped y position], both in fractional position
+   */
+  constrainToCanvasBorders(x, y) {
+    return [
+      Math.max(0, Math.min(1, x)),
+      Math.max(0, Math.min(1, y))
+    ];
+  }
+
+  /**
+   * Snaps the given x,y coordinates to the nearest point within the canvas boundaries. Where x
+   * and y are measuring pixels from the top-left of the canvas.
+   * @param {} xPixels 
+   * @param {*} yPixels 
+   * @return a tuple of [snapped x position, snapped y position], both in pixels
+   */
+  constrainToCanvasBordersPixels(xPixels, yPixels) {
+    return [
+      Math.max(0, Math.min(this.canvas.current.width, xPixels)),
+      Math.max(0, Math.min(this.canvas.current.height, yPixels))
+    ];
+  }
+
+  /**
+   * A function to generate a pixel value for 0-1 location on screen depending on screen width.
+   * @param {number} width
    */
   widthToPixels(width) {
-    width = Math.min(width, 1); //Constrain the position to be a max of 1
     let pixels = this.canvas.current.width * width;
     return pixels;
   }
   /**
-   * A function to generate a 0-1 value from pixels for location on screen depending on screen width
-   * @param {number} width 0-1
+   * A function to generate a 0-1 value from pixels for location on screen depending on screen width.
+   * @param {number} width
    */
   pixelsToWidth(pixels) {
     let width = 1 / (this.canvas.current.width / pixels);
     return width;
   }
   /**
-   * A function to generate a pixel value for 0-1 location on screen depending on screen height
-   * @param {number} width 0-1
+   * Convert from a fractional height value to a number of pixels.
+   * @param {number} width
    */
   heightToPixels(height) {
-    height = Math.min(height, 1); //Constrain the position of the max value to be 1
-
     let pixels = this.canvas.current.height * height;
     return pixels;
+  }
+
+  /**
+   * Convert from a pixel position or distance to a fraction of the page height between 0 and 1 inclusive.
+   * @param {number} width
+   */
+  pixelsToHeight(pixels) {
+    let height = 1 / (this.canvas.current.height / pixels);
+    return height;
   }
 
   /**
@@ -349,14 +383,6 @@ class GlobalVariables {
    */
   writeToDisplay(id, resetView = false) {
     console.log("Write to display not set"); //This is a placedholder. It is created in flowCanvas.js
-  }
-  /**
-   * A function to generate a 0-1 value from pixels for location on screen depending on screen height
-   * @param {number} width 0-1
-   */
-  pixelsToHeight(pixels) {
-    let height = 1 / (this.canvas.current.height / pixels);
-    return height;
   }
 
   /**
