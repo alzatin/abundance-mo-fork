@@ -101,21 +101,10 @@ export default class GitHubMolecule extends Molecule {
     if (this.output.connectors.length > 0) {
       outputConnector = this.output.connectors[0];
     }
-    console.log(this);
-    //Delete everything currently inside...Make a copy to prevent index issues
+
     const copyOfNode = this;
     copyOfNode.deleteNode(false, false, true);
 
-    //Re-de-serialize this molecule
-    this.loadProjectByID(this.gitHubUniqueID).then(() => {
-      console.log("is this ever running");
-      if (outputConnector) {
-        //Reconnect the output connector
-        outputConnector.attachmentPoint1 = this.output;
-        this.output.connectors.push(outputConnector);
-      }
-
-      this.beginPropagation(true);
-    });
+    this.loadProjectByID(this.gitHubUniqueID, this.ioValues, outputConnector);
   }
 }

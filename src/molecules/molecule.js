@@ -469,7 +469,7 @@ export default class Molecule extends Atom {
    * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
    * @param {number} id - The GitHub project ID for the project to be loaded.
    */
-  async loadProjectByID(id, ioValues = undefined) {
+  async loadProjectByID(id, ioValues = undefined, outputConnector) {
     let octokit = new Octokit();
     await octokit
       .request("GET /repositories/:id/contents/project.maslowcreate", { id })
@@ -498,15 +498,18 @@ export default class Molecule extends Atom {
             gitHubUniqueID: id,
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
-            topLevel: this.topLevel,
+            topLevel: true,
           };
         }
 
-        GlobalVariables.currentMolecule.placeAtom(
-          rawFileWithNewIds,
-          true,
-          valuesToOverwriteInLoadedVersion
-        );
+        GlobalVariables.currentMolecule
+          .placeAtom(rawFileWithNewIds, true, valuesToOverwriteInLoadedVersion)
+          .then(() => {
+            console.log(outputConnector);
+            console.log(this);
+            outputConnector.attachmentPoint1 = this.output;
+            this.output.connectors.push(outputConnector);
+          });
       });
   }
 
@@ -545,7 +548,6 @@ export default class Molecule extends Atom {
     copyOfNodesOnTheScreen.forEach((atom) => {
       atom.deleteNode(backgroundClickAfter, deletePath, silent);
     });
-
     super.deleteNode(backgroundClickAfter, deletePath, silent);
   }
 
