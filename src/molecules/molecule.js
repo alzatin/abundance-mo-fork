@@ -397,7 +397,6 @@ export default class Molecule extends Atom {
    * Generates and returns a object representation of this molecule and all of its children.
    */
   serialize(offset = { x: 0, y: 0 }) {
-    console.log("copy serialize");
     var allAtoms = []; //An array of all the atoms contained in this molecule
     var allConnectors = []; //An array of all the connectors contained in this molecule
 
