@@ -70,16 +70,14 @@ function GitSearch(props) {
   const GitList = function () {
     return gitRepos.map((item, key) => {
       return (
-        <>
-          <li
-            onClick={(e) => placeGitHubMolecule(e, item)}
-            key={item.id}
-            onMouseEnter={() => handleMouseOver(item, key)}
-            onMouseLeave={() => handleMouseOut()}
-          >
-            {item.name}
-          </li>
-        </>
+        <li
+          onClick={(e) => placeGitHubMolecule(e, item)}
+          key={item.id}
+          onMouseEnter={() => handleMouseOver(item, key)}
+          onMouseLeave={() => handleMouseOut()}
+        >
+          {item.name}
+        </li>
       );
     });
   };
