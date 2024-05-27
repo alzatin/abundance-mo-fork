@@ -470,14 +470,13 @@ export default class Molecule extends Atom {
    * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
    * @param {number} id - The GitHub project ID for the project to be loaded.
    */
-  async loadProjectByID(id) {
+  async loadProjectByID(id, ioValues = undefined) {
     let octokit = new Octokit();
     await octokit
       .request("GET /repositories/:id/contents/project.maslowcreate", { id })
       .then((response) => {
         //content will be base64 encoded
         let valuesToOverwriteInLoadedVersion = {};
-
         //If there are stored io values to recover
         if (this.ioValues != undefined) {
           valuesToOverwriteInLoadedVersion = {
@@ -491,7 +490,6 @@ export default class Molecule extends Atom {
         } else {
           valuesToOverwriteInLoadedVersion = {
             atomType: "GitHubMolecule",
-            projectID: item.id,
             uniqueID: GlobalVariables.generateUniqueID(),
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
@@ -499,10 +497,10 @@ export default class Molecule extends Atom {
           };
         }
         let rawFile = JSON.parse(atob(response.data.content));
-        let rawFileWithNewId = this.remapIDs(rawFile);
+        let rawFileWithNewIds = this.remapIDs(rawFile);
 
         GlobalVariables.currentMolecule.placeAtom(
-          rawFileWithNewId,
+          rawFileWithNewIds,
           true,
           valuesToOverwriteInLoadedVersion
         );
