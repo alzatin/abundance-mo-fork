@@ -404,8 +404,7 @@ export default class Molecule extends Atom {
     thisAsObject.topLevel = this.topLevel;
     thisAsObject.allAtoms = allAtoms;
     thisAsObject.allConnectors = allConnectors;
-    thisAsObject.fileTypeVersion = 1;
-    thisAsObject.simplify = this.simplify;
+    thisAsObject.gitHubUniqueID = this.gitHubUniqueID;
     thisAsObject.unitsIndex = this.unitsIndex;
 
     return thisAsObject;
@@ -475,29 +474,33 @@ export default class Molecule extends Atom {
     await octokit
       .request("GET /repositories/:id/contents/project.maslowcreate", { id })
       .then((response) => {
+        let rawFile = JSON.parse(atob(response.data.content));
+        let rawFileWithNewIds = this.remapIDs(rawFile);
+        rawFileWithNewIds.atomType = "GitHubMolecule";
+
         //content will be base64 encoded
         let valuesToOverwriteInLoadedVersion = {};
+        let moleculeUniqueID = GlobalVariables.generateUniqueID();
+
         //If there are stored io values to recover
         if (this.ioValues != undefined) {
           valuesToOverwriteInLoadedVersion = {
-            uniqueID: GlobalVariables.generateUniqueID(),
-            x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
-            y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
-            atomType: "GitHubMolecule",
+            uniqueID: moleculeUniqueID,
+            x: this.x,
+            y: this.y,
+            gitHubUniqueID: id,
             topLevel: this.topLevel,
             ioValues: this.ioValues,
           };
         } else {
           valuesToOverwriteInLoadedVersion = {
-            atomType: "GitHubMolecule",
-            uniqueID: GlobalVariables.generateUniqueID(),
+            uniqueID: moleculeUniqueID,
+            gitHubUniqueID: id,
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
             topLevel: this.topLevel,
           };
         }
-        let rawFile = JSON.parse(atob(response.data.content));
-        let rawFileWithNewIds = this.remapIDs(rawFile);
 
         GlobalVariables.currentMolecule.placeAtom(
           rawFileWithNewIds,
