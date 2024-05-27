@@ -511,13 +511,39 @@ export default class Molecule extends Atom {
           };
         }
         let rawFile = JSON.parse(atob(response.data.content));
+        let rawFileWithNewId = this.remapIDs(rawFile);
 
         GlobalVariables.currentMolecule.placeAtom(
-          rawFile,
+          rawFileWithNewId,
           true,
           valuesToOverwriteInLoadedVersion
         );
       });
+  }
+
+  remapIDs(json) {
+    let idPairs = {};
+    if (json.allAtoms) {
+      json.allAtoms.forEach((atom) => {
+        let oldID = atom.uniqueID;
+        let newID = GlobalVariables.generateUniqueID();
+        idPairs[oldID] = newID;
+        atom.uniqueID = newID;
+      });
+      json.allConnectors.forEach((connector) => {
+        if (connector.ap1ID && idPairs[connector.ap1ID]) {
+          connector.ap1ID = idPairs[connector.ap1ID];
+        }
+        if (connector.ap2ID && idPairs[connector.ap2ID]) {
+          connector.ap2ID = idPairs[connector.ap2ID];
+        }
+        if (connector.ap2ID && idPairs[connector.ap2ID]) {
+          connector.ap2ID = idPairs[connector.ap2ID];
+        }
+      });
+
+      return json;
+    }
   }
 
   /**
