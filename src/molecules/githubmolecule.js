@@ -1,6 +1,7 @@
 import Molecule from "../molecules/molecule";
 import GlobalVariables from "../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import { button } from "leva";
 
 /**
  * This class creates the GitHubMolecule atom.
@@ -54,6 +55,41 @@ export default class GitHubMolecule extends Molecule {
       clickProcessed = true;
     }
     return clickProcessed;
+  }
+
+  /**
+   * Create Leva Menu Input - returns to ParameterEditor
+   */
+  createLevaInputs() {
+    let inputParams = {};
+
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        /* Makes inputs for Io's other than geometry */
+        if (input.valueType !== "geometry") {
+          inputParams[this.uniqueID + input.name] = {
+            value: input.value,
+            label: input.name,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              if (input.value !== value) {
+                input.setValue(value);
+                this.sendToRender();
+              }
+            },
+          };
+        }
+        inputParams["Reload From Github"] = button(() =>
+          console.log("Reload From Github soon")
+        );
+      });
+      return inputParams;
+    }
   }
 
   /**

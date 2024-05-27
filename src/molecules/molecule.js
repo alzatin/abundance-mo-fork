@@ -155,17 +155,6 @@ export default class Molecule extends Atom {
    */
   createLevaInputs() {
     let inputParams = {};
-    // If this is not a gitHUb molecules, add a name input
-    if (this.atomType != "GitHubMolecule") {
-      inputParams["molecule name"] = {
-        value: this.name,
-        label: "Molecule Name",
-        disabled: false,
-        onChange: (value) => {
-          this.name = value;
-        },
-      };
-    }
     /** Runs through active atom inputs and adds IO parameters to default param*/
     if (this.inputs) {
       this.inputs.map((input) => {
