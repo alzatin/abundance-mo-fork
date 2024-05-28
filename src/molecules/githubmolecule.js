@@ -1,6 +1,7 @@
 import Molecule from "../molecules/molecule";
 import GlobalVariables from "../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import { button } from "leva";
 
 /**
  * This class creates the GitHubMolecule atom.
@@ -55,54 +56,40 @@ export default class GitHubMolecule extends Molecule {
     }
     return clickProcessed;
   }
+
   /**
-   * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
-   * @param {number} id - The GitHub project ID for the project to be loaded.
+   * Create Leva Menu Input - returns to ParameterEditor
    */
-  async loadProjectByID(id) {
-    let octokit = new Octokit();
-    await octokit
-      .request("GET /repositories/:id/contents/project.maslowcreate", { id })
-      .then((response) => {
-        //content will be base64 encoded
-        let valuesToOverwriteInLoadedVersion = {};
-        if (this.topLevel) {
-          //If we are loading this as a stand alone project
-          valuesToOverwriteInLoadedVersion = {
-            atomType: this.atomType,
-            topLevel: this.topLevel,
+  createLevaInputs() {
+    let inputParams = {};
+
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        /* Makes inputs for Io's other than geometry */
+        if (input.valueType !== "geometry") {
+          inputParams[this.uniqueID + input.name] = {
+            value: input.value,
+            label: input.name,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              if (input.value !== value) {
+                input.setValue(value);
+                this.sendToRender();
+              }
+            },
           };
-        } else {
-          //If there are stored io values to recover
-          if (this.ioValues != undefined) {
-            valuesToOverwriteInLoadedVersion = {
-              uniqueID: this.uniqueID,
-              x: this.x,
-              y: this.y,
-              atomType: this.atomType,
-              topLevel: this.topLevel,
-              ioValues: this.ioValues,
-            };
-          } else {
-            valuesToOverwriteInLoadedVersion = {
-              uniqueID: this.uniqueID,
-              x: this.x,
-              y: this.y,
-              atomType: this.atomType,
-              topLevel: this.topLevel,
-            };
-          }
         }
-
-        let rawFile = JSON.parse(atob(response.data.content));
-        this.deserialize(rawFile, valuesToOverwriteInLoadedVersion, true).then(
-          () => {
-            this.setValues(valuesToOverwriteInLoadedVersion);
-          }
+        inputParams["Reload From Github"] = button(() =>
+          console.log("Reload From Github soon")
         );
-
-        return rawFile;
       });
+      return inputParams;
+    }
   }
 
   /**
@@ -130,35 +117,5 @@ export default class GitHubMolecule extends Molecule {
 
       this.beginPropagation(true);
     });
-  }
-
-  /**
-   * Save the project information to be loaded. This should use super.serialize() to maintain a connection with Molecule, but it doesn't...should be fixed
-   */
-  serialize() {
-    var ioValues = [];
-    this.inputs.forEach((io) => {
-      if (typeof io.getValue() == "number") {
-        var saveIO = {
-          name: io.name,
-          ioValue: io.getValue(),
-        };
-        ioValues.push(saveIO);
-      }
-    });
-
-    //Return a placeholder for this molecule
-    var object = {
-      atomType: this.atomType,
-      name: this.name,
-      x: this.x,
-      y: this.y,
-      uniqueID: this.uniqueID,
-      projectID: this.projectID,
-      ioValues: ioValues,
-      simplify: this.simplify,
-    };
-
-    return object;
   }
 }
