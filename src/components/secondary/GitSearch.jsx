@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import GlobalVariables from "../../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-import { re } from "mathjs";
 import topics from "../../js/maslowTopics.js";
 
 function GitSearch(props) {
@@ -24,7 +23,6 @@ function GitSearch(props) {
     var query =
       searchBarValue + " topic:abundance-project " + maslowTopic.current.value;
     let octokit = new Octokit();
-    console.log(query);
     octokit
       .request("GET /search/repositories", {
         q: query,
