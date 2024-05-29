@@ -85,7 +85,7 @@ const NewProjectPopUp = (props) => {
       });
     }
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-    console.log(topics);
+
     await authorizedUserOcto
       .request("POST /user/repos", {
         name: name,
