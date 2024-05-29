@@ -1,9 +1,9 @@
 const topics = [
-  { value: "maslowcreate", label: "maslowcreate" },
-  { value: "maslowcreate-project", label: "maslowcreate-project" },
-  { value: "maslowcreate-action", label: "maslowcreate-action" },
-  { value: "maslowcreate-examples", label: "maslowcreate-examples" },
-  { value: "maslowcreate-furniture", label: "maslowcreate-furniture" },
+  { value: "abundance-tool", label: "Abundance tool" },
+  { value: "examples", label: "Example" },
+  { value: "furniture", label: "Furniture" },
+  { value: "hardware", label: "Hardware" },
+  { value: "project", label: "Project" },
 ];
 
 export default topics;

@@ -87,7 +87,7 @@ export default function ReplicadApp() {
     var octokit = new Octokit();
 
     octokit
-      .request("GET /repos/{owner}/{repo}/contents/project.maslowcreate", {
+      .request("GET /repos/{owner}/{repo}/contents/project.abundance", {
         owner: project.owner.login,
         repo: project.name,
       })

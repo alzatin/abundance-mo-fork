@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import GlobalVariables from "../../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-import { re } from "mathjs";
 import topics from "../../js/maslowTopics.js";
 
 function GitSearch(props) {
@@ -22,10 +21,7 @@ function GitSearch(props) {
   // conditional query for maslow projects
   const searchGitHub = function () {
     var query =
-      searchBarValue +
-      " topic:maslowcreate" +
-      " topic:" +
-      maslowTopic.current.value;
+      searchBarValue + " topic:abundance-project " + maslowTopic.current.value;
     let octokit = new Octokit();
     octokit
       .request("GET /search/repositories", {
@@ -108,6 +104,8 @@ function GitSearch(props) {
               id="searchType"
               className="menu_search_canvas"
             >
+              {" "}
+              <option key={"empty-topic"} value={""}></option>
               {topics.map((topic) => {
                 return (
                   <option key={topic.label} value={topic.value}>
