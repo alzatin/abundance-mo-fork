@@ -23,7 +23,7 @@ const InitialLog = (props) => {
           <img className="logo" src="/imgs/maslow-logo.png" alt="logo" />
           <div id="welcome">
             <img
-              src="/imgs/abundance.svg"
+              src="/imgs/maslowcreate.svg"
               alt="logo"
               style={{ width: "300px", padding: "10px", margin: "0" }}
             />
@@ -260,7 +260,7 @@ const ShowProjects = (props) => {
             style={{ width: "25px", height: "25px", borderRadius: "50%" }}
           />
           <img
-            src="/imgs/abundance.svg"
+            src="/imgs/maslowcreate.svg"
             alt="logo"
             style={{ height: "20px", padding: "10px" }}
           />
