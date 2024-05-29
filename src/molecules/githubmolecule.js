@@ -107,6 +107,6 @@ export default class GitHubMolecule extends Molecule {
 
     copyOfNode.deleteNode(false, false, true);
 
-    this.loadProjectByID(this.gitHubUniqueID, this.ioValues, oldObject);
+    this.loadProjectByID(this.gitHubUniqueID, oldObject);
   }
 }
