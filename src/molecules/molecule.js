@@ -469,8 +469,7 @@ export default class Molecule extends Atom {
    * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
    * @param {number} id - The GitHub project ID for the project to be loaded.
    */
-  async loadProjectByID(id, oldObject = {}) {
-    console.log(oldObject);
+  async loadProjectByID(id, oldObject = {}, oldParentObjectConnectors = {}) {
     let octokit = new Octokit();
     await octokit
       .request("GET /repositories/:id/contents/project.maslowcreate", { id })
@@ -484,7 +483,7 @@ export default class Molecule extends Atom {
         let moleculeUniqueID = GlobalVariables.generateUniqueID();
 
         //If there are stored io values to recover
-        if (this.ioValues != undefined) {
+        if (oldObject.ioValues != undefined) {
           valuesToOverwriteInLoadedVersion = {
             uniqueID: moleculeUniqueID,
             x: this.x,
@@ -503,11 +502,20 @@ export default class Molecule extends Atom {
           };
         }
 
-        GlobalVariables.currentMolecule.placeAtom(
-          rawFileWithNewIds,
-          true,
-          valuesToOverwriteInLoadedVersion
-        );
+        GlobalVariables.currentMolecule
+          .placeAtom(rawFileWithNewIds, true, valuesToOverwriteInLoadedVersion)
+          .then(() => {
+            oldParentObjectConnectors.forEach((connector) => {
+              if (connector.ap1ID == oldObject.uniqueID) {
+                connector.ap1ID = moleculeUniqueID;
+                this.parent.placeConnector(connector);
+              }
+              if (connector.ap2ID == oldObject.uniqueID) {
+                connector.ap2ID = moleculeUniqueID;
+                this.parent.placeConnector(connector);
+              }
+            });
+          });
       });
   }
 
@@ -639,6 +647,7 @@ export default class Molecule extends Atom {
    * @param {object} connectorObj - An object representation of the connector specifying its inputs and outputs.
    */
   placeConnector(connectorObj) {
+    console.log(connectorObj);
     var outputAttachmentPoint = false;
     var inputAttachmentPoint = false;
 

@@ -566,7 +566,6 @@ export default class AttachmentPoint {
    * Sets the current value of the ap. Force forces an update even if the value hasn't changed.
    */
   setValue(newValue) {
-    console.log(newValue);
     this.value = newValue;
     this.ready = true;
     //propagate the change to linked elements if this is an output

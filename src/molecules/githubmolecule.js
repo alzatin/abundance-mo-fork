@@ -98,15 +98,15 @@ export default class GitHubMolecule extends Molecule {
    */
   reloadMolecule() {
     const copyOfNode = this;
-    /*
-    var output = false;
-    if (copyOfNode.output.connectors.length > 0) {
-      output = copyOfNode.output.connectors[0];
-    }*/
     var oldObject = this.serialize();
+    var oldParentObjectConnectors = this.parent.serialize().allConnectors;
 
     copyOfNode.deleteNode(false, false, true);
 
-    this.loadProjectByID(this.gitHubUniqueID, oldObject);
+    this.loadProjectByID(
+      this.gitHubUniqueID,
+      oldObject,
+      oldParentObjectConnectors
+    );
   }
 }
