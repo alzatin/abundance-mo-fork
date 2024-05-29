@@ -647,7 +647,6 @@ export default class Molecule extends Atom {
    * @param {object} connectorObj - An object representation of the connector specifying its inputs and outputs.
    */
   placeConnector(connectorObj) {
-    console.log(connectorObj);
     var outputAttachmentPoint = false;
     var inputAttachmentPoint = false;
 
