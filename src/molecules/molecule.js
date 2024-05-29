@@ -270,7 +270,7 @@ export default class Molecule extends Atom {
   /**
    * Reads molecule's output atom ID to recompute the molecule in worker
    */
-  async recomputeMolecule(outputID) {
+  recomputeMolecule(outputID) {
     console.log("recompute molecule in molecule");
     try {
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
