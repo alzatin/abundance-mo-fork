@@ -2,6 +2,7 @@ import Molecule from "../molecules/molecule";
 import GlobalVariables from "../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { button } from "leva";
+import { re } from "mathjs";
 
 /**
  * This class creates the GitHubMolecule atom.
@@ -39,6 +40,8 @@ export default class GitHubMolecule extends Molecule {
      * @type {string}
      */
     this.description = "Project imported from GitHub";
+
+    this.gitHubUniqueID;
 
     this.setValues(values);
   }
@@ -84,9 +87,7 @@ export default class GitHubMolecule extends Molecule {
             },
           };
         }
-        inputParams["Reload From Github"] = button(() =>
-          console.log("Reload From Github soon")
-        );
+        inputParams["Reload From Github"] = button(() => this.reloadMolecule());
       });
       return inputParams;
     }
@@ -96,26 +97,16 @@ export default class GitHubMolecule extends Molecule {
    * Reload this github molecule from github
    */
   reloadMolecule() {
-    var outputConnector = false;
-    if (this.output.connectors.length > 0) {
-      outputConnector = this.output.connectors[0];
-    }
+    const copyOfNode = this;
+    var oldObject = this.serialize();
+    var oldParentObjectConnectors = this.parent.serialize().allConnectors;
 
-    //Delete everything currently inside...Make a copy to prevent index issues
-    const copyOfNodesOnTheScreen = [...this.nodesOnTheScreen];
-    copyOfNodesOnTheScreen.forEach((node) => {
-      node.deleteNode(false, false, true);
-    });
+    copyOfNode.deleteNode(false, false, true);
 
-    //Re-de-serialize this molecule
-    this.loadProjectByID(this.projectID).then(() => {
-      if (outputConnector) {
-        //Reconnect the output connector
-        outputConnector.attachmentPoint1 = this.output;
-        this.output.connectors.push(outputConnector);
-      }
-
-      this.beginPropagation(true);
-    });
+    this.loadProjectByID(
+      this.gitHubUniqueID,
+      oldObject,
+      oldParentObjectConnectors
+    );
   }
 }

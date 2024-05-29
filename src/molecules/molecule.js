@@ -404,8 +404,7 @@ export default class Molecule extends Atom {
     thisAsObject.topLevel = this.topLevel;
     thisAsObject.allAtoms = allAtoms;
     thisAsObject.allConnectors = allConnectors;
-    thisAsObject.fileTypeVersion = 1;
-    thisAsObject.simplify = this.simplify;
+    thisAsObject.gitHubUniqueID = this.gitHubUniqueID;
     thisAsObject.unitsIndex = this.unitsIndex;
 
     return thisAsObject;
@@ -470,40 +469,53 @@ export default class Molecule extends Atom {
    * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
    * @param {number} id - The GitHub project ID for the project to be loaded.
    */
-  async loadProjectByID(id, ioValues = undefined) {
+  async loadProjectByID(id, oldObject = {}, oldParentObjectConnectors = {}) {
     let octokit = new Octokit();
     await octokit
       .request("GET /repositories/:id/contents/project.maslowcreate", { id })
       .then((response) => {
+        let rawFile = JSON.parse(atob(response.data.content));
+        let rawFileWithNewIds = this.remapIDs(rawFile);
+        rawFileWithNewIds.atomType = "GitHubMolecule";
+
         //content will be base64 encoded
         let valuesToOverwriteInLoadedVersion = {};
+        let newMoleculeUniqueID = GlobalVariables.generateUniqueID();
+
         //If there are stored io values to recover
-        if (this.ioValues != undefined) {
+        if (oldObject.ioValues != undefined) {
           valuesToOverwriteInLoadedVersion = {
-            uniqueID: GlobalVariables.generateUniqueID(),
-            x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
-            y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
-            atomType: "GitHubMolecule",
+            uniqueID: newMoleculeUniqueID,
+            x: this.x,
+            y: this.y,
+            gitHubUniqueID: id,
             topLevel: this.topLevel,
-            ioValues: this.ioValues,
+            ioValues: oldObject.ioValues,
           };
         } else {
           valuesToOverwriteInLoadedVersion = {
-            atomType: "GitHubMolecule",
-            uniqueID: GlobalVariables.generateUniqueID(),
+            uniqueID: newMoleculeUniqueID,
+            gitHubUniqueID: id,
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
-            topLevel: this.topLevel,
+            topLevel: true,
           };
         }
-        let rawFile = JSON.parse(atob(response.data.content));
-        let rawFileWithNewIds = this.remapIDs(rawFile);
 
-        GlobalVariables.currentMolecule.placeAtom(
-          rawFileWithNewIds,
-          true,
-          valuesToOverwriteInLoadedVersion
-        );
+        GlobalVariables.currentMolecule
+          .placeAtom(rawFileWithNewIds, true, valuesToOverwriteInLoadedVersion)
+          .then(() => {
+            oldParentObjectConnectors.forEach((connector) => {
+              if (connector.ap1ID == oldObject.uniqueID) {
+                connector.ap1ID = newMoleculeUniqueID;
+                this.parent.placeConnector(connector);
+              }
+              if (connector.ap2ID == oldObject.uniqueID) {
+                connector.ap2ID = newMoleculeUniqueID;
+                this.parent.placeConnector(connector);
+              }
+            });
+          });
       });
   }
 
@@ -542,7 +554,6 @@ export default class Molecule extends Atom {
     copyOfNodesOnTheScreen.forEach((atom) => {
       atom.deleteNode(backgroundClickAfter, deletePath, silent);
     });
-
     super.deleteNode(backgroundClickAfter, deletePath, silent);
   }
 
