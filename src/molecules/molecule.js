@@ -480,12 +480,12 @@ export default class Molecule extends Atom {
 
         //content will be base64 encoded
         let valuesToOverwriteInLoadedVersion = {};
-        let moleculeUniqueID = GlobalVariables.generateUniqueID();
+        let newMoleculeUniqueID = GlobalVariables.generateUniqueID();
 
         //If there are stored io values to recover
         if (oldObject.ioValues != undefined) {
           valuesToOverwriteInLoadedVersion = {
-            uniqueID: moleculeUniqueID,
+            uniqueID: newMoleculeUniqueID,
             x: this.x,
             y: this.y,
             gitHubUniqueID: id,
@@ -494,7 +494,7 @@ export default class Molecule extends Atom {
           };
         } else {
           valuesToOverwriteInLoadedVersion = {
-            uniqueID: moleculeUniqueID,
+            uniqueID: newMoleculeUniqueID,
             gitHubUniqueID: id,
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
@@ -507,11 +507,11 @@ export default class Molecule extends Atom {
           .then(() => {
             oldParentObjectConnectors.forEach((connector) => {
               if (connector.ap1ID == oldObject.uniqueID) {
-                connector.ap1ID = moleculeUniqueID;
+                connector.ap1ID = newMoleculeUniqueID;
                 this.parent.placeConnector(connector);
               }
               if (connector.ap2ID == oldObject.uniqueID) {
-                connector.ap2ID = moleculeUniqueID;
+                connector.ap2ID = newMoleculeUniqueID;
                 this.parent.placeConnector(connector);
               }
             });
