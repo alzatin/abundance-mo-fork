@@ -406,6 +406,7 @@ export default class Molecule extends Atom {
     thisAsObject.allConnectors = allConnectors;
     thisAsObject.gitHubUniqueID = this.gitHubUniqueID;
     thisAsObject.unitsIndex = this.unitsIndex;
+    thisAsObject.fileTypeVersion = 1;
 
     return thisAsObject;
   }
@@ -502,7 +503,7 @@ export default class Molecule extends Atom {
             gitHubUniqueID: id,
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
-            topLevel: true,
+            topLevel: false,
           };
         }
 

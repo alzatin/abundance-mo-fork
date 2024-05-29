@@ -87,7 +87,9 @@ export default class GitHubMolecule extends Molecule {
             },
           };
         }
-        inputParams["Reload From Github"] = button(() => this.reloadMolecule());
+        inputParams["Reload From Github"] = button(() =>
+          this.reloadMoleculeFromGithub()
+        );
       });
       return inputParams;
     }
@@ -96,7 +98,7 @@ export default class GitHubMolecule extends Molecule {
   /**
    * Reload this github molecule from github
    */
-  reloadMolecule() {
+  reloadMoleculeFromGithub() {
     var githubMoleculeObjectPreReload = this.serialize();
     var githubMoleculeParentObjectConnectorsPreReload =
       this.parent.serialize().allConnectors;
