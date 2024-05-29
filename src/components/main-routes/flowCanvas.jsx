@@ -220,6 +220,7 @@ export default memo(function FlowCanvas(props) {
         /* Background click - molecule is active atom */
         props.props.setActiveAtom(GlobalVariables.currentMolecule);
         GlobalVariables.currentMolecule.selected = true;
+        GlobalVariables.currentMolecule.sendToRender();
       }
     }
   };
