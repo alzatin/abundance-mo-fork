@@ -171,7 +171,6 @@ export default class Molecule extends Atom {
             onChange: (value) => {
               if (input.value !== value) {
                 input.setValue(value);
-                this.sendToRender();
               }
             },
           };
@@ -271,11 +270,14 @@ export default class Molecule extends Atom {
   /**
    * Reads molecule's output atom ID to recompute the molecule in worker
    */
-  recomputeMolecule(outputID) {
+  async recomputeMolecule(outputID) {
     console.log("recompute molecule in molecule");
     try {
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
+        if (this.selected) {
+          this.sendToRender();
+        }
       });
     } catch (err) {
       this.setAlert(err);
