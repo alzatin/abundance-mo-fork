@@ -494,7 +494,7 @@ export default class Molecule extends Atom {
             x: this.x,
             y: this.y,
             gitHubUniqueID: id,
-            topLevel: this.topLevel,
+            topLevel: false,
             ioValues: oldObject.ioValues,
           };
         } else {
