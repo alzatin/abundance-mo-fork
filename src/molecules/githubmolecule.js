@@ -97,16 +97,17 @@ export default class GitHubMolecule extends Molecule {
    * Reload this github molecule from github
    */
   reloadMolecule() {
-    const copyOfNode = this;
-    var oldObject = this.serialize();
-    var oldParentObjectConnectors = this.parent.serialize().allConnectors;
+    var githubMoleculeObjectPreReload = this.serialize();
+    var githubMoleculeParentObjectConnectorsPreReload =
+      this.parent.serialize().allConnectors;
 
-    copyOfNode.deleteNode(false, false, true);
+    const copyOfNodeToBeDeleted = this;
+    copyOfNodeToBeDeleted.deleteNode(false, false, true);
 
-    this.loadProjectByID(
+    this.loadProjectByIDFromGithub(
       this.gitHubUniqueID,
-      oldObject,
-      oldParentObjectConnectors
+      githubMoleculeObjectPreReload,
+      githubMoleculeParentObjectConnectorsPreReload
     );
   }
 }
