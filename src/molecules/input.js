@@ -115,6 +115,7 @@ export default class Input extends Atom {
       this.output.draw();
     }
 
+    GlobalVariables.c.font = "10px Work Sans";
     GlobalVariables.c.textAlign = "start";
     GlobalVariables.c.fillText(
       this.name,
