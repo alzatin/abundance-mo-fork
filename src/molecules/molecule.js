@@ -477,7 +477,7 @@ export default class Molecule extends Atom {
   ) {
     let octokit = new Octokit();
     await octokit
-      .request("GET /repositories/:id/contents/project.maslowcreate", { id })
+      .request("GET /repositories/:id/contents/project.abundance", { id })
       .then((response) => {
         let rawFile = JSON.parse(atob(response.data.content));
         let rawFileWithNewIds = this.remapIDs(rawFile);

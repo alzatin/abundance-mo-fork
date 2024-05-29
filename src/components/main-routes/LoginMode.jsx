@@ -29,7 +29,7 @@ const InitialLog = (props) => {
             />
           </div>
           <p style={{ padding: "0 20px" }}>
-            Maslow Create projects are stored through GitHub. You control your
+            Abundance projects are stored through GitHub. You control your
             files.{" "}
           </p>
           <form className="login-form">
@@ -55,7 +55,7 @@ const InitialLog = (props) => {
               display: "inline",
             }}
           >
-            Check out what others have designed in Maslow Create
+            Check out what others have designed in Abundance
           </p>
 
           <button
@@ -88,9 +88,10 @@ const ShowProjects = (props) => {
   useEffect(() => {
     var query;
     if (props.user == "" || props.userBrowsing) {
-      query = searchBarValue + " topic:maslowcreate";
+      query = searchBarValue + " topic:abundance-project";
     } else {
-      query = searchBarValue + " user:" + props.user + " topic:maslowcreate";
+      query =
+        searchBarValue + " user:" + props.user + " topic:abundance-project";
     }
     octokit = new Octokit();
     octokit

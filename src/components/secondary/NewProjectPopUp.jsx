@@ -45,7 +45,7 @@ const NewProjectPopUp = (props) => {
 
   const navigate = useNavigate();
   const projectRef = useRef();
-  const projectTagsRef = useRef();
+  const projectTopicRef = useRef();
   const projectDescriptionRef = useRef();
   const projectLicenseRef = useRef();
   const projectUnitsRef = useRef();
@@ -57,17 +57,18 @@ const NewProjectPopUp = (props) => {
   /**
    * Create a new project or exports current molecule to github and navigate to new project create page
    * * @param {string} name - Project Name
-   * @param {array} tags - Array of tags
+   * @param {array} topics - Array of topics
    * @param {string} description - Project Description
    * @param {object} molecule - If there's an existing molecule to export
    * @param {boolean} exporting - If exporting a molecule
    *
    */
   const createProject = async (
-    [name, tags, description, license, units],
+    [name, topics, description, license, units],
     molecule,
     exporting
   ) => {
+    topics.push("abundance-project");
     // If there is a molecule and we are exporting replace current top molecule
     if (molecule !== undefined && exporting) {
       GlobalVariables.topLevelMolecule = molecule;
@@ -116,7 +117,7 @@ const NewProjectPopUp = (props) => {
           .createOrUpdateFileContents({
             owner: currentUser,
             repo: currentRepoName,
-            path: "project.maslowcreate",
+            path: "project.abundance",
             message: "Initialize repo",
             content: projectContent,
           })
@@ -196,7 +197,7 @@ const NewProjectPopUp = (props) => {
                                       .replaceAllTopics({
                                         owner: currentUser,
                                         repo: currentRepoName,
-                                        names: tags,
+                                        names: topics,
                                       })
                                       .then(() => {
                                         setExportPopUp(false);
@@ -219,14 +220,14 @@ const NewProjectPopUp = (props) => {
     e.preventDefault();
     setPending(true);
     const projectName = projectRef.current.value;
-    const projectTagArray = projectTagsRef.current.getValue();
+    const projectTopicArray = projectTopicRef.current.getValue();
     const projectDescription = projectDescriptionRef.current.value;
-    const projectTags = [];
+    const projectTopic = [];
     const projectLicense = projectLicenseRef.current.value;
     const projectUnits = projectUnitsRef.current.value;
 
-    projectTagArray.forEach((topic) => {
-      projectTags.push(topic[`value`]);
+    projectTopicArray.forEach((topic) => {
+      projectTopic.push(topic[`value`]);
     });
 
     if (GlobalVariables.currentMolecule) {
@@ -236,7 +237,7 @@ const NewProjectPopUp = (props) => {
     createProject(
       [
         projectName,
-        projectTags,
+        projectTopic,
         projectDescription,
         projectLicense,
         projectUnits,
@@ -296,7 +297,7 @@ const NewProjectPopUp = (props) => {
               placeholder="Project Description"
               ref={projectDescriptionRef}
             />
-            <label htmlFor="project-tags">Project Topics</label>
+            <label htmlFor="project-topics">Project Topics</label>
             <CreatableSelect
               defaultValue={[topics[0], topics[1]]}
               isMulti
@@ -304,7 +305,7 @@ const NewProjectPopUp = (props) => {
               options={topics}
               className="basic-multi-select"
               classNamePrefix="select"
-              ref={projectTagsRef}
+              ref={projectTopicRef}
             />
             <button className="submit-button" disabled={pending} type="submit">
               {pending ? newProjectBar + "%" : "Submit/Export to Github"}
