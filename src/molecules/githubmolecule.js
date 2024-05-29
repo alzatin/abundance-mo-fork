@@ -97,14 +97,14 @@ export default class GitHubMolecule extends Molecule {
    * Reload this github molecule from github
    */
   reloadMolecule() {
-    var outputConnector = false;
-    if (this.output.connectors.length > 0) {
-      outputConnector = this.output.connectors[0];
-    }
-
     const copyOfNode = this;
+    /*
+    var output = false;
+    if (copyOfNode.output.connectors.length > 0) {
+      output = copyOfNode.output.connectors[0];
+    }*/
     copyOfNode.deleteNode(false, false, true);
 
-    this.loadProjectByID(this.gitHubUniqueID, this.ioValues, outputConnector);
+    this.loadProjectByID(this.gitHubUniqueID, this.ioValues);
   }
 }
