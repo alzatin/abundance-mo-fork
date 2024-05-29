@@ -106,7 +106,7 @@ export default class GitHubMolecule extends Molecule {
     const copyOfNodeToBeDeleted = this;
     copyOfNodeToBeDeleted.deleteNode(false, false, true);
 
-    this.loadProjectByIDFromGithub(
+    this.loadMoleculeByIDFromGithub(
       this.gitHubUniqueID,
       githubMoleculeObjectPreReload,
       githubMoleculeParentObjectConnectorsPreReload
