@@ -103,8 +103,10 @@ export default class GitHubMolecule extends Molecule {
     if (copyOfNode.output.connectors.length > 0) {
       output = copyOfNode.output.connectors[0];
     }*/
+    var oldObject = this.serialize();
+
     copyOfNode.deleteNode(false, false, true);
 
-    this.loadProjectByID(this.gitHubUniqueID, this.ioValues);
+    this.loadProjectByID(this.gitHubUniqueID, this.ioValues, oldObject);
   }
 }

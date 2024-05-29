@@ -299,7 +299,7 @@ export default class AttachmentPoint {
 
     if (
       GlobalVariables.distBetweenPoints(xInPixels, x, yInPixels, y) <
-      this.defaultRadius &&
+        this.defaultRadius &&
       !clickProcessed
     ) {
       if (this.type == "output") {
@@ -418,7 +418,9 @@ export default class AttachmentPoint {
     // TODO: refactor our radius values. This / 2.7 seems arbitrary but it gets picked up in draw and is
     // used as the actual drawn radius.
     // Reduce radius to ensure that the entire attachment point is inside boundary.
-    const hoverRadius = boundary - GlobalVariables.widthToPixels(this.parentMolecule.radius) / 2.7;
+    const hoverRadius =
+      boundary -
+      GlobalVariables.widthToPixels(this.parentMolecule.radius) / 2.7;
 
     // angle correction so that it centers menu adjusting to however many attachment points there are
     const angleCorrection = -Math.PI / 2 - anglePerIO;
@@ -484,7 +486,7 @@ export default class AttachmentPoint {
     //this function returns itself if the coordinates passed in are within itself
     if (
       GlobalVariables.distBetweenPoints(xInPixels, x, yInPixels, y) <
-      radiusInPixels &&
+        radiusInPixels &&
       this.type == "input"
     ) {
       //If we have released the mouse here and this is an input...
@@ -564,6 +566,7 @@ export default class AttachmentPoint {
    * Sets the current value of the ap. Force forces an update even if the value hasn't changed.
    */
   setValue(newValue) {
+    console.log(newValue);
     this.value = newValue;
     this.ready = true;
     //propagate the change to linked elements if this is an output
