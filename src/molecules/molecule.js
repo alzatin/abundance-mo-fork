@@ -406,6 +406,7 @@ export default class Molecule extends Atom {
     thisAsObject.allConnectors = allConnectors;
     thisAsObject.gitHubUniqueID = this.gitHubUniqueID;
     thisAsObject.unitsIndex = this.unitsIndex;
+    thisAsObject.fileTypeVersion = 1;
 
     return thisAsObject;
   }
@@ -469,7 +470,11 @@ export default class Molecule extends Atom {
    * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
    * @param {number} id - The GitHub project ID for the project to be loaded.
    */
-  async loadProjectByID(id, oldObject = {}, oldParentObjectConnectors = {}) {
+  async loadGithubMoleculeByID(
+    id,
+    oldObject = {},
+    oldParentObjectConnectors = {}
+  ) {
     let octokit = new Octokit();
     await octokit
       .request("GET /repositories/:id/contents/project.abundance", { id })
@@ -489,7 +494,7 @@ export default class Molecule extends Atom {
             x: this.x,
             y: this.y,
             gitHubUniqueID: id,
-            topLevel: this.topLevel,
+            topLevel: false,
             ioValues: oldObject.ioValues,
           };
         } else {
@@ -498,7 +503,7 @@ export default class Molecule extends Atom {
             gitHubUniqueID: id,
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
-            topLevel: true,
+            topLevel: false,
           };
         }
 

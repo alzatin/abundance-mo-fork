@@ -87,7 +87,9 @@ export default class GitHubMolecule extends Molecule {
             },
           };
         }
-        inputParams["Reload From Github"] = button(() => this.reloadMolecule());
+        inputParams["Reload From Github"] = button(() =>
+          this.reloadMoleculeFromGithub()
+        );
       });
       return inputParams;
     }
@@ -96,17 +98,18 @@ export default class GitHubMolecule extends Molecule {
   /**
    * Reload this github molecule from github
    */
-  reloadMolecule() {
-    const copyOfNode = this;
-    var oldObject = this.serialize();
-    var oldParentObjectConnectors = this.parent.serialize().allConnectors;
+  reloadMoleculeFromGithub() {
+    var githubMoleculeObjectPreReload = this.serialize();
+    var githubMoleculeParentObjectConnectorsPreReload =
+      this.parent.serialize().allConnectors;
 
-    copyOfNode.deleteNode(false, false, true);
+    const copyOfNodeToBeDeleted = this;
+    copyOfNodeToBeDeleted.deleteNode(false, false, true);
 
-    this.loadProjectByID(
+    this.loadGithubMoleculeByID(
       this.gitHubUniqueID,
-      oldObject,
-      oldParentObjectConnectors
+      githubMoleculeObjectPreReload,
+      githubMoleculeParentObjectConnectorsPreReload
     );
   }
 }
