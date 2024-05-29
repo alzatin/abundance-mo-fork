@@ -117,7 +117,7 @@ const NewProjectPopUp = (props) => {
           .createOrUpdateFileContents({
             owner: currentUser,
             repo: currentRepoName,
-            path: "project.maslowcreate",
+            path: "project.abundance",
             message: "Initialize repo",
             content: projectContent,
           })

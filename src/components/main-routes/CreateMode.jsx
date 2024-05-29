@@ -331,7 +331,7 @@ function CreateMode(props) {
               "BillOfMaterials.md": bomContent,
               "README.md": readmeContent,
               "project.svg": "finalSVG",
-              "project.maslowcreate": projectContent,
+              "project.abundance": projectContent,
             },
             commit: "Autosave",
           },
