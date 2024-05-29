@@ -22,11 +22,9 @@ function GitSearch(props) {
   // conditional query for maslow projects
   const searchGitHub = function () {
     var query =
-      searchBarValue +
-      " topic:maslowcreate" +
-      " topic:" +
-      maslowTopic.current.value;
+      searchBarValue + " topic:abundance-project " + maslowTopic.current.value;
     let octokit = new Octokit();
+    console.log(query);
     octokit
       .request("GET /search/repositories", {
         q: query,
@@ -108,6 +106,8 @@ function GitSearch(props) {
               id="searchType"
               className="menu_search_canvas"
             >
+              {" "}
+              <option key={"empty-topic"} value={""}></option>
               {topics.map((topic) => {
                 return (
                   <option key={topic.label} value={topic.value}>

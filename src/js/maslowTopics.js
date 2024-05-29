@@ -1,8 +1,9 @@
 const topics = [
-  { value: "project", label: "project" },
-  { value: "tool", label: "tool" },
-  { value: "examples", label: "examples" },
-  { value: "furniture", label: "furniture" },
+  { value: "abundance-tool", label: "Abundance tool" },
+  { value: "examples", label: "Example" },
+  { value: "furniture", label: "Furniture" },
+  { value: "hardware", label: "Hardware" },
+  { value: "project", label: "Project" },
 ];
 
 export default topics;
