@@ -7,12 +7,12 @@ now:
     - BUG: When directly linking to runmode molecule isn't considered the activeatom so BOM will not show  
     - want to be able to pass sketches to output
     - Input name fix must have gotten lost somewhere , redo 
+    - Q: is bom working in multiple levels or just doing BOM for current active molecule?
 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking. (this.alert message not working )
 
     - model some things :S [deckle box, stool] > need to start creating new actions with gitmolecules otherwise it's very hard to model anything.
     
-    - BUG: Direct link to runMode broken 
     - Cut layout should separate by height
     - Bug : LEVA input error ? - seems like its wire 
     

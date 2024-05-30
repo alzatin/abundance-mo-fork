@@ -69,26 +69,27 @@ export default function ReplicadApp() {
   /** Compile BOM when activeAtom is a molecule and sets new state to trigger menu rerender */
   /** Should this be in flowcanvas so that it runs after project is loaded? */
   useEffect(() => {
-    if (GlobalVariables.currentMolecule != undefined && activeAtom) {
-      if (activeAtom.atomType == "Molecule") {
-        compileBom().then((result) => {
-          let bomParams = {};
-          if (result != undefined) {
-            result.map((item) => {
-              bomParams[item.BOMitemName] = {
-                value: item.costUSD + " USD",
-                label: item.BOMitemName + "(x" + item.numberNeeded + ")",
-                disabled: true,
-              };
-            });
-            bomParams["Download List of Materials"] = button(() =>
-              console.log(result)
-            );
+    if (
+      GlobalVariables.currentMolecule != undefined &&
+      activeAtom.atomType == "Molecule"
+    ) {
+      compileBom().then((result) => {
+        let bomParams = {};
+        if (result != undefined) {
+          result.map((item) => {
+            bomParams[item.BOMitemName] = {
+              value: item.costUSD + " USD",
+              label: item.BOMitemName + "(x" + item.numberNeeded + ")",
+              disabled: true,
+            };
+          });
+          bomParams["Download List of Materials"] = button(() =>
+            console.log(result)
+          );
 
-            setCompiledBom(bomParams);
-          }
-        });
-      }
+          setCompiledBom(bomParams);
+        }
+      });
     }
   }, [activeAtom]);
 
@@ -222,7 +223,7 @@ export default function ReplicadApp() {
                   loadProject: loadProject,
                   exportPopUp: exportPopUp,
                   setExportPopUp: setExportPopUp,
-                  compileBomb: compileBom,
+                  compileBom: compileBom,
                   compiledBom: compiledBom,
                 }}
                 displayProps={{

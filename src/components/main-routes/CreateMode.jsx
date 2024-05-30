@@ -107,7 +107,6 @@ function CreateMode(props) {
 
   /** Display props for replicad renderer  */
   let cad = props.displayProps.cad;
-  let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
   let setWireMesh = props.displayProps.setWireMesh;
