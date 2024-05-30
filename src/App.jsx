@@ -14,6 +14,8 @@ import LoginMode from "./components/main-routes/LoginMode.jsx";
 import RunMode from "./components/main-routes/RunMode.jsx";
 import CreateMode from "./components/main-routes/CreateMode.jsx";
 import cadWorker from "./worker.js?worker";
+import { BOMEntry } from "./js/BOM.js";
+import { button } from "leva";
 
 /*Import style scripts*/
 import "./styles/maslowCreate.css";
@@ -42,6 +44,67 @@ export default function ReplicadApp() {
   const [activeAtom, setActiveAtom] = useState(null);
   const [exportPopUp, setExportPopUp] = useState(false);
 
+  const [compiledBom, setCompiledBom] = useState({});
+
+  /** Compile BOM when activeAtom is a molecule and sets new state to trigger menu rerender */
+  /** Should this be in flowcanvas so that it runs after project is loaded? */
+  useEffect(() => {
+    if (GlobalVariables.currentMolecule != undefined && activeAtom) {
+      if (activeAtom.atomType == "Molecule") {
+        compileBom().then((result) => {
+          let bomParams = {};
+          if (result != undefined) {
+            result.map((item) => {
+              bomParams[item.BOMitemName] = {
+                value: item.costUSD + " USD",
+                label: item.BOMitemName + "(x" + item.numberNeeded + ")",
+                disabled: true,
+              };
+            });
+            bomParams["Download List of Materials"] = button(() =>
+              console.log(result)
+            );
+
+            setCompiledBom(bomParams);
+          }
+        });
+      }
+    }
+  }, [activeAtom]);
+
+  const compileBom = async () => {
+    if (GlobalVariables.currentMolecule.output.value) {
+      let compiled = GlobalVariables.currentMolecule
+        .extractBomTags(GlobalVariables.currentMolecule.output.value)
+        .then((result) => {
+          let bomList = [];
+          let compileBomItems = [];
+          if (result) {
+            result.forEach(function (bomElement) {
+              if (!bomList[bomElement.BOMitemName]) {
+                //If the list of items doesn't already have one of these
+                bomList[bomElement.BOMitemName] = new BOMEntry(); //Create one
+                bomList[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
+                bomList[bomElement.BOMitemName].BOMitemName =
+                  bomElement.BOMitemName; //With the information from the item
+                bomList[bomElement.BOMitemName].source = bomElement.source;
+                compileBomItems.push(bomList[bomElement.BOMitemName]);
+              }
+              bomList[bomElement.BOMitemName].numberNeeded +=
+                bomElement.numberNeeded;
+              bomList[bomElement.BOMitemName].costUSD += bomElement.costUSD;
+            });
+
+            // Alphabetize by source
+            compileBomItems = compileBomItems.sort((a, b) =>
+              a.source > b.source ? 1 : b.source > a.source ? -1 : 0
+            );
+            return compileBomItems;
+          }
+        });
+      return compiled;
+    }
+  };
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
@@ -138,6 +201,7 @@ export default function ReplicadApp() {
                   loadProject: loadProject,
                   exportPopUp: exportPopUp,
                   setExportPopUp: setExportPopUp,
+                  compiledBom: compiledBom,
                 }}
                 displayProps={{
                   mesh: mesh,
@@ -161,6 +225,7 @@ export default function ReplicadApp() {
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
                   loadProject: loadProject,
+                  compiledBom: compiledBom,
                 }}
                 displayProps={{
                   mesh: mesh,

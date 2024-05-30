@@ -233,7 +233,13 @@ function RunNavigation(props) {
         >
           {starSvg}
         </button>
-        <button className=" run-navigation-button" id="Bill-button">
+        <button
+          className=" run-navigation-button"
+          id="Bill-button"
+          onClick={() => {
+            console.log("open compiled bill of materials");
+          }}
+        >
           {billSvg}
         </button>
       </div>
