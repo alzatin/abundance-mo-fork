@@ -21,12 +21,8 @@ window.addEventListener(
 
 export default memo(function FlowCanvas(props) {
   //Todo this is not very clean
-  let cad = props.displayProps.cad;
-  let setMesh = props.displayProps.setMesh;
   let loadProject = props.props.loadProject;
-  let setWireMesh = props.displayProps.setWireMesh;
-
-  let activeAtom = props.props.activeAtom;
+  let setActiveAtom = props.props.setActiveAtom;
   let shortCuts = props.props.shortCuts;
 
   /** State for github molecule search input */
@@ -188,14 +184,14 @@ export default memo(function FlowCanvas(props) {
         if (atomClicked !== undefined) {
           let idi = atomClicked;
           /* Clicked atom is now the active atom */
-          props.props.setActiveAtom(idi);
+          setActiveAtom(idi);
 
           clickHandledByMolecule = true;
         }
       });
       if (!clickHandledByMolecule) {
         /* Background click - molecule is active atom */
-        props.props.setActiveAtom(GlobalVariables.currentMolecule);
+        setActiveAtom(GlobalVariables.currentMolecule);
         GlobalVariables.currentMolecule.selected = true;
         GlobalVariables.currentMolecule.sendToRender();
       }
@@ -207,7 +203,7 @@ export default memo(function FlowCanvas(props) {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.doubleClick(event.clientX, event.clientY);
     });
-    props.props.setActiveAtom(GlobalVariables.currentMolecule);
+    setActiveAtom(GlobalVariables.currentMolecule);
   };
 
   /**

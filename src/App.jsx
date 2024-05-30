@@ -251,11 +251,7 @@ export default function ReplicadApp() {
                 }}
                 displayProps={{
                   mesh: mesh,
-                  setMesh: setMesh,
-                  size: size,
-                  cad: cad,
                   wireMesh: wireMesh,
-                  setWireMesh: setWireMesh,
                 }}
               />
             }

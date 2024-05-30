@@ -47,12 +47,7 @@ function runMode(props) {
   // canvas to hide
   const canvasRef = useRef(500);
 
-  //Todo this is not very clean
-  let cad = props.displayProps.cad;
-  let size = props.displayProps.size;
-  let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
-  let setWireMesh = props.displayProps.setWireMesh;
   let wireMesh = props.displayProps.wireMesh;
 
   const [gridParamRun, setGridRun] = useState(true);
@@ -158,7 +153,7 @@ function runMode(props) {
               <ThreeContext gridParam={gridParamRun} axesParam={axesParamRun}>
                 {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
 
-                <ReplicadMesh mesh={wireMesh} isSolid={solidParam} />
+                <ReplicadMesh mesh={mesh} isSolid={solidParam} />
               </ThreeContext>
             ) : (
               <div
