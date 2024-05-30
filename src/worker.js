@@ -315,7 +315,7 @@ function molecule(targetID, inputID) {
 }
 
 /** Function that extracts geometry with BOM tags and returns bomItems*/
-function extractBom(inputID, TAG) {
+function extractBomList(inputID, TAG) {
   let taggedBoms = [];
   // only try to get tags if library entry for molecule exists
   if (library[inputID]) {
@@ -766,7 +766,7 @@ expose({
   rectangle,
   generateDisplayMesh,
   extrude,
-  extractBom,
+  extractBomList,
   getSVG,
   getStl,
   getStep,

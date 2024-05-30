@@ -31,12 +31,7 @@ function useWindowSize() {
 }
 
 export default memo(function LowerHalf(props) {
-  //Todo this is not very clean
-  let cad = props.displayProps.cad;
-  let size = props.displayProps.size;
-  let setMesh = props.displayProps.setMesh;
   let mesh = props.displayProps.mesh;
-  let setWireMesh = props.displayProps.setWireMesh;
   let wireMesh = props.displayProps.wireMesh;
 
   const windowSize = useWindowSize();
@@ -83,7 +78,6 @@ export default memo(function LowerHalf(props) {
         </div>
         <div id="viewer_bar"></div>
       </div>
-
       <div id="bottom_bar"></div>
     </>
   );

@@ -46,29 +46,50 @@ export default function ReplicadApp() {
 
   const [compiledBom, setCompiledBom] = useState({});
 
+  useEffect(() => {
+    GlobalVariables.writeToDisplay = (id, resetView = false) => {
+      console.log("write to display running " + id);
+
+      cad.generateDisplayMesh(id).then((m) => {
+        setMesh(m);
+      });
+      // if something is connected to the output, set a wireframe mesh
+      if (typeof GlobalVariables.currentMolecule.output.value == "number") {
+        cad
+          .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
+          .then((w) => setWireMesh(w));
+      } else {
+        console.warn("no wire to display");
+      }
+    };
+
+    GlobalVariables.cad = cad;
+  });
+
   /** Compile BOM when activeAtom is a molecule and sets new state to trigger menu rerender */
   /** Should this be in flowcanvas so that it runs after project is loaded? */
   useEffect(() => {
-    if (GlobalVariables.currentMolecule != undefined && activeAtom) {
-      if (activeAtom.atomType == "Molecule") {
-        compileBom().then((result) => {
-          let bomParams = {};
-          if (result != undefined) {
-            result.map((item) => {
-              bomParams[item.BOMitemName] = {
-                value: item.costUSD + " USD",
-                label: item.BOMitemName + "(x" + item.numberNeeded + ")",
-                disabled: true,
-              };
-            });
-            bomParams["Download List of Materials"] = button(() =>
-              console.log(result)
-            );
+    if (
+      GlobalVariables.currentMolecule != undefined &&
+      activeAtom.atomType == "Molecule"
+    ) {
+      compileBom().then((result) => {
+        let bomParams = {};
+        if (result != undefined) {
+          result.map((item) => {
+            bomParams[item.BOMitemName] = {
+              value: item.costUSD + " USD",
+              label: item.BOMitemName + "(x" + item.numberNeeded + ")",
+              disabled: true,
+            };
+          });
+          bomParams["Download List of Materials"] = button(() =>
+            console.log(result)
+          );
 
-            setCompiledBom(bomParams);
-          }
-        });
-      }
+          setCompiledBom(bomParams);
+        }
+      });
     }
   }, [activeAtom]);
 
@@ -165,6 +186,7 @@ export default function ReplicadApp() {
             convertFromOldFormat(rawFile)
           );
         }
+        setActiveAtom(GlobalVariables.currentMolecule);
         GlobalVariables.currentMolecule.selected = true;
       });
   };
@@ -201,6 +223,7 @@ export default function ReplicadApp() {
                   loadProject: loadProject,
                   exportPopUp: exportPopUp,
                   setExportPopUp: setExportPopUp,
+                  compileBom: compileBom,
                   compiledBom: compiledBom,
                 }}
                 displayProps={{
@@ -229,11 +252,7 @@ export default function ReplicadApp() {
                 }}
                 displayProps={{
                   mesh: mesh,
-                  setMesh: setMesh,
-                  size: size,
-                  cad: cad,
                   wireMesh: wireMesh,
-                  setWireMesh: setWireMesh,
                 }}
               />
             }

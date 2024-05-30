@@ -185,7 +185,7 @@ export default class Molecule extends Atom {
   extractBomTags() {
     try {
       var tag = "BOMitem";
-      let bomList = GlobalVariables.cad.extractBom(this.output.value, tag);
+      let bomList = GlobalVariables.cad.extractBomList(this.output.value, tag);
 
       return bomList;
     } catch (err) {
