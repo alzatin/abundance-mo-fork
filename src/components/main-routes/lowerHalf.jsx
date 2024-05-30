@@ -78,7 +78,6 @@ export default memo(function LowerHalf(props) {
         </div>
         <div id="viewer_bar"></div>
       </div>
-
       <div id="bottom_bar"></div>
     </>
   );
