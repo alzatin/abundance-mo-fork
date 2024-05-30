@@ -229,6 +229,7 @@ function CreateMode(props) {
       let compiled = GlobalVariables.currentMolecule
         .extractBomTags(GlobalVariables.currentMolecule.output.value)
         .then((result) => {
+          console.log(result);
           let bomList = [];
           let compileBomItems = [];
           if (result) {

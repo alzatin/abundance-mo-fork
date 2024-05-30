@@ -320,7 +320,27 @@ function extractBom(inputID, TAG) {
   // only try to get tags if library entry for molecule exists
   if (library[inputID]) {
     taggedBoms = extractBoms(library[inputID], TAG);
-    return taggedBoms;
+    return [...taggedBoms];
+  }
+}
+
+function extractBoms(inputGeometry, BOM) {
+  if (inputGeometry.tags.includes(BOM)) {
+    return inputGeometry.bom;
+  } else if (
+    inputGeometry.geometry.length >= 1 &&
+    inputGeometry.geometry[0].geometry != undefined
+  ) {
+    let bomArray = [];
+    inputGeometry.geometry.forEach((subAssembly) => {
+      let extractedBoms = extractBoms(subAssembly, BOM);
+      if (extractedBoms != false) {
+        bomArray.push(extractedBoms);
+      }
+    });
+    return bomArray;
+  } else {
+    return false;
   }
 }
 
@@ -370,26 +390,6 @@ function getStep(targetID, inputID) {
     };
     return library[targetID].geometry[0];
   });
-}
-
-function extractBoms(inputGeometry, TAG) {
-  if (inputGeometry.tags.includes(TAG)) {
-    return inputGeometry.bom;
-  } else if (
-    inputGeometry.geometry.length >= 1 &&
-    inputGeometry.geometry[0].geometry != undefined
-  ) {
-    let bomArray = [];
-    inputGeometry.geometry.forEach((subAssembly) => {
-      let extractedBoms = extractBoms(subAssembly, TAG);
-      if (extractedBoms != false) {
-        bomArray.push(extractedBoms);
-      }
-    });
-    return bomArray;
-  } else {
-    return false;
-  }
 }
 
 // Functions like Extracttags() but takes color as input
