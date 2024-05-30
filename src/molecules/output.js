@@ -162,6 +162,7 @@ export default class Output extends Atom {
     });
 
     GlobalVariables.c.beginPath();
+    GlobalVariables.c.font = "10px Work Sans";
     GlobalVariables.c.textAlign = "start";
     GlobalVariables.c.fillText(
       this.name,

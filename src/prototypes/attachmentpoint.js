@@ -5,81 +5,56 @@ import GlobalVariables from "../js/globalvariables.js";
  * This class creates a new attachmentPoint which are the input and output blobs on Atoms
  */
 export default class AttachmentPoint {
+  // Constant dictates how far from the parent molecule APs are rendered when in a hover position.
+  // Expressed as a multiple of the parents radius.
+  static get DIST_FROM_PARENT() {
+    return 3.5;
+  }
+
+  // Constant dictates how much larger an AP becomes when it's activated for selection, ie, when clicking
+  // or unclicking will engage the AP.
+  static get TARGET_SCALEUP() {
+    return 1.2;
+  }
+
+  // Constant dictates the radius of all APs, as a fraction of page width.
+  static get RADIUS() {
+    return 1/150;
+  }
+
   /**
    * The constructor function.
    * @param {object} values An array of values passed in which will be assigned to the class as this.x
    */
   constructor(values) {
     /**
-     * This atom's default radius (non hover)
-     * @type {number}
+     * Whether this AP is currently visible in the Flow Canvas, eg if the mouse is close to this
+     * APs parent molecule.
      */
-    this.defaultRadius = 1 / 60;
+    this.isVisible = false;
+
     /**
-     * A flag to indicate if this attachment point is currently expanded.
-     * @type {boolean}
+     * If this AP is in a 'targetted' state. This AP is 'targetted' if a at the mouse's current location a
+     * click or release will activate this AP, starting or completing a connection respectively.
      */
-    this.expandedRadius = false;
+    this.isTargetted = false;
+
     /**
-     * The radius of the clickable area of this Attachment Point. Larger than
-     * the display radius to make it easier to "hit" when attaching a connector.
-     * @type {number}
+     * The current position of this AP. Measured in fraction of canvas width (x) or canvas height (x).
      */
-    this.radius = 1 / 80;
+    this.x;
+    this.y;
+
     /**
-     * When the mouse is hovering where should the AP move in X
-     * @type {number}
-     */
-    this.hoverOffsetX = 0;
-    /**
-     * When the mouse is hovering where should the AP move in Y
-     * @type {number}
-     */
-    this.hoverOffsetY = 0;
-    /**
-     * The attachment points X position
-     * @type {number}
-     */
-    this.x = 0;
-    /**
-     * The attachment point's Y position
-     * @type {number}
-     */
-    this.y = 0;
-    /**
-     * A unique identifying number for this attachment point
+     * A unique identifying number for this attachment point among all other elements on the Flow Canvas.
      * @type {number}
      */
     this.uniqueID = 0;
+
     /**
-     * The default offset position in X referenced to the center of the parent atom.
-     * @type {number}
-     */
-    this.defaultOffsetX = 0;
-    /**
-     * The default offset position in Y referenced to the center of the parent atom.
-     * @type {number}
-     */
-    this.defaultOffsetY = 0;
-    /**
-     * The current offset position in X referenced to the center of the parent atom.
-     * @type {number}
-     */
-    this.offsetX = 0;
-    /**
-     * The current offset position in Y referenced to the center of the parent atom.
-     * @type {number}
-     */
-    this.offsetY = 0;
-    /**
-     * A flag to determine if the hover text is shown next to the attachment point.
-     * @type {boolean}
-     */
-    this.showHoverText = true;
-    /**
-     * The attachment point type.
-     * @type {string}
-     */
+         * The attachment point type.
+         * @type {string}
+         */
     this.atomType = "AttachmentPoint";
 
     /**
@@ -87,19 +62,12 @@ export default class AttachmentPoint {
      * @type {string}
      */
     this.valueType = "number";
+
     /**
      * The attachment point type. Options are input, output.
      * @type {string}
      */
     this.type = "output";
-
-    /**
-     * This is a flag to indicate if the attachment point is of the primary type.
-     * Primary type inputs are of the form geometry.translate(input2, input3, input4) for example
-     * This value is useful for importing molecules into other formats. I don't know if this is used any more. Maybe it can be deleted.
-     * @type {boolean}
-     */
-    this.primary = false;
 
     /**
      * The attachment point current value.
@@ -118,14 +86,12 @@ export default class AttachmentPoint {
      * @type {string}
      */
     this.ready = true;
+
     /**
      * A list of all of the connectors attached to this attachment point
      * @type {object}
      */
     this.connectors = [];
-
-    this.offsetX = this.defaultOffsetX;
-    this.offsetY = this.defaultOffsetY;
 
     for (var key in values) {
       /**
@@ -133,130 +99,81 @@ export default class AttachmentPoint {
        */
       this[key] = values[key];
     }
-    this.unexpand(); // Initially hide this attachment point.
+
+    // Initially hide this attachment point.
+    this.unexpand();
   }
 
   /**
    * Draws the attachment point on the screen. Called with each frame.
    */
   draw() {
+    // No-op if this AP is not currently visible.
+    if (!this.isVisible) {
+      return;
+    }
     let xInPixels = GlobalVariables.widthToPixels(this.x);
     let yInPixels = GlobalVariables.heightToPixels(this.y);
-    let radiusInPixels = GlobalVariables.widthToPixels(this.radius);
-    let parentRadiusInPixels = GlobalVariables.widthToPixels(
-      this.parentMolecule.radius
-    );
-    let parentXInPixels = GlobalVariables.widthToPixels(this.parentMolecule.x);
-    let parentYInPixels = GlobalVariables.heightToPixels(this.parentMolecule.y);
+    let radiusInPixels = GlobalVariables.widthToPixels(AttachmentPoint.RADIUS);
 
-    this.defaultRadius = radiusInPixels;
-    radiusInPixels = parentRadiusInPixels / 2.7;
-
-    if (this.expandedRadius) {
-      radiusInPixels = parentRadiusInPixels / 2.4;
-    }
-    if (this.parentMolecule.inputs.length < 2 && this.type == "input") {
-      //This prevents single attachment points from expanding out
-      /**
-       * The x coordinate of the attachment point.
-       */
-      xInPixels = parentXInPixels - parentRadiusInPixels;
-      this.x = this.parentMolecule.x - this.parentMolecule.radius; //This makes sure it says it is where it actually is
-      /**
-       * The y coordinate of the attachment point.
-       */
-      yInPixels = parentYInPixels;
-    } else if (this.parentMolecule.inputs.length < 2 && this.type == "output") {
-      xInPixels = parentXInPixels + parentRadiusInPixels;
-      yInPixels = parentYInPixels;
+    if (this.isTargetted) {
+      radiusInPixels = radiusInPixels * AttachmentPoint.TARGET_SCALEUP;
     }
 
-    var txt = this.name;
-    var textWidth = GlobalVariables.c.measureText(txt).width;
     GlobalVariables.c.font = "10px Work Sans";
+    var textWidth = GlobalVariables.c.measureText(this.name).width;
 
-    var bubbleColor = "#C300FF";
-    var scaleRadiusDown = radiusInPixels * 0.7;
+    var bubbleColor = this.name === "geometry" ? this.parentMolecule.selectedColor : "#C300FF";
     var halfRadius = radiusInPixels * 0.5;
+    GlobalVariables.c.globalCompositeOperation = "source-over";
+    GlobalVariables.c.beginPath();
+    GlobalVariables.c.fillStyle = bubbleColor;
 
-    if (this.showHoverText) {
-      if (this.type == "input") {
-        GlobalVariables.c.globalCompositeOperation = "destination-over";
-        GlobalVariables.c.beginPath();
-
-        if (this.name === "geometry") {
-          GlobalVariables.c.fillStyle = this.parentMolecule.selectedColor;
-        } else {
-          GlobalVariables.c.fillStyle = bubbleColor;
-        }
-
-        //Draws bubble shape
-        GlobalVariables.c.rect(
-          xInPixels - textWidth - radiusInPixels - halfRadius,
-          yInPixels - radiusInPixels,
-          textWidth + radiusInPixels + halfRadius,
-          radiusInPixels * 2
-        );
-        GlobalVariables.c.arc(
-          xInPixels - textWidth - radiusInPixels - halfRadius,
-          yInPixels,
-          radiusInPixels,
-          0,
-          Math.PI * 2,
-          false
-        );
-
-        //Bubble text
-        GlobalVariables.c.fill();
-        GlobalVariables.c.globalCompositeOperation = "source-over";
-        GlobalVariables.c.beginPath();
-        GlobalVariables.c.fillStyle = this.parentMolecule.defaultColor;
-        GlobalVariables.c.textAlign = "end";
-        GlobalVariables.c.fillText(
-          this.name,
-          xInPixels - (radiusInPixels + 3),
-          yInPixels + 2
-        );
-        GlobalVariables.c.fill();
-        GlobalVariables.c.closePath();
-      } else {
-        GlobalVariables.c.beginPath();
-
-        if (this.name === "geometry") {
-          GlobalVariables.c.fillStyle = this.parentMolecule.selectedColor;
-        } else {
-          GlobalVariables.c.fillStyle = bubbleColor;
-        }
-
-        GlobalVariables.c.rect(
-          xInPixels,
-          yInPixels - scaleRadiusDown,
-          textWidth + radiusInPixels + halfRadius,
-          scaleRadiusDown * 2
-        );
-        GlobalVariables.c.arc(
-          xInPixels + textWidth + radiusInPixels + halfRadius,
-          yInPixels,
-          scaleRadiusDown,
-          0,
-          Math.PI * 2,
-          false
-        );
-        GlobalVariables.c.fill();
-        GlobalVariables.c.closePath();
-        GlobalVariables.c.beginPath();
-        GlobalVariables.c.fillStyle = this.parentMolecule.defaultColor;
-        GlobalVariables.c.textAlign = "start";
-        GlobalVariables.c.fillText(
-          this.name,
-          xInPixels + halfRadius + (radiusInPixels + 3),
-          yInPixels + 2
-        );
-        GlobalVariables.c.fill();
-        GlobalVariables.c.closePath();
-      }
+    var topEdge = yInPixels - radiusInPixels;
+    var leftEdge = xInPixels;
+    if (this.type == "input") {
+      leftEdge = xInPixels - textWidth - radiusInPixels - halfRadius;
     }
 
+    var textStart = leftEdge;
+    if (this.type == "output") {
+      textStart = leftEdge + radiusInPixels + halfRadius
+    }
+
+    // Draw pill-shape for the text of this AP
+    GlobalVariables.c.arc(
+      leftEdge,
+      yInPixels,
+      radiusInPixels,
+      Math.PI / 2,
+      -1 * Math.PI / 2,);
+    GlobalVariables.c.rect(
+      leftEdge,
+      topEdge,
+      textWidth + radiusInPixels + halfRadius,
+      radiusInPixels * 2
+    );
+    GlobalVariables.c.arc(
+      leftEdge + textWidth + radiusInPixels + halfRadius,
+      yInPixels,
+      radiusInPixels,
+      -1 * Math.PI / 2,
+      Math.PI / 2,
+    );
+    GlobalVariables.c.fill();
+
+    // Draw text name of this AP
+    GlobalVariables.c.beginPath();
+    GlobalVariables.c.fillStyle = this.parentMolecule.defaultColor;
+    GlobalVariables.c.fillText(
+      this.name,
+      textStart,
+      yInPixels + 2
+    );
+    GlobalVariables.c.fill();
+    GlobalVariables.c.closePath();
+
+    // Draw the circular connection target
     GlobalVariables.c.beginPath();
     if (this.ready) {
       GlobalVariables.c.fillStyle = this.parentMolecule.color;
@@ -274,17 +191,9 @@ export default class AttachmentPoint {
       Math.PI * 2,
       false
     );
-    if (this.showHoverText == true) {
-      GlobalVariables.c.fill();
-      GlobalVariables.c.stroke();
-    }
+    GlobalVariables.c.fill();
+    GlobalVariables.c.stroke();
     GlobalVariables.c.closePath();
-
-    if (!this.expandedRadius) {
-      if (this.type == "output") {
-        this.offsetX = this.parentMolecule.radius;
-      }
-    }
   }
 
   /**
@@ -294,14 +203,7 @@ export default class AttachmentPoint {
    * @param {boolean} clickProcessed - Has the click already been handled
    */
   clickDown(x, y, clickProcessed) {
-    let xInPixels = GlobalVariables.widthToPixels(this.x);
-    let yInPixels = GlobalVariables.heightToPixels(this.y);
-
-    if (
-      GlobalVariables.distBetweenPoints(xInPixels, x, yInPixels, y) <
-        this.defaultRadius &&
-      !clickProcessed
-    ) {
+    if (this.isCloseEnoughToTarget(x, y) && !clickProcessed) {
       if (this.type == "output") {
         //begin to extend a connector from this if it is an output
         new Connector({
@@ -344,48 +246,22 @@ export default class AttachmentPoint {
   }
 
   /**
-   * Handles mouse click and move to expand the AP. Could this be done with a call to expand out?
+   * Handles mouse click and move to expand the AP.
    * @param {number} x - The x coordinate of the click
    * @param {number} y - The y coordinate of the click
    */
   mouseMove(x, y) {
-    let xInPixels = GlobalVariables.widthToPixels(this.x);
-    let yInPixels = GlobalVariables.heightToPixels(this.y);
-    let radiusInPixels = GlobalVariables.widthToPixels(this.radius);
+    let activationBoundary = AttachmentPoint.DIST_FROM_PARENT * this.parentMolecule.radius;
 
     let parentXInPixels = GlobalVariables.widthToPixels(this.parentMolecule.x);
     let parentYInPixels = GlobalVariables.heightToPixels(this.parentMolecule.y);
-    let parentRadiusInPixels = GlobalVariables.widthToPixels(
-      this.parentMolecule.radius
-    );
-
-    //expand if touched by mouse
-    var distFromClick = Math.abs(
-      GlobalVariables.distBetweenPoints(parentXInPixels, x, parentYInPixels, y)
-    );
-
-    let activationBoundary = parentRadiusInPixels * 3.5;
-    //If we are close to the attachment point move it to it's hover location to make it accessible
-    if (distFromClick < activationBoundary && this.type == "input") {
-      this.expandOut(activationBoundary);
-      this.showHoverText = true;
-    } else if (
-      distFromClick < parentRadiusInPixels * 1.5 &&
-      this.type == "output"
-    ) {
-      this.showHoverText = true;
+    if (GlobalVariables.distBetweenPoints(parentXInPixels, x, parentYInPixels, y) <= GlobalVariables.widthToPixels(activationBoundary)) {
+      this.isVisible = true;
+      [this.x, this.y] = this.computePosition(activationBoundary);
+      [this.x, this.y] = GlobalVariables.constrainToCanvasBorders(this.x, this.y);
+      this.isTargetted = this.isCloseEnoughToTarget(x, y);
     } else {
       this.unexpand();
-      this.expandedRadius = false;
-    }
-    //Expand it if you are close enough to make connection
-    if (
-      GlobalVariables.distBetweenPoints(xInPixels, x, yInPixels, y) <
-      radiusInPixels
-    ) {
-      this.expandedRadius = true;
-    } else {
-      this.expandedRadius = false;
     }
 
     this.connectors.forEach((connector) => {
@@ -398,41 +274,102 @@ export default class AttachmentPoint {
    * is moved out of the expansion range, etc.
    */
   unexpand() {
+    this.isVisible = false;
+    this.isTargetted = false;
+    // Also restore this.x and this.x to be on the perimiter of parent module
+    // since those values are used when rendering connectors.
+    this.y = this.parentMolecule.y;
     if (this.type == "input") {
-      this.offsetX = -1 * this.parentMolecule.radius;
-      this.offsetY = this.defaultOffsetY;
+      this.x = this.parentMolecule.x - this.parentMolecule.radius;
+    } else {
+      this.x = this.parentMolecule.x + this.parentMolecule.radius;
     }
-    this.showHoverText = false;
+    [this.x, this.y] = GlobalVariables.constrainToCanvasBorders(this.x, this.y);
   }
 
   /**
-   * Handles mouse click down. If the click is inside the AP it's connectors are selected if it is an input.
-   * @param {number} boundary - The maximum distance for attachement points to be from their parent, in pixels.
+   * Computes the correct position for this AP based on parent and the provided boundary.
+   * Returns a tuple of [xposition, yposition] both values in fraction-of-screen units.
+   * @param {} boundary - radius of the boundary within which APs must be displayed relative to
+   * the parent molecule.
    */
-  expandOut(boundary) {
+  computePosition(boundary) {
     const inputList = this.parentMolecule.inputs.filter(
       (input) => input.type == "input"
     );
-    const attachmentPointNumber = inputList.indexOf(this);
-    const anglePerIO = Math.PI / (inputList.length + 1);
-    // TODO: refactor our radius values. This / 2.7 seems arbitrary but it gets picked up in draw and is
-    // used as the actual drawn radius.
-    // Reduce radius to ensure that the entire attachment point is inside boundary.
-    const hoverRadius =
-      boundary -
-      GlobalVariables.widthToPixels(this.parentMolecule.radius) / 2.7;
+    if (this.type == "output") {
+      // Outputs are always singular and always positioned partially overlapped by the right-most
+      // pole of the parent molecule.
+      return [this.parentMolecule.x + this.parentMolecule.radius + AttachmentPoint.RADIUS * .75,
+      this.parentMolecule.y];
+    } else if (this.type == "input" && inputList.length == 1) {
+      // Singular inputs are located in a mirror of the output, ie partially overlapped by the
+      // left-most pole of the parent molecule.
+      return [this.parentMolecule.x - this.parentMolecule.radius - AttachmentPoint.RADIUS * .75,
+      this.parentMolecule.y];
+    } else {
+      // This is one of several input APs for the parent molecule.
+      // Otherwise APs are spaced in an arc at a distance around the parent molecule.
+      const attachmentPointNumber = inputList.indexOf(this);
+      const anglePerIO = Math.PI / (inputList.length + 1);
+      // Reduce radius to ensure that the entire attachment point is inside boundary, even when targetted.
+      const hoverRadius = boundary - AttachmentPoint.RADIUS * AttachmentPoint.TARGET_SCALEUP;
 
-    // angle correction so that it centers menu adjusting to however many attachment points there are
-    const angleCorrection = -Math.PI / 2 - anglePerIO;
-    this.hoverOffsetY =
-      hoverRadius *
-      Math.sin(attachmentPointNumber * anglePerIO - angleCorrection);
-    this.hoverOffsetX =
-      hoverRadius *
-      Math.cos(attachmentPointNumber * anglePerIO - angleCorrection);
+      // angle correction so that it centers menu adjusting to however many attachment points there are
+      const angleCorrection = Math.PI / 2 + anglePerIO;
+      let hoverOffsetX =
+        hoverRadius *
+        Math.cos(attachmentPointNumber * anglePerIO + angleCorrection);
 
-    this.offsetX = GlobalVariables.pixelsToWidth(this.hoverOffsetX);
-    this.offsetY = GlobalVariables.pixelsToHeight(this.hoverOffsetY);
+      // Do this calculation in pixels. The fractional units of height(y) might not be 1:1 proportionate with
+      // fractional units of width(x) if the canvas is rectangular. We always want these APs to look like they're
+      // in a circular pattern so do this calculation in pixels then convert back to height fraction.
+      let hoverOffsetY = 
+      -1 * GlobalVariables.pixelsToHeight(
+        GlobalVariables.widthToPixels(hoverRadius) *
+        Math.sin(attachmentPointNumber * anglePerIO + angleCorrection));
+
+      return [this.parentMolecule.x + hoverOffsetX, this.parentMolecule.y + hoverOffsetY];
+    }
+  }
+
+  /**
+   * Returns true if the given point is close enough to this AP that this AP should be "targetted",
+   * ie, should treat clicks or mouse-releases as if they hit this AP.
+   * Always false if this AP isn't visible.
+   * 
+   * @param {} x - position in pixels
+   * @param {*} y - position in pixels
+   */
+  isCloseEnoughToTarget(x, y) {
+    if (!this.isVisible) {
+      return false;
+    }
+    const dist = GlobalVariables.distBetweenPoints(
+      x,
+      GlobalVariables.widthToPixels(this.x),
+      y,
+      GlobalVariables.heightToPixels(this.y)
+    );
+    const apRadiusInPixels = GlobalVariables.widthToPixels(AttachmentPoint.RADIUS);
+    if (this.type == "output") {
+      return dist <= apRadiusInPixels * 2;
+    } else { // this.type == "input"
+      let targetRadius = apRadiusInPixels * 2;
+      // check if this creates overlapping target areas in the case where there's multiple inputs.
+      // If so reduce the targetting radius.
+      const inputCount = this.parentMolecule.inputs.filter(
+        (input) => input.type == "input"
+      ).length;
+
+      let hoverRadius = GlobalVariables.widthToPixels(AttachmentPoint.DIST_FROM_PARENT * this.parentMolecule.radius - AttachmentPoint.RADIUS * AttachmentPoint.TARGET_SCALEUP);
+
+      const anglePerIO = Math.PI / (inputCount + 1);
+      const maxNonOverlappingRadius = hoverRadius * Math.sin(anglePerIO / 2);
+
+      targetRadius = Math.max(apRadiusInPixels, Math.min(targetRadius, maxNonOverlappingRadius));
+      return dist < targetRadius;
+    }
   }
 
   /**
@@ -479,27 +416,7 @@ export default class AttachmentPoint {
    * @param {number} y - The y coordinate of the target
    */
   wasConnectionMade(x, y) {
-    let xInPixels = GlobalVariables.widthToPixels(this.x);
-    let yInPixels = GlobalVariables.heightToPixels(this.y);
-    let radiusInPixels = GlobalVariables.widthToPixels(this.radius);
-
-    //this function returns itself if the coordinates passed in are within itself
-    if (
-      GlobalVariables.distBetweenPoints(xInPixels, x, yInPixels, y) <
-        radiusInPixels &&
-      this.type == "input"
-    ) {
-      //If we have released the mouse here and this is an input...
-
-      if (this.connectors.length > 0) {
-        //Don't accept a second connection to an input
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return false;
-    }
+    return (this.isCloseEnoughToTarget(x, y) && this.connectors.length == 0);
   }
 
   /**
@@ -585,8 +502,6 @@ export default class AttachmentPoint {
    * Computes the curent position and then draws the ap on the screen.
    */
   update() {
-    this.x = this.parentMolecule.x + this.offsetX;
-    this.y = this.parentMolecule.y + this.offsetY;
     this.draw();
 
     this.connectors.forEach((connector) => {
