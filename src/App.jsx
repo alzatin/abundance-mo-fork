@@ -102,7 +102,7 @@ export default function ReplicadApp() {
             convertFromOldFormat(rawFile)
           );
         }
-        setActiveAtom(GlobalVariables.currentMolecule);
+        GlobalVariables.currentMolecule.selected = true;
       });
   };
 
