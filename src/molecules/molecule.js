@@ -171,7 +171,6 @@ export default class Molecule extends Atom {
             onChange: (value) => {
               if (input.value !== value) {
                 input.setValue(value);
-                this.sendToRender();
               }
             },
           };
@@ -276,6 +275,9 @@ export default class Molecule extends Atom {
     try {
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
+        if (this.selected) {
+          this.sendToRender();
+        }
       });
     } catch (err) {
       this.setAlert(err);
