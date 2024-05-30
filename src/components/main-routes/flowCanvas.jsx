@@ -22,38 +22,15 @@ window.addEventListener(
 export default memo(function FlowCanvas(props) {
   //Todo this is not very clean
   let cad = props.displayProps.cad;
-  let size = props.displayProps.size;
   let setMesh = props.displayProps.setMesh;
-  let mesh = props.displayProps.mesh;
   let loadProject = props.props.loadProject;
   let setWireMesh = props.displayProps.setWireMesh;
-  let wireMesh = props.displayProps.wireMesh;
 
   let activeAtom = props.props.activeAtom;
   let shortCuts = props.props.shortCuts;
 
   /** State for github molecule search input */
   const [searchingGitHub, setSearchingGitHub] = useState(false);
-
-  useEffect(() => {
-    GlobalVariables.writeToDisplay = (id, resetView = false) => {
-      console.log("write to display running " + id);
-
-      cad.generateDisplayMesh(id).then((m) => {
-        setMesh(m);
-      });
-      // if something is connected to the output, set a wireframe mesh
-      if (typeof GlobalVariables.currentMolecule.output.value == "number") {
-        cad
-          .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
-          .then((w) => setWireMesh(w));
-      } else {
-        console.warn("no wire to display");
-      }
-    };
-
-    GlobalVariables.cad = cad;
-  });
 
   const canvasRef = useRef(null);
   const circleMenu = useRef(null);

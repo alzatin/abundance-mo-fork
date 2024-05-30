@@ -6,7 +6,6 @@ import TopMenu from "../secondary/TopMenu.jsx";
 import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
 import ParamsEditor from "../secondary/ParameterEditor.jsx";
-
 import CodeWindow from "../secondary/codeWindow.jsx";
 import {
   BrowserRouter as Router,
@@ -34,6 +33,7 @@ function CreateMode(props) {
   const setExportPopUp = props.props.setExportPopUp;
 
   const compiledBom = props.props.compiledBom;
+  const compileBom = props.props.compileBom;
 
   /** State for grid and axes parameters */
   const [gridParam, setGrid] = useState(true);
@@ -104,8 +104,6 @@ function CreateMode(props) {
       saveProject(setSaveState);
     }
   };
-
-  let bomContent = "";
 
   /** Display props for replicad renderer  */
   let cad = props.displayProps.cad;
@@ -348,11 +346,8 @@ function CreateMode(props) {
               shortCuts: shortCuts,
             }}
             displayProps={{
-              mesh: mesh,
               setMesh: setMesh,
-              size: size,
               cad: cad,
-              wireMesh: wireMesh,
               setWireMesh: setWireMesh,
             }}
           />
@@ -380,11 +375,7 @@ function CreateMode(props) {
               }}
               displayProps={{
                 mesh: mesh,
-                setMesh: setMesh,
-                size: size,
-                cad: cad,
                 wireMesh: wireMesh,
-                setWireMesh: setWireMesh,
               }}
             />
           </div>

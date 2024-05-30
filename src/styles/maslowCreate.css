@@ -814,7 +814,7 @@ Sidebar navigation
 
 .paramEditorDivRun {
   position: absolute;
-  top: 10%;
+  top: 12%;
   right: 10px;
   width: 280px;
   z-index: 3;
@@ -843,7 +843,7 @@ Sidebar navigation
 }
 .bomEditorDivRun {
   position: absolute;
-  top: 47%;
+  top: 37%;
   right: 10px;
   width: 280px;
   z-index: 3;
