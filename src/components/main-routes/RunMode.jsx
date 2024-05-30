@@ -13,9 +13,6 @@ import RunNavigation from "../secondary/RunNavigation.jsx";
 import Molecule from "../../molecules/molecule.js";
 import {
   BrowserRouter as Router,
-  Link,
-  Route,
-  Routes,
   useParams,
   useNavigate,
 } from "react-router-dom";
@@ -64,14 +61,15 @@ function runMode(props) {
   const [wireParam, setWire] = useState(true);
   const [solidParam, setSolid] = useState(true);
 
-  var authorizedUserOcto = props.props.authorizedUserOcto;
-  var setActiveAtom = props.props.setActiveAtom;
-  var activeAtom = props.props.activeAtom;
-  var tryLogin = props.props.tryLogin;
+  const authorizedUserOcto = props.props.authorizedUserOcto;
+  const setActiveAtom = props.props.setActiveAtom;
+  const activeAtom = props.props.activeAtom;
+  const tryLogin = props.props.tryLogin;
+  const compiledBom = props.props.compiledBom;
 
   const windowSize = useWindowSize();
 
-  var navigate = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
@@ -128,6 +126,7 @@ function runMode(props) {
           setAxes={setAxesRun}
           setWire={setWire}
           setSolid={setSolid}
+          compiledBom={compiledBom}
         />
       ) : null}
       <RunNavigation
