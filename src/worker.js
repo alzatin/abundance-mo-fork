@@ -201,21 +201,19 @@ function cut(targetID, input1ID, input2ID) {
   });
 }
 
-function hullSketches(targetID, inputIDs, pointsInCurve) {
+function hullSketches(targetID, inputIDs) {
   return started.then(() => {
     let inputsToFuse = [];
     inputIDs.forEach((inputID) => {
       inputsToFuse.push(library[inputID].geometry[0]);
     });
     let geometryToWrap = chainFuse(inputsToFuse);
-    console.log(geometryToWrap);
     library[targetID] = {
       geometry: [shrinkWrap(geometryToWrap, 50)],
       tags: [],
       color: "#FF9065",
       plane: "XY",
     };
-    console.log(library[targetID]);
     return true;
   });
 }
