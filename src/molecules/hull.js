@@ -117,7 +117,7 @@ export default class Hull extends Atom {
           }
         });
         // leaving this as is but will change for a hull function
-        GlobalVariables.cad.loftShapes(this.uniqueID, inputsList).then(() => {
+        GlobalVariables.cad.hullSketches(this.uniqueID, inputsList).then(() => {
           this.basicThreadValueProcessing();
         });
       } catch (err) {

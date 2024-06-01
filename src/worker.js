@@ -4,6 +4,7 @@ import { setOC } from "replicad";
 import { expose } from "comlink";
 import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
+import shrinkWrap from "replicad-shrink-wrap/dist/studio/replicad-shrink-wrap.js";
 
 var library = {};
 
@@ -196,6 +197,20 @@ function cut(targetID, input1ID, input2ID) {
         plane: leaf.plane,
       };
     });
+    return true;
+  });
+}
+
+function hullSketches(targetID, inputIDs) {
+  return started.then(() => {
+    let circle = drawCircle(5);
+    let rectangle = drawRectangle(10, 10).translate(5, 5, 0);
+    library[targetID] = {
+      geometry: shrinkWrap(rectangle.fuse(circle), 50),
+      tags: [],
+      color: library[inputID].color,
+      plane: "XY",
+    };
     return true;
   });
 }
@@ -770,6 +785,7 @@ expose({
   getSVG,
   getStl,
   getStep,
+  hullSketches,
   move,
   rotate,
   cut,
