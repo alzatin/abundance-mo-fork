@@ -4,7 +4,7 @@ import { setOC } from "replicad";
 import { expose } from "comlink";
 import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
-import shrinkWrap from "replicad-shrink-wrap/dist/studio/replicad-shrink-wrap.js";
+import shrinkWrap from "replicad-shrink-wrap";
 
 var library = {};
 
@@ -203,14 +203,16 @@ function cut(targetID, input1ID, input2ID) {
 
 function hullSketches(targetID, inputIDs) {
   return started.then(() => {
+    console.log("hullSketches");
     let circle = drawCircle(5);
-    let rectangle = drawRectangle(10, 10).translate(5, 5, 0);
+    let rectangle = drawRectangle(10, 10).translate(5, 5);
     library[targetID] = {
-      geometry: shrinkWrap(rectangle.fuse(circle), 50),
+      geometry: [shrinkWrap(rectangle.fuse(circle), 50)],
       tags: [],
-      color: library[inputID].color,
+      color: "#FF9065",
       plane: "XY",
     };
+    console.log(library[targetID]);
     return true;
   });
 }
