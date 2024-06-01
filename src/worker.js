@@ -335,9 +335,8 @@ function molecule(targetID, inputID) {
 /** Function that extracts geometry with BOM tags and returns bomItems*/
 function extractBomList(inputID, TAG) {
   let taggedBoms = [];
-  // only try to get tags if library entry for molecule exists
-  if (library[inputID]) {
-    taggedBoms = extractBoms(library[inputID], TAG);
+  taggedBoms = extractBoms(library[inputID], TAG);
+  if (taggedBoms != false) {
     return [...taggedBoms];
   }
 }
