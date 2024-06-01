@@ -35,18 +35,7 @@ export default class Hull extends Atom {
      * @type {string}
      */
     this.description =
-      "Joins two or more shapes into a single solid by filling in the space between them. Also called 'hull'";
-
-    /**
-     * This was used when there was a drop down to select closed...may be deleted
-     * @type {number}
-     */
-    this.closedSelection = 0;
-    /**
-     * I believe this is no longer used alzatin - is that right?
-     * @type {boolean}
-     */
-    this.addedIO = false;
+      "Joins two or more drawings into a single sketch by filling in the space between them. Also called 'hull'";
 
     this.setValues(values);
 
@@ -149,9 +138,6 @@ export default class Hull extends Atom {
     ioValues.forEach((ioValue) => {
       thisAsObject.ioValues.push(ioValue);
     });
-
-    //Write the selection for if the chain is closed
-    thisAsObject.closedSelection = this.closedSelection;
 
     return thisAsObject;
   }
