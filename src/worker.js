@@ -623,7 +623,7 @@ function assembly(targetID, inputIDs) {
     let assembly = [];
     if (inputIDs.length > 1) {
       /** Check if all inputs are solids */
-      if (inputIDs.some((inputID) => is3D(library[inputID]))) {
+      if (inputIDs.every((inputID) => is3D(library[inputID]))) {
         for (let i = 0; i < inputIDs.length; i++) {
           assembly.push(
             cutAssembly(
@@ -634,11 +634,14 @@ function assembly(targetID, inputIDs) {
             )
           );
         }
-      } else {
+      } else if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
         for (let i = 0; i < inputIDs.length; i++) {
           assembly.push(library[inputIDs[i]]);
         }
-        console.log("passing sketches");
+      } else {
+        console.warn(
+          "Assemblies must be composed from only sketches OR only solids"
+        );
       }
     } else {
       assembly.push(library[inputIDs[0]]);
