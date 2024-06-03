@@ -155,6 +155,14 @@ export default class Molecule extends Atom {
    */
   createLevaInputs() {
     let inputParams = {};
+    inputParams["molecule name" + this.uniqueID] = {
+      value: this.name,
+      label: "Molecule Name",
+      disabled: false,
+      onChange: (value) => {
+        this.name = value;
+      },
+    };
     /** Runs through active atom inputs and adds IO parameters to default param*/
     if (this.inputs) {
       this.inputs.map((input) => {
