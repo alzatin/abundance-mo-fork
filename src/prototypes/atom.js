@@ -268,31 +268,35 @@ export default class Atom {
    */
   addIO(type, name, target, valueType, defaultValue, ready, primary = false) {
     //compute the baseline offset from parent node
-    var offset;
-    if (type == "input") {
-      offset = -1 * target.scaledRadius;
-    } else {
-      offset = target.scaledRadius;
-    }
-    var newAp = new AttachmentPoint({
-      parentMolecule: target,
-      defaultOffsetX: offset,
-      defaultOffsetY: 0,
-      type: type,
-      valueType: valueType,
-      name: name,
-      primary: primary,
-      value: defaultValue,
-      defaultValue: defaultValue,
-      uniqueID: GlobalVariables.generateUniqueID(),
-      atomType: "AttachmentPoint",
-      ready: true,
-    });
+    if (
+      target.inputs.find((o) => o.name === name && o.type === type) == undefined
+    ) {
+      var offset;
+      if (type == "input") {
+        offset = -1 * target.scaledRadius;
+      } else {
+        offset = target.scaledRadius;
+      }
+      var newAp = new AttachmentPoint({
+        parentMolecule: target,
+        defaultOffsetX: offset,
+        defaultOffsetY: 0,
+        type: type,
+        valueType: valueType,
+        name: name,
+        primary: primary,
+        value: defaultValue,
+        defaultValue: defaultValue,
+        uniqueID: GlobalVariables.generateUniqueID(),
+        atomType: "AttachmentPoint",
+        ready: true,
+      });
 
-    if (type == "input") {
-      target.inputs.push(newAp);
-    } else {
-      target.output = newAp;
+      if (type == "input") {
+        target.inputs.push(newAp);
+      } else {
+        target.output = newAp;
+      }
     }
   }
 

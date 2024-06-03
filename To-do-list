@@ -7,8 +7,6 @@ now:
     - BUG: make sure BOM is getting deleted if molecule gets recomputed/ recompile!
     - bug: possibly replicad's - when atoms are not overlapping but share a vector point they throw an error when fusing 
 
-    - Input name fix must have gotten lost somewhere , redo : BUG BUG ! it's in atom, when it checks for name as a condition to add new AP, if this is changed the way in which delete AP works also needs to change since its all done with names 
-
     - Q: is bom working in multiple levels or just doing BOM for current active molecule? if inputs change (if molecule is recomputed) it should probably recompile. Should bom recompile after molecule recompute instead of active atom?
     
     - Revise try catch worker error management/ i don't think it's working 
