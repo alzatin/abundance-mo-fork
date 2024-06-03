@@ -33,6 +33,14 @@ function generateUniqueID() {
   const newID = dateString + randomness;
   return newID;
 }
+/**
+ * A function that deletes a geometry from the library.
+ */
+function deleteFromLibrary(inputID) {
+  return started.then(() => {
+    delete library[inputID];
+  });
+}
 
 function createMesh(thickness) {
   return started.then(() => {
@@ -774,6 +782,7 @@ function generateDisplayMesh(id) {
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
 expose({
+  deleteFromLibrary,
   createMesh,
   circle,
   color,

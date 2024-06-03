@@ -501,6 +501,8 @@ export default class Atom {
     if (this.output) {
       this.output.deleteSelf(silent);
     }
+    /* Remove from worker library */
+    GlobalVariables.cad.deleteFromLibrary(this.uniqueID).then(() => {});
 
     this.parent.nodesOnTheScreen.splice(
       this.parent.nodesOnTheScreen.indexOf(this),
