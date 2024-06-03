@@ -75,9 +75,11 @@ export default class Difference extends Atom {
       const input1ID = this.findIOValue("geometry1");
       const input2ID = this.findIOValue("geometry2");
 
-      GlobalVariables.cad.cut(this.uniqueID, input1ID, input2ID).then(() => {
-        this.basicThreadValueProcessing();
-      });
+      GlobalVariables.cad
+        .difference(this.uniqueID, input1ID, input2ID)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        });
     } catch (err) {
       this.setAlert(err);
     }

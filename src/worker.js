@@ -194,17 +194,16 @@ function rotate(targetID, inputID, x, y, z, pivot) {
   });
 }
 
-function cut(targetID, input1ID, input2ID) {
+function difference(targetID, input1ID, input2ID) {
   return started.then(() => {
-    library[targetID] = actOnLeafs(library[input1ID], (leaf) => {
-      const cutTemplate = flattenRemove2DandFuse(library[input2ID]);
-      return {
-        geometry: [leaf.geometry[0].clone().cut(cutTemplate)],
-        tags: leaf.tags,
-        color: leaf.color,
-        plane: leaf.plane,
-      };
-    });
+    const partToCut = flattenRemove2DandFuse(library[input1ID]);
+    const cutTemplate = flattenRemove2DandFuse(library[input2ID]);
+    library[targetID] = {
+      geometry: [partToCut.cut(cutTemplate)],
+      tags: [],
+      color: "#FF9065",
+      plane: "XY",
+    };
     return true;
   });
 }
@@ -815,7 +814,7 @@ expose({
   hullSketches,
   move,
   rotate,
-  cut,
+  difference,
   tag,
   layout,
   output,
