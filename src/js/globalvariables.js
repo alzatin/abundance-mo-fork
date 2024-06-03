@@ -306,28 +306,25 @@ class GlobalVariables {
   /**
    * Snaps the given x,y coordinates to the nearest point within the canvas boundaries. Where x
    * and y are width fraction and heigh fraction respectively.
-   * @param {} x 
-   * @param {*} y 
+   * @param {} x
+   * @param {*} y
    * @return a tuple of [snapped x position, snapped y position], both in fractional position
    */
   constrainToCanvasBorders(x, y) {
-    return [
-      Math.max(0, Math.min(1, x)),
-      Math.max(0, Math.min(1, y))
-    ];
+    return [Math.max(0, Math.min(1, x)), Math.max(0, Math.min(1, y))];
   }
 
   /**
    * Snaps the given x,y coordinates to the nearest point within the canvas boundaries. Where x
    * and y are measuring pixels from the top-left of the canvas.
-   * @param {} xPixels 
-   * @param {*} yPixels 
+   * @param {} xPixels
+   * @param {*} yPixels
    * @return a tuple of [snapped x position, snapped y position], both in pixels
    */
   constrainToCanvasBordersPixels(xPixels, yPixels) {
     return [
       Math.max(0, Math.min(this.canvas.current.width, xPixels)),
-      Math.max(0, Math.min(this.canvas.current.height, yPixels))
+      Math.max(0, Math.min(this.canvas.current.height, yPixels)),
     ];
   }
 
@@ -395,6 +392,27 @@ class GlobalVariables {
     return newID;
   }
 
+  /**
+   * A function to avoid repeating input names in a molecule
+   */
+  incrementVariableName(varName, molecule) {
+    if (molecule.inputs.find((o) => o.name === varName)) {
+      // Find the last number in the variable name
+      let lastNumber = varName.match(/\d+(?=\D*$)/);
+
+      // Increment the number by 1
+      const incrementedNumber = parseInt(lastNumber[0]) + 1;
+
+      // Replace the last occurrence of the number in the variable name with the incremented number
+      const incrementedVarName = varName.replace(
+        new RegExp(lastNumber[0] + "(?=D*$)"),
+        incrementedNumber
+      );
+      return this.incrementVariableName(incrementedVarName, molecule);
+    } else {
+      return varName;
+    }
+  }
   /**
    * Computes the distance between two points on a plane. This is a duplicate of the one in utils which should probably be deleted.
    * @param {number} x1 - The x cordinate of the first point.
