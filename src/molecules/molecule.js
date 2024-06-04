@@ -161,7 +161,6 @@ export default class Molecule extends Atom {
         const checkConnector = () => {
           return input.connectors.length > 0;
         };
-
         /* Makes inputs for Io's other than geometry */
         if (input.valueType !== "geometry") {
           inputParams[this.uniqueID + input.name] = {
@@ -591,16 +590,6 @@ export default class Molecule extends Atom {
           var atom = new GlobalVariables.availableTypes[key].creator(
             newAtomObj
           );
-
-          //reassign the name of the Inputs to preserve linking
-          if (
-            atom.atomType == "Input" &&
-            typeof newAtomObj.name !== "undefined"
-          ) {
-            atom.name = newAtomObj.name;
-            atom.draw(); //The poling happens in draw :roll_eyes:
-          }
-
           //If this is a molecule, de-serialize it
           if (
             atom.atomType == "Molecule" ||
@@ -612,6 +601,18 @@ export default class Molecule extends Atom {
               atom.beginPropagation();
             }
           }
+
+          //reassign the name of the Inputs to preserve linking
+          if (
+            atom.atomType == "Input" &&
+            typeof newAtomObj.name !== "undefined"
+          ) {
+            atom.name = newAtomObj.name;
+            atom.draw(); //The poling happens in draw :roll_eyes:
+          } else if (atom.atomType == "Input") {
+            atom.name = GlobalVariables.incrementVariableName(atom.name, this);
+          }
+
           //If this is an output, check to make sure there are no existing outputs, and if there are delete the existing one because there can only be one
           if (atom.atomType == "Output") {
             //Check for existing outputs

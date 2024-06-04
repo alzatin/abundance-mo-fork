@@ -4,10 +4,13 @@
 to-do-fix
 
 now:
-    - BUG: When directly linking to runmode molecule isn't considered the activeatom so BOM will not show  
-    - want to be able to pass sketches to output
-    - Input name fix must have gotten lost somewhere , redo 
-    - Q: is bom working in multiple levels or just doing BOM for current active molecule?
+    - BUG: make sure BOM is getting deleted if molecule gets recomputed/ recompile!
+    - bug: possibly replicad's - when atoms are not overlapping but share a vector point they throw an error when fusing 
+
+    - Q: is bom working in multiple levels or just doing BOM for current active molecule? if inputs change (if molecule is recomputed) it should probably recompile. Should bom recompile after molecule recompute instead of active atom?
+    
+    - Revise try catch worker error management/ i don't think it's working 
+    - Alert error message for molecules not working or failing
 
     - need to start implementing for UX alerts, (a.e.can't find tag), it's hard to tell when i'm doing something wrong in rendering vs when something is breaking. (this.alert message not working )
 
@@ -18,6 +21,7 @@ now:
     
 mid :
     - our own filtering?
+    - multiple atom selection 
     - BUG: if we create multiple inputs without changing the name, they won't show in menu 
     - replicad packing? 
     - fix shortcut button

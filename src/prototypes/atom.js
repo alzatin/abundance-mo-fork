@@ -1,6 +1,7 @@
 import AttachmentPoint from "./attachmentpoint";
 import GlobalVariables from "../js/globalvariables.js";
 import showdown from "showdown";
+import globalvariables from "../js/globalvariables.js";
 
 /**
  * This class is the prototype for all atoms.
@@ -76,7 +77,7 @@ export default class Atom {
      * This atom's name
      * @type {string}
      */
-    this.name = "name";
+    this.name = "name0";
     /**
      * This atom's parent, usually the molecule which contains this atom
      * @type {object}
@@ -266,11 +267,10 @@ export default class Atom {
    * @param {object} defaultValue - The default value to be used when the value is not yet set
    */
   addIO(type, name, target, valueType, defaultValue, ready, primary = false) {
+    //compute the baseline offset from parent node
     if (
       target.inputs.find((o) => o.name === name && o.type === type) == undefined
     ) {
-      //Check to make sure there isn't already an IO with the same type and name
-      //compute the baseline offset from parent node
       var offset;
       if (type == "input") {
         offset = -1 * target.scaledRadius;

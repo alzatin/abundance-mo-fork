@@ -314,7 +314,7 @@ function output(targetID, inputID) {
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
     } else {
-      throw new Error("input ID is undefined");
+      throw new Error("Nothing is connected to the atom");
     }
 
     return true;
