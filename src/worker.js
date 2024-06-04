@@ -149,12 +149,15 @@ function move(targetID, inputID, x, y, z) {
         };
       });
     } else {
-      library[targetID] = {
-        geometry: [library[inputID].geometry[0].translate([x, y])],
-        tags: [],
-        plane: library[inputID].plane.translate([0, 0, z]),
-        color: library[inputID].color,
-      };
+      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        console.log(leaf);
+        return {
+          geometry: [leaf.geometry[0].clone().translate([x, y])],
+          tags: leaf.tags,
+          plane: leaf.plane.translate([0, 0, z]),
+          color: leaf.color,
+        };
+      });
     }
     return true;
   });
@@ -752,6 +755,7 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
+    console.log(library[id]);
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
     if (library[id].plane != undefined) {
