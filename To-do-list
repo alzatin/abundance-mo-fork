@@ -4,9 +4,8 @@
 to-do-fix
 
 now:
-   - difference doesn't work with assembly
+   - thumbnails
     - BUG: make sure BOM is getting deleted if molecule gets recomputed/ recompile!
-    - bug: Again unable to rename molecule 
     - bug: possibly replicad's - when atoms are not overlapping but share a vector point they throw an error when fusing 
     - Print object bounds option to let user know how big their object is?  
     - BUG: uncaught in promise error will break everything, must have a way of resetting, won't throw more errors after
