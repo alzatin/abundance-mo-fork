@@ -150,7 +150,6 @@ function move(targetID, inputID, x, y, z) {
       });
     } else {
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-        console.log(leaf);
         return {
           geometry: [leaf.geometry[0].clone().translate([x, y])],
           tags: leaf.tags,
