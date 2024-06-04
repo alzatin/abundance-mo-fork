@@ -196,13 +196,23 @@ function rotate(targetID, inputID, x, y, z, pivot) {
 
 function difference(targetID, input1ID, input2ID) {
   return started.then(() => {
-    const partToCut = flattenRemove2DandFuse(library[input1ID]);
-    const cutTemplate = flattenRemove2DandFuse(library[input2ID]);
+    let partToCut;
+    let cutTemplate;
+    if (is3D(library[input1ID]) && is3D(library[input2ID])) {
+      partToCut = flattenRemove2DandFuse(library[input1ID]);
+      cutTemplate = flattenRemove2DandFuse(library[input2ID]);
+    } else if (!is3D(library[input1ID]) && !is3D(library[input2ID])) {
+      partToCut = flattenAndFuse(library[input1ID]);
+      cutTemplate = flattenAndFuse(library[input2ID]);
+    } else {
+      throw new Error("Both inputs must be either 3D or 2D");
+    }
+
     library[targetID] = {
       geometry: [partToCut.cut(cutTemplate)],
       tags: [],
       color: "#FF9065",
-      plane: "XY",
+      plane: library[input1ID].plane,
     };
     return true;
   });
@@ -684,16 +694,23 @@ function flattenAssembly(assembly) {
     assembly.geometry.forEach((subAssembly) => {
       flattened.push(...flattenAssembly(subAssembly));
     });
+    console.log(flattened);
     return flattened;
   }
 }
 
 function chainFuse(chain) {
+  console.log(chain);
   let fused = chain[0].clone();
   for (let i = 1; i < chain.length; i++) {
     fused = fused.fuse(chain[i]);
   }
   return fused;
+}
+
+function flattenAndFuse(chain) {
+  let flattened = flattenAssembly(chain);
+  return chainFuse(flattened);
 }
 
 function flattenRemove2DandFuse(chain) {
@@ -738,6 +755,7 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
+    console.log(library[id]);
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
     if (library[id].plane != undefined) {
@@ -755,6 +773,9 @@ function generateDisplayMesh(id) {
         //Here we need to extrude anything which isn't already 3D
         var cleanedGeometry = [];
         flattened.forEach((pieceOfGeometry) => {
+          console.log(pieceOfGeometry);
+          console.log(pieceOfGeometry.sketchOnPlane(sketchPlane));
+
           if (pieceOfGeometry.mesh == undefined) {
             cleanedGeometry.push(
               pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
