@@ -4,8 +4,12 @@
 to-do-fix
 
 now:
+   
     - BUG: make sure BOM is getting deleted if molecule gets recomputed/ recompile!
+    - bug: Again unable to rename molecule 
     - bug: possibly replicad's - when atoms are not overlapping but share a vector point they throw an error when fusing 
+    - Print object bounds option to let user know how big their object is?  
+    - BUG: uncaught in promise error will break everything, must have a way of resetting, won't throw more errors after
 
     - Q: is bom working in multiple levels or just doing BOM for current active molecule? if inputs change (if molecule is recomputed) it should probably recompile. Should bom recompile after molecule recompute instead of active atom?
     
@@ -53,6 +57,7 @@ future:
     - make sample project with readme walkthrough or sandbox
     - CSS Overhaul , make global fonts, margins, colors
     - keyboard commands r-e-10
+    - Would be really sweet if we could do something like toggle paths as an option when building projects, like if i built a table and can let whoever is using the project choose between a rectagular or circular top.
 
 Qs :
   
