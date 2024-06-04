@@ -114,7 +114,7 @@ function extrude(targetID, inputID, height) {
     library[targetID] = actOnLeafs(library[inputID], (leaf) => {
       return {
         geometry: [
-          leaf.geometry[0].sketchOnPlane(leaf.plane).clone().extrude(height),
+          leaf.geometry[0].clone().sketchOnPlane(leaf.plane).extrude(height),
         ],
         tags: leaf.tags,
         plane: leaf.plane,
@@ -145,16 +145,18 @@ function move(targetID, inputID, x, y, z) {
           geometry: [leaf.geometry[0].clone().translate(x, y, z)],
           plane: leaf.plane,
           tags: leaf.tags,
-          color: library[inputID].color,
+          color: leaf.color,
         };
       });
     } else {
-      library[targetID] = {
-        geometry: [library[inputID].geometry[0].translate([x, y])],
-        tags: [],
-        plane: library[inputID].plane.translate([0, 0, z]),
-        color: library[inputID].color,
-      };
+      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [leaf.geometry[0].clone().translate([x, y])],
+          tags: leaf.tags,
+          plane: leaf.plane.translate([0, 0, z]),
+          color: leaf.color,
+        };
+      });
     }
     return true;
   });
@@ -179,7 +181,6 @@ function rotate(targetID, inputID, x, y, z, pivot) {
         };
       });
     } else {
-      //might need to establish a way to let it pick the direction of rotation
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         return {
           geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
@@ -196,13 +197,23 @@ function rotate(targetID, inputID, x, y, z, pivot) {
 
 function difference(targetID, input1ID, input2ID) {
   return started.then(() => {
-    const partToCut = flattenRemove2DandFuse(library[input1ID]);
-    const cutTemplate = flattenRemove2DandFuse(library[input2ID]);
+    let partToCut;
+    let cutTemplate;
+    if (is3D(library[input1ID]) && is3D(library[input2ID])) {
+      partToCut = flattenRemove2DandFuse(library[input1ID]);
+      cutTemplate = flattenRemove2DandFuse(library[input2ID]);
+    } else if (!is3D(library[input1ID]) && !is3D(library[input2ID])) {
+      partToCut = flattenAndFuse(library[input1ID]);
+      cutTemplate = flattenAndFuse(library[input2ID]);
+    } else {
+      throw new Error("Both inputs must be either 3D or 2D");
+    }
+
     library[targetID] = {
       geometry: [partToCut.cut(cutTemplate)],
       tags: [],
       color: "#FF9065",
-      plane: "XY",
+      plane: library[input1ID].plane,
     };
     return true;
   });
@@ -638,7 +649,7 @@ function assembly(targetID, inputIDs) {
           assembly.push(library[inputIDs[i]]);
         }
       } else {
-        console.warn(
+        throw new Error(
           "Assemblies must be composed from only sketches OR only solids"
         );
       }
@@ -696,6 +707,11 @@ function chainFuse(chain) {
   return fused;
 }
 
+function flattenAndFuse(chain) {
+  let flattened = flattenAssembly(chain);
+  return chainFuse(flattened);
+}
+
 function flattenRemove2DandFuse(chain) {
   let flattened = flattenAssembly(chain);
 
@@ -738,6 +754,7 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
+    console.log(library[id]);
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
     if (library[id].plane != undefined) {
@@ -756,8 +773,9 @@ function generateDisplayMesh(id) {
         var cleanedGeometry = [];
         flattened.forEach((pieceOfGeometry) => {
           if (pieceOfGeometry.mesh == undefined) {
+            let sketches = pieceOfGeometry.clone();
             cleanedGeometry.push(
-              pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
+              sketches.sketchOnPlane(sketchPlane).extrude(0.0001)
             );
           } else {
             cleanedGeometry.push(pieceOfGeometry);
