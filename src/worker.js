@@ -145,7 +145,7 @@ function move(targetID, inputID, x, y, z) {
           geometry: [leaf.geometry[0].clone().translate(x, y, z)],
           plane: leaf.plane,
           tags: leaf.tags,
-          color: library[inputID].color,
+          color: leaf.color,
         };
       });
     } else {
