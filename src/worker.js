@@ -125,12 +125,12 @@ function extrude(targetID, inputID, height) {
   });
 }
 
-/* function to check if shape has mesh, not for with assemblies yet since we can't assemble drawings*/
-function is3D(input) {
+/* function to check if shape has mesh*/
+function is3D(inputs) {
   // if it's an assembly assume it's 3d since our assemblies don't work for drawings right now
-  if (isAssembly(input)) {
-    return true;
-  } else if (input.geometry[0].mesh !== undefined) {
+  if (isAssembly(inputs)) {
+    return inputs.geometry.some((input) => is3D(input));
+  } else if (inputs.geometry[0].mesh !== undefined) {
     return true;
   } else {
     return false;
@@ -622,9 +622,25 @@ function assembly(targetID, inputIDs) {
   return started.then(() => {
     let assembly = [];
     if (inputIDs.length > 1) {
-      for (let i = 0; i < inputIDs.length; i++) {
-        assembly.push(
-          cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID, i)
+      /** Check if all inputs are solids */
+      if (inputIDs.every((inputID) => is3D(library[inputID]))) {
+        for (let i = 0; i < inputIDs.length; i++) {
+          assembly.push(
+            cutAssembly(
+              library[inputIDs[i]],
+              inputIDs.slice(i + 1),
+              targetID,
+              i
+            )
+          );
+        }
+      } else if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
+        for (let i = 0; i < inputIDs.length; i++) {
+          assembly.push(library[inputIDs[i]]);
+        }
+      } else {
+        console.warn(
+          "Assemblies must be composed from only sketches OR only solids"
         );
       }
     } else {
