@@ -4,6 +4,7 @@ import { setOC } from "replicad";
 import { expose } from "comlink";
 import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
 import { drawProjection } from "replicad";
+import shrinkWrap from "replicad-shrink-wrap";
 
 var library = {};
 
@@ -200,6 +201,23 @@ function cut(targetID, input1ID, input2ID) {
   });
 }
 
+function hullSketches(targetID, inputIDs) {
+  return started.then(() => {
+    let inputsToFuse = [];
+    inputIDs.forEach((inputID) => {
+      inputsToFuse.push(library[inputID].geometry[0]);
+    });
+    let geometryToWrap = chainFuse(inputsToFuse);
+    library[targetID] = {
+      geometry: [shrinkWrap(geometryToWrap, 50)],
+      tags: [],
+      color: "#FF9065",
+      plane: "XY",
+    };
+    return true;
+  });
+}
+
 function intersect(targetID, input1ID, input2ID) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[input1ID], (leaf) => {
@@ -317,9 +335,8 @@ function molecule(targetID, inputID) {
 /** Function that extracts geometry with BOM tags and returns bomItems*/
 function extractBomList(inputID, TAG) {
   let taggedBoms = [];
-  // only try to get tags if library entry for molecule exists
-  if (library[inputID]) {
-    taggedBoms = extractBoms(library[inputID], TAG);
+  taggedBoms = extractBoms(library[inputID], TAG);
+  if (taggedBoms != false) {
     return [...taggedBoms];
   }
 }
@@ -770,6 +787,7 @@ expose({
   getSVG,
   getStl,
   getStep,
+  hullSketches,
   move,
   rotate,
   cut,
