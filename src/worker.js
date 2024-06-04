@@ -114,7 +114,7 @@ function extrude(targetID, inputID, height) {
     library[targetID] = actOnLeafs(library[inputID], (leaf) => {
       return {
         geometry: [
-          leaf.geometry[0].sketchOnPlane(leaf.plane).clone().extrude(height),
+          leaf.geometry[0].clone().sketchOnPlane(leaf.plane).extrude(height),
         ],
         tags: leaf.tags,
         plane: leaf.plane,
@@ -648,7 +648,7 @@ function assembly(targetID, inputIDs) {
           assembly.push(library[inputIDs[i]]);
         }
       } else {
-        console.warn(
+        throw new Error(
           "Assemblies must be composed from only sketches OR only solids"
         );
       }
@@ -694,13 +694,11 @@ function flattenAssembly(assembly) {
     assembly.geometry.forEach((subAssembly) => {
       flattened.push(...flattenAssembly(subAssembly));
     });
-    console.log(flattened);
     return flattened;
   }
 }
 
 function chainFuse(chain) {
-  console.log(chain);
   let fused = chain[0].clone();
   for (let i = 1; i < chain.length; i++) {
     fused = fused.fuse(chain[i]);
@@ -755,7 +753,6 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
-    console.log(library[id]);
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
     if (library[id].plane != undefined) {
@@ -773,12 +770,10 @@ function generateDisplayMesh(id) {
         //Here we need to extrude anything which isn't already 3D
         var cleanedGeometry = [];
         flattened.forEach((pieceOfGeometry) => {
-          console.log(pieceOfGeometry);
-          console.log(pieceOfGeometry.sketchOnPlane(sketchPlane));
-
           if (pieceOfGeometry.mesh == undefined) {
+            let sketches = pieceOfGeometry.clone();
             cleanedGeometry.push(
-              pieceOfGeometry.sketchOnPlane(sketchPlane).clone().extrude(0.0001)
+              sketches.sketchOnPlane(sketchPlane).extrude(0.0001)
             );
           } else {
             cleanedGeometry.push(pieceOfGeometry);
