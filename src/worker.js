@@ -93,17 +93,22 @@ function loftShapes(targetID, inputsIDs) {
   return started.then(() => {
     let startPlane = library[inputsIDs[0]].plane;
     let arrayOfSketchedGeometry = [];
+
     inputsIDs.forEach((inputID) => {
+      let partToLoft = flattenAndFuse(library[inputID]);
+      console.log(partToLoft);
       arrayOfSketchedGeometry.push(
-        library[inputID].geometry[0].sketchOnPlane(library[inputID].plane)
+        partToLoft.sketchOnPlane(library[inputID].plane)
       );
     });
     let startGeometry = arrayOfSketchedGeometry.shift();
+    const newPlane = new Plane().pivot(0, "Y");
+
     library[targetID] = {
       geometry: [startGeometry.loftWith([...arrayOfSketchedGeometry])],
       tags: [],
-      plane: startPlane,
-      color: library[inputsIDs[0]].color,
+      plane: newPlane,
+      color: "#FF9065",
     };
     return true;
   });
@@ -129,6 +134,7 @@ function extrude(targetID, inputID, height) {
 function is3D(inputs) {
   // if it's an assembly assume it's 3d since our assemblies don't work for drawings right now
   if (isAssembly(inputs)) {
+    console.log(inputs.geometry.some((input) => is3D(input)));
     return inputs.geometry.some((input) => is3D(input));
   } else if (inputs.geometry[0].mesh !== undefined) {
     return true;
@@ -164,6 +170,7 @@ function move(targetID, inputID, x, y, z) {
 
 function rotate(targetID, inputID, x, y, z, pivot) {
   return started.then(() => {
+    console.log(is3D(library[inputID]));
     if (is3D(library[inputID])) {
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
         let leafCenter = leaf.geometry[0].boundingBox.center;
@@ -181,14 +188,19 @@ function rotate(targetID, inputID, x, y, z, pivot) {
         };
       });
     } else {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-        return {
-          geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
-          tags: leaf.tags,
-          plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
-          color: leaf.color,
-        };
-      });
+      library[targetID] = actOnLeafs(
+        library[inputID],
+        (leaf) => {
+          console.log(leaf);
+          return {
+            geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
+            tags: leaf.tags,
+            plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+            color: leaf.color,
+          };
+        },
+        library[inputID].plane.pivot(x, "X").pivot(y, "Y")
+      );
     }
 
     return true;
@@ -281,10 +293,13 @@ function code(targetID, code, argumentsArray) {
       "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
     );
 
+    const newPlane = new Plane().pivot(0, "Y");
+
     library[targetID] = {
       geometry: result,
       tags: [],
       color: "#FF9065",
+      plane: newPlane,
     };
 
     return true;
@@ -661,13 +676,15 @@ function assembly(targetID, inputIDs) {
     } else {
       assembly.push(library[inputIDs[0]]);
     }
-    library[targetID] = { geometry: assembly, tags: [] };
+    const newPlane = new Plane().pivot(0, "Y");
+    library[targetID] = { geometry: assembly, tags: [], plane: newPlane };
     return true;
   });
 }
 
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
-function actOnLeafs(assembly, action) {
+function actOnLeafs(assembly, action, plane) {
+  plane = plane || assembly.plane;
   //This is a leaf
   if (
     assembly.geometry.length == 1 &&
@@ -681,7 +698,11 @@ function actOnLeafs(assembly, action) {
     assembly.geometry.forEach((subAssembly) => {
       transformedAssembly.push(actOnLeafs(subAssembly, action));
     });
-    return { geometry: transformedAssembly, tags: assembly.tags };
+    return {
+      geometry: transformedAssembly,
+      tags: assembly.tags,
+      plane: plane,
+    };
   }
 }
 

@@ -52,14 +52,13 @@ mid :
     - add thumbnail images for projects
 
 future:
-
+    - Feature : toggle atoms for finished project (a.e selection==1 rectangular top selection==2 circular top )
     - Zoom in camera on load to bounding box for renderer
     -  import parts ?
     - make sample project with readme walkthrough or sandbox
     - CSS Overhaul , make global fonts, margins, colors
     - keyboard commands r-e-10
-    - Would be really sweet if we could do something like toggle paths as an option when building projects, like if i built a table and can let whoever is using the project choose between a rectagular or circular top.
-
+   
 Qs :
   
 
