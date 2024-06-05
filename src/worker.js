@@ -221,18 +221,23 @@ function difference(targetID, input1ID, input2ID) {
 
 function shrinkWrapSketches(targetID, inputIDs) {
   return started.then(() => {
-    let inputsToFuse = [];
-    inputIDs.forEach((inputID) => {
-      inputsToFuse.push(library[inputID].geometry[0]);
-    });
-    let geometryToWrap = chainFuse(inputsToFuse);
-    library[targetID] = {
-      geometry: [shrinkWrap(geometryToWrap, 50)],
-      tags: [],
-      color: "#FF9065",
-      plane: "XY",
-    };
-    return true;
+    if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
+      let inputsToFuse = [];
+      inputIDs.forEach((inputID) => {
+        inputsToFuse.push(flattenAndFuse(library[inputID]));
+      });
+      console.log(inputsToFuse);
+      let geometryToWrap = chainFuse(inputsToFuse);
+      library[targetID] = {
+        geometry: [shrinkWrap(geometryToWrap, 50)],
+        tags: [],
+        color: "#FF9065",
+        plane: "XY",
+      };
+      return true;
+    } else {
+      throw new Error("All inputs must be sketches");
+    }
   });
 }
 
