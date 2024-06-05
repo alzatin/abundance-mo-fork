@@ -219,7 +219,7 @@ function difference(targetID, input1ID, input2ID) {
   });
 }
 
-function hullSketches(targetID, inputIDs) {
+function shrinkWrapSketches(targetID, inputIDs) {
   return started.then(() => {
     let inputsToFuse = [];
     inputIDs.forEach((inputID) => {
@@ -829,7 +829,7 @@ expose({
   getSVG,
   getStl,
   getStep,
-  hullSketches,
+  shrinkWrapSketches,
   move,
   rotate,
   difference,

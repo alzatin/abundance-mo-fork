@@ -5,7 +5,7 @@ import GlobalVariables from "../js/globalvariables.js";
 /**
  * This class creates the shrinkwrap atom. This behavior can also be called 'hull'
  */
-export default class Hull extends Atom {
+export default class shrinkWrap extends Atom {
   /**
    * The constructor function.
    * @param {object} values An array of values passed in which will be assigned to the class as this.x
@@ -19,12 +19,12 @@ export default class Hull extends Atom {
      * This atom's name
      * @type {string}
      */
-    this.name = "Hull";
+    this.name = "Shrink Wrap";
     /**
      * This atom's type
      * @type {string}
      */
-    this.atomType = "Hull";
+    this.atomType = "Shrink Wrap";
     /**
      * A list of all of the inputs to this molecule. May be passed to the constructor and loaded.
      * @type {array}
@@ -105,10 +105,11 @@ export default class Hull extends Atom {
             inputsList.push(io.getValue());
           }
         });
-        // leaving this as is but will change for a hull function
-        GlobalVariables.cad.hullSketches(this.uniqueID, inputsList).then(() => {
-          this.basicThreadValueProcessing();
-        });
+        GlobalVariables.cad
+          .shrinkWrapSketches(this.uniqueID, inputsList)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          });
       } catch (err) {
         this.setAlert(err);
       }
