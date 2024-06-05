@@ -75,15 +75,15 @@ export default class Molecule extends Atom {
      */
     this.awaitingPropagationFlag = false;
     /**
-     * A list of available units.
+     * A list of available units with corresponding scaling numbers.
      * @type {object}
      */
-    this.units = { MM: 1, Inches: 25.4 };
+    this.units = { MM: 1, Inches: 20 };
     /**
-     * The index of the currently selected unit.
-     * @type {array}
+     * The key of the currently selected unit.
+     * @type {string}
      */
-    this.unitsIndex = 0;
+    this.unitsKey;
     /**
      * List of BOM items.
      * @type {array}
@@ -99,6 +99,8 @@ export default class Molecule extends Atom {
     this.projectAvailableTags = [];
 
     this.setValues(values);
+
+    this.color;
   }
 
   /**
@@ -502,7 +504,7 @@ export default class Molecule extends Atom {
     thisAsObject.allAtoms = allAtoms;
     thisAsObject.allConnectors = allConnectors;
     thisAsObject.gitHubUniqueID = this.gitHubUniqueID;
-    thisAsObject.unitsIndex = this.unitsIndex;
+    thisAsObject.unitsKey = this.unitsKey;
     thisAsObject.fileTypeVersion = 1;
     thisAsObject.compiledBom = this.compiledBom;
 
