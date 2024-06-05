@@ -93,17 +93,21 @@ function loftShapes(targetID, inputsIDs) {
   return started.then(() => {
     let startPlane = library[inputsIDs[0]].plane;
     let arrayOfSketchedGeometry = [];
+
     inputsIDs.forEach((inputID) => {
+      let partToLoft = flattenAndFuse(library[inputID]);
       arrayOfSketchedGeometry.push(
-        library[inputID].geometry[0].sketchOnPlane(library[inputID].plane)
+        partToLoft.sketchOnPlane(library[inputID].plane)
       );
     });
     let startGeometry = arrayOfSketchedGeometry.shift();
+    const newPlane = new Plane().pivot(0, "Y");
+
     library[targetID] = {
       geometry: [startGeometry.loftWith([...arrayOfSketchedGeometry])],
       tags: [],
-      plane: startPlane,
-      color: library[inputsIDs[0]].color,
+      plane: newPlane,
+      color: "#FF9065",
     };
     return true;
   });
@@ -149,14 +153,18 @@ function move(targetID, inputID, x, y, z) {
         };
       });
     } else {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-        return {
-          geometry: [leaf.geometry[0].clone().translate([x, y])],
-          tags: leaf.tags,
-          plane: leaf.plane.translate([0, 0, z]),
-          color: leaf.color,
-        };
-      });
+      library[targetID] = actOnLeafs(
+        library[inputID],
+        (leaf) => {
+          return {
+            geometry: [leaf.geometry[0].clone().translate([x, y])],
+            tags: leaf.tags,
+            plane: leaf.plane.translate([0, 0, z]),
+            color: leaf.color,
+          };
+        },
+        library[inputID].plane.translate([0, 0, z])
+      );
     }
     return true;
   });
@@ -181,14 +189,18 @@ function rotate(targetID, inputID, x, y, z, pivot) {
         };
       });
     } else {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-        return {
-          geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
-          tags: leaf.tags,
-          plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
-          color: leaf.color,
-        };
-      });
+      library[targetID] = actOnLeafs(
+        library[inputID],
+        (leaf) => {
+          return {
+            geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
+            tags: leaf.tags,
+            plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+            color: leaf.color,
+          };
+        },
+        library[inputID].plane.pivot(x, "X").pivot(y, "Y")
+      );
     }
 
     return true;
@@ -226,7 +238,6 @@ function shrinkWrapSketches(targetID, inputIDs) {
       inputIDs.forEach((inputID) => {
         inputsToFuse.push(flattenAndFuse(library[inputID]));
       });
-      console.log(inputsToFuse);
       let geometryToWrap = chainFuse(inputsToFuse);
       library[targetID] = {
         geometry: [shrinkWrap(geometryToWrap, 50)],
@@ -281,10 +292,13 @@ function code(targetID, code, argumentsArray) {
       "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
     );
 
+    const newPlane = new Plane().pivot(0, "Y");
+
     library[targetID] = {
       geometry: result,
       tags: [],
       color: "#FF9065",
+      plane: newPlane,
     };
 
     return true;
@@ -661,13 +675,15 @@ function assembly(targetID, inputIDs) {
     } else {
       assembly.push(library[inputIDs[0]]);
     }
-    library[targetID] = { geometry: assembly, tags: [] };
+    const newPlane = new Plane().pivot(0, "Y");
+    library[targetID] = { geometry: assembly, tags: [], plane: newPlane };
     return true;
   });
 }
 
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
-function actOnLeafs(assembly, action) {
+function actOnLeafs(assembly, action, plane) {
+  plane = plane || assembly.plane;
   //This is a leaf
   if (
     assembly.geometry.length == 1 &&
@@ -681,7 +697,11 @@ function actOnLeafs(assembly, action) {
     assembly.geometry.forEach((subAssembly) => {
       transformedAssembly.push(actOnLeafs(subAssembly, action));
     });
-    return { geometry: transformedAssembly, tags: assembly.tags };
+    return {
+      geometry: transformedAssembly,
+      tags: assembly.tags,
+      plane: plane,
+    };
   }
 }
 
@@ -759,7 +779,6 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
-    console.log(library[id]);
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
     if (library[id].plane != undefined) {
