@@ -155,14 +155,18 @@ function move(targetID, inputID, x, y, z) {
         };
       });
     } else {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-        return {
-          geometry: [leaf.geometry[0].clone().translate([x, y])],
-          tags: leaf.tags,
-          plane: leaf.plane.translate([0, 0, z]),
-          color: leaf.color,
-        };
-      });
+      library[targetID] = actOnLeafs(
+        library[inputID],
+        (leaf) => {
+          return {
+            geometry: [leaf.geometry[0].clone().translate([x, y])],
+            tags: leaf.tags,
+            plane: leaf.plane.translate([0, 0, z]),
+            color: leaf.color,
+          };
+        },
+        library[inputID].plane.translate([0, 0, z])
+      );
     }
     return true;
   });
