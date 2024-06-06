@@ -36,6 +36,8 @@ export default class Import extends Atom {
      */
     this.fileName = "";
 
+    this.file = null;
+
     this.addIO("output", "geometry", this, "geometry", "");
 
     this.setValues(values);
@@ -64,12 +66,22 @@ export default class Import extends Atom {
   /**
    * Update the displayed svg file
    */
-  updateValue() {}
+  updateValue(file) {
+    try {
+      let file = this.file;
+
+      GlobalVariables.cad.importSTL(this.uniqueID, file).then((result) => {
+        this.basicThreadValueProcessing();
+      });
+    } catch (err) {
+      this.setAlert(err);
+    }
+  }
 
   createLevaInputs() {
     console.log(LevaInputs);
     let inputParams = {};
-    const importOptions = ["STL", "SVG", "STEP"];
+    const importOptions = ["STL", "SVG", "STEP", "jpg"];
     let importIndex = 0;
 
     inputParams[this.uniqueID + "file_ops"] = {
@@ -79,33 +91,44 @@ export default class Import extends Atom {
         importIndex = importOptions.indexOf(value);
       },
     };
-
-    inputParams["Import"] = button(
-      () => this.importFile(importOptions[importIndex]),
-      { type: "file" }
+    inputParams["Load File"] = button(() =>
+      this.loadFile(importOptions[importIndex])
+    );
+    inputParams["Loaded File"] = {
+      value: this.fileName, //href to the file
+      label: "Loaded File",
+      disabled: true,
+    };
+    inputParams["Import"] = button(() =>
+      this.importFile(importOptions[importIndex])
     );
     return inputParams;
   }
-
-  importFile(type) {
+  /**
+   * Creates an input element to load a file and calls import function
+   */
+  loadFile(type) {
     var f = document.createElement("input");
     f.style.display = "none";
     f.type = "file";
-    f.accept = ".jpg";
-    f.name = "file";
+    f.accept = "." + type.toLowerCase();
+    f.name = "fileLoader";
     f.addEventListener("change", () => {
-      console.log("file changed");
-      console.log(f.value);
+      this.importFile(f.files[0]);
     });
     f.click();
-    /*Place holder for import file function*/
+  }
+
+  importFile(file) {
+    this.file = file;
+    this.updateValue();
   }
 
   /**
    * The function which is called when you press the upload button
    */
   uploadSvg() {
-    var x = document.getElementById("UploadSVG-button");
+    var x = document.getElementById("loadedFile");
     if ("files" in x) {
       if (x.files.length > 0) {
         const file = x.files[0];
