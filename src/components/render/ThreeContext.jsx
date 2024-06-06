@@ -33,7 +33,7 @@ export default function ThreeContext({ children, ...props }) {
         camera={{ position: [20, 40, 50] }}
       >
         {props.gridParam ? <InfiniteGrid /> : null}
-        {props.axesParam ? <Controls enableDamping={false}></Controls> : null}
+        <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
         <ambientLight />
         <pointLight position={[100, 100, 100]} />
 
