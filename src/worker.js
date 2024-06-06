@@ -2,7 +2,14 @@ import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC } from "replicad";
 import { expose } from "comlink";
-import { drawCircle, drawRectangle, drawPolysides, Plane } from "replicad";
+import {
+  drawCircle,
+  drawRectangle,
+  drawPolysides,
+  Plane,
+  importSTEP,
+  importSTL,
+} from "replicad";
 import { drawProjection } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 
@@ -446,6 +453,31 @@ function getStep(targetID, inputID) {
   });
 }
 
+function importingSTEP(targetID, file) {
+  return started.then(() => {
+    importSTEP(file).then((result) => {
+      library[targetID] = {
+        geometry: [result],
+        tags: [],
+        color: "#FF9065",
+      };
+      return true;
+    });
+  });
+}
+function importingSTL(targetID, file) {
+  return started.then(() => {
+    importSTL(file).then((result) => {
+      library[targetID] = {
+        geometry: [result],
+        tags: [],
+        color: "#FF9065",
+      };
+      return true;
+    });
+  });
+}
+
 // Functions like Extracttags() but takes color as input
 function extractColors(inputGeometry, color) {
   if (inputGeometry.color == color) {
@@ -779,6 +811,7 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
+    console.log(library[id]);
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
     if (library[id].plane != undefined) {
@@ -840,6 +873,8 @@ function generateDisplayMesh(id) {
 // to your app.
 expose({
   deleteFromLibrary,
+  importingSTEP,
+  importingSTL,
   createMesh,
   circle,
   color,

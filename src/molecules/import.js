@@ -31,12 +31,15 @@ export default class Import extends Atom {
       "Import Atom, let's you choose a type of file to import and use in your design.";
 
     /**
-     * The name of the uploaded file
+     * The uploaded file
      * @type {string}
      */
-    this.fileName = "";
-
     this.file = null;
+    /**
+     * The type of uploaded file
+     * @type {string}
+     */
+    this.type = null;
 
     this.addIO("output", "geometry", this, "geometry", "");
 
@@ -66,22 +69,41 @@ export default class Import extends Atom {
   /**
    * Update the displayed svg file
    */
-  updateValue(file) {
+  updateValue() {
     try {
-      let file = this.file;
+      if (this.file != null) {
+        let file = this.file;
+        console.log(this.type);
+        let fileType = this.type;
 
-      GlobalVariables.cad.importSTL(this.uniqueID, file).then((result) => {
-        this.basicThreadValueProcessing();
-      });
+        let funcToCall =
+          fileType == "STL"
+            ? GlobalVariables.cad.importingSTL
+            : fileType == "SVG"
+            ? GlobalVariables.cad.importingSVG
+            : fileType == "STEP"
+            ? GlobalVariables.cad.importingSTEP
+            : null;
+
+        if (funcToCall == null) {
+          throw "Invalid file type";
+        }
+        console.log(funcToCall);
+        funcToCall(this.uniqueID, file).then((result) => {
+          console.log("cad finished in import");
+          this.basicThreadValueProcessing();
+        });
+      } else {
+        throw "No file to import";
+      }
     } catch (err) {
       this.setAlert(err);
     }
   }
 
   createLevaInputs() {
-    console.log(LevaInputs);
     let inputParams = {};
-    const importOptions = ["STL", "SVG", "STEP", "jpg"];
+    const importOptions = ["STL", "SVG", "STEP"];
     let importIndex = 0;
 
     inputParams[this.uniqueID + "file_ops"] = {
@@ -95,13 +117,10 @@ export default class Import extends Atom {
       this.loadFile(importOptions[importIndex])
     );
     inputParams["Loaded File"] = {
-      value: this.fileName, //href to the file
+      value: "this.file", //href to the file
       label: "Loaded File",
       disabled: true,
     };
-    inputParams["Import"] = button(() =>
-      this.importFile(importOptions[importIndex])
-    );
     return inputParams;
   }
   /**
@@ -114,59 +133,16 @@ export default class Import extends Atom {
     f.accept = "." + type.toLowerCase();
     f.name = "fileLoader";
     f.addEventListener("change", () => {
-      this.importFile(f.files[0]);
+      this.importFile(type, f.files[0]);
     });
     f.click();
   }
 
-  importFile(file) {
+  importFile(type, file) {
+    this.type = type;
     this.file = file;
     this.updateValue();
   }
-
-  /**
-   * The function which is called when you press the upload button
-   */
-  uploadSvg() {
-    var x = document.getElementById("loadedFile");
-    if ("files" in x) {
-      if (x.files.length > 0) {
-        const file = x.files[0];
-
-        const toSend = {};
-
-        //Delete the previous file if this one is a new one
-        // if(this.fileName != x.files[0].name){
-        //     //Make sure the file to delete actually exists before deleting it
-        //     let rawPath = GlobalVariables.gitHub.getAFileRawPath(this.fileName)
-        //     var http = new XMLHttpRequest()
-        //     http.open('HEAD', rawPath, false)
-        //     http.send()
-        //     if ( http.status!=404){
-        //         toSend[this.fileName] = null
-        //     }
-        // }
-
-        this.fileName = x.files[0].name;
-        this.name = this.fileName;
-
-        const reader = new FileReader();
-        reader.addEventListener("load", (event) => {
-          toSend[this.fileName] = event.target.result;
-
-          GlobalVariables.gitHub.uploadAFile(toSend).then(() => {
-            this.updateValue();
-            //Save the project to keep it in sync with the files uploaded to github
-            setTimeout(() => {
-              GlobalVariables.gitHub.saveProject();
-            }, 10000);
-          });
-        });
-        reader.readAsText(file);
-      }
-    }
-  }
-
   /**
    * Add the file name to the object which is saved for this molecule
    */
