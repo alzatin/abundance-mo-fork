@@ -1,6 +1,6 @@
 import Atom from "../prototypes/atom.js";
 import GlobalVariables from "../js/globalvariables.js";
-import { button } from "leva";
+import { button, LevaInputs } from "leva";
 
 /**
  * This class creates an atom which supports uploading a .svg file
@@ -67,6 +67,7 @@ export default class Import extends Atom {
   updateValue() {}
 
   createLevaInputs() {
+    console.log(LevaInputs);
     let inputParams = {};
     const importOptions = ["STL", "SVG", "STEP"];
     let importIndex = 0;
@@ -78,16 +79,26 @@ export default class Import extends Atom {
         importIndex = importOptions.indexOf(value);
       },
     };
-    inputParams["Import"] = button(() =>
-      this.importFile(importOptions[importIndex])
-    );
 
+    inputParams["Import"] = button(
+      () => this.importFile(importOptions[importIndex]),
+      { type: "file" }
+    );
     return inputParams;
   }
 
   importFile(type) {
+    var f = document.createElement("input");
+    f.style.display = "none";
+    f.type = "file";
+    f.accept = ".jpg";
+    f.name = "file";
+    f.addEventListener("change", () => {
+      console.log("file changed");
+      console.log(f.value);
+    });
+    f.click();
     /*Place holder for import file function*/
-    console.log(type);
   }
 
   /**
