@@ -453,29 +453,26 @@ function getStep(targetID, inputID) {
   });
 }
 
-function importingSTEP(targetID, file) {
-  return started.then(() => {
-    importSTEP(file).then((result) => {
-      library[targetID] = {
-        geometry: [result],
-        tags: [],
-        color: "#FF9065",
-      };
-      return true;
-    });
-  });
+async function importingSTEP(targetID, file) {
+  let STEPresult = await importSTEP(file);
+
+  library[targetID] = {
+    geometry: [STEPresult],
+    tags: [],
+    color: "#FF9065",
+  };
+  return true;
 }
-function importingSTL(targetID, file) {
-  return started.then(() => {
-    importSTL(file).then((result) => {
-      library[targetID] = {
-        geometry: [result],
-        tags: [],
-        color: "#FF9065",
-      };
-      return true;
-    });
-  });
+
+async function importingSTL(targetID, file) {
+  let STLresult = await importSTL(file);
+
+  library[targetID] = {
+    geometry: [STLresult],
+    tags: [],
+    color: "#FF9065",
+  };
+  return true;
 }
 
 // Functions like Extracttags() but takes color as input

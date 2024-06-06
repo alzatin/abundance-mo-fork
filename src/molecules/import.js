@@ -88,10 +88,10 @@ export default class Import extends Atom {
         if (funcToCall == null) {
           throw "Invalid file type";
         }
-        console.log(funcToCall);
         funcToCall(this.uniqueID, file).then((result) => {
+          console.log(result);
           this.basicThreadValueProcessing();
-          this.sendToRender(); // ? i think this is the right spot to call this
+          this.sendToRender(); // ? i think this is the right spot to call this// not waiting to call ?
         });
       } else {
         throw "No file to import";
