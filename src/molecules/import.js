@@ -127,20 +127,15 @@ export default class Import extends Atom {
    * Creates an input element to load a file and calls import function
    */
   loadFile(type) {
-    var f = document.createElement("input");
-    f.style.display = "none";
-    f.type = "file";
+    var f = document.getElementById("fileLoaderInput");
     f.accept = "." + type.toLowerCase();
-    f.name = "fileLoader";
-    f.addEventListener("change", () => {
-      this.importFile(type, f.files[0]);
-    });
     f.click();
+    this.type = type;
   }
 
-  importFile(type, file) {
-    this.type = type;
+  importFile(file) {
     this.file = file;
+    this.updateValue(this.type, this.file);
     this.updateValue();
   }
   /**

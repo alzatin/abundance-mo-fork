@@ -44,6 +44,7 @@ function CreateMode(props) {
   /** State for save progress bar */
   const [saveState, setSaveState] = useState(0);
   const [savePopUp, setSavePopUp] = useState(false);
+  const [commitState, setCommitState] = useState(0);
 
   /** State for top level molecule */
   const [currentMoleculeTop, setTop] = useState(false);
@@ -196,6 +197,26 @@ function CreateMode(props) {
     }
   };
 
+  const uploadAFile = async function (file) {
+    var reader = new FileReader();
+    reader.onload = function (e) {};
+    reader.readAsText(file);
+
+    let content = window.btoa(reader);
+
+    authorizedUserOcto.rest.repos
+      .createOrUpdateFileContents({
+        owner: GlobalVariables.currentUser,
+        repo: GlobalVariables.currentRepoName,
+        path: file.name,
+        message: "import File",
+        content: content,
+      })
+      .then(() => {
+        //save project// update atom values
+        activeAtom.importFile(file);
+      });
+  };
   /**
    * Saves project by making a commit to the Github repository.
    */
@@ -334,6 +355,15 @@ function CreateMode(props) {
             setActiveAtom={setActiveAtom}
           />
           <CodeWindow activeAtom={activeAtom} />
+          <input
+            type="file"
+            id="fileLoaderInput"
+            style={{ display: "none" }}
+            onChange={(value) => {
+              let file = value.target.files[0];
+              uploadAFile(file);
+            }}
+          />
           <FlowCanvas
             props={{
               activeAtom: activeAtom,
