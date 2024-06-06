@@ -90,8 +90,8 @@ export default class Import extends Atom {
         }
         console.log(funcToCall);
         funcToCall(this.uniqueID, file).then((result) => {
-          console.log("cad finished in import");
           this.basicThreadValueProcessing();
+          this.sendToRender(); // ? i think this is the right spot to call this
         });
       } else {
         throw "No file to import";
