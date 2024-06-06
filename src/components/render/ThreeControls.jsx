@@ -22,7 +22,6 @@ const Controls = React.memo(
               return controlsRef?.current?.target;
             }}
             onUpdate={() => {
-              console.log(controlsRef.current);
               controlsRef.current?.update();
             }}
           >
