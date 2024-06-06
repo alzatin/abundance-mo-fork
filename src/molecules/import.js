@@ -4,7 +4,7 @@ import GlobalVariables from "../js/globalvariables.js";
 /**
  * This class creates an atom which supports uploading a .svg file
  */
-export default class UploadSVG extends Atom {
+export default class Import extends Atom {
   /**
    * The constructor function.
    * @param {object} values An array of values passed in which will be assigned to the class as this.x
@@ -16,17 +16,18 @@ export default class UploadSVG extends Atom {
      * This atom's name
      * @type {string}
      */
-    this.name = "UploadSVG";
+    this.name = "Import";
     /**
      * This atom's type
      * @type {string}
      */
-    this.atomType = "UploadSVG";
+    this.atomType = "Import";
     /**
      * A description of this atom
      * @type {string}
      */
-    this.description = "Upload a .svg file and use it in your design.";
+    this.description =
+      "Import Atom, let's you choose a type of file to import and use in your design.";
 
     /**
      * The name of the uploaded file
@@ -62,45 +63,9 @@ export default class UploadSVG extends Atom {
   /**
    * Update the displayed svg file
    */
-  updateValue() {
-    const rawPath = GlobalVariables.gitHub.getAFileRawPath(this.fileName);
+  updateValue() {}
 
-    if (this.fileName.split(".").pop() == "svg") {
-      try {
-        const values = {
-          op: "fromSVG",
-          svgPath: rawPath,
-          writePath: this.path,
-        };
-
-        this.basicThreadValueProcessing(values);
-      } catch (err) {
-        this.setAlert(err);
-      }
-    } else if (this.fileName.split(".").pop() == "stl") {
-      try {
-        const values = {
-          op: "fromSTL",
-          stlPath: rawPath,
-          writePath: this.path,
-        };
-
-        this.basicThreadValueProcessing(values);
-      } catch (err) {
-        this.setAlert(err);
-      }
-    }
-  }
-
-  /**
-   * Create a button to download the .stl file.
-   */
-  updateSidebar() {
-    const list = super.updateSidebar();
-    this.createFileUpload(list, this, "Upload SVG", () => {
-      this.uploadSvg();
-    });
-  }
+  createLevaInputs() {}
 
   /**
    * The function which is called when you press the upload button
@@ -152,7 +117,7 @@ export default class UploadSVG extends Atom {
     var superSerialObject = super.serialize();
 
     //Write the current equation to the serialized object
-    superSerialObject.fileName = this.fileName;
+    superSerialObject.fileName = this.fileName; // might delete, maybe we just save as library object
     superSerialObject.name = this.name;
 
     return superSerialObject;
