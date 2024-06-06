@@ -8,7 +8,12 @@ const Controls = React.memo(
   ) {
     return (
       <>
-        <OrbitControls ref={controlsRef} enableDamping={enableDamping} />
+        <OrbitControls
+          ref={controlsRef}
+          panSpeed={1.5}
+          zoomSpeed={0.5}
+          enableDamping={enableDamping}
+        />
         {axesParam && (
           <GizmoHelper
             alignment={"bottom-right"}
@@ -17,6 +22,7 @@ const Controls = React.memo(
               return controlsRef?.current?.target;
             }}
             onUpdate={() => {
+              console.log(controlsRef.current);
               controlsRef.current?.update();
             }}
           >
