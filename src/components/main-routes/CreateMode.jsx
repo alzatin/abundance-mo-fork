@@ -209,7 +209,7 @@ function CreateMode(props) {
         owner: GlobalVariables.currentUser,
         repo: GlobalVariables.currentRepoName,
         path: file.name,
-        message: "import File",
+        message: "Import File",
         content: content,
       })
       .then(() => {
