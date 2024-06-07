@@ -199,23 +199,23 @@ function CreateMode(props) {
 
   const uploadAFile = async function (file) {
     var reader = new FileReader();
-    reader.onload = function (e) {};
-    reader.readAsText(file);
-
-    let content = window.btoa(reader);
-
-    authorizedUserOcto.rest.repos
-      .createOrUpdateFileContents({
-        owner: GlobalVariables.currentUser,
-        repo: GlobalVariables.currentRepoName,
-        path: file.name,
-        message: "Import File",
-        content: content,
-      })
-      .then(() => {
-        //save project// update atom values
-        activeAtom.importFile(file);
-      });
+    reader.onload = function (e) {
+      let content = window.btoa(e.target.result);
+      console.log(e.target.result);
+      authorizedUserOcto.rest.repos
+        .createOrUpdateFileContents({
+          owner: GlobalVariables.currentUser,
+          repo: GlobalVariables.currentRepoName,
+          path: file.name,
+          message: "Import File",
+          content: content,
+        })
+        .then(() => {
+          //save project// update atom values
+          activeAtom.importFile(file);
+        });
+    };
+    reader.readAsDataURL(file);
   };
   /**
    * Saves project by making a commit to the Github repository.

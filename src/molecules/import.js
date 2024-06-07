@@ -1,6 +1,7 @@
 import Atom from "../prototypes/atom.js";
 import GlobalVariables from "../js/globalvariables.js";
 import { button, LevaInputs } from "leva";
+import { Octokit } from "https://esm.sh/octokit@2.0.19";
 
 /**
  * This class creates an atom which supports uploading a .svg file
@@ -36,6 +37,11 @@ export default class Import extends Atom {
      */
     this.file = null;
     /**
+     * The filename
+     * @type {string}
+     */
+    this.fileName = null;
+    /**
      * The type of uploaded file
      * @type {string}
      */
@@ -67,13 +73,43 @@ export default class Import extends Atom {
   }
 
   /**
+   * Get a file from github. Calback is called after the retrieved.
+   */
+  getAFile = async function () {
+    const octokit = new Octokit();
+    const filePath = this.fileName;
+    console.log(this.fileName);
+
+    const result = await octokit.rest.repos.getContent({
+      owner: GlobalVariables.currentUser,
+      repo: GlobalVariables.currentRepoName,
+      path: filePath,
+    });
+
+    return result;
+  };
+
+  dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[arr.length - 1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+
+  /**
    * Update the displayed svg file
    */
   updateValue() {
+    console.log("update value running");
     try {
       if (this.file != null) {
         let file = this.file;
-        console.log(this.type);
+        console.log(file);
         let fileType = this.type;
 
         let funcToCall =
@@ -89,12 +125,19 @@ export default class Import extends Atom {
           throw "Invalid file type";
         }
         funcToCall(this.uniqueID, file).then((result) => {
-          console.log(result);
           this.basicThreadValueProcessing();
           this.sendToRender(); // ? i think this is the right spot to call this// not waiting to call ?
         });
       } else {
-        throw "No file to import";
+        this.getAFile().then((result) => {
+          let file = new File([atob(result.data.content)], this.fileName, {
+            type: "application/octet-stream",
+          });
+          console.log(file);
+          this.file = file;
+          this.updateValue();
+          // throw an error if promise is rejected
+        });
       }
     } catch (err) {
       this.setAlert(err);
@@ -121,6 +164,7 @@ export default class Import extends Atom {
       label: "Loaded File",
       disabled: true,
     };
+    inputParams["Reload temp"] = button(() => this.updateValue());
     return inputParams;
   }
   /**
@@ -135,8 +179,8 @@ export default class Import extends Atom {
 
   importFile(file) {
     this.file = file;
+    this.fileName = file.name;
     this.updateValue(this.type, this.file);
-    this.updateValue();
   }
   /**
    * Add the file name to the object which is saved for this molecule
@@ -147,6 +191,7 @@ export default class Import extends Atom {
     //Write the current equation to the serialized object
     superSerialObject.fileName = this.fileName; // might delete, maybe we just save as library object
     superSerialObject.name = this.name;
+    superSerialObject.type = this.type;
 
     return superSerialObject;
   }
