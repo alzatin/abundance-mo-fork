@@ -202,9 +202,6 @@ function CreateMode(props) {
 
     reader.onload = function (e) {
       let base64result = e.target.result.split(",")[1];
-
-      console.log(base64result);
-
       authorizedUserOcto.rest.repos
         .createOrUpdateFileContents({
           owner: GlobalVariables.currentUser,
@@ -214,12 +211,28 @@ function CreateMode(props) {
           content: base64result,
         })
         .then(() => {
-          //save project// update atom values
-          activeAtom.importFile(file);
+          activeAtom.updateFile(file);
+          saveProject(setSaveState);
         });
     };
     reader.readAsDataURL(file);
   };
+
+  const deleteAFile = async function (fileName, fileSha) {
+    authorizedUserOcto.rest.repos
+      .deleteFile({
+        owner: GlobalVariables.currentUser,
+        repo: GlobalVariables.currentRepoName,
+        path: fileName,
+        message: "Deleted node",
+        sha: fileSha,
+      })
+      .then(() => {
+        //activeAtom.updateFile(file);
+        saveProject(setSaveState);
+      });
+  };
+
   /**
    * Saves project by making a commit to the Github repository.
    */
@@ -365,6 +378,16 @@ function CreateMode(props) {
             onChange={(value) => {
               let file = value.target.files[0];
               uploadAFile(file);
+            }}
+          />
+          <input
+            type="button"
+            id="fileDeleteInput"
+            style={{ display: "none" }}
+            onClick={() => {
+              console.log("deleting file");
+              console.log(activeAtom.fileName);
+              deleteAFile(activeAtom.fileName, activeAtom.sha);
             }}
           />
           <FlowCanvas

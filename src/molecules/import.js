@@ -46,6 +46,11 @@ export default class Import extends Atom {
      * @type {string}
      */
     this.type = null;
+    /**
+     * The sha of the file. Need to keep track of it to be able to delete file from github
+     * @type {string}
+     */
+    this.sha = null;
 
     this.addIO("output", "geometry", this, "geometry", "");
 
@@ -78,7 +83,6 @@ export default class Import extends Atom {
   getAFile = async function () {
     const octokit = new Octokit();
     const filePath = this.fileName;
-    console.log(this.fileName);
 
     const result = await octokit.rest.repos.getContent({
       owner: GlobalVariables.currentUser,
@@ -88,28 +92,14 @@ export default class Import extends Atom {
 
     return result;
   };
-
-  dataURLtoFile(dataurl, filename) {
-    var arr = dataurl.split(","),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[arr.length - 1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, { type: mime });
-  }
-
   /**
    * Update the displayed svg file
    */
   updateValue() {
-    console.log("update value running");
+    console.log("does this run? on place");
     try {
       if (this.file != null) {
         let file = this.file;
-        console.log(file);
         let fileType = this.type;
 
         let funcToCall =
@@ -130,26 +120,40 @@ export default class Import extends Atom {
         });
       } else {
         this.getAFile().then((result) => {
-          // Your base64 string
-          let base64String = result.data.content;
-          // Convert base64 string to binary
-          let binary = atob(base64String);
-          // Create an array to store the binary data
-          let array = [];
-          for (let i = 0; i < binary.length; i++) {
-            array.push(binary.charCodeAt(i));
-          }
-          // Create a new Blob from the binary data
-          let newFile = new Blob([new Uint8Array(array)], {
-            type: "application/octet-stream",
-          });
-          this.file = newFile;
+          this.sha = result.data.sha;
+          this.file = this.newBlobFromBase64(result);
           this.updateValue();
         });
       }
     } catch (err) {
       this.setAlert(err);
     }
+  }
+
+  /** Make new Blob from Github repo content results */
+
+  newBlobFromBase64(result) {
+    // Your base64 string
+    let base64String = result.data.content;
+    // Convert base64 string to binary
+    let binary = atob(base64String);
+    // Create an array to store the binary data
+    let array = [];
+    for (let i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+    // Create a new Blob from the binary data
+    return new Blob([new Uint8Array(array)], {
+      type: "application/octet-stream",
+    });
+  }
+
+  /**
+   * Begin propagation from this atom if there is a file uploaded
+   */
+  beginPropagation() {
+    console.log(this.file);
+    this.updateValue();
   }
 
   createLevaInputs() {
@@ -168,7 +172,7 @@ export default class Import extends Atom {
       this.loadFile(importOptions[importIndex])
     );
     inputParams["Loaded File"] = {
-      value: "this.file", //href to the file
+      value: this.fileName, //href to the file
       label: "Loaded File",
       disabled: true,
     };
@@ -176,7 +180,7 @@ export default class Import extends Atom {
     return inputParams;
   }
   /**
-   * Creates an input element to load a file and calls import function
+   * Creates an input element to load a file and calls import function in CreateMode
    */
   loadFile(type) {
     var f = document.getElementById("fileLoaderInput");
@@ -185,11 +189,21 @@ export default class Import extends Atom {
     this.type = type;
   }
 
-  importFile(file) {
-    console.log("import file in import");
-    console.log(file);
+  /**
+   * Override super delete function to prevent output from being deleted
+   */
+  deleteNode() {
+    super.deleteNode();
+    var f = document.getElementById("fileDeleteInput");
+    f.value = this.fileName; //filenamepath
+    // Dispatch it.
+    f.click();
+  }
+
+  updateFile(file) {
     this.file = file;
     this.fileName = file.name;
+    this.sha = file.sha;
     this.updateValue(this.type, this.file);
   }
   /**
