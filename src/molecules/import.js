@@ -195,15 +195,15 @@ export default class Import extends Atom {
   deleteNode() {
     super.deleteNode();
     var f = document.getElementById("fileDeleteInput");
-    f.value = this.fileName; //filenamepath
+    f.value = this.fileName;
     // Dispatch it.
     f.click();
   }
 
-  updateFile(file) {
+  updateFile(file, sha) {
     this.file = file;
     this.fileName = file.name;
-    this.sha = file.sha;
+    this.sha = sha;
     this.updateValue(this.type, this.file);
   }
   /**

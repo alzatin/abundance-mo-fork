@@ -210,8 +210,8 @@ function CreateMode(props) {
           message: "Import File",
           content: base64result,
         })
-        .then(() => {
-          activeAtom.updateFile(file);
+        .then((result) => {
+          activeAtom.updateFile(file, result.data.content.sha);
           saveProject(setSaveState);
         });
     };
@@ -219,18 +219,15 @@ function CreateMode(props) {
   };
 
   const deleteAFile = async function (fileName, fileSha) {
-    authorizedUserOcto.rest.repos
-      .deleteFile({
-        owner: GlobalVariables.currentUser,
-        repo: GlobalVariables.currentRepoName,
-        path: fileName,
-        message: "Deleted node",
-        sha: fileSha,
-      })
-      .then(() => {
-        //activeAtom.updateFile(file);
-        saveProject(setSaveState);
-      });
+    console.log("deleting file");
+    console.log(fileName, fileSha);
+    authorizedUserOcto.rest.repos.deleteFile({
+      owner: GlobalVariables.currentUser,
+      repo: GlobalVariables.currentRepoName,
+      path: fileName,
+      message: "Deleted node",
+      sha: fileSha,
+    });
   };
 
   /**
@@ -385,8 +382,6 @@ function CreateMode(props) {
             id="fileDeleteInput"
             style={{ display: "none" }}
             onClick={() => {
-              console.log("deleting file");
-              console.log(activeAtom.fileName);
               deleteAFile(activeAtom.fileName, activeAtom.sha);
             }}
           />
