@@ -96,9 +96,9 @@ export default class Import extends Atom {
    * Update the displayed svg file
    */
   updateValue() {
-    console.log("does this run? on place");
     try {
       if (this.file != null) {
+        this.processing = true;
         let file = this.file;
         let fileType = this.type;
 
@@ -152,8 +152,9 @@ export default class Import extends Atom {
    * Begin propagation from this atom if there is a file uploaded
    */
   beginPropagation() {
-    console.log(this.file);
-    this.updateValue();
+    if (this.fileName != null) {
+      this.updateValue();
+    }
   }
 
   createLevaInputs() {
@@ -164,7 +165,7 @@ export default class Import extends Atom {
 
       inputParams[this.uniqueID + "file_ops"] = {
         options: importOptions,
-        label: "File Operations",
+        label: "File Type",
         onChange: (value) => {
           importIndex = importOptions.indexOf(value);
         },
@@ -192,16 +193,18 @@ export default class Import extends Atom {
   }
 
   /**
-   * Override super delete function to prevent output from being deleted
+   * Call super delete node and then grab input that calls function to delete the file from github
    */
   deleteNode() {
     super.deleteNode();
     var f = document.getElementById("fileDeleteInput");
     f.value = this.fileName;
-    // Dispatch it.
     f.click();
   }
 
+  /**
+   * Update the file, filename and sha of the atom
+   */
   updateFile(file, sha) {
     this.file = file;
     this.fileName = file.name;
