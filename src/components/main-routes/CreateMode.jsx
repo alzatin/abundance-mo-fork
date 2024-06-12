@@ -220,7 +220,6 @@ function CreateMode(props) {
 
   const deleteAFile = async function (fileName, fileSha) {
     console.log("deleting file");
-    console.log(fileName, fileSha);
     authorizedUserOcto.rest.repos.deleteFile({
       owner: GlobalVariables.currentUser,
       repo: GlobalVariables.currentRepoName,

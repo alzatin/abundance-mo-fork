@@ -158,25 +158,27 @@ export default class Import extends Atom {
 
   createLevaInputs() {
     let inputParams = {};
-    const importOptions = ["STL", "SVG", "STEP"];
-    let importIndex = 0;
+    if (this.fileName == null) {
+      const importOptions = ["STL", "SVG", "STEP"];
+      let importIndex = 0;
 
-    inputParams[this.uniqueID + "file_ops"] = {
-      options: importOptions,
-      label: "File Operations",
-      onChange: (value) => {
-        importIndex = importOptions.indexOf(value);
-      },
-    };
-    inputParams["Load File"] = button(() =>
-      this.loadFile(importOptions[importIndex])
-    );
-    inputParams["Loaded File"] = {
-      value: this.fileName, //href to the file
-      label: "Loaded File",
-      disabled: true,
-    };
-    inputParams["Reload temp"] = button(() => this.updateValue());
+      inputParams[this.uniqueID + "file_ops"] = {
+        options: importOptions,
+        label: "File Operations",
+        onChange: (value) => {
+          importIndex = importOptions.indexOf(value);
+        },
+      };
+      inputParams["Load File"] = button(() =>
+        this.loadFile(importOptions[importIndex])
+      );
+    } else {
+      inputParams["Loaded File"] = {
+        value: this.fileName, //href to the file
+        label: "Loaded File",
+        disabled: true,
+      };
+    }
     return inputParams;
   }
   /**
