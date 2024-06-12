@@ -126,17 +126,21 @@ export default class Import extends Atom {
         }
         funcToCall(this.uniqueID, file).then((result) => {
           this.basicThreadValueProcessing();
-          this.sendToRender(); // ? i think this is the right spot to call this// not waiting to call ?
+          this.sendToRender();
         });
       } else {
         this.getAFile().then((result) => {
-          let file = new File([atob(result.data.content)], this.fileName, {
-            type: "application/octet-stream",
-          });
-          console.log(file);
-          this.file = file;
+          console.log(result);
+          let newFile = new File(
+            [atob(result.data.content)],
+            result.data.name,
+            {
+              type: "application/octet-stream",
+            }
+          );
+
+          this.file = result;
           this.updateValue();
-          // throw an error if promise is rejected
         });
       }
     } catch (err) {
@@ -178,6 +182,8 @@ export default class Import extends Atom {
   }
 
   importFile(file) {
+    console.log("import file in import");
+    console.log(file);
     this.file = file;
     this.fileName = file.name;
     this.updateValue(this.type, this.file);

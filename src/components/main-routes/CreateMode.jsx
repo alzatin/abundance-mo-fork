@@ -199,16 +199,19 @@ function CreateMode(props) {
 
   const uploadAFile = async function (file) {
     var reader = new FileReader();
+
     reader.onload = function (e) {
-      let content = window.btoa(e.target.result);
-      console.log(e.target.result);
+      let base64result = e.target.result.split(",")[1];
+
+      console.log(base64result);
+
       authorizedUserOcto.rest.repos
         .createOrUpdateFileContents({
           owner: GlobalVariables.currentUser,
           repo: GlobalVariables.currentRepoName,
           path: file.name,
           message: "Import File",
-          content: content,
+          content: base64result,
         })
         .then(() => {
           //save project// update atom values
