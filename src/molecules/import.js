@@ -130,16 +130,20 @@ export default class Import extends Atom {
         });
       } else {
         this.getAFile().then((result) => {
-          console.log(result);
-          let newFile = new File(
-            [atob(result.data.content)],
-            result.data.name,
-            {
-              type: "application/octet-stream",
-            }
-          );
-
-          this.file = result;
+          // Your base64 string
+          let base64String = result.data.content;
+          // Convert base64 string to binary
+          let binary = atob(base64String);
+          // Create an array to store the binary data
+          let array = [];
+          for (let i = 0; i < binary.length; i++) {
+            array.push(binary.charCodeAt(i));
+          }
+          // Create a new Blob from the binary data
+          let newFile = new Blob([new Uint8Array(array)], {
+            type: "application/octet-stream",
+          });
+          this.file = newFile;
           this.updateValue();
         });
       }
