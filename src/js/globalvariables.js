@@ -32,7 +32,7 @@ import Output from "../molecules/output.js";
 import Gcode from "../molecules/gcode.js";
 import Code from "../molecules/code.js";
 import Group from "../molecules/group.js";
-import UploadSVG from "../molecules/uploadSVG.js";
+import Import from "../molecules/import.js";
 
 /**
  * This class defines things which are made available to all objects which import it. It is a singlton which means that each time it is imported the same instance is made available so if it is written to in one place, it can be read somewhere else.
@@ -155,10 +155,10 @@ class GlobalVariables {
       step: { creator: Step, atomType: "Step", atomCategory: "Export" },
       //nest:               {creator: Nest, atomType: 'Nest', atomCategory: 'Export'},
       gcode: { creator: Gcode, atomType: "Gcode", atomCategory: "Export" },
-      uploadSVG: {
-        creator: UploadSVG,
-        atomType: "UploadSVG",
-        atomCategory: "Export",
+      import: {
+        creator: Import,
+        atomType: "Import",
+        atomCategory: "Inputs",
       },
       githubmolecule: {
         creator: GitHubMolecule,
