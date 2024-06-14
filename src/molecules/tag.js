@@ -84,10 +84,12 @@ export default class Tag extends Atom {
         if (value === true) {
           this.cutTag = true;
           this.tags.push("cutLayout");
+          this.name = this.tags.toString();
           this.updateValue();
         } else {
           this.cutTag = false;
           this.tags = this.tags.filter((e) => e !== "cutLayout");
+          this.name = this.tags.toString();
           this.updateValue();
         }
       },
@@ -99,6 +101,7 @@ export default class Tag extends Atom {
       onChange: (value) => {
         this.tags = this.cutTag ? ["cutLayout"] : [];
         this.tags.push(value);
+        this.name = this.tags.toString();
         this.updateValue();
       },
     };

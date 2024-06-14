@@ -673,7 +673,7 @@ function assembly(targetID, inputIDs) {
   return started.then(() => {
     let assembly = [];
     if (inputIDs.length > 1) {
-      /** Check if all inputs are solids */
+      /** Check if all inputs are solid or sketches */
       if (
         inputIDs.every((inputID) => is3D(library[inputID])) ||
         inputIDs.every((inputID) => !is3D(library[inputID]))

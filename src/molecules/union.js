@@ -163,6 +163,7 @@ export default class Union extends Atom {
       onChange: (value) => {
         this.unionIndex = importOptions.indexOf(value);
         this.unionType = importOptions[this.unionIndex];
+        this.name = this.unionType;
         this.updateValue();
       },
     };
