@@ -1,5 +1,6 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
+import { button, LevaInputs } from "leva";
 
 /**
  * This class creates the tag atom.
@@ -13,7 +14,7 @@ export default class Tag extends Atom {
     super(values);
 
     this.addIO("input", "geometry", this, "geometry", "", false, true);
-    this.addIO("input", "tag", this, "string", "Tag String");
+    //this.addIO("input", "tag", this, "string", "Tag String");
     this.addIO("output", "geometry", this, "geometry", "");
 
     /**
@@ -35,6 +36,11 @@ export default class Tag extends Atom {
      * @type {string}
      */
     this.description = "Tags geometry so that it can be extracted later.";
+
+    this.tags = [""];
+
+    /** Flag for cutlist tag */
+    this.cutTag = false;
 
     this.setValues(values);
   }
@@ -63,15 +69,51 @@ export default class Tag extends Atom {
     GlobalVariables.c.fill();
     GlobalVariables.c.closePath();
   }
+
+  checkHasTag() {
+    return this.cutTag;
+  }
+
+  createLevaInputs() {
+    let inputParams = {};
+
+    inputParams[this.uniqueID + "cut_string"] = {
+      value: this.cutTag,
+      label: "Cut List Tag",
+      onChange: (value) => {
+        if (value === true) {
+          this.cutTag = true;
+          this.tags.push("cutLayout");
+          this.updateValue();
+        } else {
+          this.cutTag = false;
+          this.tags = this.tags.filter((e) => e !== "cutLayout");
+          this.updateValue();
+        }
+      },
+    };
+    inputParams[this.uniqueID + "custom_string"] = {
+      value: this.tags.filter((e) => e !== "cutLayout")[0],
+      label: "Tag",
+      disabled: false,
+      onChange: (value) => {
+        this.tags = this.cutTag ? ["cutLayout"] : [];
+        this.tags.push(value);
+        this.updateValue();
+      },
+    };
+
+    return inputParams;
+  }
   /**
    * Add a tag to the input geometry. The substance is not changed.
    */
   updateValue() {
     try {
       var inputID = this.findIOValue("geometry");
-      var tag = this.findIOValue("tag");
+      var tags = this.tags;
 
-      GlobalVariables.cad.tag(this.uniqueID, inputID, tag).then(() => {
+      GlobalVariables.cad.tag(this.uniqueID, inputID, tags).then(() => {
         this.basicThreadValueProcessing();
       });
     } catch (err) {
