@@ -89,7 +89,7 @@ class GlobalVariables {
         atomType: "Add-BOM-Tag",
         atomCategory: "Tags",
       },
-      color: { creator: Color, atomType: "Color", atomCategory: "Tags" },
+      color: { creator: Color, atomType: "Color", atomCategory: "Actions" },
       tag: { creator: Tag, atomType: "Tag", atomCategory: "Tags" },
       extracttag: {
         creator: ExtractTag,
@@ -163,7 +163,7 @@ class GlobalVariables {
       githubmolecule: {
         creator: GitHubMolecule,
         atomType: "GitHubMolecule",
-        atomCategory: "Inputs",
+        atomCategory: "ImportExport",
       },
 
       output: { creator: Output, atomType: "Output" },
