@@ -278,7 +278,7 @@ function tag(targetID, inputID, TAG) {
   return started.then(() => {
     library[targetID] = {
       geometry: library[inputID].geometry,
-      tags: [TAG, ...library[inputID].tags],
+      tags: [...TAG, ...library[inputID].tags],
       color: library[inputID].color,
       plane: library[inputID].plane,
     };
