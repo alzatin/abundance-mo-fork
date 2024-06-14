@@ -674,7 +674,10 @@ function assembly(targetID, inputIDs) {
     let assembly = [];
     if (inputIDs.length > 1) {
       /** Check if all inputs are solids */
-      if (inputIDs.every((inputID) => is3D(library[inputID]))) {
+      if (
+        inputIDs.every((inputID) => is3D(library[inputID])) ||
+        inputIDs.every((inputID) => !is3D(library[inputID]))
+      ) {
         for (let i = 0; i < inputIDs.length; i++) {
           assembly.push(
             cutAssembly(
@@ -684,10 +687,6 @@ function assembly(targetID, inputIDs) {
               i
             )
           );
-        }
-      } else if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
-        for (let i = 0; i < inputIDs.length; i++) {
-          assembly.push(library[inputIDs[i]]);
         }
       } else {
         throw new Error(
