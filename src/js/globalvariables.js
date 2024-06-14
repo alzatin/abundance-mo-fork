@@ -55,8 +55,6 @@ class GlobalVariables {
      * @type {array}
      */
     this.availableTypes = {
-      box: { creator: Box, atomType: "Box" },
-
       intersection: {
         creator: Intersection,
         atomType: "Intersection",
@@ -141,7 +139,6 @@ class GlobalVariables {
         atomCategory: "Actions",
       },
       move: { creator: Move, atomType: "Move", atomCategory: "Actions" },
-      translate: { creator: Move, atomType: "Translate", atomCategory: "none" },
       GeneticAlgorithm: {
         creator: GeneticAlgorithm,
         atomType: "GeneticAlgorithm",

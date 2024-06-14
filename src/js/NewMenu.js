@@ -7,11 +7,7 @@ import GlobalVariables from "./globalvariables.js";
 var ele = null; //document.querySelector('#circle-menu1')
 var cmenu;
 
-const createCMenu = (
-  targetElement,
-  setSearchingGithub,
-  setGitSearchPosition
-) => {
+const createCMenu = (targetElement, setSearchingGithub) => {
   ele = targetElement;
   // /**
   //      * Runs to create submenus from Global Variables atomCategories. Populates menu objects
@@ -70,7 +66,7 @@ const createCMenu = (
       },
       {
         title: "Import/Export",
-        icon: "Import/Export",
+        icon: "import-export",
         menus: makeArray("ImportExport"),
       },
       {
@@ -116,16 +112,7 @@ const createCMenu = (
       },
       true
     );
-    //Simulate a click on the new atom
-    var clickHandledByAtom = false;
-    //clickdown on the atom is making it rerender project
-    /* GlobalVariables.currentMolecule.nodesOnTheScreen.forEach(atom => {
-            if (atom.clickDown(containerX,containerY,clickHandledByAtom) == true){
-                clickHandledByAtom = true
-                atom.clickUp(containerX, containerY) //Click up to not drag the atom
-            }
-        })*/
   }
 };
 
-export { createCMenu, cmenu }; //,showGitHubSearch}
+export { createCMenu, cmenu };
