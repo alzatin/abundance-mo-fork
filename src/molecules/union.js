@@ -5,7 +5,7 @@ import GlobalVariables from "../js/globalvariables.js";
 /**
  * This class creates the Assembly atom instance.
  */
-export default class Assembly extends Atom {
+export default class Union extends Atom {
   /**
    * Creates a new assembly atom.
    * @param {object} values - An object of values. Each of these values will be applied to the resulting atom.
@@ -19,12 +19,12 @@ export default class Assembly extends Atom {
      * This atom's name
      * @type {string}
      */
-    this.name = "Assembly";
+    this.name = "Union";
     /**
      * This atom's type
      * @type {string}
      */
-    this.atomType = "Assembly";
+    this.atomType = "Union";
     /**
      * A list of all of the inputs to this molecule. May be loaded when the molecule is created.
      * @type {array}
@@ -51,6 +51,10 @@ export default class Assembly extends Atom {
         this.addIO("input", ioValue.name, this, "geometry", "");
       });
     }
+
+    this.unionType;
+
+    this.unionIndex = 0;
 
     this.setValues([]);
   }
@@ -128,10 +132,17 @@ export default class Assembly extends Atom {
             inputValues.push(io.getValue());
           }
         });
-
-        GlobalVariables.cad.assembly(this.uniqueID, inputValues).then(() => {
-          this.basicThreadValueProcessing();
-        });
+        console.log("update value running");
+        console.log(this.unionType);
+        if (this.unionType === "Fusion") {
+          GlobalVariables.cad.fusion(this.uniqueID, inputValues).then(() => {
+            this.basicThreadValueProcessing();
+          });
+        } else if (this.unionType === "Assembly") {
+          GlobalVariables.cad.assembly(this.uniqueID, inputValues).then(() => {
+            this.basicThreadValueProcessing();
+          });
+        }
       } catch (err) {
         this.setAlert(err);
       }
@@ -139,6 +150,23 @@ export default class Assembly extends Atom {
       //Delete or add ports as needed
       addOrDeletePorts(this);
     }
+  }
+
+  createLevaInputs() {
+    let inputParams = {};
+    const importOptions = ["Fusion", "Assembly"];
+
+    inputParams[this.uniqueID + "union_ops"] = {
+      value: importOptions[this.unionIndex],
+      options: importOptions,
+      label: "Union Type",
+      onChange: (value) => {
+        this.unionIndex = importOptions.indexOf(value);
+        this.unionType = importOptions[this.unionIndex];
+        this.updateValue();
+      },
+    };
+    return inputParams;
   }
 
   /**

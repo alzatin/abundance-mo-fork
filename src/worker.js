@@ -703,6 +703,31 @@ function assembly(targetID, inputIDs) {
   });
 }
 
+function fusion(targetID, inputIDs) {
+  return started.then(() => {
+    let fusedGeometry = [];
+    inputIDs.forEach((inputID) => {
+      if (inputIDs.every((inputID) => is3D(library[inputID]))) {
+        fusedGeometry.push(flattenRemove2DandFuse(library[inputID]));
+      } else if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
+        fusedGeometry.push(flattenAndFuse(library[inputID]));
+      } else {
+        throw new Error(
+          "Fusion must be composed from only sketches OR only solids"
+        );
+      }
+    });
+    const newPlane = new Plane().pivot(0, "Y");
+    library[targetID] = {
+      geometry: [chainFuse(fusedGeometry)],
+      tags: [],
+      plane: newPlane,
+      color: "#FF9065",
+    };
+    return true;
+  });
+}
+
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
 function actOnLeafs(assembly, action, plane) {
   plane = plane || assembly.plane;
@@ -873,6 +898,7 @@ expose({
   rectangle,
   generateDisplayMesh,
   extrude,
+  fusion,
   extractBomList,
   visExport,
   downExport,
