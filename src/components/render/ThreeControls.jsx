@@ -3,13 +3,18 @@ import { OrbitControls, GizmoHelper, GizmoViewport } from "@react-three/drei";
 
 const Controls = React.memo(
   React.forwardRef(function Controls(
-    { hideGizmo, enableDamping },
+    { axesParam, enableDamping },
     controlsRef
   ) {
     return (
       <>
-        <OrbitControls ref={controlsRef} enableDamping={enableDamping} />
-        {!hideGizmo && (
+        <OrbitControls
+          ref={controlsRef}
+          panSpeed={1.5}
+          zoomSpeed={0.5}
+          enableDamping={enableDamping}
+        />
+        {axesParam && (
           <GizmoHelper
             alignment={"bottom-right"}
             margin={[70, 100]}
