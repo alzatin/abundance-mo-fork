@@ -132,8 +132,6 @@ export default class Union extends Atom {
             inputValues.push(io.getValue());
           }
         });
-        console.log("update value running");
-        console.log(this.unionType);
         if (this.unionType === "Fusion") {
           GlobalVariables.cad.fusion(this.uniqueID, inputValues).then(() => {
             this.basicThreadValueProcessing();
