@@ -1,7 +1,5 @@
 import { create, all } from "mathjs";
 import Assembly from "../molecules/assembly.js";
-import Box from "../molecules/box.js";
-import CutList from "../molecules/cutlist.js";
 import Circle from "../molecules/circle.js";
 import Color from "../molecules/color.js";
 import CutLayout from "../molecules/cutlayout.js";
@@ -101,8 +99,6 @@ class GlobalVariables {
         atomType: "CutLayout",
         atomCategory: "Tags",
       },
-      CutList: { creator: CutList, atomType: "CutList", atomCategory: "Tags" },
-
       regularPolygon: {
         creator: RegularPolygon,
         atomType: "RegularPolygon",
