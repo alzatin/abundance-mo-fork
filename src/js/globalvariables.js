@@ -12,9 +12,6 @@ import Move from "../molecules/move.js";
 import Tag from "../molecules/tag.js";
 import RegularPolygon from "../molecules/regularPolygon.js";
 import Extrude from "../molecules/extrude.js";
-import Stl from "../molecules/stl.js";
-import Svg from "../molecules/svg.js";
-import Step from "../molecules/step.js";
 //import Nest              from '../molecules/nest.js'
 import Intersection from "../molecules/intersection.js";
 import Difference from "../molecules/difference.js";
@@ -33,6 +30,7 @@ import Gcode from "../molecules/gcode.js";
 import Code from "../molecules/code.js";
 import Group from "../molecules/group.js";
 import Import from "../molecules/import.js";
+import Export from "../molecules/export.js";
 
 /**
  * This class defines things which are made available to all objects which import it. It is a singlton which means that each time it is imported the same instance is made available so if it is written to in one place, it can be read somewhere else.
@@ -57,8 +55,6 @@ class GlobalVariables {
      * @type {array}
      */
     this.availableTypes = {
-      box: { creator: Box, atomType: "Box" },
-
       intersection: {
         creator: Intersection,
         atomType: "Intersection",
@@ -93,7 +89,7 @@ class GlobalVariables {
         atomType: "Add-BOM-Tag",
         atomCategory: "Tags",
       },
-      color: { creator: Color, atomType: "Color", atomCategory: "Tags" },
+      color: { creator: Color, atomType: "Color", atomCategory: "Actions" },
       tag: { creator: Tag, atomType: "Tag", atomCategory: "Tags" },
       extracttag: {
         creator: ExtractTag,
@@ -143,27 +139,31 @@ class GlobalVariables {
         atomCategory: "Actions",
       },
       move: { creator: Move, atomType: "Move", atomCategory: "Actions" },
-      translate: { creator: Move, atomType: "Translate", atomCategory: "none" },
       GeneticAlgorithm: {
         creator: GeneticAlgorithm,
         atomType: "GeneticAlgorithm",
         atomCategory: "Actions",
       },
-
-      stl: { creator: Stl, atomType: "Stl", atomCategory: "Export" },
-      svg: { creator: Svg, atomType: "Svg", atomCategory: "Export" },
-      step: { creator: Step, atomType: "Step", atomCategory: "Export" },
       //nest:               {creator: Nest, atomType: 'Nest', atomCategory: 'Export'},
-      gcode: { creator: Gcode, atomType: "Gcode", atomCategory: "Export" },
+      gcode: {
+        creator: Gcode,
+        atomType: "Gcode",
+        atomCategory: "ImportExport",
+      },
       import: {
         creator: Import,
         atomType: "Import",
-        atomCategory: "Inputs",
+        atomCategory: "ImportExport",
+      },
+      export: {
+        creator: Export,
+        atomType: "Export",
+        atomCategory: "ImportExport",
       },
       githubmolecule: {
         creator: GitHubMolecule,
         atomType: "GitHubMolecule",
-        atomCategory: "Inputs",
+        atomCategory: "ImportExport",
       },
 
       output: { creator: Output, atomType: "Output" },
