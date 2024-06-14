@@ -69,9 +69,9 @@ const createCMenu = (
         menus: makeArray("Tags"),
       },
       {
-        title: "Export",
-        icon: "Export",
-        menus: makeArray("Export"),
+        title: "Import/Export",
+        icon: "Import/Export",
+        menus: makeArray("ImportExport"),
       },
       {
         title: "Shapes",
