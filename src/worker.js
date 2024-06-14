@@ -7,6 +7,7 @@ import {
   drawRectangle,
   drawPolysides,
   Plane,
+  Vector,
   importSTEP,
   importSTL,
 } from "replicad";
@@ -526,76 +527,252 @@ function extractTags(inputGeometry, TAG) {
 
 function layout(targetID, inputID, TAG, spacing) {
   return started.then(() => {
+    console.log(library);
+
     let taggedGeometry = extractTags(library[inputID], TAG);
-    let shapenum = 0;
+    console.log(taggedGeometry);
+
+    let materialThickness = 19; // TODO: parameterize this
+
+    // Rotate all shapes to be most cuttable.
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
-      shapenum++;
-      /** Angle to rotate in x and y plane */
-      let rotatiX = 0;
-      let rotatiY = 0;
-      /** Objects with angle height pairs in x and y plane */
-      let heightAngleX = [];
-      let heightAngleY = [];
-      /** Sorts through key value pairs and returns pair with min value */
-      const maxMinVal = (obj) => {
-        const sortedEntriesByVal = Object.entries(obj).sort(
-          ([, v1], [, v2]) => v1 - v2
-        );
-        return sortedEntriesByVal[0];
-      };
-      /** Checks for lowest possible height by rotating on x */
-      for (let i = 0; i > -90; i--) {
-        heightAngleX[i] = leaf.geometry[0]
-          .clone()
-          .rotate(i, [0, 0, 0], [1, 0, 0]).boundingBox.depth;
+      console.log("Acting on obj...");
+      console.log(leaf);
+      console.log("face count: " + leaf.geometry[0].faces.length);
+
+      // For each face, consider it as the underside of the shape on the CNC bed.
+      // In order to be considered, a face must be...
+      //  1) a flat PLANE, not a cylander, or sphere or other curved face type.
+      //  2) the thickness of the part normal to this plane must be less than or equal to
+      //     the raw material thickness
+      //  3) there must be no parts of the shape which protrude "below" this face
+      let candidates = [];
+      let hasFlatFace = false;
+      leaf.geometry[0].faces.forEach((face) => {
+        console.log(face);
+        if (face.geomType == "PLANE") {
+          hasFlatFace = true;
+          let prospectiveGoem = moveFaceToCuttingPlane(leaf.geometry[0], face);
+          let thickness = prospectiveGoem.boundingBox.depth;
+          if (thickness <= materialThickness) { // TODO: do we need a margin of error here? Yes.
+              // observed examples 13.0000003 instead of 13
+            // TODO: we might care if there's parts of the shape which protrude below the face.
+            candidates.push({
+              // Retrieve properties of the face which will later be used for tie-breaking.
+              // The face itself will get deconstructed by replcad outside of our control.
+              faceInnerWire: face.innerWires.length,
+              faceArea: areaApprox(face.UVBounds),
+              geom: prospectiveGoem,
+            });
+          }
+        }
+      });
+
+      console.log("blep blep");
+      let newGeometry;
+      if (candidates.length == 0) {
+        console.log("No valid orientation for shape... " + hasFlatFace);
+        // TODO: we probably want to provide a more specific error in this case. Causes include:
+        // * no flat faces
+        // * too thick normal to all flat faces
+        // * overhangs (we don't detect this at the moment)
+      } else if (candidates.length == 1) {
+        console.log("sole candidate");
+        newGeometry = candidates[0].geom;
+      } else {
+        console.log("multiple candidates");
+        // The candidate selection here doesn't guarantee a printable piece. In particular there
+        // are shapes with overhangs which we cannot easily detect.
+        // These tie-break heuristics are designed to usually pick a printable orientation for
+        // this piece. (TODO) However, we should consider allowing user-modification of these
+        // orientations before the packing stage.
+
+        // Filter out faces with extra interiorWires, as these may indicate carve-outs which will
+        // be unreachable on the underside of the sheet.
+        let temp = candidates.map((c) => {return c.faceInnerWire;});
+        let minInteriorWires = Math.min(...temp);
+        candidates = candidates.filter((c) => {return c.faceInnerWire === minInteriorWires});
+        if (candidates.length === 1) {
+          newGeometry = candidates[0].geom;
+        }
+        
+        // Pick the largest of the remaining candidates (note: it's not trivial to calculate area, so here we
+        // just compare bounding boxes)
+        let maxArea = 0;
+        candidates.forEach((c) => {
+          if (c.faceArea > maxArea) {
+            maxArea = c.faceArea;
+            newGeometry = c.geom;
+          }
+        });
       }
 
-      rotatiX = Number(maxMinVal(heightAngleX)[0]);
-
-      /** Checks for lowest possible height by rotating on x and then on y*/
-
-      for (let i = 0; i > -90; i--) {
-        heightAngleY[i] = leaf.geometry[0]
-          .clone()
-          .rotate(rotatiX, [0, 0, 0], [1, 0, 0])
-          .rotate(i, [0, 0, 0], [0, 1, 0]).boundingBox.depth;
-      }
-      rotatiY = Number(maxMinVal(heightAngleY)[0]);
-
-      // Finding how much to move the geometry to center at the origin
-      let movex =
-        (leaf.geometry[0].boundingBox.bounds[0][0] +
-          leaf.geometry[0].boundingBox.bounds[1][0]) /
-        2;
-      let movey =
-        (leaf.geometry[0].boundingBox.bounds[0][1] +
-          leaf.geometry[0].boundingBox.bounds[1][1]) /
-        2;
-      let movez =
-        (leaf.geometry[0].boundingBox.bounds[0][2] +
-          leaf.geometry[0].boundingBox.bounds[1][2]) /
-        2;
-      // Geometry centered at origin xyz
-      let alteredGeometry = leaf.geometry[0]
-        .clone()
-        .translate(-movex, -movey, -movez);
-
-      /** Returns rotated geometry */
+      console.log("returning new geom");
       return {
         geometry: [
-          alteredGeometry
-            .clone()
-            .rotate(rotatiX, alteredGeometry.boundingBox.center, [1, 0, 0])
-            .rotate(rotatiY, alteredGeometry.boundingBox.center, [0, 1, 0])
-            .translate(shapenum * spacing, 0, 0),
+          newGeometry
         ],
         tags: leaf.tags,
         color: leaf.color,
         plane: leaf.plane,
       };
+
+      // console.log("end of new code");
+      // /** Angle to rotate in x and y plane */
+      // let rotatiX = 0;
+      // let rotatiY = 0;
+      // /** Objects with angle height pairs in x and y plane */
+      // let heightAngleX = [];
+      // let heightAngleY = [];
+      // /** Sorts through key value pairs and returns pair with min value */
+      // const maxMinVal = (obj) => {
+      //   const sortedEntriesByVal = Object.entries(obj).sort(
+      //     ([, v1], [, v2]) => v1 - v2
+      //   );
+      //   return sortedEntriesByVal[0];
+      // };
+
+      /**
+       * TODO: (tristan)
+       * This block and the matching set for y axis below is attempting to determine the rotation which minimizes
+       * the vertical height of this geom.
+       * 
+       * in the nice case it's a shape who's thickness is equivalent to our cut material height.
+       * however 1) this process doesn't seem to be always find the optimal arangement even for
+       * nice pieces. 2) we need a warning mechanism for cases where a shape cannot be cut from the
+       * specified material. 3) there's also a granularity problem here since we only consider increments
+       * of 1 degree.
+       * 
+       * 3) future feature request is a slice-ify operation to take a thick shape and extract a set of
+       * topo profiles which can they be layed out.
+       * 
+       * New algo proposal...
+       *  * for each face rotate so that face is "down"
+       *  * determine there's elements "below" the bottom face in which case move on to next face
+       *  * determine if the "thickness" is greater than the cut out material... if so move on to the next face
+       *  * otherwise this is an acceptable bottom face (tho not necessarily the only acceptable face)
+       * Rank acceptable faces by the portion of the element which is == material thickness?
+       * If none throw an uncuttability warning.
+       * 
+       * TODO: are there shapes with no faces?
+       * TODO: how to determine if a shape is cuttable if it has recessed areas. Esp: how do we identify if there's
+       *   recessed areas on both sides?
+       * It seems like a good heuristic is to pick based on:
+       *  * among faces where there's an opposing face at thickness distance...
+       *  * pick the face which has the fewest interior wires.
+       * 
+       */
+      /** Checks for lowest possible height by rotating on x */
+      // for (let i = 0; i > -90; i--) {
+      //   var temp = leaf.geometry[0];
+      //   var dup = temp.clone();
+      //   var rotate = dup.rotate(i, [0, 0, 0], [1, 0, 0]);
+      //   var temp2 = rotate.boundingBox.depth;
+      //   heightAngleX[i] = temp2;
+      // }
+
+      // rotatiX = Number(maxMinVal(heightAngleX)[0]);
+
+      // /** Checks for lowest possible height by rotating on x and then on y*/
+
+      // for (let i = 0; i > -90; i--) {
+      //   heightAngleY[i] = leaf.geometry[0]
+      //     .clone()
+      //     .rotate(rotatiX, [0, 0, 0], [1, 0, 0])
+      //     .rotate(i, [0, 0, 0], [0, 1, 0]).boundingBox.depth;
+      // }
+      // rotatiY = Number(maxMinVal(heightAngleY)[0]);
+
+      // // Finding how much to move the geometry to center at the origin
+      // let movex =
+      //   (leaf.geometry[0].boundingBox.bounds[0][0] +
+      //     leaf.geometry[0].boundingBox.bounds[1][0]) /
+      //   2;
+      // let movey =
+      //   (leaf.geometry[0].boundingBox.bounds[0][1] +
+      //     leaf.geometry[0].boundingBox.bounds[1][1]) /
+      //   2;
+      // let movez =
+      //   (leaf.geometry[0].boundingBox.bounds[0][2] +
+      //     leaf.geometry[0].boundingBox.bounds[1][2]) /
+      //   2;
+      // // Geometry centered at origin xyz
+      // let alteredGeometry = leaf.geometry[0]
+      //   .clone()
+      //   .translate(-movex, -movey, -movez);
+
+      // /** Returns rotated geometry */
+      // return {
+      //   geometry: [
+      //     alteredGeometry
+      //       .clone()
+      //       .rotate(rotatiX, alteredGeometry.boundingBox.center, [1, 0, 0])
+      //       .rotate(rotatiY, alteredGeometry.boundingBox.center, [0, 1, 0])
+      //       .translate(shapenum * spacing, 0, 0),
+      //   ],
+      //   tags: leaf.tags,
+      //   color: leaf.color,
+      //   plane: leaf.plane,
+      // };
     });
     return true;
   });
+}
+
+function moveFaceToCuttingPlane(geom, face) {
+  let faceNormal = face.normalAt();
+  
+  // Always use "XY" plane as the cutting surface
+  let cutPlaneNormal = new Vector([0, 0, 1]);
+
+  let rotationAxis = faceNormal.cross(cutPlaneNormal);
+  if (rotationAxis.Length == 0) {
+    // No rotation necessary.
+    return geom.clone();
+  }
+  let rotationDegrees = Math.asin(rotationAxis.Length / faceNormal.Length) * 360 / (2 * Math.PI);
+ 
+  // Rotating around the global origin ensures that this face will be flush with the XY plane after the rotation.
+  return geom.clone().rotate(
+    rotationDegrees,
+    [0,0,0],
+    rotationAxis
+  )
+}
+
+function areaApprox(bounds) {
+  return (bounds.uMax - bounds.uMin) * (bounds.vMax - bounds.vMin);
+}
+
+function magnitude(vec) {
+  var sum = 0;
+  vec.forEach((i) => {
+    sum += i * i;
+  });
+  return Math.sqrt(sum);
+}
+
+function calculateTransforms(geoms, targetPlane) {
+  var translations = [];
+  // rotate onto plane
+  geoms.forEach((geom) => {
+    let result = [0,0,0];
+    if (geom.plane === targetPlane) {
+      console.log("already on plane");
+    } else {
+      console.log("incorrect plane. what do :(");
+    }
+    translations.push({rotation: result});
+  });
+  // determine where to position on the sheet, based on bottom left of the shape?
+  // This algo is a stand-in at the moment.
+  let runningTotal = 0;
+  for (var i = 0; i < geoms.length; i++) {
+    translations[i].position = [runningTotal, 0, 0];
+    runningTotal += geoms[i].boundingBox.width;
+  }
+
+  return translations;
 }
 
 // Checks if part is an assembly)
