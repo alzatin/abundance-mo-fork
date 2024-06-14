@@ -66,7 +66,7 @@ const createCMenu = (targetElement, setSearchingGithub) => {
       },
       {
         title: "Import/Export",
-        icon: "import-export",
+        icon: "Import-Export",
         menus: makeArray("ImportExport"),
       },
       {
@@ -112,6 +112,8 @@ const createCMenu = (targetElement, setSearchingGithub) => {
       },
       true
     );
+    //Simulate a click on the new atom
+    var clickHandledByAtom = false;
   }
 };
 
