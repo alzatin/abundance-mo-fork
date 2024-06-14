@@ -44,6 +44,8 @@ export default class Export extends Atom {
     this.addIO("input", "geometry", this, "geometry", "");
 
     this.setValues(values);
+
+    this.importIndex = 0;
   }
 
   /**
@@ -73,23 +75,12 @@ export default class Export extends Atom {
     try {
       let inputID = this.findIOValue("geometry");
       let fileType = this.type;
-
-      let funcToCall =
-        fileType == "STL"
-          ? GlobalVariables.cad.getSTL
-          : fileType == "SVG"
-          ? GlobalVariables.cad.getSVG
-          : fileType == "STEP"
-          ? GlobalVariables.cad.getSTEP
-          : null;
-
-      if (funcToCall == null) {
-        throw "Invalid file type";
-      }
-      funcToCall(this.uniqueID, inputID).then((result) => {
-        this.basicThreadValueProcessing();
-        //this.sendToRender();
-      });
+      GlobalVariables.cad
+        .visExport(this.uniqueID, inputID, fileType)
+        .then((result) => {
+          this.basicThreadValueProcessing();
+          this.sendToRender();
+        });
     } catch (err) {
       this.setAlert(err);
     }
@@ -97,17 +88,15 @@ export default class Export extends Atom {
 
   createLevaInputs() {
     let inputParams = {};
-
     const importOptions = ["STL", "SVG", "STEP"];
-    let importIndex = 0;
 
     inputParams[this.uniqueID + "file_ops"] = {
+      value: importOptions[this.importIndex],
       options: importOptions,
       label: "File Type",
       onChange: (value) => {
-        importIndex = importOptions.indexOf(value);
-        this.type = importOptions[importIndex];
-        console.log("file type is now " + this.type);
+        this.importIndex = importOptions.indexOf(value);
+        this.type = importOptions[this.importIndex];
         this.updateValue();
       },
     };
@@ -124,11 +113,13 @@ export default class Export extends Atom {
    */
   exportFile() {
     try {
-      let inputID = this.findIOValue("geometry");
+      let fileType = this.type;
 
-      GlobalVariables.cad.downSVG(this.uniqueID, inputID).then((result) => {
-        var blob = new Blob([result], { type: "image/svg+xml;charset=utf-8" });
-        saveAs(blob, GlobalVariables.currentMolecule.name + ".svg");
+      GlobalVariables.cad.downExport(this.uniqueID, fileType).then((result) => {
+        saveAs(
+          result,
+          GlobalVariables.currentMolecule.name + "." + fileType.toLowerCase()
+        );
       });
     } catch (err) {
       this.setAlert(err);

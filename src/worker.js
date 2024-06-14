@@ -405,51 +405,44 @@ function extractBoms(inputGeometry, BOM) {
   }
 }
 
-/** Fuses input geometry, draws a top view projection and turns drawing into sketch */
-function getSVG(targetID, inputID) {
+/** Visualize STL or STEP*/
+function visExport(targetID, inputID, fileType) {
   return started.then(() => {
-    // Fuse geometry and then blob it
     let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-    let topProjection = [
-      drawProjection(fusedGeometry, "top").visible.sketchOnPlane(),
-    ];
-    library[targetID] = { geometry: topProjection, tags: [] };
+    let displayColor =
+      fileType == "STL"
+        ? "#91C8D5"
+        : fileType == "STEP"
+        ? "#ACAFDD"
+        : "#3C3C3C";
+    let finalGeometry;
+    if (fileType == "SVG") {
+      /** Fuses input geometry, draws a top view projection*/
+      finalGeometry = [drawProjection(fusedGeometry, "top").visible];
+    } else {
+      finalGeometry = [fusedGeometry];
+    }
+    library[targetID] = {
+      geometry: finalGeometry,
+      color: displayColor,
+      plane: library[inputID].plane,
+    };
     return true;
   });
 }
 
-/** Creates SVG when download button is clicked */
-function downSVG(targetID, inputID) {
+/** down STL*/
+function downExport(ID, fileType) {
   return started.then(() => {
-    // Fuse geometry and then blob it
-    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-    let topProjection = [drawProjection(fusedGeometry, "top").visible];
-    let svg = topProjection[0].toSVG();
-    return svg;
-  });
-}
-
-/** STL*/
-function getStl(targetID, inputID) {
-  return started.then(() => {
-    // Fuse geometry and then blob it
-    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-    library[targetID] = {
-      geometry: [fusedGeometry.clone().blobSTL()],
-    };
-    return library[targetID].geometry[0];
-  });
-}
-
-/** STEP*/
-function getStep(targetID, inputID) {
-  return started.then(() => {
-    // Fuse geometry and then blob it
-    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-    library[targetID] = {
-      geometry: [fusedGeometry.clone().blobSTEP()],
-    };
-    return library[targetID].geometry[0];
+    if (fileType == "SVG") {
+      let svg = library[ID].geometry[0].toSVG();
+      var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+      return blob;
+    } else if (fileType == "STL") {
+      return library[ID].geometry[0].clone().blobSTL();
+    } else {
+      return library[ID].geometry[0].clone().blobSTEP();
+    }
   });
 }
 
@@ -876,15 +869,13 @@ expose({
   circle,
   color,
   code,
-  downSVG,
   regularPolygon,
   rectangle,
   generateDisplayMesh,
   extrude,
   extractBomList,
-  getSVG,
-  getStl,
-  getStep,
+  visExport,
+  downExport,
   shrinkWrapSketches,
   move,
   rotate,
