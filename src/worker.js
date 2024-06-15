@@ -534,6 +534,10 @@ function layout(targetID, inputID, TAG, materialThickness) {
       throw new Error("No Upstream Geometries Tagged for Cut");
     }
 
+    // a temporary solution to ensure shapes don't overlap. This is not an
+    // efficient packing algorithm.
+    let lateralOffset = 0;
+
     // Rotate all shapes to be most cuttable.
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
       // For each face, consider it as the underside of the shape on the CNC bed.
@@ -607,8 +611,11 @@ function layout(targetID, inputID, TAG, materialThickness) {
         });
       }
 
+      let newGeom = selected.geom.clone().translate(lateralOffset, 0, 0);
+      lateralOffset += newGeom.boundingBox.width;
+
       return {
-        geometry: [selected.geom],
+        geometry: [newGeom],
         tags: leaf.tags,
         color: leaf.color,
         plane: leaf.plane,
