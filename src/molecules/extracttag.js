@@ -38,8 +38,17 @@ export default class ExtractTag extends Atom {
     this.description = "Extracts geometry containing the specified tag.";
 
     this.addIO("input", "geometry", this, "geometry", null, false, true);
-    this.addIO("input", "tag", this, "string", "Tag String");
     this.addIO("output", "geometry", this, "geometry", null);
+
+    /** Index for initial tag dropdown
+     * @type {number}
+     */
+    this.tagIndex = 0;
+
+    /** Selected Tag
+     * @type {string}
+     */
+    this.tag;
 
     this.setValues(values);
   }
@@ -69,13 +78,32 @@ export default class ExtractTag extends Atom {
     GlobalVariables.c.fill();
     GlobalVariables.c.closePath();
   }
+
+  createLevaInputs() {
+    let inputParams = {};
+    const tagOptions = GlobalVariables.topLevelMolecule.projectAvailableTags;
+
+    inputParams[this.uniqueID + "tag_ops"] = {
+      value: tagOptions[this.tagIndex],
+      options: tagOptions,
+      label: "Tag",
+      onChange: (value) => {
+        this.tagIndex = tagOptions.indexOf(value);
+        this.tag = tagOptions[this.tagIndex];
+        this.updateValue();
+        this.sendToRender();
+      },
+    };
+    return inputParams;
+  }
+
   /**
    * Adds the cutAway tag to the part
    */
   updateValue() {
     try {
       var inputID = this.findIOValue("geometry");
-      var tag = this.findIOValue("tag");
+      var tag = this.tag;
 
       GlobalVariables.cad.extractTag(this.uniqueID, inputID, tag).then(() => {
         this.basicThreadValueProcessing();
@@ -83,5 +111,16 @@ export default class ExtractTag extends Atom {
     } catch (err) {
       this.setAlert(err);
     }
+  }
+
+  /**
+   * Keeps track of tag to be extracted
+   */
+  serialize() {
+    var superSerialObject = super.serialize();
+    superSerialObject.tag = this.tag;
+    superSerialObject.tagIndex = this.tagIndex;
+
+    return superSerialObject;
   }
 }

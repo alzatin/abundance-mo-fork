@@ -69,7 +69,7 @@ export default class Join extends Atom {
   }
 
   /**
-   * Draw the assembly icon
+   * Draw the join icon
    */
   draw() {
     super.draw(); //Super call to draw the rest
@@ -120,9 +120,6 @@ export default class Join extends Atom {
     GlobalVariables.c.closePath();
   }
 
-  /**
-   * Super class the default update value function. This function computes creates an array of all of the input values and then passes that array to a worker thread to create the assembly.
-   */
   updateValue() {
     if (this.inputs.every((x) => x.ready)) {
       try {
