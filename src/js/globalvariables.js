@@ -1,5 +1,5 @@
 import { create, all } from "mathjs";
-import Union from "../molecules/union.js";
+import Join from "../molecules/join.js";
 import Circle from "../molecules/circle.js";
 import Color from "../molecules/color.js";
 import CutLayout from "../molecules/cutlayout.js";
@@ -64,8 +64,8 @@ class GlobalVariables {
         atomCategory: "Interactions",
       },
       union: {
-        creator: Union,
-        atomType: "Union",
+        creator: Join,
+        atomType: "Join",
         atomCategory: "Interactions",
       },
       group: { creator: Group, atomType: "Group", atomCategory: "None" },

@@ -3,11 +3,11 @@ import { addOrDeletePorts } from "../js/alwaysOneFreeInput.js";
 import GlobalVariables from "../js/globalvariables.js";
 
 /**
- * This class creates the Assembly atom instance.
+ * This class creates the Join atom instance.
  */
-export default class Union extends Atom {
+export default class Join extends Atom {
   /**
-   * Creates a new assembly atom.
+   * Creates a new join atom.
    * @param {object} values - An object of values. Each of these values will be applied to the resulting atom.
    */
   constructor(values) {
@@ -19,12 +19,12 @@ export default class Union extends Atom {
      * This atom's name
      * @type {string}
      */
-    this.name = "Union";
+    this.name = "Join";
     /**
      * This atom's type
      * @type {string}
      */
-    this.atomType = "Union";
+    this.atomType = "Join";
     /**
      * A list of all of the inputs to this molecule. May be loaded when the molecule is created.
      * @type {array}
@@ -40,7 +40,7 @@ export default class Union extends Atom {
      * @type {string}
      */
     this.description =
-      "Assembles multiple shapes together into one. Shapes higher in the inputs list will cut into shapes lower on the input list where they overlap.";
+      "Pick between assembly and fusion to join input geometries. Assembly takes multiple shapes together into one, shapes higher in the inputs list will cut into shapes lower on the input list where they overlap. Fusion takes all shapes or sketches and fuses them permanently into a single shape";
 
     this.setValues(values);
 
@@ -152,7 +152,7 @@ export default class Union extends Atom {
 
   createLevaInputs() {
     let inputParams = {};
-    const importOptions = ["Fusion", "Assembly"];
+    const importOptions = ["Assembly", "Fusion"];
 
     inputParams[this.uniqueID + "union_ops"] = {
       value: importOptions[this.unionIndex],
