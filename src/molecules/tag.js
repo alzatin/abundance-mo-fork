@@ -106,7 +106,7 @@ export default class Tag extends Atom {
     };
     inputParams[this.uniqueID + "custom_string"] = {
       value: this.tags.filter((e) => e !== "cutLayout")[0],
-      label: "Tag",
+      label: "Add Tag",
       disabled: false,
       onChange: (value) => {
         this.tags = this.cutTag ? ["cutLayout"] : [];
