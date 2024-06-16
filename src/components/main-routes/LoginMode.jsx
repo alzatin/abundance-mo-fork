@@ -230,10 +230,14 @@ const ShowProjects = (props) => {
             className="project_image"
             src={
               "https://raw.githubusercontent.com/" +
-                node.full_name +
-                "/master/project.svg?sanitize=true" ||
-              "/imgs/defaultThumbnail.svg"
+              node.full_name +
+              "/master/project.svg?sanitize=true"
             }
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = "/imgs/defaultThumbnail.svg";
+            }}
+            alt={node.name}
           ></img>
           <div style={{ display: "inline" }}>
             <svg

@@ -480,15 +480,16 @@ const prettyProjection = (shape) => {
   const camera = new ProjectionCamera(corner).lookAt(center);
   const { visible, hidden } = drawProjection(shape, camera);
 
-  return visible;
+  return { visible, hidden };
 };
 
 function generateThumbnail(inputID) {
   return started.then(() => {
     let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
     let projectionShape = prettyProjection(fusedGeometry);
-    let svg = projectionShape.toSVG();
-    //var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    let svg = projectionShape.visible.toSVG();
+    //let hiddenSvg = projectionShape.hidden.toSVGPaths();
+
     return svg;
   });
 }
