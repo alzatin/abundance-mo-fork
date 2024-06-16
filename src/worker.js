@@ -358,7 +358,7 @@ function output(targetID, inputID) {
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
     } else {
-      throw new Error("Nothing is connected to the atom");
+      throw new Error("Nothing is connected to the output");
     }
 
     return true;
@@ -419,6 +419,7 @@ function visExport(targetID, inputID, fileType) {
     let finalGeometry;
     if (fileType == "SVG") {
       /** Fuses input geometry, draws a top view projection*/
+      console.log(fusedGeometry);
       finalGeometry = [drawProjection(fusedGeometry, "top").visible];
     } else {
       finalGeometry = [fusedGeometry];
@@ -486,15 +487,25 @@ const prettyProjection = (shape) => {
 function generateThumbnail(inputID) {
   return started.then(() => {
     if (library[inputID] != undefined) {
-      let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-      let projectionShape = prettyProjection(fusedGeometry);
-      let svg = projectionShape.visible.toSVG();
+      let fusedGeometry;
+      let projectionShape;
+      let svg;
+      if (is3D(library[inputID])) {
+        fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+        projectionShape = prettyProjection(fusedGeometry);
+        svg = projectionShape.visible.toSVG();
+      } else {
+        fusedGeometry = flattenAndFuse(library[inputID])
+          .sketchOnPlane("XY")
+          .extrude(0.0001);
+        projectionShape = drawProjection(fusedGeometry, "top").visible;
+        svg = projectionShape.toSVG();
+      }
       //let hiddenSvg = projectionShape.hidden.toSVGPaths();
+      return svg;
     } else {
-      throw new Error("can't generate svg for 2D geometry");
+      throw new Error("can't generate thumbnail for undefined geometry");
     }
-
-    return svg;
   });
 }
 
