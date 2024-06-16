@@ -812,7 +812,6 @@ function flattenAssembly(assembly) {
 }
 
 function chainFuse(chain) {
-  console.log(chain);
   let fused = chain[0].clone();
   for (let i = 1; i < chain.length; i++) {
     fused = fused.fuse(chain[i]);
