@@ -234,8 +234,17 @@ function CreateMode(props) {
    */
   const saveProject = async (setState) => {
     setState(5);
-    let finalSVG =
-      await GlobalVariables.topLevelMolecule.generateProjectThumbnail();
+    let finalSVG;
+
+    GlobalVariables.topLevelMolecule
+      .generateProjectThumbnail()
+      .then((result) => {
+        finalSVG = result;
+      })
+      .catch((error) => {
+        console.error("Error generating project thumbnail: ", error);
+      });
+
     var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
     jsonRepOfProject.filetypeVersion = 1;
     const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
@@ -303,7 +312,7 @@ function CreateMode(props) {
             files: {
               "BillOfMaterials.md": bomContent,
               "README.md": readmeContent,
-              "project.svg": finalSVG,
+              "project.svg": finalSVG ? finalSVG : "",
               "project.abundance": projectContent,
             },
             commit: "Autosave",

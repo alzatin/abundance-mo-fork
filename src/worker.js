@@ -485,10 +485,14 @@ const prettyProjection = (shape) => {
 
 function generateThumbnail(inputID) {
   return started.then(() => {
-    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-    let projectionShape = prettyProjection(fusedGeometry);
-    let svg = projectionShape.visible.toSVG();
-    //let hiddenSvg = projectionShape.hidden.toSVGPaths();
+    if (library[inputID] != undefined) {
+      let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+      let projectionShape = prettyProjection(fusedGeometry);
+      let svg = projectionShape.visible.toSVG();
+      //let hiddenSvg = projectionShape.hidden.toSVGPaths();
+    } else {
+      throw new Error("can't generate svg for 2D geometry");
+    }
 
     return svg;
   });
@@ -797,6 +801,7 @@ function flattenAssembly(assembly) {
 }
 
 function chainFuse(chain) {
+  console.log(chain);
   let fused = chain[0].clone();
   for (let i = 1; i < chain.length; i++) {
     fused = fused.fuse(chain[i]);
