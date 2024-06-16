@@ -4,10 +4,7 @@
 to-do-fix
 
 now:
-    - import svg 
-    - import stp? 
-   - feat: thumbnails
-   - bug :need to change unit ratio because i can't quite zoom in into the piece
+    - broke code :()
     - BUG: make sure BOM is getting deleted if molecule gets recomputed/ recompile!
   
     - FEAT: Print object bounds option to let user know how big their object is?  
@@ -32,11 +29,8 @@ mid :
     - replicad packing? 
     - fix shortcut button
     - github search needs css help
-    - hull (in april? waiting for replicad)
     - tag drop downs for extract tag
     - github topic filter search
-    - BOM summary / fix inputs
-    - add labels to molecule
     - REDO login/browse to use link/reroute
     - allow filtering of projects
     - nest
