@@ -3,7 +3,7 @@ import Connector from "../prototypes/connector.js";
 import GlobalVariables from "../js/globalvariables.js";
 
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-//import saveAs from '../lib/FileSaver.js'
+import saveAs from "file-saver";
 
 /**
  * This class creates the Molecule atom.
@@ -293,6 +293,7 @@ export default class Molecule extends Atom {
     try {
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
+        this.generateProjectThumbnail(this.uniqueID);
         if (this.selected) {
           this.sendToRender();
         }
@@ -373,6 +374,18 @@ export default class Molecule extends Atom {
       }
 
       GlobalVariables.currentMolecule = GlobalVariables.currentMolecule.parent; //set parent this to be the currently displayed molecule
+    }
+  }
+
+  generateProjectThumbnail() {
+    //Generate a thumbnail for the project
+    try {
+      console.log("Generating thumbnail");
+      GlobalVariables.cad.generateThumbnail(this.uniqueID).then((result) => {
+        saveAs(result, GlobalVariables.currentMolecule.name + ".svg");
+      });
+    } catch (err) {
+      this.setAlert(err);
     }
   }
 
@@ -544,6 +557,7 @@ export default class Molecule extends Atom {
       });
   }
 
+  /** Gives new unique IDs to all atoms in a json object and remaps the connections with the attachment points */
   remapIDs(json) {
     let idPairs = {};
     if (json.allAtoms) {

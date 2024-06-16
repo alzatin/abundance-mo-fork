@@ -10,7 +10,7 @@ import {
   importSTEP,
   importSTL,
 } from "replicad";
-import { drawProjection } from "replicad";
+import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 
 var library = {};
@@ -381,6 +381,7 @@ function extractBomList(inputID, TAG) {
   let taggedBoms = [];
   taggedBoms = extractBoms(library[inputID], TAG);
   if (taggedBoms != false) {
+    console.log(taggedBoms);
     return [...taggedBoms];
   }
 }
@@ -466,6 +467,35 @@ async function importingSTL(targetID, file) {
     color: "#FF9065",
   };
   return true;
+}
+
+const prettyProjection = (shape) => {
+  const bbox = shape.boundingBox;
+  const center = bbox.center;
+  const corner = [
+    bbox.center[0] + bbox.width,
+    bbox.center[1] - bbox.height,
+    bbox.center[2] + bbox.depth,
+  ];
+  const camera = new ProjectionCamera(corner).lookAt(center);
+  const { visible, hidden } = drawProjection(shape, camera);
+
+  return visible;
+};
+
+function generateThumbnail(inputID) {
+  return started.then(() => {
+    console.log("in worker");
+    console.log(library[inputID]);
+    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+
+    let projectionShape = prettyProjection(fusedGeometry);
+    console.log(projectionShape);
+    let svg = projectionShape.toSVG();
+    console.log(svg);
+    var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    return blob;
+  });
 }
 
 // Functions like Extracttags() but takes color as input
@@ -899,6 +929,7 @@ expose({
   extrude,
   fusion,
   extractBomList,
+  generateThumbnail,
   visExport,
   downExport,
   shrinkWrapSketches,
