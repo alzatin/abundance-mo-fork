@@ -485,16 +485,11 @@ const prettyProjection = (shape) => {
 
 function generateThumbnail(inputID) {
   return started.then(() => {
-    console.log("in worker");
-    console.log(library[inputID]);
     let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
-
     let projectionShape = prettyProjection(fusedGeometry);
-    console.log(projectionShape);
     let svg = projectionShape.toSVG();
-    console.log(svg);
-    var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
-    return blob;
+    //var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    return svg;
   });
 }
 

@@ -293,7 +293,6 @@ export default class Molecule extends Atom {
     try {
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
-        this.generateProjectThumbnail(this.uniqueID);
         if (this.selected) {
           this.sendToRender();
         }
@@ -377,16 +376,9 @@ export default class Molecule extends Atom {
     }
   }
 
-  generateProjectThumbnail() {
+  async generateProjectThumbnail() {
     //Generate a thumbnail for the project
-    try {
-      console.log("Generating thumbnail");
-      GlobalVariables.cad.generateThumbnail(this.uniqueID).then((result) => {
-        saveAs(result, GlobalVariables.currentMolecule.name + ".svg");
-      });
-    } catch (err) {
-      this.setAlert(err);
-    }
+    return GlobalVariables.cad.generateThumbnail(this.uniqueID);
   }
 
   /**
