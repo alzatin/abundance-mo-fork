@@ -266,7 +266,7 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
   serialize(values) {
     //Save the readme text to the serial stream
     var valuesObj = super.serialize(values);
-
+    valuesObj.codeVersion = 1;
     valuesObj.code = this.code;
 
     return valuesObj;
