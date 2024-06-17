@@ -34,7 +34,39 @@ export default class Code extends Atom {
      * @type {string}
      */
     this.code =
-      "//Inputs:[Input1, Input2];\n\n\nreturn [drawRectangle(5,10)]\n//what you return should be a replicad geometry\n\n//Learn more about all of the available methods at \n //https://replicad.xyz/docs/introapp/UserGuide.html \n";
+      "\
+//Inputs:[input1, height];\n\
+\n\
+let shape = drawRectangle(5,7)\n\
+\n\
+const newPlane = new Plane().pivot(0, 'Y');\n\
+\n\
+ return { geometry: [shape.sketchOnPlane(newPlane).extrude(7)], tags: [],\n\
+      color: '#A3CE5B',\n\
+      plane: newPlane}\n\
+\n\
+\n\
+    /**\n\
+    To Use the Code Atom, enter your inputs to the input list a.e Inputs:[shape, height]\n\
+    If your input is connected to another atom with a replicad geometry you can access its geometry by looking up its ID in your library. a.e library[Input1].geometry[0] \n\
+    Use any replicad available methods to modify your geometry. Learn more about all of the available methods at \n\
+    https://replicad.xyz/docs/introapp/UserGuide.html \n\
+    Return a replicad object that includes geometry, color, tags and plane. \n\
+\n\
+\n\
+    Example Code Atom:\n\
+\n\
+      Inputs:[shape, x];\n\
+\n\
+      let finalShape = library[shape].geometry[0].clone.translate[x,0,0]\n\
+\n\
+      return {geometry: finalShape, color: library[shape].color, plane: library[shape].plane, tags: library[shape].tags }\n\
+\n\
+      - See more examples at _______ \n\
+\n\
+\n\
+    */\n\
+";
 
     this.addIO("output", "geometry", this, "geometry", "");
 
@@ -104,6 +136,8 @@ export default class Code extends Atom {
         };
       });
       inputParams["Edit Code"] = button(() => this.editCode());
+      inputParams["Save Code"] = button(() => this.saveCode());
+      inputParams["Close Editor"] = button(() => this.closeCode());
       return inputParams;
     }
   }
@@ -114,6 +148,7 @@ export default class Code extends Atom {
   updateCode(code) {
     this.code = code;
     this.updateValue();
+    this.sendToRender();
   }
 
   /**
@@ -210,12 +245,28 @@ export default class Code extends Atom {
   }
 
   /**
+   * Called to trigger editing the code atom
+   */
+  saveCode() {
+    const saveCodeButton = document.getElementById("save-code-button");
+    saveCodeButton.click();
+  }
+
+  /**
+   * Called to trigger editing the code atom
+   */
+  closeCode() {
+    const closeCodeButton = document.getElementById("close-code-button");
+    closeCodeButton.click();
+  }
+
+  /**
    * Save the input code to be loaded next time
    */
   serialize(values) {
     //Save the readme text to the serial stream
     var valuesObj = super.serialize(values);
-
+    valuesObj.codeVersion = 1;
     valuesObj.code = this.code;
 
     return valuesObj;

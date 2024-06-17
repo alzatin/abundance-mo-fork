@@ -59,12 +59,31 @@
   cursor: pointer;
 }
 
+/*Code window instance scrollers*/
+.cm-scroller {
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll;
+}
+
+.cm-scroller::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
+
+.cm-theme-dark {
+  height: 100%;
+}
+
+.cm-editor {
+  height: inherit;
+}
+
 .code-window-div {
-  width: 80%;
+  flex: 1; /* expand to the maximum */
+  height: 46%;
+  width: 100%;
   z-index: 5;
-  top: 30%;
   position: absolute;
-  left: 20%;
 }
 
 .export-div {

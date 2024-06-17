@@ -28,21 +28,28 @@ export default function CodeWindow(props) {
   return (
     <div id="code-window" className=" code-off login-page code-window-div">
       <ReactCodeEditor
-        width="600px"
-        height="300px"
+        width="100%"
         extensions={extensions}
         value={docvalue}
         onChange={(value) => {
           setdocValue(value);
         }}
+        theme={"dark"}
       />
       <button
         type="button"
         onClick={() => props.activeAtom.updateCode(docvalue)}
+        style={{ display: "none" }}
+        id="save-code-button"
       >
         Save Code
       </button>
-      <button type="button" onClick={() => closeEditor()}>
+      <button
+        type="button"
+        style={{ display: "none" }}
+        id="close-code-button"
+        onClick={() => closeEditor()}
+      >
         Close Editor
       </button>
     </div>
