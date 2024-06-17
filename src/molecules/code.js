@@ -146,6 +146,7 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
   updateCode(code) {
     this.code = code;
     this.updateValue();
+    this.sendToRender();
   }
 
   /**
