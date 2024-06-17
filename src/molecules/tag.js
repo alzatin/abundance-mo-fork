@@ -37,6 +37,7 @@ export default class Tag extends Atom {
      */
     this.description = "Tags geometry so that it can be extracted later.";
 
+    /** Array of tags for this atom */
     this.tags = [""];
 
     /** Flag for cutlist tag */
@@ -74,6 +75,15 @@ export default class Tag extends Atom {
     return this.cutTag;
   }
 
+  addTagsToAvailableTags() {
+    let newProjectTags = Array.from(
+      new Set(
+        GlobalVariables.topLevelMolecule.projectAvailableTags.concat(this.tags)
+      )
+    );
+    GlobalVariables.topLevelMolecule.projectAvailableTags = newProjectTags;
+  }
+
   createLevaInputs() {
     let inputParams = {};
 
@@ -96,7 +106,7 @@ export default class Tag extends Atom {
     };
     inputParams[this.uniqueID + "custom_string"] = {
       value: this.tags.filter((e) => e !== "cutLayout")[0],
-      label: "Tag",
+      label: "Add Tag",
       disabled: false,
       onChange: (value) => {
         this.tags = this.cutTag ? ["cutLayout"] : [];
@@ -115,7 +125,7 @@ export default class Tag extends Atom {
     try {
       var inputID = this.findIOValue("geometry");
       var tags = this.tags;
-
+      this.addTagsToAvailableTags();
       GlobalVariables.cad.tag(this.uniqueID, inputID, tags).then(() => {
         this.basicThreadValueProcessing();
       });
@@ -129,5 +139,16 @@ export default class Tag extends Atom {
   sendToRender() {
     // do nothing
     console.log("tag has nothing to render");
+  }
+
+  /**
+   * Add the file name to the object which is saved for this molecule
+   */
+  serialize() {
+    var superSerialObject = super.serialize();
+    superSerialObject.tags = this.tags;
+    superSerialObject.cutTag = this.cutTag;
+
+    return superSerialObject;
   }
 }

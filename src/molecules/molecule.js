@@ -90,6 +90,12 @@ export default class Molecule extends Atom {
      */
     this.BOMlist;
 
+    /**
+     * List of all available tags in project.
+     * @type {array}
+     */
+    this.projectAvailableTags = [];
+
     this.setValues(values);
   }
 
