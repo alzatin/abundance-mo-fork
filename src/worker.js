@@ -673,8 +673,11 @@ function assembly(targetID, inputIDs) {
   return started.then(() => {
     let assembly = [];
     if (inputIDs.length > 1) {
-      /** Check if all inputs are solids */
-      if (inputIDs.every((inputID) => is3D(library[inputID]))) {
+      /** Check if all inputs are solid or sketches */
+      if (
+        inputIDs.every((inputID) => is3D(library[inputID])) ||
+        inputIDs.every((inputID) => !is3D(library[inputID]))
+      ) {
         for (let i = 0; i < inputIDs.length; i++) {
           assembly.push(
             cutAssembly(
@@ -684,10 +687,6 @@ function assembly(targetID, inputIDs) {
               i
             )
           );
-        }
-      } else if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
-        for (let i = 0; i < inputIDs.length; i++) {
-          assembly.push(library[inputIDs[i]]);
         }
       } else {
         throw new Error(
@@ -699,6 +698,31 @@ function assembly(targetID, inputIDs) {
     }
     const newPlane = new Plane().pivot(0, "Y");
     library[targetID] = { geometry: assembly, tags: [], plane: newPlane };
+    return true;
+  });
+}
+
+function fusion(targetID, inputIDs) {
+  return started.then(() => {
+    let fusedGeometry = [];
+    inputIDs.forEach((inputID) => {
+      if (inputIDs.every((inputID) => is3D(library[inputID]))) {
+        fusedGeometry.push(flattenRemove2DandFuse(library[inputID]));
+      } else if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
+        fusedGeometry.push(flattenAndFuse(library[inputID]));
+      } else {
+        throw new Error(
+          "Fusion must be composed from only sketches OR only solids"
+        );
+      }
+    });
+    const newPlane = new Plane().pivot(0, "Y");
+    library[targetID] = {
+      geometry: [chainFuse(fusedGeometry)],
+      tags: [],
+      plane: newPlane,
+      color: "#FF9065",
+    };
     return true;
   });
 }
@@ -873,6 +897,7 @@ expose({
   rectangle,
   generateDisplayMesh,
   extrude,
+  fusion,
   extractBomList,
   visExport,
   downExport,

@@ -1,5 +1,5 @@
 import { create, all } from "mathjs";
-import Assembly from "../molecules/assembly.js";
+import Join from "../molecules/join.js";
 import Circle from "../molecules/circle.js";
 import Color from "../molecules/color.js";
 import CutLayout from "../molecules/cutlayout.js";
@@ -63,12 +63,11 @@ class GlobalVariables {
         atomType: "Difference",
         atomCategory: "Interactions",
       },
-      assembly: {
-        creator: Assembly,
-        atomType: "Assembly",
+      union: {
+        creator: Join,
+        atomType: "Join",
         atomCategory: "Interactions",
       },
-      union: { creator: Group, atomType: "Union", atomCategory: "None" },
       group: { creator: Group, atomType: "Group", atomCategory: "None" },
       loft: {
         creator: Loft,
