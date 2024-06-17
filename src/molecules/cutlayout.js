@@ -33,13 +33,10 @@ export default class CutLayout extends Atom {
      * @type {string}
      */
     this.description =
-      "Extracts all of the parts tagged for layout and lays them out on a sheet to cut.";
+      "Extracts all parts tagged for cutting and lays them out on a sheet to cut.";
 
     this.addIO("input", "geometry", this, "geometry", null);
-
-    this.addIO("input", "Spacing", this, "number", 5);
-    //this.addIO('input', 'Sheet Width', this, 'number', 50)
-    //this.addIO('input', 'Sheet Length', this, 'number', 50)
+    this.addIO("input", "Material Thickness", this, "number", "");  
     this.addIO("output", "geometry", this, "geometry", "");
 
     this.setValues(values);
@@ -102,18 +99,23 @@ export default class CutLayout extends Atom {
    * Pass the input geometry to a worker function to compute the translation.
    */
   updateValue() {
-    try {
-      var inputID = this.findIOValue("geometry");
-      var tag = "cutLayout";
-      var spacing = this.findIOValue("Spacing");
+    var inputID = this.findIOValue("geometry");
+    var materialThickness = this.findIOValue("Material Thickness");
+    var tag = "cutLayout";
 
-      GlobalVariables.cad
-        .layout(this.uniqueID, inputID, tag, spacing)
-        .then(() => {
-          this.basicThreadValueProcessing();
-        });
-    } catch (err) {
-      this.setAlert(err);
+    if (!inputID) {
+      this.setAlert("\"geometry\" input is missing");
+      return;
     }
+    if (!materialThickness) {
+      this.setAlert("\"Material Thickness\" input is missing");
+      return;
+    }
+
+    GlobalVariables.cad
+      .layout(this.uniqueID, inputID, tag, materialThickness)
+      .then(() => {
+        this.basicThreadValueProcessing();
+      }).catch(this.alertingErrorHandler());
   }
 }

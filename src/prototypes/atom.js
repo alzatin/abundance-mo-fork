@@ -318,13 +318,25 @@ export default class Atom {
   }
 
   /**
+   * Returns an error handler function usable with Promise.catch.
+   * Prints the stack trace of a thrown error in the console and sets
+   * an alert on this atom with the message of the error.
+   * @returns 
+   */
+  alertingErrorHandler() {
+    return (err) => {
+      console.log(err);
+      this.setAlert(err.message);
+    }
+  }
+
+  /**
    * Set an alert to display next to the atom.
    * @param {string} message - The message to display.
    */
   setAlert(message) {
     this.color = "orange";
     this.alertMessage = String(message);
-    console.warn(message);
   }
 
   /**
