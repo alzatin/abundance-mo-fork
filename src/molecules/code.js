@@ -136,6 +136,8 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
         };
       });
       inputParams["Edit Code"] = button(() => this.editCode());
+      inputParams["Save Code"] = button(() => this.saveCode());
+      inputParams["Close Editor"] = button(() => this.closeCode());
       return inputParams;
     }
   }
@@ -145,6 +147,7 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
    */
   updateCode(code) {
     this.code = code;
+    console.log(code);
     this.updateValue();
     this.sendToRender();
   }
@@ -240,6 +243,22 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
   editCode() {
     const codeWindow = document.getElementById("code-window");
     codeWindow.classList.remove("code-off");
+  }
+
+  /**
+   * Called to trigger editing the code atom
+   */
+  saveCode() {
+    const saveCodeButton = document.getElementById("save-code-button");
+    saveCodeButton.click();
+  }
+
+  /**
+   * Called to trigger editing the code atom
+   */
+  closeCode() {
+    const closeCodeButton = document.getElementById("close-code-button");
+    closeCodeButton.click();
   }
 
   /**
