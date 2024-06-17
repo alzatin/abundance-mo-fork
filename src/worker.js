@@ -7,6 +7,7 @@ import {
   drawRectangle,
   drawPolysides,
   Plane,
+  Vector,
   importSTEP,
   importSTL,
 } from "replicad";
@@ -410,8 +411,8 @@ function visExport(targetID, inputID, fileType) {
       fileType == "STL"
         ? "#91C8D5"
         : fileType == "STEP"
-        ? "#ACAFDD"
-        : "#3C3C3C";
+          ? "#ACAFDD"
+          : "#3C3C3C";
     let finalGeometry;
     if (fileType == "SVG") {
       /** Fuses input geometry, draws a top view projection*/
@@ -561,71 +562,97 @@ function extractTags(inputGeometry, TAG) {
   }
 }
 
-function layout(targetID, inputID, TAG, spacing) {
+function layout(targetID, inputID, TAG, materialThickness) {
   return started.then(() => {
+    var THICKNESS_TOLLERANCE = 0.001;
+
     let taggedGeometry = extractTags(library[inputID], TAG);
-    let shapenum = 0;
+    if (!taggedGeometry) {
+      throw new Error("No Upstream Geometries Tagged for Cut");
+    }
+
+    // a temporary solution to ensure shapes don't overlap. This is not an
+    // efficient packing algorithm.
+    let lateralOffset = 0;
+
+    // Rotate all shapes to be most cuttable.
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
-      shapenum++;
-      /** Angle to rotate in x and y plane */
-      let rotatiX = 0;
-      let rotatiY = 0;
-      /** Objects with angle height pairs in x and y plane */
-      let heightAngleX = [];
-      let heightAngleY = [];
-      /** Sorts through key value pairs and returns pair with min value */
-      const maxMinVal = (obj) => {
-        const sortedEntriesByVal = Object.entries(obj).sort(
-          ([, v1], [, v2]) => v1 - v2
-        );
-        return sortedEntriesByVal[0];
-      };
-      /** Checks for lowest possible height by rotating on x */
-      for (let i = 0; i > -90; i--) {
-        heightAngleX[i] = leaf.geometry[0]
-          .clone()
-          .rotate(i, [0, 0, 0], [1, 0, 0]).boundingBox.depth;
+      // For each face, consider it as the underside of the shape on the CNC bed.
+      // In order to be considered, a face must be...
+      //  1) a flat PLANE, not a cylander, or sphere or other curved face type.
+      //  2) the thickness of the part normal to this plane must be less than or equal to
+      //     the raw material thickness
+      //  3) there must be no parts of the shape which protrude "below" this face
+      let candidates = [];
+      let hasFlatFace = false;
+      leaf.geometry[0].faces.forEach((face) => {
+        if (face.geomType == "PLANE") {
+          hasFlatFace = true;
+          let prospectiveGoem = moveFaceToCuttingPlane(leaf.geometry[0], face);
+          let thickness = prospectiveGoem.boundingBox.depth;
+          if (thickness < materialThickness + THICKNESS_TOLLERANCE) {
+            // Check for protrusions "below" the bottom of the raw material.
+            if (prospectiveGoem.boundingBox.bounds[0][2] > -1 * THICKNESS_TOLLERANCE) {
+              candidates.push({
+                face: face,
+                geom: prospectiveGoem,
+              });
+            }
+          }
+        }
+      });
+
+      let selected;
+      if (candidates.length == 0) {
+        if (!hasFlatFace) {
+          // TODO: how to specify which upstream object? We know which leaf we're dealing with here
+          // but I'm not sure how to back-track that to alerting on the relevant atom or
+          // providing a user visible indication of which geom is the problem.
+          throw new Error("Upstream object uncuttable, has no flat face");
+        } else {
+          throw new Error("Upstream object too thick for specified material");
+        }
+      } else if (candidates.length == 1) {
+        selected = candidates[0];
+      } else {
+        // The candidate selection here doesn't guarantee a printable piece. In particular there
+        // are shapes with overhangs which we cannot easily detect.
+        // These tie-break heuristics are designed to usually pick a printable orientation for
+        // this piece. (TODO) However, we should consider allowing user-modification of these
+        // orientations before the packing stage.
+
+        // Filter out faces with extra interiorWires, as these may indicate carve-outs which will
+        // be unreachable on the underside of the sheet.
+        let minInteriorWires = Math.min(...candidates.map((c) => { return c.face.clone().innerWires().length; }));
+        candidates = candidates.filter((c) => { return c.face.clone().innerWires().length === minInteriorWires });
+        if (candidates.length === 1) {
+          selected = candidates[0];
+        }
+
+        // prefer candidates whose thickness is equal to material thickness, if any.
+        let temp = candidates.filter((c) => {
+          return Math.abs(c.geom.boundingBox.depth - materialThickness) < THICKNESS_TOLLERANCE;
+        });
+        if (temp.length > 0) {
+          candidates = temp;
+        }
+
+        // Pick the largest of the remaining candidates (note: it's not trivial to calculate area, so here we
+        // just compare bounding boxes)
+        let maxArea = 0;
+        candidates.forEach((c) => {
+          if (areaApprox(c.face.UVBounds) > maxArea) {
+            maxArea = areaApprox(c.face.UVBounds);
+            selected = c;
+          }
+        });
       }
 
-      rotatiX = Number(maxMinVal(heightAngleX)[0]);
+      let newGeom = selected.geom.clone().translate(lateralOffset, 0, 0);
+      lateralOffset += newGeom.boundingBox.width;
 
-      /** Checks for lowest possible height by rotating on x and then on y*/
-
-      for (let i = 0; i > -90; i--) {
-        heightAngleY[i] = leaf.geometry[0]
-          .clone()
-          .rotate(rotatiX, [0, 0, 0], [1, 0, 0])
-          .rotate(i, [0, 0, 0], [0, 1, 0]).boundingBox.depth;
-      }
-      rotatiY = Number(maxMinVal(heightAngleY)[0]);
-
-      // Finding how much to move the geometry to center at the origin
-      let movex =
-        (leaf.geometry[0].boundingBox.bounds[0][0] +
-          leaf.geometry[0].boundingBox.bounds[1][0]) /
-        2;
-      let movey =
-        (leaf.geometry[0].boundingBox.bounds[0][1] +
-          leaf.geometry[0].boundingBox.bounds[1][1]) /
-        2;
-      let movez =
-        (leaf.geometry[0].boundingBox.bounds[0][2] +
-          leaf.geometry[0].boundingBox.bounds[1][2]) /
-        2;
-      // Geometry centered at origin xyz
-      let alteredGeometry = leaf.geometry[0]
-        .clone()
-        .translate(-movex, -movey, -movez);
-
-      /** Returns rotated geometry */
       return {
-        geometry: [
-          alteredGeometry
-            .clone()
-            .rotate(rotatiX, alteredGeometry.boundingBox.center, [1, 0, 0])
-            .rotate(rotatiY, alteredGeometry.boundingBox.center, [0, 1, 0])
-            .translate(shapenum * spacing, 0, 0),
-        ],
+        geometry: [newGeom],
         tags: leaf.tags,
         color: leaf.color,
         plane: leaf.plane,
@@ -633,6 +660,34 @@ function layout(targetID, inputID, TAG, spacing) {
     });
     return true;
   });
+}
+
+function moveFaceToCuttingPlane(geom, face) {
+  let pointOnSurface = face.pointOnSurface(0, 0);
+  let faceNormal = face.normalAt();
+
+  // Always use "XY" plane as the cutting surface
+  // TODO(tristan): there's an inversion here I don't fully understand, hence using the negative Z vector.
+  let cutPlaneNormal = new Vector([0, 0, -1]);
+
+  let rotationAxis = faceNormal.cross(cutPlaneNormal);
+  if (rotationAxis.Length == 0) {
+    // Face already parallel to cut plane, no rotation necessary.
+    return geom.clone().translate(0, 0, -1 * pointOnSurface.z);
+  }
+
+  let rotationDegrees = Math.acos(faceNormal.dot(cutPlaneNormal) / (cutPlaneNormal.Length * faceNormal.Length))
+    * 360 / (2 * Math.PI);
+
+  return geom.clone().rotate(
+    rotationDegrees,
+    pointOnSurface,
+    rotationAxis
+  ).translate(0, 0, -1 * pointOnSurface.z);
+}
+
+function areaApprox(bounds) {
+  return (bounds.uMax - bounds.uMin) * (bounds.vMax - bounds.vMin);
 }
 
 // Checks if part is an assembly)
