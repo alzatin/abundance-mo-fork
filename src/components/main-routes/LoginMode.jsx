@@ -226,7 +226,19 @@ const ShowProjects = (props) => {
           >
             {node.name}
           </p>
-          <img className="project_image" src="/imgs/defaultThumbnail.svg"></img>
+          <img
+            className="project_image"
+            src={
+              "https://raw.githubusercontent.com/" +
+              node.full_name +
+              "/master/project.svg?sanitize=true"
+            }
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = "/imgs/defaultThumbnail.svg";
+            }}
+            alt={node.name}
+          ></img>
           <div style={{ display: "inline" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

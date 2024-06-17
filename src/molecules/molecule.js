@@ -3,7 +3,7 @@ import Connector from "../prototypes/connector.js";
 import GlobalVariables from "../js/globalvariables.js";
 
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-//import saveAs from '../lib/FileSaver.js'
+import saveAs from "file-saver";
 
 /**
  * This class creates the Molecule atom.
@@ -376,6 +376,11 @@ export default class Molecule extends Atom {
     }
   }
 
+  async generateProjectThumbnail() {
+    //Generate a thumbnail for the project
+    return GlobalVariables.cad.generateThumbnail(this.uniqueID);
+  }
+
   /**
    * Check to see if any of this molecules children have contributions to make to the README file. Children closer to the top left will be applied first. TODO: No contribution should be made if it's just a title.
    */
@@ -544,6 +549,7 @@ export default class Molecule extends Atom {
       });
   }
 
+  /** Gives new unique IDs to all atoms in a json object and remaps the connections with the attachment points */
   remapIDs(json) {
     let idPairs = {};
     if (json.allAtoms) {
