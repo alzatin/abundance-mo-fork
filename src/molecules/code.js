@@ -34,7 +34,19 @@ export default class Code extends Atom {
      * @type {string}
      */
     this.code =
-      "//Inputs:[Input1, Input2];\n\n\nreturn [drawRectangle(5,10)]\n//what you return should be a replicad geometry\n\n//Learn more about all of the available methods at \n //https://replicad.xyz/docs/introapp/UserGuide.html \n";
+      "//Inputs:[Input1, Input2];\n\n return [drawRectangle(5,10)]\n\n\n\n\
+    /**\n\
+    To Use the Code Atom, enter your inputs to the input list a.e Inputs:[shape, height]\n\
+    If your input is connected to another atom with a replicad geometry you can access its geometry by looking up its ID in your library. a.e library[Input1].geometry[0] \n\
+    Use any replicad available methods to modify your geometry. Learn more about all of the available methods at \n\
+    https://replicad.xyz/docs/introapp/UserGuide.html \n\
+    Return a replicad geometry. \n\n\n\
+    Example Code Atom:\n\n\
+      Inputs:[shape, x];\n\n\
+      let finalShape = library[shape].geometry[0].clone.translate[x,0,0]\n\n\
+      return finalShape\n\n\
+      - See more examples at _______ \n\n\n\
+    */";
 
     this.addIO("output", "geometry", this, "geometry", "");
 
