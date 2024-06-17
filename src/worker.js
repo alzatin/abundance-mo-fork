@@ -302,12 +302,7 @@ function code(targetID, code, argumentsArray) {
     console.log(result);
     const newPlane = new Plane().pivot(0, "Y");
 
-    library[targetID] = {
-      geometry: result,
-      tags: [],
-      color: "#FF9065",
-      plane: newPlane,
-    };
+    library[targetID] = result;
 
     return true;
   });
