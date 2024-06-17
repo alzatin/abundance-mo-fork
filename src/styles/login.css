@@ -71,7 +71,7 @@
 }
 
 .cm-theme-dark {
-  height: 68%;
+  height: 100%;
 }
 
 .cm-editor {
@@ -80,7 +80,7 @@
 
 .code-window-div {
   flex: 1; /* expand to the maximum */
-  height: 100%;
+  height: 46%;
   width: 100%;
   z-index: 5;
   position: absolute;
