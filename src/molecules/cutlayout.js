@@ -36,7 +36,8 @@ export default class CutLayout extends Atom {
       "Extracts all parts tagged for cutting and lays them out on a sheet to cut.";
 
     this.addIO("input", "geometry", this, "geometry", null);
-    this.addIO("input", "Material Thickness", this, "number", "");  
+    this.addIO("input", "Material Thickness", this, "number",
+      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 19 : .75);
     this.addIO("output", "geometry", this, "geometry", "");
 
     this.setValues(values);
@@ -105,10 +106,6 @@ export default class CutLayout extends Atom {
 
     if (!inputID) {
       this.setAlert("\"geometry\" input is missing");
-      return;
-    }
-    if (!materialThickness) {
-      this.setAlert("\"Material Thickness\" input is missing");
       return;
     }
 

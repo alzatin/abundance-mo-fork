@@ -82,6 +82,7 @@ const NewProjectPopUp = (props) => {
         name: name,
         atomType: "Molecule",
         uniqueID: GlobalVariables.generateUniqueID(),
+        unitsIndex: units,
       });
     }
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
