@@ -191,7 +191,9 @@ export default class Input extends Atom {
       label: "Input Name",
       disabled: false,
       onChange: (value) => {
-        this.name = value;
+        if (this.name !== value) {
+          this.name = value;
+        }
       },
     };
     return inputNames;

@@ -89,9 +89,11 @@ export default class ExtractTag extends Atom {
       label: "Extract Tag",
       onChange: (value) => {
         this.tagIndex = tagOptions.indexOf(value);
-        this.tag = tagOptions[this.tagIndex];
-        this.updateValue();
-        this.sendToRender();
+        if (this.tag != tagOptions[this.tagIndex]) {
+          this.tag = tagOptions[this.tagIndex];
+          this.updateValue();
+          this.sendToRender();
+        }
       },
     };
     return inputParams;

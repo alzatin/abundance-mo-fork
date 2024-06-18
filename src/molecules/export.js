@@ -96,8 +96,10 @@ export default class Export extends Atom {
       label: "File Type",
       onChange: (value) => {
         this.importIndex = importOptions.indexOf(value);
-        this.type = importOptions[this.importIndex];
-        this.updateValue();
+        if (this.type != importOptions[this.importIndex]) {
+          this.type = importOptions[this.importIndex];
+          this.updateValue();
+        }
       },
     };
     inputParams["Download File"] = button(() =>

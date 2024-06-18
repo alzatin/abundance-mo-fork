@@ -91,16 +91,18 @@ export default class Tag extends Atom {
       value: this.cutTag,
       label: "Cut List Tag",
       onChange: (value) => {
-        if (value === true) {
-          this.cutTag = true;
-          this.tags.push("cutLayout");
-          this.name = this.tags.toString();
-          this.updateValue();
-        } else {
-          this.cutTag = false;
-          this.tags = this.tags.filter((e) => e !== "cutLayout");
-          this.name = this.tags.toString();
-          this.updateValue();
+        if (this.cutTag !== value) {
+          if (value === true) {
+            this.cutTag = true;
+            this.tags.push("cutLayout");
+            this.name = this.tags.toString();
+            this.updateValue();
+          } else {
+            this.cutTag = false;
+            this.tags = this.tags.filter((e) => e !== "cutLayout");
+            this.name = this.tags.toString();
+            this.updateValue();
+          }
         }
       },
     };
