@@ -91,16 +91,17 @@ const ShowProjects = (props) => {
       query = searchBarValue + " topic:abundance-project";
     } else {
       query =
-        searchBarValue + " user:" + props.user + " topic:abundance-project";
+        searchBarValue +
+        " user:" +
+        props.user +
+        " topic:abundance-project" +
+        " fork:true";
+      //query = " user:alzatin" + " topic:abundance-project";
     }
     octokit = new Octokit();
-    octokit
-      .request("GET /search/repositories", {
+    octokit.rest.search
+      .repos({
         q: query,
-        per_page: 50,
-        headers: {
-          accept: "application/vnd.github.mercy-preview+json",
-        },
       })
       .then((result) => {
         var userRepos = [];
