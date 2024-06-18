@@ -300,7 +300,6 @@ function code(targetID, code, argumentsArray) {
     var result = eval(
       "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
     );
-    console.log(result);
     const newPlane = new Plane().pivot(0, "Y");
 
     library[targetID] = result;
@@ -352,7 +351,6 @@ function extractTag(targetID, inputID, TAG) {
 
 function output(targetID, inputID) {
   return started.then(() => {
-    console.log(library[inputID]);
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
     } else {
@@ -364,7 +362,6 @@ function output(targetID, inputID) {
 }
 function molecule(targetID, inputID) {
   return started.then(() => {
-    console.log(library[inputID]);
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
     } else {
@@ -418,7 +415,6 @@ function visExport(targetID, inputID, fileType) {
     let finalGeometry;
     if (fileType == "SVG") {
       /** Fuses input geometry, draws a top view projection*/
-      console.log(fusedGeometry);
       finalGeometry = [drawProjection(fusedGeometry, "top").visible];
     } else {
       finalGeometry = [fusedGeometry];
