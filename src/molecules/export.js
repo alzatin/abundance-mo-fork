@@ -79,7 +79,9 @@ export default class Export extends Atom {
         .visExport(this.uniqueID, inputID, fileType)
         .then((result) => {
           this.basicThreadValueProcessing();
-          this.sendToRender();
+          if (this.selected) {
+            this.sendToRender();
+          }
         });
     } catch (err) {
       this.setAlert(err);
