@@ -352,6 +352,7 @@ function extractTag(targetID, inputID, TAG) {
 
 function output(targetID, inputID) {
   return started.then(() => {
+    console.log(library[inputID]);
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
     } else {
@@ -363,6 +364,7 @@ function output(targetID, inputID) {
 }
 function molecule(targetID, inputID) {
   return started.then(() => {
+    console.log(library[inputID]);
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
     } else {
@@ -411,8 +413,8 @@ function visExport(targetID, inputID, fileType) {
       fileType == "STL"
         ? "#91C8D5"
         : fileType == "STEP"
-          ? "#ACAFDD"
-          : "#3C3C3C";
+        ? "#ACAFDD"
+        : "#3C3C3C";
     let finalGeometry;
     if (fileType == "SVG") {
       /** Fuses input geometry, draws a top view projection*/
@@ -592,7 +594,10 @@ function layout(targetID, inputID, TAG, materialThickness) {
           let thickness = prospectiveGoem.boundingBox.depth;
           if (thickness < materialThickness + THICKNESS_TOLLERANCE) {
             // Check for protrusions "below" the bottom of the raw material.
-            if (prospectiveGoem.boundingBox.bounds[0][2] > -1 * THICKNESS_TOLLERANCE) {
+            if (
+              prospectiveGoem.boundingBox.bounds[0][2] >
+              -1 * THICKNESS_TOLLERANCE
+            ) {
               candidates.push({
                 face: face,
                 geom: prospectiveGoem,
@@ -623,15 +628,24 @@ function layout(targetID, inputID, TAG, materialThickness) {
 
         // Filter out faces with extra interiorWires, as these may indicate carve-outs which will
         // be unreachable on the underside of the sheet.
-        let minInteriorWires = Math.min(...candidates.map((c) => { return c.face.clone().innerWires().length; }));
-        candidates = candidates.filter((c) => { return c.face.clone().innerWires().length === minInteriorWires });
+        let minInteriorWires = Math.min(
+          ...candidates.map((c) => {
+            return c.face.clone().innerWires().length;
+          })
+        );
+        candidates = candidates.filter((c) => {
+          return c.face.clone().innerWires().length === minInteriorWires;
+        });
         if (candidates.length === 1) {
           selected = candidates[0];
         }
 
         // prefer candidates whose thickness is equal to material thickness, if any.
         let temp = candidates.filter((c) => {
-          return Math.abs(c.geom.boundingBox.depth - materialThickness) < THICKNESS_TOLLERANCE;
+          return (
+            Math.abs(c.geom.boundingBox.depth - materialThickness) <
+            THICKNESS_TOLLERANCE
+          );
         });
         if (temp.length > 0) {
           candidates = temp;
@@ -676,14 +690,18 @@ function moveFaceToCuttingPlane(geom, face) {
     return geom.clone().translate(0, 0, -1 * pointOnSurface.z);
   }
 
-  let rotationDegrees = Math.acos(faceNormal.dot(cutPlaneNormal) / (cutPlaneNormal.Length * faceNormal.Length))
-    * 360 / (2 * Math.PI);
+  let rotationDegrees =
+    (Math.acos(
+      faceNormal.dot(cutPlaneNormal) /
+        (cutPlaneNormal.Length * faceNormal.Length)
+    ) *
+      360) /
+    (2 * Math.PI);
 
-  return geom.clone().rotate(
-    rotationDegrees,
-    pointOnSurface,
-    rotationAxis
-  ).translate(0, 0, -1 * pointOnSurface.z);
+  return geom
+    .clone()
+    .rotate(rotationDegrees, pointOnSurface, rotationAxis)
+    .translate(0, 0, -1 * pointOnSurface.z);
 }
 
 function areaApprox(bounds) {
@@ -917,7 +935,9 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
-    console.log(library[id]);
+    if (library[id] == undefined) {
+      throw new Error("ID not found in library");
+    }
     // if there's a different plane than XY sketch there
     let sketchPlane = "XY";
     if (library[id].plane != undefined) {

@@ -50,17 +50,21 @@ export default function ReplicadApp() {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
 
-      cad.generateDisplayMesh(id).then((m) => {
-        setMesh(m);
-      });
+      cad
+        .generateDisplayMesh(id)
+        .then((m) => {
+          setMesh(m);
+        })
+        .catch((e) => {
+          console.error("Can't display Mesh " + e);
+        });
       // if something is connected to the output, set a wireframe mesh
-      if (typeof GlobalVariables.currentMolecule.output.value == "number") {
-        cad
-          .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
-          .then((w) => setWireMesh(w));
-      } else {
-        console.warn("no wire to display");
-      }
+      cad
+        .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
+        .then((w) => setWireMesh(w))
+        .catch((e) => {
+          console.error("Can't comput Wireframe/No output " + e);
+        });
     };
 
     GlobalVariables.cad = cad;

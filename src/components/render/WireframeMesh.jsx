@@ -16,9 +16,9 @@ export default React.memo(function ShapeMeshes({ mesh }) {
       // new data from the parameters
       if (m.edges) syncLines(wire, m.edges);
       else if (m.faces) syncLinesFromFaces(wire);
-
+      console.log(m);
       const thisLines = wire;
-      meshArray.push({ lines: thisLines });
+      meshArray.push({ lines: thisLines, color: m.color });
     });
     setFullMesh(meshArray);
     // We have configured the canvas to only refresh when there is a change,
