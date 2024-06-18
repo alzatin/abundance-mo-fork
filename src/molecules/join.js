@@ -122,24 +122,32 @@ export default class Join extends Atom {
 
   updateValue() {
     if (this.inputs.every((x) => x.ready)) {
-      try {
-        var inputValues = [];
-        this.inputs.forEach((io) => {
-          if (io.connectors.length > 0 && io.type == "input") {
-            inputValues.push(io.getValue());
-          }
-        });
-        if (this.unionType === "Fusion") {
-          GlobalVariables.cad.fusion(this.uniqueID, inputValues).then(() => {
-            this.basicThreadValueProcessing();
-          });
-        } else if (this.unionType === "Assembly") {
-          GlobalVariables.cad.assembly(this.uniqueID, inputValues).then(() => {
-            this.basicThreadValueProcessing();
-          });
+      var inputValues = [];
+      this.inputs.forEach((io) => {
+        if (io.connectors.length > 0 && io.type == "input") {
+          inputValues.push(io.getValue());
         }
-      } catch (err) {
-        this.setAlert(err);
+      });
+      if (this.unionType === "Fusion") {
+        GlobalVariables.cad
+          .fusion(this.uniqueID, inputValues)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          })
+          .catch((err) => {
+            console.error(err);
+            this.setAlert(err);
+          });
+      } else if (this.unionType === "Assembly") {
+        GlobalVariables.cad
+          .assembly(this.uniqueID, inputValues)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          })
+          .catch((err) => {
+            console.error(err);
+            this.setAlert(err);
+          });
       }
 
       //Delete or add ports as needed
@@ -183,6 +191,7 @@ export default class Join extends Atom {
     });
 
     thisAsObject.ioValues = ioValues;
+    thisAsObject.unionType = this.unionType;
 
     return thisAsObject;
   }
