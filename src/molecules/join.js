@@ -165,9 +165,11 @@ export default class Join extends Atom {
       label: "Union Type",
       onChange: (value) => {
         this.unionIndex = importOptions.indexOf(value);
-        this.unionType = importOptions[this.unionIndex];
-        this.name = this.unionType;
-        this.updateValue();
+        if (this.unionType !== importOptions[this.unionIndex]) {
+          this.unionType = importOptions[this.unionIndex];
+          this.name = this.unionType;
+          this.updateValue();
+        }
       },
     };
     return inputParams;

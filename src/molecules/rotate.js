@@ -89,9 +89,11 @@ export default class Rotate extends Atom {
             label: input.name,
             disabled: checkConnector(),
             onChange: (value) => {
-              input.setValue(value);
-              /** should we run updateValue too? */
-              this.sendToRender();
+              if (input.value !== value) {
+                input.setValue(value);
+                /** should we run updateValue too? */
+                this.sendToRender();
+              }
             },
           };
         }
@@ -110,7 +112,6 @@ export default class Rotate extends Atom {
       var y = this.findIOValue("y-axis degrees");
       var z = this.findIOValue("z-axis degrees");
       var pivot = this.findIOValue("pivot");
-
       GlobalVariables.cad
         .rotate(this.uniqueID, inputID, x, y, z, pivot)
         .then(() => {
