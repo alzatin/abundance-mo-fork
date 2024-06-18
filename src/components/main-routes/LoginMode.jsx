@@ -96,7 +96,6 @@ const ShowProjects = (props) => {
         props.user +
         " topic:abundance-project" +
         " fork:true";
-      //query = " user:alzatin" + " topic:abundance-project";
     }
     octokit = new Octokit();
     octokit.rest.search
