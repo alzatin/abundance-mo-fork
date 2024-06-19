@@ -312,7 +312,7 @@ function color(targetID, inputID, color) {
   return started.then(() => {
     library[targetID] = {
       geometry: library[inputID].geometry,
-      tags: [color, ...library[inputID].tags],
+      tags: [...library[inputID].tags],
       color: color,
       plane: library[inputID].plane,
     };
