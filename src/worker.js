@@ -936,6 +936,7 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
+    console.log(library[id]);
     if (library[id] == undefined) {
       throw new Error("ID not found in library");
     }
