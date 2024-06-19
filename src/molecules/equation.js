@@ -150,7 +150,9 @@ export default class Equation extends Atom {
           label: "Current Equation",
           disabled: false,
           onChange: (value) => {
-            this.setEquation(value);
+            if (this.currentEquation !== value) {
+              this.setEquation(value);
+            }
           },
         };
 

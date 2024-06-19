@@ -184,7 +184,7 @@ export default memo(function FlowCanvas(props) {
           let idi = atomClicked;
           /* Clicked atom is now the active atom */
           setActiveAtom(idi);
-
+          GlobalVariables.currentMolecule.selected = false;
           clickHandledByMolecule = true;
         }
       });

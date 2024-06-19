@@ -168,9 +168,10 @@ export default class Color extends Atom {
             label: input.name,
             disabled: checkConnector(),
             onChange: (value) => {
-              input.setValue(value);
-              /** should we run updateValue too? */
-              this.sendToRender();
+              if (input.value !== value) {
+                input.setValue(value);
+                this.sendToRender();
+              }
             },
           };
         }

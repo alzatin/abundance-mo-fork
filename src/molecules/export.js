@@ -79,7 +79,9 @@ export default class Export extends Atom {
         .visExport(this.uniqueID, inputID, fileType)
         .then((result) => {
           this.basicThreadValueProcessing();
-          this.sendToRender();
+          if (this.selected) {
+            this.sendToRender();
+          }
         });
     } catch (err) {
       this.setAlert(err);
@@ -96,8 +98,10 @@ export default class Export extends Atom {
       label: "File Type",
       onChange: (value) => {
         this.importIndex = importOptions.indexOf(value);
-        this.type = importOptions[this.importIndex];
-        this.updateValue();
+        if (this.type != importOptions[this.importIndex]) {
+          this.type = importOptions[this.importIndex];
+          this.updateValue();
+        }
       },
     };
     inputParams["Download File"] = button(() =>

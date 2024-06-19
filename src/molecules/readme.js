@@ -95,7 +95,9 @@ export default class Readme extends Atom {
       label: this.name,
       rows: 10,
       onChange: (value) => {
-        this.setValue(value);
+        if (this.readmeText !== value) {
+          this.setValue(value);
+        }
       },
     };
     return inputParams;
