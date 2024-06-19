@@ -877,11 +877,16 @@ function flattenAssembly(assembly) {
 }
 
 function chainFuse(chain) {
-  let fused = chain[0].clone();
-  for (let i = 1; i < chain.length; i++) {
-    fused = fused.fuse(chain[i]);
+  try {
+    let fused = chain[0].clone();
+    for (let i = 1; i < chain.length; i++) {
+      fused = fused.fuse(chain[i]);
+    }
+    return fused;
+  } catch (e) {
+    console.log(e);
+    throw new Error("Fusion failed");
   }
-  return fused;
 }
 
 function flattenAndFuse(chain) {
