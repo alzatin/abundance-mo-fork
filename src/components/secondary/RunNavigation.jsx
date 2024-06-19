@@ -181,6 +181,12 @@ function RunNavigation(props) {
               })
               .then((result) => {
                 GlobalVariables.currentRepo = result.data;
+
+                authorizedUserOcto.rest.repos.replaceAllTopics({
+                  owner: activeUser,
+                  repo: GlobalVariables.currentRepo.name,
+                  names: ["abundance-project"],
+                });
                 navigate(`/${GlobalVariables.currentRepo.id}`),
                   { replace: true };
               });
@@ -237,7 +243,7 @@ function RunNavigation(props) {
           className=" run-navigation-button"
           id="Bill-button"
           onClick={() => {
-            console.log("open compiled bill of materials");
+            console.log("open compiled bill of materials ");
           }}
         >
           {billSvg}
