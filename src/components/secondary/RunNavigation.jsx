@@ -185,7 +185,7 @@ function RunNavigation(props) {
                 authorizedUserOcto.rest.repos.replaceAllTopics({
                   owner: activeUser,
                   repo: GlobalVariables.currentRepo.name,
-                  names: ["project-abundance"],
+                  names: ["abundance-project"],
                 });
                 navigate(`/${GlobalVariables.currentRepo.id}`),
                   { replace: true };
