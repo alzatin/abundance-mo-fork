@@ -126,7 +126,7 @@ export default class Import extends Atom {
         });
       }
     } catch (err) {
-      this.setAlert(err);
+      this.alertingErrorHandler();
     }
   }
 

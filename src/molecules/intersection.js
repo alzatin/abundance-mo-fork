@@ -81,17 +81,14 @@ export default class Intersection extends Atom {
    * Grab the input geometries and pass them to a worker thread for computation.
    */
   updateValue() {
-    try {
-      const input1ID = this.findIOValue("geometry1");
-      const input2ID = this.findIOValue("geometry2");
+    const input1ID = this.findIOValue("geometry1");
+    const input2ID = this.findIOValue("geometry2");
 
-      GlobalVariables.cad
-        .intersect(this.uniqueID, input1ID, input2ID)
-        .then(() => {
-          this.basicThreadValueProcessing();
-        });
-    } catch (err) {
-      this.setAlert(err);
-    }
+    GlobalVariables.cad
+      .intersect(this.uniqueID, input1ID, input2ID)
+      .then(() => {
+        this.basicThreadValueProcessing();
+      })
+      .catch(this.alertingErrorHandler());
   }
 }

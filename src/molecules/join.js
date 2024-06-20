@@ -134,20 +134,14 @@ export default class Join extends Atom {
           .then(() => {
             this.basicThreadValueProcessing();
           })
-          .catch((err) => {
-            console.error(err);
-            this.setAlert(err);
-          });
+          .catch(this.alertingErrorHandler());
       } else if (this.unionType === "Assembly") {
         GlobalVariables.cad
           .assembly(this.uniqueID, inputValues)
           .then(() => {
             this.basicThreadValueProcessing();
           })
-          .catch((err) => {
-            console.error("Error in join " + err);
-            this.setAlert(err);
-          });
+          .catch(this.alertingErrorHandler());
       }
 
       //Delete or add ports as needed

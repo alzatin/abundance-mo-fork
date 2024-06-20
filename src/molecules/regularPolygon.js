@@ -91,17 +91,14 @@ export default class RegularPolygon extends Atom {
    * Create a new regular polygon in a worker thread.
    */
   updateValue() {
-    try {
-      var numberOfSides = this.findIOValue("number of sides");
-      var diameter = this.findIOValue("diameter");
+    var numberOfSides = this.findIOValue("number of sides");
+    var diameter = this.findIOValue("diameter");
 
-      GlobalVariables.cad
-        .regularPolygon(this.uniqueID, diameter / 2, numberOfSides)
-        .then(() => {
-          this.basicThreadValueProcessing();
-        });
-    } catch (err) {
-      this.setAlert(err);
-    }
+    GlobalVariables.cad
+      .regularPolygon(this.uniqueID, diameter / 2, numberOfSides)
+      .then(() => {
+        this.basicThreadValueProcessing();
+      })
+      .catch(this.alertingErrorHandler());
   }
 }

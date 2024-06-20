@@ -178,7 +178,7 @@ function move(targetID, inputID, x, y, z) {
   });
 }
 
-function rotate(targetID, inputID, x, y, z, pivot) {
+function rotate(targetID, inputID, x, y, z) {
   return started.then(() => {
     if (is3D(library[inputID])) {
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
@@ -187,9 +187,9 @@ function rotate(targetID, inputID, x, y, z, pivot) {
           geometry: [
             leaf.geometry[0]
               .clone()
-              .rotate(x, pivot, [1, 0, 0])
-              .rotate(y, pivot, [0, 1, 0])
-              .rotate(z, pivot, [0, 0, 1]),
+              .rotate(x, [0, 0, 0], [1, 0, 0])
+              .rotate(y, [0, 0, 0], [0, 1, 0])
+              .rotate(z, [0, 0, 0], [0, 0, 1]),
           ],
           tags: leaf.tags,
           plane: leaf.plane,
@@ -201,7 +201,9 @@ function rotate(targetID, inputID, x, y, z, pivot) {
         library[inputID],
         (leaf) => {
           return {
-            geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
+            geometry: [
+              leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
+            ],
             tags: leaf.tags,
             plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
             color: leaf.color,
@@ -753,6 +755,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       tags: partToCut.tags,
       color: partToCut.color,
       bom: partToCut.bom,
+      plane: partToCut.plane,
     };
 
     return library[newID];
@@ -802,8 +805,8 @@ function assembly(targetID, inputIDs) {
     } else {
       assembly.push(library[inputIDs[0]]);
     }
-    const newPlane = new Plane().pivot(0, "Y");
-    library[targetID] = { geometry: assembly, tags: [], plane: newPlane };
+    //const newPlane = new Plane().pivot(0, "Y");
+    library[targetID] = { geometry: assembly, tags: [] };
     return true;
   });
 }
@@ -940,11 +943,6 @@ function generateDisplayMesh(id) {
     if (library[id] == undefined) {
       throw new Error("ID not found in library");
     }
-    // if there's a different plane than XY sketch there
-    let sketchPlane = "XY";
-    if (library[id].plane != undefined) {
-      sketchPlane = library[id].plane;
-    }
     let colorGeometry;
     let meshArray = [];
     // Iterate through all the color options and see what geometry matches
@@ -958,6 +956,7 @@ function generateDisplayMesh(id) {
         var cleanedGeometry = [];
         flattened.forEach((pieceOfGeometry) => {
           if (pieceOfGeometry.mesh == undefined) {
+            let sketchPlane = library[id].plane;
             let sketches = pieceOfGeometry.clone();
             cleanedGeometry.push(
               sketches.sketchOnPlane(sketchPlane).extrude(0.0001)

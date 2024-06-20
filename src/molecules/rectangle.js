@@ -70,15 +70,14 @@ export default class Rectangle extends Atom {
    * Create a new rectangle in a worker thread.
    */
   updateValue() {
-    try {
-      var xVal = this.findIOValue("x length");
-      var yVal = this.findIOValue("y length");
+    var xVal = this.findIOValue("x length");
+    var yVal = this.findIOValue("y length");
 
-      GlobalVariables.cad.rectangle(this.uniqueID, xVal, yVal).then(() => {
+    GlobalVariables.cad
+      .rectangle(this.uniqueID, xVal, yVal)
+      .then(() => {
         this.basicThreadValueProcessing();
-      });
-    } catch (err) {
-      this.setAlert(err);
-    }
+      })
+      .catch(this.alertingErrorHandler());
   }
 }

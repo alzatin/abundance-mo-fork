@@ -75,18 +75,17 @@ export default class Move extends Atom {
    */
   updateValue() {
     if (this.inputs.every((x) => x.ready)) {
-      try {
-        var inputID = this.findIOValue("geometry");
-        var x = this.findIOValue("xDist");
-        var y = this.findIOValue("yDist");
-        var z = this.findIOValue("zDist");
+      var inputID = this.findIOValue("geometry");
+      var x = this.findIOValue("xDist");
+      var y = this.findIOValue("yDist");
+      var z = this.findIOValue("zDist");
 
-        GlobalVariables.cad.move(this.uniqueID, inputID, x, y, z).then(() => {
+      GlobalVariables.cad
+        .move(this.uniqueID, inputID, x, y, z)
+        .then(() => {
           this.basicThreadValueProcessing();
-        });
-      } catch (err) {
-        this.setAlert(err);
-      }
+        })
+        .catch(this.alertingErrorHandler());
     }
   }
 }

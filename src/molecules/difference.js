@@ -71,17 +71,14 @@ export default class Difference extends Atom {
    * Pass the input values to the worker thread to do the actual processing.
    */
   updateValue() {
-    try {
-      const input1ID = this.findIOValue("geometry1");
-      const input2ID = this.findIOValue("geometry2");
+    const input1ID = this.findIOValue("geometry1");
+    const input2ID = this.findIOValue("geometry2");
 
-      GlobalVariables.cad
-        .difference(this.uniqueID, input1ID, input2ID)
-        .then(() => {
-          this.basicThreadValueProcessing();
-        });
-    } catch (err) {
-      this.setAlert(err);
-    }
+    GlobalVariables.cad
+      .difference(this.uniqueID, input1ID, input2ID)
+      .then(() => {
+        this.basicThreadValueProcessing();
+      })
+      .catch(this.alertingErrorHandler());
   }
 }

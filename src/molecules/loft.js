@@ -109,20 +109,19 @@ export default class ShrinkWrap extends Atom {
    */
   updateValue() {
     if (this.inputs.every((x) => x.ready)) {
-      try {
-        var inputsList = [];
-        this.inputs.forEach((io) => {
-          if (io.connectors.length > 0) {
-            inputsList.push(io.getValue());
-          }
-        });
+      var inputsList = [];
+      this.inputs.forEach((io) => {
+        if (io.connectors.length > 0) {
+          inputsList.push(io.getValue());
+        }
+      });
 
-        GlobalVariables.cad.loftShapes(this.uniqueID, inputsList).then(() => {
+      GlobalVariables.cad
+        .loftShapes(this.uniqueID, inputsList)
+        .then(() => {
           this.basicThreadValueProcessing();
-        });
-      } catch (err) {
-        this.setAlert(err);
-      }
+        })
+        .catch(this.alertingErrorHandler());
 
       //Delete or add ports as needed
       addOrDeletePorts(this);
