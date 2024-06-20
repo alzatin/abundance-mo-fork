@@ -310,13 +310,14 @@ function code(targetID, code, argumentsArray) {
 
 function color(targetID, inputID, color) {
   return started.then(() => {
-    library[targetID] = {
-      geometry: library[inputID].geometry,
-      tags: [color, ...library[inputID].tags],
-      color: color,
-      plane: library[inputID].plane,
-    };
-    return true;
+    library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+      return {
+        geometry: leaf.geometry,
+        tags: [...leaf.tags],
+        color: color,
+        plane: leaf.plane,
+      };
+    });
   });
 }
 
@@ -734,7 +735,6 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     library[subID] = {
       geometry: assemblyCut,
       tags: partToCut.tags,
-      color: partToCut.color,
       bom: partToCut.bom,
     };
     return library[subID];
@@ -877,11 +877,16 @@ function flattenAssembly(assembly) {
 }
 
 function chainFuse(chain) {
-  let fused = chain[0].clone();
-  for (let i = 1; i < chain.length; i++) {
-    fused = fused.fuse(chain[i]);
+  try {
+    let fused = chain[0].clone();
+    for (let i = 1; i < chain.length; i++) {
+      fused = fused.fuse(chain[i]);
+    }
+    return fused;
+  } catch (e) {
+    console.log(e);
+    throw new Error("Fusion failed");
   }
-  return fused;
 }
 
 function flattenAndFuse(chain) {
@@ -931,6 +936,7 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
+    console.log(library[id]);
     if (library[id] == undefined) {
       throw new Error("ID not found in library");
     }

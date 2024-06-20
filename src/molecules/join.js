@@ -145,7 +145,7 @@ export default class Join extends Atom {
             this.basicThreadValueProcessing();
           })
           .catch((err) => {
-            console.error(err);
+            console.error("Error in join " + err);
             this.setAlert(err);
           });
       }
