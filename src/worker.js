@@ -310,13 +310,14 @@ function code(targetID, code, argumentsArray) {
 
 function color(targetID, inputID, color) {
   return started.then(() => {
-    library[targetID] = {
-      geometry: library[inputID].geometry,
-      tags: [...library[inputID].tags],
-      color: color,
-      plane: library[inputID].plane,
-    };
-    return true;
+    library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+      return {
+        geometry: leaf.geometry,
+        tags: [...leaf.tags],
+        color: color,
+        plane: leaf.plane,
+      };
+    });
   });
 }
 
@@ -734,7 +735,6 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
     library[subID] = {
       geometry: assemblyCut,
       tags: partToCut.tags,
-      color: partToCut.color,
       bom: partToCut.bom,
     };
     return library[subID];
