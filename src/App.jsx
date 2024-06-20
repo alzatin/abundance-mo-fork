@@ -78,7 +78,6 @@ export default function ReplicadApp() {
       activeAtom.atomType == "Molecule"
     ) {
       compileBom().then((result) => {
-        console.log(result);
         let bomParams = {};
         if (result != undefined) {
           result.map((item) => {
