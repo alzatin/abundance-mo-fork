@@ -17,7 +17,6 @@ export default class Rotate extends Atom {
     this.addIO("input", "y-axis degrees", this, "number", 0);
     this.addIO("input", "z-axis degrees", this, "number", 0);
     this.addIO("output", "geometry", this, "geometry", "");
-    this.addIO("input", "pivot", this, "array", [0, 0, 0]);
 
     /**
      * This atom's name
@@ -66,15 +65,6 @@ export default class Rotate extends Atom {
   createLevaInputs() {
     let inputParams = {};
 
-    /*inputParams[this.uniqueID + "pivot"] = {
-      value: { x: 0, y: 0, z: 0 },
-      label: "Pivot",
-      onChange: (value) => {
-        this.findIOValue("Pivot").setValue(value);
-        this.sendToRender();
-      },
-    };*/
-
     /** Runs through active atom inputs and adds IO parameters to default param*/
     if (this.inputs) {
       this.inputs.map((input) => {
@@ -111,12 +101,9 @@ export default class Rotate extends Atom {
       var x = this.findIOValue("x-axis degrees");
       var y = this.findIOValue("y-axis degrees");
       var z = this.findIOValue("z-axis degrees");
-      var pivot = this.findIOValue("pivot");
-      GlobalVariables.cad
-        .rotate(this.uniqueID, inputID, x, y, z, pivot)
-        .then(() => {
-          this.basicThreadValueProcessing();
-        });
+      GlobalVariables.cad.rotate(this.uniqueID, inputID, x, y, z).then(() => {
+        this.basicThreadValueProcessing();
+      });
     } catch (err) {
       this.setAlert(err);
     }
