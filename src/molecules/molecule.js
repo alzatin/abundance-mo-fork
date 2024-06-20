@@ -196,18 +196,14 @@ export default class Molecule extends Atom {
   /**
    * Computes and returns an array of BOMEntry objects after looking at the tags of a geometry.*/
   extractBomTags() {
-    try {
-      var tag = "BOMitem";
-      if (this.output.value) {
-        let bomList = GlobalVariables.cad.extractBomList(
-          this.output.value,
-          tag
-        );
-
-        return bomList;
-      }
-    } catch (err) {
-      this.setAlert("Unable to read BOM");
+    var tag = "BOMitem";
+    if (this.output.value) {
+      GlobalVariables.cad
+        .extractBomList(this.output.value, tag)
+        .then((bomList) => {
+          return bomList;
+        })
+        .catch(this.alertingErrorHandler());
     }
   }
 

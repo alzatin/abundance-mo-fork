@@ -103,16 +103,15 @@ export default class ExtractTag extends Atom {
    * Adds the cutAway tag to the part
    */
   updateValue() {
-    try {
-      var inputID = this.findIOValue("geometry");
-      var tag = this.tag;
+    var inputID = this.findIOValue("geometry");
+    var tag = this.tag;
 
-      GlobalVariables.cad.extractTag(this.uniqueID, inputID, tag).then(() => {
+    GlobalVariables.cad
+      .extractTag(this.uniqueID, inputID, tag)
+      .then(() => {
         this.basicThreadValueProcessing();
-      });
-    } catch (err) {
-      this.setAlert(err);
-    }
+      })
+      .catch(this.alertingErrorHandler());
   }
 
   /**

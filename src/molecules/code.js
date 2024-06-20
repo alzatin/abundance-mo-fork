@@ -159,26 +159,23 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
     this.parseInputs();
 
     if (this.inputs.every((x) => x.ready)) {
-      try {
-        var inputValues = [];
-        this.inputs.forEach((io) => {
-          if (io.connectors.length > 0 && io.type == "input") {
-            inputValues.push(io.getValue());
-          }
-        });
-        var argumentsArray = {};
-        this.inputs.forEach((input) => {
-          argumentsArray[input.name] = input.value;
-        });
+      var inputValues = [];
+      this.inputs.forEach((io) => {
+        if (io.connectors.length > 0 && io.type == "input") {
+          inputValues.push(io.getValue());
+        }
+      });
+      var argumentsArray = {};
+      this.inputs.forEach((input) => {
+        argumentsArray[input.name] = input.value;
+      });
 
-        GlobalVariables.cad
-          .code(this.uniqueID, this.code, argumentsArray)
-          .then(() => {
-            this.basicThreadValueProcessing();
-          });
-      } catch (err) {
-        this.setAlert(err);
-      }
+      GlobalVariables.cad
+        .code(this.uniqueID, this.code, argumentsArray)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        })
+        .catch(this.alertingErrorHandler());
     }
   }
 

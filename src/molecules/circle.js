@@ -69,13 +69,12 @@ export default class Circle extends Atom {
    * Update the value of the circle in worker.
    */
   updateValue() {
-    try {
-      var diameter = this.findIOValue("diameter");
-      GlobalVariables.cad.circle(this.uniqueID, diameter).then(() => {
+    var diameter = this.findIOValue("diameter");
+    GlobalVariables.cad
+      .circle(this.uniqueID, diameter)
+      .then(() => {
         this.basicThreadValueProcessing();
-      });
-    } catch (err) {
-      this.setAlert(err);
-    }
+      })
+      .catch(this.alertingErrorHandler());
   }
 }

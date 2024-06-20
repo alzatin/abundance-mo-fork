@@ -120,15 +120,14 @@ export default class Color extends Atom {
    * Applies a color tag to the object in a worker thread.
    */
   updateValue() {
-    try {
-      var inputID = this.findIOValue("geometry");
-      var color = Object.values(this.colorOptions)[this.selectedColorIndex];
-      GlobalVariables.cad.color(this.uniqueID, inputID, color).then(() => {
+    var inputID = this.findIOValue("geometry");
+    var color = Object.values(this.colorOptions)[this.selectedColorIndex];
+    GlobalVariables.cad
+      .color(this.uniqueID, inputID, color)
+      .then(() => {
         this.basicThreadValueProcessing();
-      });
-    } catch (err) {
-      this.setAlert(err);
-    }
+      })
+      .catch(this.alertingErrorHandler());
   }
 
   /**

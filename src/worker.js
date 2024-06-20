@@ -755,6 +755,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       tags: partToCut.tags,
       color: partToCut.color,
       bom: partToCut.bom,
+      plane: partToCut.plane,
     };
 
     return library[newID];
@@ -804,8 +805,8 @@ function assembly(targetID, inputIDs) {
     } else {
       assembly.push(library[inputIDs[0]]);
     }
-    const newPlane = new Plane().pivot(0, "Y");
-    library[targetID] = { geometry: assembly, tags: [], plane: newPlane };
+    //const newPlane = new Plane().pivot(0, "Y");
+    library[targetID] = { geometry: assembly, tags: [] };
     return true;
   });
 }
@@ -942,11 +943,6 @@ function generateDisplayMesh(id) {
     if (library[id] == undefined) {
       throw new Error("ID not found in library");
     }
-    // if there's a different plane than XY sketch there
-    let sketchPlane = "XY";
-    if (library[id].plane != undefined) {
-      sketchPlane = library[id].plane;
-    }
     let colorGeometry;
     let meshArray = [];
     // Iterate through all the color options and see what geometry matches
@@ -960,6 +956,7 @@ function generateDisplayMesh(id) {
         var cleanedGeometry = [];
         flattened.forEach((pieceOfGeometry) => {
           if (pieceOfGeometry.mesh == undefined) {
+            let sketchPlane = library[id].plane;
             let sketches = pieceOfGeometry.clone();
             cleanedGeometry.push(
               sketches.sketchOnPlane(sketchPlane).extrude(0.0001)

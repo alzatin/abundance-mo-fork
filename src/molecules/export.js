@@ -116,17 +116,16 @@ export default class Export extends Atom {
    * The function which is called when you press the download button.
    */
   exportFile() {
-    try {
-      let fileType = this.type;
+    let fileType = this.type;
 
-      GlobalVariables.cad.downExport(this.uniqueID, fileType).then((result) => {
+    GlobalVariables.cad
+      .downExport(this.uniqueID, fileType)
+      .then((result) => {
         saveAs(
           result,
           GlobalVariables.currentMolecule.name + "." + fileType.toLowerCase()
         );
-      });
-    } catch (err) {
-      this.setAlert(err);
-    }
+      })
+      .catch(this.alertingErrorHandler());
   }
 }

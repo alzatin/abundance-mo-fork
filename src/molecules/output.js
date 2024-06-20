@@ -78,16 +78,16 @@ export default class Output extends Atom {
       //still need to understand this
       this.decreaseToProcessCountByOne();
 
-      try {
-        var inputID = this.findIOValue("number or geometry");
-        GlobalVariables.cad.output(this.uniqueID, inputID).then(() => {
+      var inputID = this.findIOValue("number or geometry");
+      GlobalVariables.cad
+        .output(this.uniqueID, inputID)
+        .then(() => {
           this.basicThreadValueProcessing();
           //Recompute molecule gets called if we have successfully updated the value of output
           this.parent.recomputeMolecule(this.uniqueID);
-        });
-      } catch (err) {
-        this.setAlert(err);
-      }
+        })
+        .catch(this.alertingErrorHandler());
+
       //Propagate passes the updated value on while parent.updateValue is called when one of the molecule inputs changes
       this.parent.propagate();
     }

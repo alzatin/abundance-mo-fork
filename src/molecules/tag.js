@@ -124,16 +124,15 @@ export default class Tag extends Atom {
    * Add a tag to the input geometry. The substance is not changed.
    */
   updateValue() {
-    try {
-      var inputID = this.findIOValue("geometry");
-      var tags = this.tags;
-      this.addTagsToAvailableTags();
-      GlobalVariables.cad.tag(this.uniqueID, inputID, tags).then(() => {
+    var inputID = this.findIOValue("geometry");
+    var tags = this.tags;
+    this.addTagsToAvailableTags();
+    GlobalVariables.cad
+      .tag(this.uniqueID, inputID, tags)
+      .then(() => {
         this.basicThreadValueProcessing();
-      });
-    } catch (err) {
-      this.setAlert(err);
-    }
+      })
+      .catch(this.alertingErrorHandler());
   }
   /**
    * Send the value of this atom to the 3D display. Used to display the number

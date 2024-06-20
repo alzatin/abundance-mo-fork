@@ -80,6 +80,7 @@ export default class Rotate extends Atom {
             disabled: checkConnector(),
             onChange: (value) => {
               if (input.value !== value) {
+                console.log(input.name, value);
                 input.setValue(value);
                 /** should we run updateValue too? */
                 this.sendToRender();
@@ -96,16 +97,15 @@ export default class Rotate extends Atom {
    * Pass the input shape to a worker thread to compute the rotation
    */
   updateValue() {
-    try {
-      var inputID = this.findIOValue("geometry");
-      var x = this.findIOValue("x-axis degrees");
-      var y = this.findIOValue("y-axis degrees");
-      var z = this.findIOValue("z-axis degrees");
-      GlobalVariables.cad.rotate(this.uniqueID, inputID, x, y, z).then(() => {
+    var inputID = this.findIOValue("geometry");
+    var x = this.findIOValue("x-axis degrees");
+    var y = this.findIOValue("y-axis degrees");
+    var z = this.findIOValue("z-axis degrees");
+    GlobalVariables.cad
+      .rotate(this.uniqueID, inputID, x, y, z)
+      .then(() => {
         this.basicThreadValueProcessing();
-      });
-    } catch (err) {
-      this.setAlert(err);
-    }
+      })
+      .catch(this.alertingErrorHandler());
   }
 }
