@@ -78,6 +78,7 @@ export default function ReplicadApp() {
       activeAtom.atomType == "Molecule"
     ) {
       compileBom().then((result) => {
+        console.log(result);
         let bomParams = {};
         if (result != undefined) {
           result.map((item) => {
@@ -98,37 +99,35 @@ export default function ReplicadApp() {
   }, [activeAtom]);
 
   const compileBom = async () => {
-    if (GlobalVariables.currentMolecule.output.value) {
-      let compiled = GlobalVariables.currentMolecule
-        .extractBomTags(GlobalVariables.currentMolecule.output.value)
-        .then((result) => {
-          let bomList = [];
-          let compileBomItems = [];
-          if (result) {
-            result.forEach(function (bomElement) {
-              if (!bomList[bomElement.BOMitemName]) {
-                //If the list of items doesn't already have one of these
-                bomList[bomElement.BOMitemName] = new BOMEntry(); //Create one
-                bomList[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
-                bomList[bomElement.BOMitemName].BOMitemName =
-                  bomElement.BOMitemName; //With the information from the item
-                bomList[bomElement.BOMitemName].source = bomElement.source;
-                compileBomItems.push(bomList[bomElement.BOMitemName]);
-              }
-              bomList[bomElement.BOMitemName].numberNeeded +=
-                bomElement.numberNeeded;
-              bomList[bomElement.BOMitemName].costUSD += bomElement.costUSD;
-            });
+    let compiled = GlobalVariables.currentMolecule
+      .extractBomTags()
+      .then((result) => {
+        let bomList = [];
+        let compileBomItems = [];
+        if (result) {
+          result.forEach(function (bomElement) {
+            if (!bomList[bomElement.BOMitemName]) {
+              //If the list of items doesn't already have one of these
+              bomList[bomElement.BOMitemName] = new BOMEntry(); //Create one
+              bomList[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
+              bomList[bomElement.BOMitemName].BOMitemName =
+                bomElement.BOMitemName; //With the information from the item
+              bomList[bomElement.BOMitemName].source = bomElement.source;
+              compileBomItems.push(bomList[bomElement.BOMitemName]);
+            }
+            bomList[bomElement.BOMitemName].numberNeeded +=
+              bomElement.numberNeeded;
+            bomList[bomElement.BOMitemName].costUSD += bomElement.costUSD;
+          });
 
-            // Alphabetize by source
-            compileBomItems = compileBomItems.sort((a, b) =>
-              a.source > b.source ? 1 : b.source > a.source ? -1 : 0
-            );
-            return compileBomItems;
-          }
-        });
-      return compiled;
-    }
+          // Alphabetize by source
+          compileBomItems = compileBomItems.sort((a, b) =>
+            a.source > b.source ? 1 : b.source > a.source ? -1 : 0
+          );
+          return compileBomItems;
+        }
+      });
+    return compiled;
   };
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.

@@ -195,16 +195,17 @@ export default class Molecule extends Atom {
 
   /**
    * Computes and returns an array of BOMEntry objects after looking at the tags of a geometry.*/
-  extractBomTags() {
+  async extractBomTags() {
     var tag = "BOMitem";
-    if (this.output.value) {
-      GlobalVariables.cad
-        .extractBomList(this.output.value, tag)
-        .then((bomList) => {
-          return bomList;
-        })
-        .catch(this.alertingErrorHandler());
-    }
+    GlobalVariables.cad
+      .extractBomList(this.output.value, tag)
+      .then((bomList) => {
+        console.log(bomList);
+        return bomList;
+      })
+      .catch((err) => {
+        console.error(err + "in extractBomTags");
+      });
   }
 
   /**
