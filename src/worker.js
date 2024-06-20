@@ -178,7 +178,7 @@ function move(targetID, inputID, x, y, z) {
   });
 }
 
-function rotate(targetID, inputID, x, y, z, pivot) {
+function rotate(targetID, inputID, x, y, z) {
   return started.then(() => {
     if (is3D(library[inputID])) {
       library[targetID] = actOnLeafs(library[inputID], (leaf) => {
@@ -187,9 +187,9 @@ function rotate(targetID, inputID, x, y, z, pivot) {
           geometry: [
             leaf.geometry[0]
               .clone()
-              .rotate(x, pivot, [1, 0, 0])
-              .rotate(y, pivot, [0, 1, 0])
-              .rotate(z, pivot, [0, 0, 1]),
+              .rotate(x, [0, 0, 0], [1, 0, 0])
+              .rotate(y, [0, 0, 0], [0, 1, 0])
+              .rotate(z, [0, 0, 0], [0, 0, 1]),
           ],
           tags: leaf.tags,
           plane: leaf.plane,
@@ -201,7 +201,9 @@ function rotate(targetID, inputID, x, y, z, pivot) {
         library[inputID],
         (leaf) => {
           return {
-            geometry: [leaf.geometry[0].clone().rotate(z, pivot, [0, 0, 1])],
+            geometry: [
+              leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
+            ],
             tags: leaf.tags,
             plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
             color: leaf.color,
