@@ -60,7 +60,6 @@ function runMode(props) {
   const setActiveAtom = props.props.setActiveAtom;
   const activeAtom = props.props.activeAtom;
   const tryLogin = props.props.tryLogin;
-  const compiledBom = props.props.compiledBom;
 
   const windowSize = useWindowSize();
 
@@ -121,7 +120,6 @@ function runMode(props) {
           setAxes={setAxesRun}
           setWire={setWire}
           setSolid={setSolid}
-          compiledBom={compiledBom}
         />
       ) : null}
       <RunNavigation

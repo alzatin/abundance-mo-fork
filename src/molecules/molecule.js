@@ -1,9 +1,10 @@
 import Atom from "../prototypes/atom.js";
 import Connector from "../prototypes/connector.js";
 import GlobalVariables from "../js/globalvariables.js";
-
+import { button } from "leva";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import saveAs from "file-saver";
+import { BOMEntry } from "../js/BOM";
 
 /**
  * This class creates the Molecule atom.
@@ -89,6 +90,8 @@ export default class Molecule extends Atom {
      * @type {array}
      */
     this.BOMlist;
+
+    this.compiledBom = {};
 
     /**
      * List of all available tags in project.
@@ -197,15 +200,12 @@ export default class Molecule extends Atom {
    * Computes and returns an array of BOMEntry objects after looking at the tags of a geometry.*/
   async extractBomTags() {
     var tag = "BOMitem";
-    GlobalVariables.cad
-      .extractBomList(this.output.value, tag)
-      .then((bomList) => {
-        console.log(bomList);
-        return bomList;
-      })
-      .catch((err) => {
-        console.error(err + "in extractBomTags");
-      });
+    let bomlist = await GlobalVariables.cad.extractBomList(
+      this.output.value,
+      tag
+    );
+
+    return bomlist;
   }
 
   /**
@@ -282,6 +282,54 @@ export default class Molecule extends Atom {
     });
   }
 
+  compileBom() {
+    let compiled = this.extractBomTags().then((result) => {
+      let bomList = [];
+      let compileBomItems = [];
+      if (result) {
+        result.forEach(function (bomElement) {
+          if (!bomList[bomElement.BOMitemName]) {
+            //If the list of items doesn't already have one of these
+            bomList[bomElement.BOMitemName] = new BOMEntry(); //Create one
+            bomList[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
+            bomList[bomElement.BOMitemName].BOMitemName =
+              bomElement.BOMitemName; //With the information from the item
+            bomList[bomElement.BOMitemName].source = bomElement.source;
+            compileBomItems.push(bomList[bomElement.BOMitemName]);
+          }
+          bomList[bomElement.BOMitemName].numberNeeded +=
+            bomElement.numberNeeded;
+          bomList[bomElement.BOMitemName].costUSD += bomElement.costUSD;
+        });
+
+        // Alphabetize by source
+        compileBomItems = compileBomItems.sort((a, b) =>
+          a.source > b.source ? 1 : b.source > a.source ? -1 : 0
+        );
+        return compileBomItems;
+      }
+    });
+    return compiled;
+  }
+
+  createLevaBom() {
+    let bomParams = {};
+    if (this.compiledBom.length > 0) {
+      this.compiledBom.map((item) => {
+        bomParams[item.BOMitemName] = {
+          value: item.costUSD + " USD",
+          label: item.BOMitemName + "(x" + item.numberNeeded + ")",
+          disabled: true,
+        };
+      });
+      bomParams["Download List of Materials"] = button(() =>
+        console.log(result)
+      );
+
+      return bomParams;
+    }
+  }
+
   /**
    * Reads molecule's output atom ID to recompute the molecule in worker
    */
@@ -290,6 +338,9 @@ export default class Molecule extends Atom {
     try {
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
+        this.compileBom().then((result) => {
+          this.compiledBom = result;
+        });
         if (this.selected) {
           this.sendToRender();
         }
