@@ -314,19 +314,21 @@ export default class Molecule extends Atom {
 
   createLevaBom() {
     let bomParams = {};
-    if (this.compiledBom.length > 0) {
-      this.compiledBom.map((item) => {
-        bomParams[item.BOMitemName] = {
-          value: item.costUSD + " USD",
-          label: item.BOMitemName + "(x" + item.numberNeeded + ")",
-          disabled: true,
-        };
-      });
-      bomParams["Download List of Materials"] = button(() =>
-        console.log(result)
-      );
+    if (this.compiledBom) {
+      if (this.compiledBom.length > 0) {
+        this.compiledBom.map((item) => {
+          bomParams[item.BOMitemName] = {
+            value: item.costUSD + " USD",
+            label: item.BOMitemName + "(x" + item.numberNeeded + ")",
+            disabled: true,
+          };
+        });
+        bomParams["Download List of Materials"] = button(() =>
+          console.log(result)
+        );
 
-      return bomParams;
+        return bomParams;
+      }
     }
   }
 
@@ -480,6 +482,7 @@ export default class Molecule extends Atom {
     thisAsObject.gitHubUniqueID = this.gitHubUniqueID;
     thisAsObject.unitsIndex = this.unitsIndex;
     thisAsObject.fileTypeVersion = 1;
+    thisAsObject.compiledBom = this.compiledBom;
 
     return thisAsObject;
   }

@@ -380,8 +380,11 @@ function extractBomList(inputID, TAG) {
   let taggedBoms = [];
   taggedBoms = extractBoms(library[inputID], TAG);
   if (taggedBoms != false) {
-    console.log(taggedBoms);
-    return [...taggedBoms];
+    if (taggedBoms.length > 1) {
+      return [...taggedBoms];
+    } else {
+      return [taggedBoms];
+    }
   }
 }
 
