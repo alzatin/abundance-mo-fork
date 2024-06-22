@@ -314,6 +314,7 @@ function color(targetID, inputID, color) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[inputID], (leaf) => {
       return {
+        bom: leaf.bom,
         geometry: leaf.geometry,
         tags: [...leaf.tags],
         color: color,
@@ -356,6 +357,8 @@ function output(targetID, inputID) {
   return started.then(() => {
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
+      console.log("output:");
+      console.log(library[targetID]);
     } else {
       throw new Error("Nothing is connected to the output");
     }
