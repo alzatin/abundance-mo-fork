@@ -162,6 +162,7 @@ function move(targetID, inputID, x, y, z) {
           plane: leaf.plane,
           tags: leaf.tags,
           color: leaf.color,
+          bom: leaf.bom,
         };
       });
     } else {
@@ -173,6 +174,7 @@ function move(targetID, inputID, x, y, z) {
             tags: leaf.tags,
             plane: leaf.plane.translate([0, 0, z]),
             color: leaf.color,
+            bom: leaf.bom,
           };
         },
         library[inputID].plane.translate([0, 0, z])
@@ -363,8 +365,6 @@ function output(targetID, inputID) {
   return started.then(() => {
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
-      console.log("output:");
-      console.log(library[targetID]);
     } else {
       throw new Error("Nothing is connected to the output");
     }
@@ -386,7 +386,7 @@ function molecule(targetID, inputID) {
 
 /** Function that extracts geometry with BOM tags and returns bomItems*/
 function extractBomList(inputID) {
-  let taggedBoms = [];
+  let taggedBoms;
   taggedBoms = extractBoms(library[inputID]);
   console.log(taggedBoms);
   if (taggedBoms != false) {
@@ -395,18 +395,21 @@ function extractBomList(inputID) {
 }
 
 function extractBoms(inputGeometry) {
-  console.log("extractBoms");
-  let bomArray = [];
-  if (inputGeometry.bom !== undefined) {
+  if (isAssembly(inputGeometry)) {
+    if (inputGeometry.bom !== undefined) {
+      return inputGeometry.bom;
+    } else {
+      inputGeometry.geometry.forEach((subAssembly) => {
+        let bomArray = [];
+        let extractedBoms = extractBoms(subAssembly);
+        if (extractedBoms != false) {
+          bomArray.push(...extractedBoms);
+        }
+      });
+      return [...bomArray];
+    }
+  } else if (inputGeometry.bom !== undefined) {
     return inputGeometry.bom;
-  } else if (isAssembly(inputGeometry)) {
-    inputGeometry.geometry.forEach((subAssembly) => {
-      let extractedBoms = extractBoms(subAssembly);
-      if (extractedBoms != false) {
-        bomArray.push(extractedBoms);
-      }
-    });
-    return bomArray;
   } else {
     return false;
   }
@@ -560,6 +563,7 @@ function extractTags(inputGeometry, TAG) {
         geometry: geometryWithTags,
         tags: inputGeometry.tags,
         color: inputGeometry.color,
+        bom: inputGeometry.bom,
       };
       return thethingtoreturn;
     } else {
@@ -761,7 +765,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       geometry: [partCutCopy],
       tags: partToCut.tags,
       color: partToCut.color,
-      //bom: partToCut.bom, // i think it should just be passed to the asssembly
+      bom: partToCut.bom,
       plane: partToCut.plane,
     };
 
@@ -805,12 +809,13 @@ function assembly(targetID, inputIDs) {
             )
           );
           /** Pass bom at assembly level, flatten array */
-          if (library[inputIDs[i]].bom !== undefined) {
-            if (library[inputIDs[i]].bom.length > 0) {
-              bomAssembly.push(...library[inputIDs[i]].bom);
-            } else {
-              bomAssembly.push(library[inputIDs[i]].bom);
-            }
+          console.log(library[inputIDs[i]]);
+          if (library[inputIDs[i]].bom.length > 0) {
+            console.log("pushing bom");
+            console.log(library[inputIDs[i]].bom);
+            bomAssembly.push(...library[inputIDs[i]].bom);
+          } else {
+            bomAssembly.push(library[inputIDs[i]].bom);
           }
         }
       } else {
@@ -820,6 +825,7 @@ function assembly(targetID, inputIDs) {
       }
     } else {
       assembly.push(library[inputIDs[0]]);
+      bomAssembly.push(library[inputIDs[0]].bom);
     }
     //const newPlane = new Plane().pivot(0, "Y");
     library[targetID] = { geometry: assembly, tags: [], bom: bomAssembly };
