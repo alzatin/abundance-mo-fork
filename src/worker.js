@@ -66,6 +66,7 @@ function circle(id, diameter) {
       tags: [],
       plane: newPlane,
       color: "#FF9065",
+      bom: [],
     };
     return true;
   });
@@ -79,6 +80,7 @@ function rectangle(id, x, y) {
       tags: [],
       plane: newPlane,
       color: "#FF9065",
+      bom: [],
     };
     return true;
   });
@@ -92,6 +94,7 @@ function regularPolygon(id, radius, numberOfSides) {
       tags: [],
       plane: newPlane,
       color: "#FF9065",
+      bom: [],
     };
     return true;
   });
@@ -131,6 +134,7 @@ function extrude(targetID, inputID, height) {
         tags: leaf.tags,
         plane: leaf.plane,
         color: leaf.color,
+        bom: leaf.bom,
       };
     });
     return true;
@@ -194,6 +198,7 @@ function rotate(targetID, inputID, x, y, z) {
           tags: leaf.tags,
           plane: leaf.plane,
           color: leaf.color,
+          bom: leaf.bom,
         };
       });
     } else {
@@ -207,6 +212,7 @@ function rotate(targetID, inputID, x, y, z) {
             tags: leaf.tags,
             plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
             color: leaf.color,
+            bom: leaf.bom,
           };
         },
         library[inputID].plane.pivot(x, "X").pivot(y, "Y")
@@ -281,6 +287,7 @@ function tag(targetID, inputID, TAG) {
   return started.then(() => {
     library[targetID] = {
       geometry: library[inputID].geometry,
+      bom: library[inputID].bom,
       tags: [...TAG, ...library[inputID].tags],
       color: library[inputID].color,
       plane: library[inputID].plane,
@@ -314,7 +321,6 @@ function color(targetID, inputID, color) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[inputID], (leaf) => {
       return {
-        bom: leaf.bom,
         geometry: leaf.geometry,
         tags: [...leaf.tags],
         color: color,
@@ -324,12 +330,12 @@ function color(targetID, inputID, color) {
   });
 }
 
-function bom(targetID, inputID, TAG, BOM) {
+function bom(targetID, inputID, BOM) {
   return started.then(() => {
     library[targetID] = {
       geometry: library[inputID].geometry,
-      tags: [TAG, ...library[inputID].tags],
-      bom: BOM,
+      tags: [...library[inputID].tags],
+      bom: [...library[inputID].bom, BOM],
       color: library[inputID].color,
     };
     return true;
@@ -379,28 +385,23 @@ function molecule(targetID, inputID) {
 }
 
 /** Function that extracts geometry with BOM tags and returns bomItems*/
-function extractBomList(inputID, TAG) {
+function extractBomList(inputID) {
   let taggedBoms = [];
-  taggedBoms = extractBoms(library[inputID], TAG);
+  taggedBoms = extractBoms(library[inputID]);
+  console.log(taggedBoms);
   if (taggedBoms != false) {
-    if (taggedBoms.length > 1) {
-      return [...taggedBoms];
-    } else {
-      return [taggedBoms];
-    }
+    return taggedBoms;
   }
 }
 
-function extractBoms(inputGeometry, BOM) {
-  if (inputGeometry.tags.includes(BOM)) {
+function extractBoms(inputGeometry) {
+  console.log("extractBoms");
+  let bomArray = [];
+  if (inputGeometry.bom !== undefined) {
     return inputGeometry.bom;
-  } else if (
-    inputGeometry.geometry.length >= 1 &&
-    inputGeometry.geometry[0].geometry != undefined
-  ) {
-    let bomArray = [];
+  } else if (isAssembly(inputGeometry)) {
     inputGeometry.geometry.forEach((subAssembly) => {
-      let extractedBoms = extractBoms(subAssembly, BOM);
+      let extractedBoms = extractBoms(subAssembly);
       if (extractedBoms != false) {
         bomArray.push(extractedBoms);
       }
@@ -760,7 +761,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       geometry: [partCutCopy],
       tags: partToCut.tags,
       color: partToCut.color,
-      bom: partToCut.bom,
+      //bom: partToCut.bom, // i think it should just be passed to the asssembly
       plane: partToCut.plane,
     };
 
@@ -787,6 +788,7 @@ function recursiveCut(partToCut, cuttingPart) {
 function assembly(targetID, inputIDs) {
   return started.then(() => {
     let assembly = [];
+    let bomAssembly = [];
     if (inputIDs.length > 1) {
       /** Check if all inputs are solid or sketches */
       if (
@@ -802,6 +804,14 @@ function assembly(targetID, inputIDs) {
               i
             )
           );
+          /** Pass bom at assembly level, flatten array */
+          if (library[inputIDs[i]].bom !== undefined) {
+            if (library[inputIDs[i]].bom.length > 0) {
+              bomAssembly.push(...library[inputIDs[i]].bom);
+            } else {
+              bomAssembly.push(library[inputIDs[i]].bom);
+            }
+          }
         }
       } else {
         throw new Error(
@@ -812,7 +822,7 @@ function assembly(targetID, inputIDs) {
       assembly.push(library[inputIDs[0]]);
     }
     //const newPlane = new Plane().pivot(0, "Y");
-    library[targetID] = { geometry: assembly, tags: [] };
+    library[targetID] = { geometry: assembly, tags: [], bom: bomAssembly };
     return true;
   });
 }
@@ -861,6 +871,7 @@ function actOnLeafs(assembly, action, plane) {
     return {
       geometry: transformedAssembly,
       tags: assembly.tags,
+      bom: assembly.bom,
       plane: plane,
     };
   }
