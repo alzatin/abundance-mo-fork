@@ -334,10 +334,13 @@ function color(targetID, inputID, color) {
 
 function bom(targetID, inputID, BOM) {
   return started.then(() => {
+    if (library[inputID].bom != []) {
+      BOM = [...library[inputID].bom, BOM];
+    }
     library[targetID] = {
       geometry: library[inputID].geometry,
       tags: [...library[inputID].tags],
-      bom: [...library[inputID].bom, BOM],
+      bom: BOM,
       color: library[inputID].color,
     };
     return true;
@@ -388,7 +391,6 @@ function molecule(targetID, inputID) {
 function extractBomList(inputID) {
   let taggedBoms;
   taggedBoms = extractBoms(library[inputID]);
-  console.log(taggedBoms);
   if (taggedBoms != false) {
     return taggedBoms;
   }
@@ -400,13 +402,11 @@ function extractBoms(inputGeometry) {
       return inputGeometry.bom;
     } else {
       inputGeometry.geometry.forEach((subAssembly) => {
-        let bomArray = [];
         let extractedBoms = extractBoms(subAssembly);
         if (extractedBoms != false) {
-          bomArray.push(...extractedBoms);
+          return extractedBoms;
         }
       });
-      return [...bomArray];
     }
   } else if (inputGeometry.bom !== undefined) {
     return inputGeometry.bom;
@@ -808,14 +808,8 @@ function assembly(targetID, inputIDs) {
               i
             )
           );
-          /** Pass bom at assembly level, flatten array */
-          console.log(library[inputIDs[i]]);
           if (library[inputIDs[i]].bom.length > 0) {
-            console.log("pushing bom");
-            console.log(library[inputIDs[i]].bom);
             bomAssembly.push(...library[inputIDs[i]].bom);
-          } else {
-            bomAssembly.push(library[inputIDs[i]].bom);
           }
         }
       } else {
@@ -825,10 +819,17 @@ function assembly(targetID, inputIDs) {
       }
     } else {
       assembly.push(library[inputIDs[0]]);
-      bomAssembly.push(library[inputIDs[0]].bom);
+      if (library[inputIDs[0]].bom.length > 0) {
+        bomAssembly.push(...library[inputIDs[0]].bom);
+      }
     }
-    //const newPlane = new Plane().pivot(0, "Y");
-    library[targetID] = { geometry: assembly, tags: [], bom: bomAssembly };
+    const newPlane = new Plane().pivot(0, "Y");
+    library[targetID] = {
+      geometry: assembly,
+      plane: newPlane,
+      tags: [],
+      bom: bomAssembly,
+    };
     return true;
   });
 }
