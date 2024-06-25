@@ -963,6 +963,7 @@ function generateDisplayMesh(id) {
     }
     let colorGeometry;
     let meshArray = [];
+
     // Iterate through all the color options and see what geometry matches
     Object.values(colorOptions).forEach((color) => {
       colorGeometry = extractColors(library[id], color);

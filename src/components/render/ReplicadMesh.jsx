@@ -49,9 +49,9 @@ export default React.memo(function ShapeMeshes({ mesh, isSolid }) {
 
   return (
     <>
-      {fullMesh.map((m) => {
+      {fullMesh.map((m, index) => {
         return (
-          <group key={"group" + m.color}>
+          <group key={"group" + m.color + index}>
             {isSolid ? (
               <mesh geometry={m.body} key={"mesh" + m.color}>
                 {/*the offsets are here to avoid z fighting between the mesh and the lines*/}
