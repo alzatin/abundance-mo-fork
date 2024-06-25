@@ -487,7 +487,7 @@ function generateThumbnail(inputID) {
       let projectionShape;
       let svg;
       if (is3D(library[inputID])) {
-        fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+        fusedGeometry = digFuse(library[inputID]);
         projectionShape = prettyProjection(fusedGeometry);
         svg = projectionShape.visible.toSVG();
       } else {
@@ -898,15 +898,38 @@ function flattenAssembly(assembly) {
 }
 
 function chainFuse(chain) {
+  console.log(chain);
   try {
     let fused = chain[0].clone();
+
     for (let i = 1; i < chain.length; i++) {
       fused = fused.fuse(chain[i]);
     }
+    console.log(fused);
     return fused;
   } catch (e) {
     console.log(e);
     throw new Error("Fusion failed");
+  }
+}
+
+function digFuse(assembly) {
+  var flattened = [];
+  if (isAssembly(assembly)) {
+    assembly.geometry.forEach((subAssembly) => {
+      if (!isAssembly(subAssembly)) {
+        //if it's not an assembly hold on add it to the fusion list
+        flattened.push(subAssembly.geometry[0]);
+      } else {
+        // if it is an assembly keep digging
+        // add the fused things in
+        flattened.push(digFuse(subAssembly));
+      }
+      console.log(flattened);
+    });
+    return chainFuse(flattened);
+  } else {
+    console.log("not an assembly to dig ");
   }
 }
 
