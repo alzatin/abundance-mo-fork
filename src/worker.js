@@ -963,6 +963,7 @@ function generateDisplayMesh(id) {
     }
     let colorGeometry;
     let meshArray = [];
+
     // Iterate through all the color options and see what geometry matches
     Object.values(colorOptions).forEach((color) => {
       colorGeometry = extractColors(library[id], color);
@@ -971,21 +972,20 @@ function generateDisplayMesh(id) {
         //Flatten the assembly to remove hierarchy
         const flattened = flattenAssembly(colorGeometry);
         //Here we need to extrude anything which isn't already 3D
-        var cleanedGeometry = [];
+
         flattened.forEach((pieceOfGeometry) => {
+          var cleanedGeometry = [];
           if (pieceOfGeometry.mesh == undefined) {
             let sketchPlane = library[id].plane;
             let sketches = pieceOfGeometry.clone();
-            cleanedGeometry.push(
-              sketches.sketchOnPlane(sketchPlane).extrude(0.0001)
-            );
+            cleanedGeometry = sketches
+              .sketchOnPlane(sketchPlane)
+              .extrude(0.0001);
           } else {
-            cleanedGeometry.push(pieceOfGeometry);
+            cleanedGeometry = pieceOfGeometry;
           }
+          meshArray.push({ color: color, geometry: cleanedGeometry });
         });
-        let geometry = chainFuse(cleanedGeometry);
-        // Make an array that contains the color and the flattened/cleaned/fused geometry
-        meshArray.push({ color: color, geometry: geometry });
       }
     });
 
