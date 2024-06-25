@@ -66,6 +66,7 @@ function circle(id, diameter) {
       tags: [],
       plane: newPlane,
       color: "#FF9065",
+      bom: [],
     };
     return true;
   });
@@ -79,6 +80,7 @@ function rectangle(id, x, y) {
       tags: [],
       plane: newPlane,
       color: "#FF9065",
+      bom: [],
     };
     return true;
   });
@@ -92,6 +94,7 @@ function regularPolygon(id, radius, numberOfSides) {
       tags: [],
       plane: newPlane,
       color: "#FF9065",
+      bom: [],
     };
     return true;
   });
@@ -131,6 +134,7 @@ function extrude(targetID, inputID, height) {
         tags: leaf.tags,
         plane: leaf.plane,
         color: leaf.color,
+        bom: leaf.bom,
       };
     });
     return true;
@@ -158,6 +162,7 @@ function move(targetID, inputID, x, y, z) {
           plane: leaf.plane,
           tags: leaf.tags,
           color: leaf.color,
+          bom: leaf.bom,
         };
       });
     } else {
@@ -169,6 +174,7 @@ function move(targetID, inputID, x, y, z) {
             tags: leaf.tags,
             plane: leaf.plane.translate([0, 0, z]),
             color: leaf.color,
+            bom: leaf.bom,
           };
         },
         library[inputID].plane.translate([0, 0, z])
@@ -194,6 +200,7 @@ function rotate(targetID, inputID, x, y, z) {
           tags: leaf.tags,
           plane: leaf.plane,
           color: leaf.color,
+          bom: leaf.bom,
         };
       });
     } else {
@@ -207,6 +214,7 @@ function rotate(targetID, inputID, x, y, z) {
             tags: leaf.tags,
             plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
             color: leaf.color,
+            bom: leaf.bom,
           };
         },
         library[inputID].plane.pivot(x, "X").pivot(y, "Y")
@@ -221,6 +229,7 @@ function difference(targetID, input1ID, input2ID) {
   return started.then(() => {
     let partToCut;
     let cutTemplate;
+    let BOM = [library[input1ID].bom, library[input2ID].bom];
     if (is3D(library[input1ID]) && is3D(library[input2ID])) {
       partToCut = flattenRemove2DandFuse(library[input1ID]);
       cutTemplate = flattenRemove2DandFuse(library[input2ID]);
@@ -236,6 +245,7 @@ function difference(targetID, input1ID, input2ID) {
       tags: [],
       color: "#FF9065",
       plane: library[input1ID].plane,
+      bom: BOM,
     };
     return true;
   });
@@ -243,10 +253,12 @@ function difference(targetID, input1ID, input2ID) {
 
 function shrinkWrapSketches(targetID, inputIDs) {
   return started.then(() => {
+    let BOM = [];
     if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
       let inputsToFuse = [];
       inputIDs.forEach((inputID) => {
         inputsToFuse.push(flattenAndFuse(library[inputID]));
+        BOM.push(library[inputID].bom);
       });
       let geometryToWrap = chainFuse(inputsToFuse);
       library[targetID] = {
@@ -254,6 +266,7 @@ function shrinkWrapSketches(targetID, inputIDs) {
         tags: [],
         color: "#FF9065",
         plane: "XY",
+        bom: BOM,
       };
       return true;
     } else {
@@ -271,6 +284,7 @@ function intersect(targetID, input1ID, input2ID) {
         tags: leaf.tags,
         color: leaf.color,
         plane: leaf.plane,
+        bom: leaf.bom,
       };
     });
     return true;
@@ -281,6 +295,7 @@ function tag(targetID, inputID, TAG) {
   return started.then(() => {
     library[targetID] = {
       geometry: library[inputID].geometry,
+      bom: library[inputID].bom,
       tags: [...TAG, ...library[inputID].tags],
       color: library[inputID].color,
       plane: library[inputID].plane,
@@ -317,17 +332,21 @@ function color(targetID, inputID, color) {
         geometry: leaf.geometry,
         tags: [...leaf.tags],
         color: color,
+        bom: leaf.bom,
         plane: leaf.plane,
       };
     });
   });
 }
 
-function bom(targetID, inputID, TAG, BOM) {
+function bom(targetID, inputID, BOM) {
   return started.then(() => {
+    if (library[inputID].bom != []) {
+      BOM = [...library[inputID].bom, BOM];
+    }
     library[targetID] = {
       geometry: library[inputID].geometry,
-      tags: [TAG, ...library[inputID].tags],
+      tags: [...library[inputID].tags],
       bom: BOM,
       color: library[inputID].color,
     };
@@ -376,30 +395,9 @@ function molecule(targetID, inputID) {
 }
 
 /** Function that extracts geometry with BOM tags and returns bomItems*/
-function extractBomList(inputID, TAG) {
-  let taggedBoms = [];
-  taggedBoms = extractBoms(library[inputID], TAG);
-  if (taggedBoms != false) {
-    console.log(taggedBoms);
-    return [...taggedBoms];
-  }
-}
-
-function extractBoms(inputGeometry, BOM) {
-  if (inputGeometry.tags.includes(BOM)) {
-    return inputGeometry.bom;
-  } else if (
-    inputGeometry.geometry.length >= 1 &&
-    inputGeometry.geometry[0].geometry != undefined
-  ) {
-    let bomArray = [];
-    inputGeometry.geometry.forEach((subAssembly) => {
-      let extractedBoms = extractBoms(subAssembly, BOM);
-      if (extractedBoms != false) {
-        bomArray.push(extractedBoms);
-      }
-    });
-    return bomArray;
+function extractBomList(inputID) {
+  if (library[inputID].bom !== undefined) {
+    return library[inputID].bom;
   } else {
     return false;
   }
@@ -553,6 +551,7 @@ function extractTags(inputGeometry, TAG) {
         geometry: geometryWithTags,
         tags: inputGeometry.tags,
         color: inputGeometry.color,
+        bom: inputGeometry.bom,
       };
       return thethingtoreturn;
     } else {
@@ -669,6 +668,7 @@ function layout(targetID, inputID, TAG, materialThickness) {
         tags: leaf.tags,
         color: leaf.color,
         plane: leaf.plane,
+        bom: leaf.bom,
       };
     });
     return true;
@@ -781,6 +781,7 @@ function recursiveCut(partToCut, cuttingPart) {
 function assembly(targetID, inputIDs) {
   return started.then(() => {
     let assembly = [];
+    let bomAssembly = [];
     if (inputIDs.length > 1) {
       /** Check if all inputs are solid or sketches */
       if (
@@ -796,6 +797,9 @@ function assembly(targetID, inputIDs) {
               i
             )
           );
+          if (library[inputIDs[i]].bom.length > 0) {
+            bomAssembly.push(...library[inputIDs[i]].bom);
+          }
         }
       } else {
         throw new Error(
@@ -804,9 +808,17 @@ function assembly(targetID, inputIDs) {
       }
     } else {
       assembly.push(library[inputIDs[0]]);
+      if (library[inputIDs[0]].bom.length > 0) {
+        bomAssembly.push(...library[inputIDs[0]].bom);
+      }
     }
-    //const newPlane = new Plane().pivot(0, "Y");
-    library[targetID] = { geometry: assembly, tags: [] };
+    const newPlane = new Plane().pivot(0, "Y");
+    library[targetID] = {
+      geometry: assembly,
+      plane: newPlane,
+      tags: [],
+      bom: bomAssembly,
+    };
     return true;
   });
 }
@@ -814,6 +826,7 @@ function assembly(targetID, inputIDs) {
 function fusion(targetID, inputIDs) {
   return started.then(() => {
     let fusedGeometry = [];
+    let bomAssembly = [];
     inputIDs.forEach((inputID) => {
       if (inputIDs.every((inputID) => is3D(library[inputID]))) {
         fusedGeometry.push(flattenRemove2DandFuse(library[inputID]));
@@ -824,11 +837,15 @@ function fusion(targetID, inputIDs) {
           "Fusion must be composed from only sketches OR only solids"
         );
       }
+      if (library[inputID].bom.length > 0) {
+        bomAssembly.push(...library[inputID].bom);
+      }
     });
     const newPlane = new Plane().pivot(0, "Y");
     library[targetID] = {
       geometry: [chainFuse(fusedGeometry)],
       tags: [],
+      bom: bomAssembly,
       plane: newPlane,
       color: "#FF9065",
     };
@@ -855,6 +872,7 @@ function actOnLeafs(assembly, action, plane) {
     return {
       geometry: transformedAssembly,
       tags: assembly.tags,
+      bom: assembly.bom,
       plane: plane,
     };
   }

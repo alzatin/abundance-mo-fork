@@ -35,6 +35,11 @@ export default (function ParamsEditor({
     inputParams = activeAtom.createLevaInputs();
   }
 
+  if (activeAtom.atomType == "Molecule") {
+    /** Creates Leva inputs inside each atom */
+    compiledBom = activeAtom.createLevaBom();
+  }
+
   const bomParamsConfig = useMemo(() => {
     return { ...compiledBom };
   }, [compiledBom]);
@@ -57,7 +62,7 @@ export default (function ParamsEditor({
     [activeAtom]
   );
 
-  useControls(() => bomParamsConfig, { store: store3 }, [compiledBom]);
+  useControls(() => bomParamsConfig, { store: store3 }, [activeAtom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
 
   /** Creates Leva panel with grid settings */
