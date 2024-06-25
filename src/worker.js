@@ -984,10 +984,6 @@ function generateDisplayMesh(id) {
           } else {
             cleanedGeometry = pieceOfGeometry;
           }
-          console.log(cleanedGeometry);
-          console.log(color);
-          //let geometry = chainFuse(cleanedGeometry);
-          // Make an array that contains the color and the flattened/cleaned/fused geometry
           meshArray.push({ color: color, geometry: cleanedGeometry });
         });
       }
