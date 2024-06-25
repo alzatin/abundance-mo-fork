@@ -396,28 +396,8 @@ function molecule(targetID, inputID) {
 
 /** Function that extracts geometry with BOM tags and returns bomItems*/
 function extractBomList(inputID) {
-  let taggedBoms;
-  taggedBoms = extractBoms(library[inputID]);
-  if (taggedBoms != false) {
-    return taggedBoms;
-  }
-}
-
-function extractBoms(inputGeometry) {
-  if (isAssembly(inputGeometry)) {
-    if (inputGeometry.bom !== undefined) {
-      return inputGeometry.bom;
-    } else {
-      console.log(" does no bom ever run?");
-      inputGeometry.geometry.forEach((subAssembly) => {
-        let extractedBoms = extractBoms(subAssembly);
-        if (extractedBoms != false) {
-          return extractedBoms;
-        }
-      });
-    }
-  } else if (inputGeometry.bom !== undefined) {
-    return inputGeometry.bom;
+  if (library[inputID].bom !== undefined) {
+    return library[inputID].bom;
   } else {
     return false;
   }
