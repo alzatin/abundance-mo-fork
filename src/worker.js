@@ -106,10 +106,13 @@ function loftShapes(targetID, inputsIDs) {
     let arrayOfSketchedGeometry = [];
 
     inputsIDs.forEach((inputID) => {
-      let partToLoft = flattenAndFuse(library[inputID]);
-      arrayOfSketchedGeometry.push(
-        partToLoft.sketchOnPlane(library[inputID].plane)
-      );
+      let partToLoft = digFuse(library[inputID]);
+      let sketchedpart = partToLoft.sketchOnPlane(library[inputID].plane);
+      if (!sketchedpart.sketches) {
+        arrayOfSketchedGeometry.push(sketchedpart);
+      } else {
+        throw new Error("Sketches to be lofted can't have interior geometries");
+      }
     });
     let startGeometry = arrayOfSketchedGeometry.shift();
     const newPlane = new Plane().pivot(0, "Y");
