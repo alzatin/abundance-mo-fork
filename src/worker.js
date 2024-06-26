@@ -102,7 +102,6 @@ function regularPolygon(id, radius, numberOfSides) {
 
 function loftShapes(targetID, inputsIDs) {
   return started.then(() => {
-    let startPlane = library[inputsIDs[0]].plane;
     let arrayOfSketchedGeometry = [];
 
     inputsIDs.forEach((inputID) => {
