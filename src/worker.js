@@ -231,11 +231,11 @@ function difference(targetID, input1ID, input2ID) {
     let cutTemplate;
     let BOM = [library[input1ID].bom, library[input2ID].bom];
     if (is3D(library[input1ID]) && is3D(library[input2ID])) {
-      partToCut = flattenRemove2DandFuse(library[input1ID]);
-      cutTemplate = flattenRemove2DandFuse(library[input2ID]);
+      partToCut = digFuse(library[input1ID]);
+      cutTemplate = digFuse(library[input2ID]);
     } else if (!is3D(library[input1ID]) && !is3D(library[input2ID])) {
-      partToCut = flattenAndFuse(library[input1ID]);
-      cutTemplate = flattenAndFuse(library[input2ID]);
+      partToCut = digFuse(library[input1ID]);
+      cutTemplate = digFuse(library[input2ID]);
     } else {
       throw new Error("Both inputs must be either 3D or 2D");
     }
@@ -898,14 +898,11 @@ function flattenAssembly(assembly) {
 }
 
 function chainFuse(chain) {
-  console.log(chain);
   try {
     let fused = chain[0].clone();
-
     for (let i = 1; i < chain.length; i++) {
       fused = fused.fuse(chain[i]);
     }
-    console.log(fused);
     return fused;
   } catch (e) {
     console.log(e);
