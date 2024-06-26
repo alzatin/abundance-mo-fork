@@ -406,7 +406,7 @@ function extractBomList(inputID) {
 /** Visualize STL or STEP*/
 function visExport(targetID, inputID, fileType) {
   return started.then(() => {
-    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+    let fusedGeometry = digFuse(library[inputID]);
     let displayColor =
       fileType == "STL"
         ? "#91C8D5"
