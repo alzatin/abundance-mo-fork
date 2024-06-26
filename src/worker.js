@@ -491,7 +491,7 @@ function generateThumbnail(inputID) {
         projectionShape = prettyProjection(fusedGeometry);
         svg = projectionShape.visible.toSVG();
       } else {
-        fusedGeometry = flattenAndFuse(library[inputID])
+        fusedGeometry = digFuse(library[inputID])
           .sketchOnPlane("XY")
           .extrude(0.0001);
         projectionShape = drawProjection(fusedGeometry, "top").visible;
@@ -929,7 +929,8 @@ function digFuse(assembly) {
     });
     return chainFuse(flattened);
   } else {
-    console.log("not an assembly to dig ");
+    console.log("not an assembly to dig, returning single geometry ");
+    return assembly.geometry[0];
   }
 }
 
