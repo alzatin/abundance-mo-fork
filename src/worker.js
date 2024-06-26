@@ -929,7 +929,6 @@ function digFuse(assembly) {
     });
     return chainFuse(flattened);
   } else {
-    console.log("not an assembly to dig, returning single geometry ");
     return assembly.geometry[0];
   }
 }
