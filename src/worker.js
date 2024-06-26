@@ -829,9 +829,9 @@ function fusion(targetID, inputIDs) {
     let bomAssembly = [];
     inputIDs.forEach((inputID) => {
       if (inputIDs.every((inputID) => is3D(library[inputID]))) {
-        fusedGeometry.push(flattenRemove2DandFuse(library[inputID]));
+        fusedGeometry.push(digFuse(library[inputID]));
       } else if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
-        fusedGeometry.push(flattenAndFuse(library[inputID]));
+        fusedGeometry.push(digFuse(library[inputID]));
       } else {
         throw new Error(
           "Fusion must be composed from only sketches OR only solids"
