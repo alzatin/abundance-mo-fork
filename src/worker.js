@@ -102,14 +102,16 @@ function regularPolygon(id, radius, numberOfSides) {
 
 function loftShapes(targetID, inputsIDs) {
   return started.then(() => {
-    let startPlane = library[inputsIDs[0]].plane;
     let arrayOfSketchedGeometry = [];
 
     inputsIDs.forEach((inputID) => {
-      let partToLoft = flattenAndFuse(library[inputID]);
-      arrayOfSketchedGeometry.push(
-        partToLoft.sketchOnPlane(library[inputID].plane)
-      );
+      let partToLoft = digFuse(library[inputID]);
+      let sketchedpart = partToLoft.sketchOnPlane(library[inputID].plane);
+      if (!sketchedpart.sketches) {
+        arrayOfSketchedGeometry.push(sketchedpart);
+      } else {
+        throw new Error("Sketches to be lofted can't have interior geometries");
+      }
     });
     let startGeometry = arrayOfSketchedGeometry.shift();
     const newPlane = new Plane().pivot(0, "Y");
@@ -231,11 +233,11 @@ function difference(targetID, input1ID, input2ID) {
     let cutTemplate;
     let BOM = [library[input1ID].bom, library[input2ID].bom];
     if (is3D(library[input1ID]) && is3D(library[input2ID])) {
-      partToCut = flattenRemove2DandFuse(library[input1ID]);
-      cutTemplate = flattenRemove2DandFuse(library[input2ID]);
+      partToCut = digFuse(library[input1ID]);
+      cutTemplate = digFuse(library[input2ID]);
     } else if (!is3D(library[input1ID]) && !is3D(library[input2ID])) {
-      partToCut = flattenAndFuse(library[input1ID]);
-      cutTemplate = flattenAndFuse(library[input2ID]);
+      partToCut = digFuse(library[input1ID]);
+      cutTemplate = digFuse(library[input2ID]);
     } else {
       throw new Error("Both inputs must be either 3D or 2D");
     }
@@ -257,7 +259,7 @@ function shrinkWrapSketches(targetID, inputIDs) {
     if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
       let inputsToFuse = [];
       inputIDs.forEach((inputID) => {
-        inputsToFuse.push(flattenAndFuse(library[inputID]));
+        inputsToFuse.push(digFuse(library[inputID]));
         BOM.push(library[inputID].bom);
       });
       let geometryToWrap = chainFuse(inputsToFuse);
@@ -278,7 +280,7 @@ function shrinkWrapSketches(targetID, inputIDs) {
 function intersect(targetID, input1ID, input2ID) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[input1ID], (leaf) => {
-      const shapeToIntersectWith = flattenRemove2DandFuse(library[input2ID]);
+      const shapeToIntersectWith = digFuse(library[input2ID]);
       return {
         geometry: [leaf.geometry[0].clone().intersect(shapeToIntersectWith)],
         tags: leaf.tags,
@@ -406,7 +408,7 @@ function extractBomList(inputID) {
 /** Visualize STL or STEP*/
 function visExport(targetID, inputID, fileType) {
   return started.then(() => {
-    let fusedGeometry = flattenRemove2DandFuse(library[inputID]);
+    let fusedGeometry = digFuse(library[inputID]);
     let displayColor =
       fileType == "STL"
         ? "#91C8D5"
@@ -829,9 +831,9 @@ function fusion(targetID, inputIDs) {
     let bomAssembly = [];
     inputIDs.forEach((inputID) => {
       if (inputIDs.every((inputID) => is3D(library[inputID]))) {
-        fusedGeometry.push(flattenRemove2DandFuse(library[inputID]));
+        fusedGeometry.push(digFuse(library[inputID]));
       } else if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
-        fusedGeometry.push(flattenAndFuse(library[inputID]));
+        fusedGeometry.push(digFuse(library[inputID]));
       } else {
         throw new Error(
           "Fusion must be composed from only sketches OR only solids"
@@ -898,14 +900,11 @@ function flattenAssembly(assembly) {
 }
 
 function chainFuse(chain) {
-  console.log(chain);
   try {
     let fused = chain[0].clone();
-
     for (let i = 1; i < chain.length; i++) {
       fused = fused.fuse(chain[i]);
     }
-    console.log(fused);
     return fused;
   } catch (e) {
     console.log(e);
