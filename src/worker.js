@@ -229,26 +229,26 @@ function rotate(targetID, inputID, x, y, z) {
 
 function difference(targetID, input1ID, input2ID) {
   return started.then(() => {
-    let partToCut;
     let cutTemplate;
-    let BOM = [library[input1ID].bom, library[input2ID].bom];
-    if (is3D(library[input1ID]) && is3D(library[input2ID])) {
-      partToCut = digFuse(library[input1ID]);
+
+    if (
+      (is3D(library[input1ID]) && is3D(library[input2ID])) ||
+      (!is3D(library[input1ID]) && !is3D(library[input2ID]))
+    ) {
       cutTemplate = digFuse(library[input2ID]);
-    } else if (!is3D(library[input1ID]) && !is3D(library[input2ID])) {
-      partToCut = digFuse(library[input1ID]);
-      cutTemplate = digFuse(library[input2ID]);
+
+      library[targetID] = actOnLeafs(library[input1ID], (leaf) => {
+        return {
+          geometry: [leaf.geometry[0].clone().cut(cutTemplate)],
+          tags: leaf.tags,
+          color: leaf.color,
+          plane: leaf.plane,
+          bom: leaf.bom,
+        };
+      });
     } else {
       throw new Error("Both inputs must be either 3D or 2D");
     }
-
-    library[targetID] = {
-      geometry: [partToCut.cut(cutTemplate)],
-      tags: [],
-      color: "#FF9065",
-      plane: library[input1ID].plane,
-      bom: BOM,
-    };
     return true;
   });
 }
