@@ -972,7 +972,6 @@ function generateDisplayMesh(id) {
 
     //Flatten the assembly to remove hierarchy
     const flattened = flattenAssembly(library[id]);
-    //Here we need to extrude anything which isn't already 3D
 
     flattened.forEach((displayObject) => {
       var cleanedGeometry = [];
