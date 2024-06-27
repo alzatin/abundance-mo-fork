@@ -259,7 +259,13 @@ function shrinkWrapSketches(targetID, inputIDs) {
     if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
       let inputsToFuse = [];
       inputIDs.forEach((inputID) => {
-        inputsToFuse.push(digFuse(library[inputID]));
+        let fusedInput = digFuse(library[inputID]);
+        inputsToFuse.push(fusedInput);
+        if (fusedInput.innerShape.blueprints) {
+          throw new Error(
+            "Sketches to be lofted can't have interior geometries"
+          );
+        }
         BOM.push(library[inputID].bom);
       });
       let geometryToWrap = chainFuse(inputsToFuse);
