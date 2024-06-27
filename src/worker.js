@@ -229,26 +229,26 @@ function rotate(targetID, inputID, x, y, z) {
 
 function difference(targetID, input1ID, input2ID) {
   return started.then(() => {
-    let partToCut;
     let cutTemplate;
-    let BOM = [library[input1ID].bom, library[input2ID].bom];
-    if (is3D(library[input1ID]) && is3D(library[input2ID])) {
-      partToCut = digFuse(library[input1ID]);
+
+    if (
+      (is3D(library[input1ID]) && is3D(library[input2ID])) ||
+      (!is3D(library[input1ID]) && !is3D(library[input2ID]))
+    ) {
       cutTemplate = digFuse(library[input2ID]);
-    } else if (!is3D(library[input1ID]) && !is3D(library[input2ID])) {
-      partToCut = digFuse(library[input1ID]);
-      cutTemplate = digFuse(library[input2ID]);
+
+      library[targetID] = actOnLeafs(library[input1ID], (leaf) => {
+        return {
+          geometry: [leaf.geometry[0].clone().cut(cutTemplate)],
+          tags: leaf.tags,
+          color: leaf.color,
+          plane: leaf.plane,
+          bom: leaf.bom,
+        };
+      });
     } else {
       throw new Error("Both inputs must be either 3D or 2D");
     }
-
-    library[targetID] = {
-      geometry: [partToCut.cut(cutTemplate)],
-      tags: [],
-      color: "#FF9065",
-      plane: library[input1ID].plane,
-      bom: BOM,
-    };
     return true;
   });
 }
@@ -259,7 +259,13 @@ function shrinkWrapSketches(targetID, inputIDs) {
     if (inputIDs.every((inputID) => !is3D(library[inputID]))) {
       let inputsToFuse = [];
       inputIDs.forEach((inputID) => {
-        inputsToFuse.push(digFuse(library[inputID]));
+        let fusedInput = digFuse(library[inputID]);
+        inputsToFuse.push(fusedInput);
+        if (fusedInput.innerShape.blueprints) {
+          throw new Error(
+            "Sketches to be lofted can't have interior geometries"
+          );
+        }
         BOM.push(library[inputID].bom);
       });
       let geometryToWrap = chainFuse(inputsToFuse);
@@ -887,7 +893,7 @@ function flattenAssembly(assembly) {
     assembly.geometry.length == 1 &&
     assembly.geometry[0].geometry == undefined
   ) {
-    flattened.push(assembly.geometry[0]);
+    flattened.push({ geometry: assembly.geometry[0], color: assembly.color });
     return flattened;
   }
   //This is a branch
@@ -924,32 +930,11 @@ function digFuse(assembly) {
         // add the fused things in
         flattened.push(digFuse(subAssembly));
       }
-      console.log(flattened);
     });
     return chainFuse(flattened);
   } else {
     return assembly.geometry[0];
   }
-}
-
-function flattenAndFuse(chain) {
-  let flattened = flattenAssembly(chain);
-  return chainFuse(flattened);
-}
-
-function flattenRemove2DandFuse(chain) {
-  let flattened = flattenAssembly(chain);
-
-  //Here we need to remove anything which isn't already 3D
-  let cleanedGeometry = [];
-
-  flattened.forEach((pieceOfGeometry) => {
-    if (pieceOfGeometry.mesh != undefined) {
-      cleanedGeometry.push(pieceOfGeometry);
-    }
-  });
-
-  return chainFuse(cleanedGeometry);
 }
 
 let colorOptions = {
@@ -983,32 +968,24 @@ function generateDisplayMesh(id) {
     if (library[id] == undefined) {
       throw new Error("ID not found in library");
     }
-    let colorGeometry;
     let meshArray = [];
 
-    // Iterate through all the color options and see what geometry matches
-    Object.values(colorOptions).forEach((color) => {
-      colorGeometry = extractColors(library[id], color);
+    //Flatten the assembly to remove hierarchy
+    const flattened = flattenAssembly(library[id]);
 
-      if (colorGeometry != false) {
-        //Flatten the assembly to remove hierarchy
-        const flattened = flattenAssembly(colorGeometry);
-        //Here we need to extrude anything which isn't already 3D
-
-        flattened.forEach((pieceOfGeometry) => {
-          var cleanedGeometry = [];
-          if (pieceOfGeometry.mesh == undefined) {
-            let sketchPlane = library[id].plane;
-            let sketches = pieceOfGeometry.clone();
-            cleanedGeometry = sketches
-              .sketchOnPlane(sketchPlane)
-              .extrude(0.0001);
-          } else {
-            cleanedGeometry = pieceOfGeometry;
-          }
-          meshArray.push({ color: color, geometry: cleanedGeometry });
-        });
+    flattened.forEach((displayObject) => {
+      var cleanedGeometry = [];
+      if (displayObject.geometry.mesh == undefined) {
+        let sketchPlane = library[id].plane;
+        let sketches = displayObject.geometry.clone();
+        cleanedGeometry = sketches.sketchOnPlane(sketchPlane).extrude(0.0001);
+      } else {
+        cleanedGeometry = displayObject.geometry;
       }
+      meshArray.push({
+        color: displayObject.color,
+        geometry: cleanedGeometry,
+      });
     });
 
     let finalMeshes = [];
