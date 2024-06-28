@@ -295,6 +295,7 @@ function CreateMode(props) {
       await GlobalVariables.topLevelMolecule.requestReadme();
     readmeContent = readmeContent + readMeRequestResult.readMeText + "\n\n";
 
+    /** File object to commit */
     let filesObject = {
       "BillOfMaterials.md": bomContent,
       "README.md": readmeContent,
@@ -303,12 +304,12 @@ function CreateMode(props) {
     };
 
     let readmeSVGs = readMeRequestResult.svgs;
+
     if (readmeSVGs) {
       readmeSVGs.forEach((item) => {
-        filesObject["readme.svg"] = item;
+        filesObject["readme" + item.uniqueID + ".svg"] = item.svg;
       });
     }
-    console.log(filesObject);
 
     setState(10);
 

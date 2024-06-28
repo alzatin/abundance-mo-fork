@@ -456,12 +456,10 @@ export default class Molecule extends Atom {
         if (value.thumbnail) {
           if (value.readMeText) {
             finalMoleculeReadMe = finalMoleculeReadMe
-              .concat(
-                GlobalVariables.currentRepoName + " \n\n![](/readme.svg)\n\n"
-              )
+              .concat(" \n\n![readme](/readme" + value.uniqueID + ".svg)\n\n")
+
               .concat(value.readMeText);
-            console.log(value.thumbnail);
-            svgArray.push(value.thumbnail);
+            svgArray.push({ uniqueID: value.uniqueID, svg: value.thumbnail });
           }
         } else {
           finalMoleculeReadMe.concat(value.readMeText);

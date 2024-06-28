@@ -121,6 +121,7 @@ export default class Readme extends Atom {
           return {
             readMeText: this.readmeText,
             thumbnail: res,
+            uniqueID: this.uniqueID,
           };
         })
         .catch((error) => {
