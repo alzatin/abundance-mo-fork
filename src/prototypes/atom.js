@@ -585,7 +585,9 @@ export default class Atom {
   /**
    * Token update value function to give each atom one by default
    */
-  updateValue() {}
+  updateValue() {
+    console.log("No update value function for this atom");
+  }
 
   /**
    * Used to walk back out the tree generating a list of constants...used for evolve

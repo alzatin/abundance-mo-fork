@@ -13,6 +13,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
+import { re } from "mathjs";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -289,9 +290,25 @@ function CreateMode(props) {
       "# " +
       GlobalVariables.currentRepoName +
       "\n\n![](/project.svg)\n\n";
-    GlobalVariables.topLevelMolecule.requestReadme().forEach((item) => {
-      readmeContent = readmeContent + item + "\n\n\n";
-    });
+
+    let readMeRequestResult =
+      await GlobalVariables.topLevelMolecule.requestReadme();
+    readmeContent = readmeContent + readMeRequestResult.readMeText + "\n\n";
+
+    let filesObject = {
+      "BillOfMaterials.md": bomContent,
+      "README.md": readmeContent,
+      "project.svg": finalSVG ? finalSVG : "",
+      "project.abundance": projectContent,
+    };
+
+    let readmeSVGs = readMeRequestResult.svgs;
+    if (readmeSVGs) {
+      readmeSVGs.forEach((item) => {
+        filesObject["readme.svg"] = item;
+      });
+    }
+    console.log(filesObject);
 
     setState(10);
 
@@ -301,12 +318,7 @@ function CreateMode(props) {
         owner: GlobalVariables.currentUser,
         repo: GlobalVariables.currentRepo.name,
         changes: {
-          files: {
-            "BillOfMaterials.md": bomContent,
-            "README.md": readmeContent,
-            "project.svg": finalSVG ? finalSVG : "",
-            "project.abundance": projectContent,
-          },
+          files: filesObject,
           commit: "Autosave",
         },
       },

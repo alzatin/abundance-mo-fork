@@ -1,5 +1,6 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
+import { re } from "mathjs";
 
 /**
  * This class creates the readme atom.
@@ -54,6 +55,8 @@ export default class Readme extends Atom {
      */
     this.global = true;
 
+    this.addIO("input", "geometry", this, "geometry", undefined);
+
     this.setValues(values);
   }
 
@@ -103,12 +106,26 @@ export default class Readme extends Atom {
     return inputParams;
   }
 
+  async generateProjectThumbnail() {
+    let thumb = this.findIOValue("geometry");
+    //Generate a thumbnail for the project
+    return GlobalVariables.cad.generateThumbnail(thumb);
+  }
   /**
    * Provides this molecules contribution to the global Readme
    */
-  requestReadme() {
+  async requestReadme() {
     if (this.global) {
-      return [this.readmeText];
+      return this.generateProjectThumbnail()
+        .then((res) => {
+          return {
+            readMeText: this.readmeText,
+            thumbnail: res,
+          };
+        })
+        .catch((error) => {
+          console.error("Error generating project thumbnail: ", error);
+        });
     } else {
       return [];
     }

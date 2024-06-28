@@ -5,6 +5,7 @@ import { button } from "leva";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import saveAs from "file-saver";
 import { BOMEntry } from "../js/BOM";
+import { re } from "mathjs";
 
 /**
  * This class creates the Molecule atom.
@@ -430,27 +431,50 @@ export default class Molecule extends Atom {
   /**
    * Check to see if any of this molecules children have contributions to make to the README file. Children closer to the top left will be applied first. TODO: No contribution should be made if it's just a title.
    */
-  requestReadme() {
+  async requestReadme() {
     var generatedReadme = super.requestReadme();
+    let svgArray = [];
 
     var sortableAtomsList = this.nodesOnTheScreen;
-    sortableAtomsList.sort(function (a, b) {
-      return (
-        GlobalVariables.distBetweenPoints(a.x, 0, a.y, 0) -
-        GlobalVariables.distBetweenPoints(b.x, 0, b.y, 0)
-      );
-    });
+    sortableAtomsList = sortableAtomsList
+      .filter(
+        (atom) => atom.atomType == "Molecule" || atom.atomType == "Readme"
+      )
+      .sort(function (a, b) {
+        return (
+          GlobalVariables.distBetweenPoints(a.x, 0, a.y, 0) -
+          GlobalVariables.distBetweenPoints(b.x, 0, b.y, 0)
+        );
+      });
+    let finalMoleculeReadMe = "";
 
-    sortableAtomsList.forEach((atom) => {
-      generatedReadme = generatedReadme.concat(atom.requestReadme());
+    const promiseArray = sortableAtomsList.map((atom) => {
+      return atom.requestReadme();
+    });
+    await Promise.all(promiseArray).then((values) => {
+      values.forEach((value) => {
+        if (value.thumbnail) {
+          if (value.readMeText) {
+            finalMoleculeReadMe = finalMoleculeReadMe
+              .concat(
+                GlobalVariables.currentRepoName + " \n\n![](/readme.svg)\n\n"
+              )
+              .concat(value.readMeText);
+            console.log(value.thumbnail);
+            svgArray.push(value.thumbnail);
+          }
+        } else {
+          finalMoleculeReadMe.concat(value.readMeText);
+        }
+      });
     });
 
     //Check to see if any of the children added anything if not, remove the bit we added
     if (generatedReadme[generatedReadme.length - 1] == "## " + this.name) {
       generatedReadme.pop();
     }
-
-    return generatedReadme;
+    console.log(svgArray);
+    return { readMeText: finalMoleculeReadMe, svgs: svgArray };
   }
 
   /**
