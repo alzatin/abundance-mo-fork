@@ -463,7 +463,7 @@ export default class Molecule extends Atom {
             svgArray.push({ uniqueID: value.uniqueID, svg: value.thumbnail });
           }
         } else {
-          finalMoleculeReadMe.concat(value.readMeText);
+          finalMoleculeReadMe = finalMoleculeReadMe.concat(value.readMeText);
         }
       });
     });

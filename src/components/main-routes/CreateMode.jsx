@@ -299,6 +299,7 @@ function CreateMode(props) {
     setState(20);
     let readMeRequestResult =
       await GlobalVariables.topLevelMolecule.requestReadme();
+
     readmeContent = readmeContent + readMeRequestResult.readMeText + "\n\n";
 
     /** File object to commit */
@@ -310,10 +311,14 @@ function CreateMode(props) {
     };
 
     // delete any SVGs that are no longer in the project
-    const svgsToDelete = activeAtom.projectSVGs.filter(
-      (item) =>
-        !readMeRequestResult.svgs.some((svg) => svg.uniqueID === item.uniqueID)
-    );
+    const svgsToDelete = activeAtom.projectSVGs
+      ? activeAtom.projectSVGs.filter(
+          (item) =>
+            !readMeRequestResult.svgs.some(
+              (svg) => svg.uniqueID === item.uniqueID
+            )
+        )
+      : [];
     svgsToDelete.forEach((item) => {
       filesObject["readme" + item.uniqueID + ".svg"] = null;
     });
