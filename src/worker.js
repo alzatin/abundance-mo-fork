@@ -490,7 +490,6 @@ const prettyProjection = (shape) => {
 
 function generateThumbnail(inputID) {
   return started.then(() => {
-    console.log(inputID);
     if (library[inputID] != undefined) {
       let fusedGeometry;
       let projectionShape;

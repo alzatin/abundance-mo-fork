@@ -448,7 +448,7 @@ export default class Molecule extends Atom {
           GlobalVariables.distBetweenPoints(b.x, 0, b.y, 0)
         );
       });
-    let finalMoleculeReadMe = "";
+    let finalMoleculeReadMe = generatedReadme;
 
     const promiseArray = sortableAtomsList.map((atom) => {
       return atom.requestReadme();
@@ -468,11 +468,6 @@ export default class Molecule extends Atom {
       });
     });
 
-    //Check to see if any of the children added anything if not, remove the bit we added
-    if (generatedReadme[generatedReadme.length - 1] == "## " + this.name) {
-      generatedReadme.pop();
-    }
-    console.log(svgArray);
     return { readMeText: finalMoleculeReadMe, svgs: svgArray };
   }
 

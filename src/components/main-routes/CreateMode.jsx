@@ -243,7 +243,7 @@ function CreateMode(props) {
     finalSVG = await GlobalVariables.topLevelMolecule
       .generateProjectThumbnail()
       .catch((error) => {
-        console.error("Error generating project thumbnail: ", error);
+        console.error("Error generating final project thumbnail: ", error);
       });
 
     var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
@@ -309,6 +309,7 @@ function CreateMode(props) {
       "project.abundance": projectContent,
     };
 
+    // delete any SVGs that are no longer in the project
     const svgsToDelete = activeAtom.projectSVGs.filter(
       (item) =>
         !readMeRequestResult.svgs.some((svg) => svg.uniqueID === item.uniqueID)
@@ -316,6 +317,7 @@ function CreateMode(props) {
     svgsToDelete.forEach((item) => {
       filesObject["readme" + item.uniqueID + ".svg"] = null;
     });
+
     const readmeSVGs = readMeRequestResult.svgs;
     if (readmeSVGs) {
       readmeSVGs.forEach((item) => {
