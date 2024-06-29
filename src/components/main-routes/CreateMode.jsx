@@ -118,7 +118,7 @@ function CreateMode(props) {
     { owner, repo, base, changes },
     setState
   ) {
-    setState(20);
+    setState(35);
     if (!base) {
       octokit
         .request("GET /repos/{owner}/{repo}", {
@@ -126,7 +126,7 @@ function CreateMode(props) {
           repo: repo,
         })
         .then((response) => {
-          setState(30);
+          setState(40);
           base = response.data.default_branch;
           octokit.rest.repos
             .listCommits({
@@ -136,7 +136,7 @@ function CreateMode(props) {
               per_page: 1,
             })
             .then((response) => {
-              setState(40);
+              setState(50);
               let latestCommitSha = response.data[0].sha;
               const treeSha = response.data[0].commit.tree.sha;
               octokit.rest.git
@@ -190,7 +190,6 @@ function CreateMode(props) {
                             item["sha"] = latestCommitSha;
                           });
                           setState(90);
-                          console.log(activeAtom.projectSVGs);
                           console.warn("Project saved");
                           setState(100);
                         });
@@ -246,6 +245,7 @@ function CreateMode(props) {
         console.error("Error generating final project thumbnail: ", error);
       });
 
+    setState(10);
     var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
     jsonRepOfProject.filetypeVersion = 1;
     const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
@@ -297,6 +297,7 @@ function CreateMode(props) {
       GlobalVariables.currentRepoName +
       "\n\n![](/project.svg)\n\n";
 
+    setState(20);
     let readMeRequestResult =
       await GlobalVariables.topLevelMolecule.requestReadme();
     readmeContent = readmeContent + readMeRequestResult.readMeText + "\n\n";
@@ -327,7 +328,7 @@ function CreateMode(props) {
     // add the new SVGArray to the active atom to keep track of sha and serialize
     activeAtom.projectSVGs = readmeSVGs;
 
-    setState(10);
+    setState(30);
 
     createCommit(
       authorizedUserOcto,
