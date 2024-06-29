@@ -173,7 +173,6 @@ function CreateMode(props) {
                       parents: [latestCommitSha],
                     })
                     .then((response) => {
-                      console.log(response);
                       setState(80);
                       latestCommitSha = response.data.sha;
 
