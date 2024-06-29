@@ -310,7 +310,7 @@ function CreateMode(props) {
       "project.abundance": projectContent,
     };
 
-    // delete any SVGs that are no longer in the project
+    /* Delete any SVGs that are no longer in the project*/
     const svgsToDelete = activeAtom.projectSVGs
       ? activeAtom.projectSVGs.filter(
           (item) =>
@@ -323,13 +323,14 @@ function CreateMode(props) {
       filesObject["readme" + item.uniqueID + ".svg"] = null;
     });
 
+    /* add any new SVGs to the project change files*/
     const readmeSVGs = readMeRequestResult.svgs;
     if (readmeSVGs) {
       readmeSVGs.forEach((item) => {
         filesObject["readme" + item.uniqueID + ".svg"] = item.svg;
       });
     }
-    // add the new SVGArray to the active atom to keep track of sha and serialize
+    /*add the new SVGArray to the active atom to keep track of sha and serialize*/
     activeAtom.projectSVGs = readmeSVGs;
 
     setState(30);
