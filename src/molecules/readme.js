@@ -126,6 +126,11 @@ export default class Readme extends Atom {
         })
         .catch((error) => {
           console.error("Error generating project thumbnail: ", error);
+          return {
+            readMeText: this.readmeText,
+            thumbnail: null,
+            uniqueID: this.uniqueID,
+          };
         });
     } else {
       return [];
@@ -137,6 +142,16 @@ export default class Readme extends Atom {
    */
   sendToRender() {
     console.log("nothing to render in readme");
+  }
+
+  /**
+   * Call super delete node and then grab input that calls function to delete the file from github
+   */
+  deleteNode() {
+    super.deleteNode();
+    // var f = document.getElementById("fileDeleteInput");
+    //f.value = this.fileName;
+    //f.click();
   }
 
   /**

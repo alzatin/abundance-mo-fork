@@ -94,6 +94,8 @@ export default class Molecule extends Atom {
 
     this.compiledBom = {};
 
+    this.projectSVGs = [];
+
     /**
      * List of all available tags in project.
      * @type {array}
@@ -457,7 +459,6 @@ export default class Molecule extends Atom {
           if (value.readMeText) {
             finalMoleculeReadMe = finalMoleculeReadMe
               .concat(" \n\n![readme](/readme" + value.uniqueID + ".svg)\n\n")
-
               .concat(value.readMeText);
             svgArray.push({ uniqueID: value.uniqueID, svg: value.thumbnail });
           }
@@ -501,6 +502,7 @@ export default class Molecule extends Atom {
     thisAsObject.unitsIndex = this.unitsIndex;
     thisAsObject.fileTypeVersion = 1;
     thisAsObject.compiledBom = this.compiledBom;
+    thisAsObject.projectSVGs = this.projectSVGs;
 
     return thisAsObject;
   }

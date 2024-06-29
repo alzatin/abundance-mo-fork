@@ -173,8 +173,10 @@ function CreateMode(props) {
                       parents: [latestCommitSha],
                     })
                     .then((response) => {
+                      console.log(response);
                       setState(80);
                       latestCommitSha = response.data.sha;
+
                       octokit.rest.git
                         .updateRef({
                           owner,
@@ -184,7 +186,11 @@ function CreateMode(props) {
                           force: true,
                         })
                         .then((response) => {
+                          activeAtom.projectSVGs.forEach((item) => {
+                            item["sha"] = latestCommitSha;
+                          });
                           setState(90);
+                          console.log(activeAtom.projectSVGs);
                           console.warn("Project saved");
                           setState(100);
                         });
@@ -232,8 +238,8 @@ function CreateMode(props) {
    */
   const saveProject = async (setState) => {
     setState(5);
-    let finalSVG;
 
+    let finalSVG;
     finalSVG = await GlobalVariables.topLevelMolecule
       .generateProjectThumbnail()
       .catch((error) => {
@@ -303,13 +309,21 @@ function CreateMode(props) {
       "project.abundance": projectContent,
     };
 
-    let readmeSVGs = readMeRequestResult.svgs;
-
+    const svgsToDelete = activeAtom.projectSVGs.filter(
+      (item) =>
+        !readMeRequestResult.svgs.some((svg) => svg.uniqueID === item.uniqueID)
+    );
+    svgsToDelete.forEach((item) => {
+      filesObject["readme" + item.uniqueID + ".svg"] = null;
+    });
+    const readmeSVGs = readMeRequestResult.svgs;
     if (readmeSVGs) {
       readmeSVGs.forEach((item) => {
         filesObject["readme" + item.uniqueID + ".svg"] = item.svg;
       });
     }
+    // add the new SVGArray to the active atom to keep track of sha and serialize
+    activeAtom.projectSVGs = readmeSVGs;
 
     setState(10);
 
