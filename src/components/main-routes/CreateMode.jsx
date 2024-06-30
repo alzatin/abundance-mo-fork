@@ -185,9 +185,11 @@ function CreateMode(props) {
                           force: true,
                         })
                         .then((response) => {
-                          activeAtom.projectSVGs.forEach((item) => {
-                            item["sha"] = latestCommitSha;
-                          });
+                          GlobalVariables.topLevelMolecule.projectSVGs.forEach(
+                            (item) => {
+                              item["sha"] = latestCommitSha;
+                            }
+                          );
                           setState(90);
                           console.warn("Project saved");
                           setState(100);
