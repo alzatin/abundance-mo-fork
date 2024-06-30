@@ -455,19 +455,21 @@ export default class Molecule extends Atom {
       values.forEach((value) => {
         if (value.svg) {
           if (value.readMeText) {
-            finalMoleculeReadMe = finalMoleculeReadMe
-              .concat(" \n\n![readme](/readme" + value.uniqueID + ".svg)\n\n")
-              .concat(value.readMeText);
+            finalMoleculeReadMe = finalMoleculeReadMe.concat(value.readMeText);
             if (value.svg instanceof Array) {
-              console.log("array");
-              console.log(value);
               value.svg.forEach((arrayItem) => {
+                finalMoleculeReadMe = finalMoleculeReadMe.concat(
+                  " \n\n![readme](/readme" + arrayItem.uniqueID + ".svg)\n\n"
+                );
                 svgArray.push({
                   uniqueID: arrayItem.uniqueID,
                   svg: arrayItem.svg,
                 });
               });
             } else {
+              /*finalMoleculeReadMe = finalMoleculeReadMe.concat(
+                " \n\n![readme](/readme" + value.uniqueID + ".svg)\n\n"
+              );*/
               svgArray.push({ uniqueID: value.uniqueID, svg: value.svg });
             }
           }
