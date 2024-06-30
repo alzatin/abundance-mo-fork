@@ -480,7 +480,6 @@ export default class Molecule extends Atom {
         }
       });
     });
-    console.log(finalReadMe);
     return finalReadMe;
   }
 
