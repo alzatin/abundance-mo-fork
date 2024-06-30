@@ -92,8 +92,6 @@ export default class Molecule extends Atom {
 
     this.compiledBom = {};
 
-    this.projectSVGs = [];
-
     /**
      * List of all available tags in project.
      * @type {array}
@@ -432,9 +430,6 @@ export default class Molecule extends Atom {
    * Check to see if any of this molecules children have contributions to make to the README file. Children closer to the top left will be applied first. TODO: No contribution should be made if it's just a title.
    */
   async requestReadme() {
-    var generatedReadme = super.requestReadme();
-    let svgArray = [];
-
     var sortableAtomsList = this.nodesOnTheScreen;
     sortableAtomsList = sortableAtomsList
       .filter(
@@ -446,8 +441,6 @@ export default class Molecule extends Atom {
           GlobalVariables.distBetweenPoints(b.x, 0, b.y, 0)
         );
       });
-    let finalMoleculeReadMe = generatedReadme;
-
     const promiseArray = sortableAtomsList.map((atom) => {
       return atom.requestReadme();
     });
@@ -509,7 +502,6 @@ export default class Molecule extends Atom {
     thisAsObject.unitsIndex = this.unitsIndex;
     thisAsObject.fileTypeVersion = 1;
     thisAsObject.compiledBom = this.compiledBom;
-    thisAsObject.projectSVGs = this.projectSVGs;
 
     return thisAsObject;
   }

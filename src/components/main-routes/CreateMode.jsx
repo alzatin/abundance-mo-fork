@@ -186,12 +186,6 @@ function CreateMode(props) {
                           force: true,
                         })
                         .then((response) => {
-                          setState(85);
-                          GlobalVariables.topLevelMolecule.projectSVGs.forEach(
-                            (item) => {
-                              item["sha"] = latestCommitSha;
-                            }
-                          );
                           setState(90);
                           console.warn("Project saved");
                           setState(100);
@@ -329,9 +323,6 @@ function CreateMode(props) {
         }
       });
     }
-    /*add the new SVGArray to the active atom to keep track of sha and serialize*/
-    GlobalVariables.topLevelMolecule.projectSVGs = readmeSVGs;
-
     setState(30);
 
     createCommit(
