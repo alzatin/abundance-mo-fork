@@ -300,6 +300,9 @@ function CreateMode(props) {
     let readMeRequestResult =
       await GlobalVariables.topLevelMolecule.requestReadme();
 
+    console.log("readMeRequestResult in Create Mode:");
+    console.log(readMeRequestResult);
+
     readmeContent = readmeContent + readMeRequestResult.readMeText + "\n\n";
 
     /** File object to commit */
@@ -311,11 +314,11 @@ function CreateMode(props) {
     };
 
     /* Delete any SVGs that are no longer in the project*/
-    const svgsToDelete = activeAtom.projectSVGs
-      ? activeAtom.projectSVGs.filter(
+    const svgsToDelete = GlobalVariables.topLevelMolecule.projectSVGs
+      ? GlobalVariables.topLevelMolecule.projectSVGs.filter(
           (item) =>
-            !readMeRequestResult.svgs.some(
-              (svg) => svg.uniqueID === item.uniqueID
+            !readMeRequestResult.svg.some(
+              (item) => item.uniqueID === item.uniqueID
             )
         )
       : [];
@@ -324,7 +327,7 @@ function CreateMode(props) {
     });
 
     /* add any new SVGs to the project change files*/
-    const readmeSVGs = readMeRequestResult.svgs;
+    const readmeSVGs = readMeRequestResult.svg;
     if (readmeSVGs) {
       readmeSVGs.forEach((item) => {
         filesObject["readme" + item.uniqueID + ".svg"] = item.svg;

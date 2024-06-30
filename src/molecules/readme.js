@@ -126,13 +126,13 @@ export default class Readme extends Atom {
           if (res !== null) {
             return {
               readMeText: this.readmeText,
-              thumbnail: res,
+              svg: res,
               uniqueID: this.uniqueID,
             };
           } else {
             return {
               readMeText: this.readmeText,
-              thumbnail: null,
+              svg: null,
               uniqueID: this.uniqueID,
             };
           }

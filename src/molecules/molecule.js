@@ -3,9 +3,7 @@ import Connector from "../prototypes/connector.js";
 import GlobalVariables from "../js/globalvariables.js";
 import { button } from "leva";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-import saveAs from "file-saver";
 import { BOMEntry } from "../js/BOM";
-import { re } from "mathjs";
 
 /**
  * This class creates the Molecule atom.
@@ -455,20 +453,31 @@ export default class Molecule extends Atom {
     });
     await Promise.all(promiseArray).then((values) => {
       values.forEach((value) => {
-        if (value.thumbnail) {
+        if (value.svg) {
           if (value.readMeText) {
             finalMoleculeReadMe = finalMoleculeReadMe
               .concat(" \n\n![readme](/readme" + value.uniqueID + ".svg)\n\n")
               .concat(value.readMeText);
-            svgArray.push({ uniqueID: value.uniqueID, svg: value.thumbnail });
+            if (value.svg instanceof Array) {
+              console.log("array");
+              console.log(value);
+              value.svg.forEach((arrayItem) => {
+                svgArray.push({
+                  uniqueID: arrayItem.uniqueID,
+                  svg: arrayItem.svg,
+                });
+              });
+            } else {
+              svgArray.push({ uniqueID: value.uniqueID, svg: value.svg });
+            }
           }
         } else {
           finalMoleculeReadMe = finalMoleculeReadMe.concat(value.readMeText);
         }
       });
     });
-
-    return { readMeText: finalMoleculeReadMe, svgs: svgArray };
+    console.log(svgArray);
+    return { readMeText: finalMoleculeReadMe, svg: svgArray };
   }
 
   /**
