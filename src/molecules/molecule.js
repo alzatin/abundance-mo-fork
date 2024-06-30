@@ -454,15 +454,11 @@ export default class Molecule extends Atom {
     let finalReadMe = [];
 
     await Promise.all(promiseArray).then((values) => {
-      console.log(values);
       values.forEach((value) => {
-        console.log(value);
-
+        let text;
         if (value instanceof Array) {
           value.forEach((arrayItem) => {
-            let text = arrayItem.readMeText.concat(
-              " \n\n![readme](/readme" + arrayItem.uniqueID + ".svg)\n\n"
-            );
+            text = arrayItem.readMeText;
             finalReadMe.push({
               uniqueID: arrayItem.uniqueID,
               readMeText: text,
@@ -470,9 +466,15 @@ export default class Molecule extends Atom {
             });
           });
         } else {
+          text = value.readMeText;
+          if (value.svg) {
+            text = text.concat(
+              " \n\n![readme](/readme" + value.uniqueID + ".svg)\n\n"
+            );
+          }
           finalReadMe.push({
             uniqueID: value.uniqueID,
-            readMeText: value.readMeText,
+            readMeText: text,
             svg: value.svg,
           });
         }

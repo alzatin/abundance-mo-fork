@@ -306,9 +306,9 @@ function CreateMode(props) {
     let readMeTextArray = " ";
 
     readMeRequestResult.forEach((item) => {
-      readMeTextArray = readMeTextArray.concat(item["readMeText"]);
+      readMeTextArray = readMeTextArray.concat(item["readMeText"]) + "\n\n";
     });
-    readmeContent = readmeContent + readMeTextArray + "\n\n";
+    readmeContent = readmeContent + "\n\n" + readMeTextArray + "\n\n";
 
     /** File object to commit */
     let filesObject = {
@@ -333,13 +333,13 @@ function CreateMode(props) {
     const readmeSVGs = readMeRequestResult;
     if (readmeSVGs) {
       readmeSVGs.forEach((item) => {
-        console.log(item);
         if (item.svg != null) {
           filesObject["readme" + item.uniqueID + ".svg"] = item.svg;
         }
       });
     }
     console.log(filesObject);
+
     /*add the new SVGArray to the active atom to keep track of sha and serialize*/
     GlobalVariables.topLevelMolecule.projectSVGs = readmeSVGs;
 
