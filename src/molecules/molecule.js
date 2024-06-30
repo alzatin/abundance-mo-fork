@@ -451,35 +451,35 @@ export default class Molecule extends Atom {
     const promiseArray = sortableAtomsList.map((atom) => {
       return atom.requestReadme();
     });
+    let finalReadMe = [];
+
     await Promise.all(promiseArray).then((values) => {
+      console.log(values);
       values.forEach((value) => {
-        if (value.svg) {
-          if (value.readMeText) {
-            finalMoleculeReadMe = finalMoleculeReadMe.concat(value.readMeText);
-            if (value.svg instanceof Array) {
-              value.svg.forEach((arrayItem) => {
-                finalMoleculeReadMe = finalMoleculeReadMe.concat(
-                  " \n\n![readme](/readme" + arrayItem.uniqueID + ".svg)\n\n"
-                );
-                svgArray.push({
-                  uniqueID: arrayItem.uniqueID,
-                  svg: arrayItem.svg,
-                });
-              });
-            } else {
-              /*finalMoleculeReadMe = finalMoleculeReadMe.concat(
-                " \n\n![readme](/readme" + value.uniqueID + ".svg)\n\n"
-              );*/
-              svgArray.push({ uniqueID: value.uniqueID, svg: value.svg });
-            }
-          }
+        console.log(value);
+
+        if (value instanceof Array) {
+          value.forEach((arrayItem) => {
+            let text = arrayItem.readMeText.concat(
+              " \n\n![readme](/readme" + arrayItem.uniqueID + ".svg)\n\n"
+            );
+            finalReadMe.push({
+              uniqueID: arrayItem.uniqueID,
+              readMeText: text,
+              svg: arrayItem.svg,
+            });
+          });
         } else {
-          finalMoleculeReadMe = finalMoleculeReadMe.concat(value.readMeText);
+          finalReadMe.push({
+            uniqueID: value.uniqueID,
+            readMeText: value.readMeText,
+            svg: value.svg,
+          });
         }
       });
     });
-    console.log(svgArray);
-    return { readMeText: finalMoleculeReadMe, svg: svgArray };
+    console.log(finalReadMe);
+    return finalReadMe;
   }
 
   /**

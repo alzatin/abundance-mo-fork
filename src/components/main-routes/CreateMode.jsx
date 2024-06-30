@@ -299,13 +299,16 @@ function CreateMode(props) {
       "\n\n![](/project.svg)\n\n";
 
     setState(20);
+
     let readMeRequestResult =
       await GlobalVariables.topLevelMolecule.requestReadme();
 
-    console.log("readMeRequestResult in Create Mode:");
-    console.log(readMeRequestResult);
+    let readMeTextArray = " ";
 
-    readmeContent = readmeContent + readMeRequestResult.readMeText + "\n\n";
+    readMeRequestResult.forEach((item) => {
+      readMeTextArray = readMeTextArray.concat(item["readMeText"]);
+    });
+    readmeContent = readmeContent + readMeTextArray + "\n\n";
 
     /** File object to commit */
     let filesObject = {
@@ -319,9 +322,7 @@ function CreateMode(props) {
     const svgsToDelete = GlobalVariables.topLevelMolecule.projectSVGs
       ? GlobalVariables.topLevelMolecule.projectSVGs.filter(
           (item) =>
-            !readMeRequestResult.svg.some(
-              (item) => item.uniqueID === item.uniqueID
-            )
+            !readMeRequestResult.some((item) => item.uniqueID === item.uniqueID)
         )
       : [];
     svgsToDelete.forEach((item) => {
@@ -329,14 +330,18 @@ function CreateMode(props) {
     });
 
     /* add any new SVGs to the project change files*/
-    const readmeSVGs = readMeRequestResult.svg;
+    const readmeSVGs = readMeRequestResult;
     if (readmeSVGs) {
       readmeSVGs.forEach((item) => {
-        filesObject["readme" + item.uniqueID + ".svg"] = item.svg;
+        console.log(item);
+        if (item.svg != null) {
+          filesObject["readme" + item.uniqueID + ".svg"] = item.svg;
+        }
       });
     }
+    console.log(filesObject);
     /*add the new SVGArray to the active atom to keep track of sha and serialize*/
-    activeAtom.projectSVGs = readmeSVGs;
+    GlobalVariables.topLevelMolecule.projectSVGs = readmeSVGs;
 
     setState(30);
 
