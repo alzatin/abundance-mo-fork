@@ -1,5 +1,6 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
+import { e, re } from "mathjs";
 
 /**
  * This class creates the readme atom.
@@ -54,6 +55,8 @@ export default class Readme extends Atom {
      */
     this.global = true;
 
+    this.addIO("input", "geometry", this, "geometry", undefined);
+
     this.setValues(values);
   }
 
@@ -103,12 +106,40 @@ export default class Readme extends Atom {
     return inputParams;
   }
 
+  async generateProjectThumbnail() {
+    let thumb = this.findIOValue("geometry");
+    //Generate a thumbnail for the project
+    if (thumb !== undefined) {
+      return GlobalVariables.cad.generateThumbnail(thumb);
+    } else {
+      return null;
+    }
+  }
+
   /**
    * Provides this molecules contribution to the global Readme
    */
-  requestReadme() {
+  async requestReadme() {
     if (this.global) {
-      return [this.readmeText];
+      return this.generateProjectThumbnail()
+        .then((res) => {
+          if (res !== null) {
+            return {
+              readMeText: this.readmeText,
+              svg: res,
+              uniqueID: this.uniqueID,
+            };
+          } else {
+            return {
+              readMeText: this.readmeText,
+              svg: null,
+              uniqueID: this.uniqueID,
+            };
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       return [];
     }
@@ -119,6 +150,16 @@ export default class Readme extends Atom {
    */
   sendToRender() {
     console.log("nothing to render in readme");
+  }
+
+  /**
+   * Call super delete node and then grab input that calls function to delete the file from github
+   */
+  deleteNode() {
+    super.deleteNode();
+    // var f = document.getElementById("fileDeleteInput");
+    //f.value = this.fileName;
+    //f.click();
   }
 
   /**

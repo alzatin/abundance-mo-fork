@@ -3,7 +3,6 @@ import Connector from "../prototypes/connector.js";
 import GlobalVariables from "../js/globalvariables.js";
 import { button } from "leva";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
-import saveAs from "file-saver";
 import { BOMEntry } from "../js/BOM";
 
 /**
@@ -430,27 +429,51 @@ export default class Molecule extends Atom {
   /**
    * Check to see if any of this molecules children have contributions to make to the README file. Children closer to the top left will be applied first. TODO: No contribution should be made if it's just a title.
    */
-  requestReadme() {
-    var generatedReadme = super.requestReadme();
-
+  async requestReadme() {
     var sortableAtomsList = this.nodesOnTheScreen;
-    sortableAtomsList.sort(function (a, b) {
-      return (
-        GlobalVariables.distBetweenPoints(a.x, 0, a.y, 0) -
-        GlobalVariables.distBetweenPoints(b.x, 0, b.y, 0)
-      );
+    sortableAtomsList = sortableAtomsList
+      .filter(
+        (atom) => atom.atomType == "Molecule" || atom.atomType == "Readme"
+      )
+      .sort(function (a, b) {
+        return (
+          GlobalVariables.distBetweenPoints(a.x, 0, a.y, 0) -
+          GlobalVariables.distBetweenPoints(b.x, 0, b.y, 0)
+        );
+      });
+    const promiseArray = sortableAtomsList.map((atom) => {
+      return atom.requestReadme();
     });
+    let finalReadMe = [];
 
-    sortableAtomsList.forEach((atom) => {
-      generatedReadme = generatedReadme.concat(atom.requestReadme());
+    await Promise.all(promiseArray).then((values) => {
+      values.forEach((value) => {
+        let text;
+        if (value instanceof Array) {
+          value.forEach((arrayItem) => {
+            text = arrayItem.readMeText;
+            finalReadMe.push({
+              uniqueID: arrayItem.uniqueID,
+              readMeText: text,
+              svg: arrayItem.svg,
+            });
+          });
+        } else {
+          text = value.readMeText;
+          if (value.svg) {
+            text = text.concat(
+              " \n\n![readme](/readme" + value.uniqueID + ".svg)\n\n"
+            );
+          }
+          finalReadMe.push({
+            uniqueID: value.uniqueID,
+            readMeText: text,
+            svg: value.svg,
+          });
+        }
+      });
     });
-
-    //Check to see if any of the children added anything if not, remove the bit we added
-    if (generatedReadme[generatedReadme.length - 1] == "## " + this.name) {
-      generatedReadme.pop();
-    }
-
-    return generatedReadme;
+    return finalReadMe;
   }
 
   /**

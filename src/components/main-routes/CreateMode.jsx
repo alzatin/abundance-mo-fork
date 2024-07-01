@@ -13,6 +13,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
+import { re } from "mathjs";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -117,7 +118,7 @@ function CreateMode(props) {
     { owner, repo, base, changes },
     setState
   ) {
-    setState(20);
+    setState(35);
     if (!base) {
       octokit
         .request("GET /repos/{owner}/{repo}", {
@@ -125,7 +126,8 @@ function CreateMode(props) {
           repo: repo,
         })
         .then((response) => {
-          setState(30);
+          setState(40);
+
           base = response.data.default_branch;
           octokit.rest.repos
             .listCommits({
@@ -135,7 +137,7 @@ function CreateMode(props) {
               per_page: 1,
             })
             .then((response) => {
-              setState(40);
+              setState(50);
               let latestCommitSha = response.data[0].sha;
               const treeSha = response.data[0].commit.tree.sha;
               octokit.rest.git
@@ -174,6 +176,7 @@ function CreateMode(props) {
                     .then((response) => {
                       setState(80);
                       latestCommitSha = response.data.sha;
+
                       octokit.rest.git
                         .updateRef({
                           owner,
@@ -231,14 +234,15 @@ function CreateMode(props) {
    */
   const saveProject = async (setState) => {
     setState(5);
-    let finalSVG;
 
+    let finalSVG;
     finalSVG = await GlobalVariables.topLevelMolecule
       .generateProjectThumbnail()
       .catch((error) => {
-        console.error("Error generating project thumbnail: ", error);
+        console.error("Error generating final project thumbnail: ", error);
       });
 
+    setState(10);
     var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
     jsonRepOfProject.filetypeVersion = 1;
     const projectContent = JSON.stringify(jsonRepOfProject, null, 4);
@@ -289,11 +293,37 @@ function CreateMode(props) {
       "# " +
       GlobalVariables.currentRepoName +
       "\n\n![](/project.svg)\n\n";
-    GlobalVariables.topLevelMolecule.requestReadme().forEach((item) => {
-      readmeContent = readmeContent + item + "\n\n\n";
-    });
 
-    setState(10);
+    setState(20);
+
+    let readMeRequestResult =
+      await GlobalVariables.topLevelMolecule.requestReadme();
+
+    let readMeTextArray = " ";
+
+    readMeRequestResult.forEach((item) => {
+      readMeTextArray = readMeTextArray.concat(item["readMeText"]) + "\n\n";
+    });
+    readmeContent = readmeContent + "\n\n" + readMeTextArray + "\n\n";
+
+    /** File object to commit */
+    let filesObject = {
+      "BillOfMaterials.md": bomContent,
+      "README.md": readmeContent,
+      "project.svg": finalSVG ? finalSVG : "",
+      "project.abundance": projectContent,
+    };
+
+    /* add any new SVGs to the project change files*/
+    const readmeSVGs = readMeRequestResult;
+    if (readmeSVGs) {
+      readmeSVGs.forEach((item) => {
+        if (item.svg != null) {
+          filesObject["readme" + item.uniqueID + ".svg"] = item.svg;
+        }
+      });
+    }
+    setState(30);
 
     createCommit(
       authorizedUserOcto,
@@ -301,12 +331,7 @@ function CreateMode(props) {
         owner: GlobalVariables.currentUser,
         repo: GlobalVariables.currentRepo.name,
         changes: {
-          files: {
-            "BillOfMaterials.md": bomContent,
-            "README.md": readmeContent,
-            "project.svg": finalSVG ? finalSVG : "",
-            "project.abundance": projectContent,
-          },
+          files: filesObject,
           commit: "Autosave",
         },
       },
