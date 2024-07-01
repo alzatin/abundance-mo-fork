@@ -807,9 +807,7 @@ function assembly(targetID, inputIDs) {
         inputIDs.every((inputID) => is3D(library[inputID])) ||
         inputIDs.every((inputID) => !is3D(library[inputID]))
       ) {
-        console.log(inputIDs);
         for (let i = 0; i < inputIDs.length; i++) {
-          console.log(library[inputIDs[i]]);
           assembly.push(
             cutAssembly(
               library[inputIDs[i]],
@@ -926,7 +924,7 @@ function chainFuse(chain) {
     }
     return fused;
   } catch (e) {
-    console.log(chain);
+    console.error(chain);
     throw new Error("Fusion failed");
   }
 }
