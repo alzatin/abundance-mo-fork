@@ -759,7 +759,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
         partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
       });
       // return new cut part
-      let newID = assemblyID * 10 + index;
+      let newID = generateUniqueID();
       library[newID] = {
         geometry: [partCutCopy],
         tags: partToCut.tags,
