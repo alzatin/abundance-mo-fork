@@ -731,58 +731,71 @@ function isAssembly(part) {
 /** Cut assembly function that takes in a part to cut (library object), cutting parts (unique IDS), assembly id and index */
 /** Returns a new single cut part or an assembly of cut parts */
 function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
-  //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
-  if (isAssembly(partToCut)) {
-    let assemblyToCut = partToCut.geometry;
-    let assemblyCut = [];
-    assemblyToCut.forEach((part) => {
-      // make new assembly from cut parts
-      assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID, assemblyID));
-    });
+  try {
+    //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
+    if (isAssembly(partToCut)) {
+      let assemblyToCut = partToCut.geometry;
+      let assemblyCut = [];
+      assemblyToCut.forEach((part) => {
+        // make new assembly from cut parts
+        assemblyCut.push(
+          cutAssembly(part, cuttingParts, assemblyID, assemblyID)
+        );
+      });
 
-    let subID = generateUniqueID();
-    //returns new assembly that has been cut
-    library[subID] = {
-      geometry: assemblyCut,
-      tags: partToCut.tags,
-      bom: partToCut.bom,
-    };
-    return library[subID];
-  } else {
-    // if part to cut is a single part send to cutting function with cutting parts
-    var partCutCopy = partToCut.geometry[0];
+      let subID = generateUniqueID();
+      //returns new assembly that has been cut
+      library[subID] = {
+        geometry: assemblyCut,
+        tags: partToCut.tags,
+        bom: partToCut.bom,
+      };
+      return library[subID];
+    } else {
+      // if part to cut is a single part send to cutting function with cutting parts
+      var partCutCopy = partToCut.geometry[0];
+      cuttingParts.forEach((cuttingPart) => {
+        // for each cutting part cut the part
+        partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
+      });
+      // return new cut part
+      let newID = assemblyID * 10 + index;
+      library[newID] = {
+        geometry: [partCutCopy],
+        tags: partToCut.tags,
+        color: partToCut.color,
+        bom: partToCut.bom,
+        plane: partToCut.plane,
+      };
 
-    cuttingParts.forEach((cuttingPart) => {
-      // for each cutting part cut the part
-      partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
-    });
-    // return new cut part
-    let newID = assemblyID * 10 + index;
-    library[newID] = {
-      geometry: [partCutCopy],
-      tags: partToCut.tags,
-      color: partToCut.color,
-      bom: partToCut.bom,
-      plane: partToCut.plane,
-    };
-
-    return library[newID];
+      return library[newID];
+    }
+  } catch (e) {
+    throw new Error("Cut Assembly failed");
   }
 }
 /** Recursive function that gets passed a solid to cut and a library object that cuts it */
 function recursiveCut(partToCut, cuttingPart) {
-  let cutGeometry = partToCut;
-  // if cutting part is an assembly pass back into the function to be cut by each part in that assembly
-  if (isAssembly(cuttingPart)) {
-    for (let i = 0; i < cuttingPart.geometry.length; i++) {
-      cutGeometry = recursiveCut(cutGeometry, cuttingPart.geometry[i]);
+  try {
+    let cutGeometry = partToCut;
+    // if cutting part is an assembly pass back into the function to be cut by each part in that assembly
+    if (isAssembly(cuttingPart)) {
+      console.log("cutting part is an assembly");
+      for (let i = 0; i < cuttingPart.geometry.length; i++) {
+        cutGeometry = recursiveCut(cutGeometry, cuttingPart.geometry[i]);
+      }
+      return cutGeometry;
+    } else {
+      console.log("cutting part is NOT an assembly");
+
+      // cut and return part
+      let cutPart;
+      cutPart = partToCut.cut(cuttingPart.geometry[0]);
+      return cutPart;
     }
-    return cutGeometry;
-  } else {
-    // cut and return part
-    let cutPart;
-    cutPart = partToCut.cut(cuttingPart.geometry[0]);
-    return cutPart;
+  } catch (e) {
+    console.error("Recursive Cut failed");
+    throw new Error("Recursive Cut failed");
   }
 }
 
@@ -790,13 +803,16 @@ function assembly(targetID, inputIDs) {
   return started.then(() => {
     let assembly = [];
     let bomAssembly = [];
+
     if (inputIDs.length > 1) {
       /** Check if all inputs are solid or sketches */
       if (
         inputIDs.every((inputID) => is3D(library[inputID])) ||
         inputIDs.every((inputID) => !is3D(library[inputID]))
       ) {
+        console.log(inputIDs);
         for (let i = 0; i < inputIDs.length; i++) {
+          console.log(library[inputIDs[i]]);
           assembly.push(
             cutAssembly(
               library[inputIDs[i]],
@@ -913,7 +929,7 @@ function chainFuse(chain) {
     }
     return fused;
   } catch (e) {
-    console.log(e);
+    console.log(chain);
     throw new Error("Fusion failed");
   }
 }
