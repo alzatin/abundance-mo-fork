@@ -780,21 +780,18 @@ function recursiveCut(partToCut, cuttingPart) {
     let cutGeometry = partToCut;
     // if cutting part is an assembly pass back into the function to be cut by each part in that assembly
     if (isAssembly(cuttingPart)) {
-      console.log("cutting part is an assembly");
       for (let i = 0; i < cuttingPart.geometry.length; i++) {
         cutGeometry = recursiveCut(cutGeometry, cuttingPart.geometry[i]);
       }
       return cutGeometry;
     } else {
-      console.log("cutting part is NOT an assembly");
-
       // cut and return part
       let cutPart;
       cutPart = partToCut.cut(cuttingPart.geometry[0]);
       return cutPart;
     }
   } catch (e) {
-    console.error("Recursive Cut failed");
+    console.error("Recursive Cut failed", partToCut);
     throw new Error("Recursive Cut failed");
   }
 }
