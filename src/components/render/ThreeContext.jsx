@@ -21,12 +21,14 @@ THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
 export default function ext({ children, ...props }) {
   const dpr = Math.min(window.devicePixelRatio, 2);
 
+  let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
+
   return (
     <Suspense fallback={null}>
       <Canvas
         id="threeCanvas"
         style={{
-          backgroundColor: "#f5f5f5",
+          backgroundColor: backColor,
         }}
         dpr={dpr}
         frameloop="demand"
@@ -43,8 +45,16 @@ export default function ext({ children, ...props }) {
         {props.gridParam ? <InfiniteGrid /> : null}
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
         <ambientLight intensity={0.5} />
-        <directionalLight position={[50, 50, 50]} />
-
+        {!props.outdatedMesh ? (
+          <directionalLight position={[50, 50, 50]} />
+        ) : (
+          <directionalLight
+            color={"grey"}
+            intensity={0.2}
+            position={[50, 50, 50]}
+          />
+        )}
+        {!props.outdatedMesh ? <ambientLight intensity={0.5} /> : null}
         {children}
       </Canvas>
     </Suspense>

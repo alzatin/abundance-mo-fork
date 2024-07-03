@@ -450,6 +450,8 @@ function CreateMode(props) {
               displayProps={{
                 mesh: mesh,
                 wireMesh: wireMesh,
+                outdatedMesh: props.displayProps.outdatedMesh,
+                setOutdatedMesh: props.displayProps.setOutdatedMesh,
               }}
             />
           </div>
