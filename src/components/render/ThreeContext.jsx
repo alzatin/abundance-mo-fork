@@ -18,7 +18,7 @@ THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
 //
 // Depending on your needs I would advice not using a light and relying on
 // a matcap material instead of the meshStandardMaterial used here.
-export default function ThreeContext({ children, ...props }) {
+export default function ext({ children, ...props }) {
   const dpr = Math.min(window.devicePixelRatio, 2);
 
   return (
@@ -30,12 +30,14 @@ export default function ThreeContext({ children, ...props }) {
         }}
         dpr={dpr}
         frameloop="demand"
-        camera={{ position: [20, 40, 50] }}
+        orthographic={true}
+        camera={{ position: [50, 50, 50] }}
+        shadows={true}
       >
         {props.gridParam ? <InfiniteGrid /> : null}
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
-        <ambientLight />
-        <pointLight position={[100, 100, 100]} />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[50, 50, 50]} />
 
         {children}
       </Canvas>
