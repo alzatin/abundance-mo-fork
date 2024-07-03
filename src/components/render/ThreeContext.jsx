@@ -31,7 +31,13 @@ export default function ext({ children, ...props }) {
         dpr={dpr}
         frameloop="demand"
         orthographic={true}
-        camera={{ position: [50, 50, 50] }}
+        camera={{
+          fov: 75,
+          near: 0.1,
+          far: 1000,
+          position: [50, 50, 60],
+          zoom: 7,
+        }}
         shadows={true}
       >
         {props.gridParam ? <InfiniteGrid /> : null}
