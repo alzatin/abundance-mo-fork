@@ -74,12 +74,13 @@ export default class Move extends Atom {
    * Pass the input geometry to a worker function to compute the translation.
    */
   updateValue() {
+    super.updateValue();
     if (this.inputs.every((x) => x.ready)) {
       var inputID = this.findIOValue("geometry");
       var x = this.findIOValue("xDist");
       var y = this.findIOValue("yDist");
       var z = this.findIOValue("zDist");
-
+      this.processing = true;
       GlobalVariables.cad
         .move(this.uniqueID, inputID, x, y, z)
         .then(() => {

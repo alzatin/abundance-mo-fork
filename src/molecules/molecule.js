@@ -331,7 +331,9 @@ export default class Molecule extends Atom {
    * Reads molecule's output atom ID to recompute the molecule in worker
    */
   recomputeMolecule(outputID) {
-    console.log("recompute molecule in molecule");
+    //super.updateValue();
+
+    console.log("recompute molecule in molecule" + this.name);
     try {
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
@@ -378,6 +380,7 @@ export default class Molecule extends Atom {
       node.beginPropagation(force);
     });
     this.inputs.forEach((input) => {
+      console.log("input", input);
       input.beginPropagation();
     });
   }

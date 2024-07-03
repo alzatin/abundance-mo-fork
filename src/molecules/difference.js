@@ -71,6 +71,7 @@ export default class Difference extends Atom {
    * Pass the input values to the worker thread to do the actual processing.
    */
   updateValue() {
+    super.updateValue();
     const input1ID = this.findIOValue("geometry1");
     const input2ID = this.findIOValue("geometry2");
 

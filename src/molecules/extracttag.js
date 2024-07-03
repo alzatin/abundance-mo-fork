@@ -103,6 +103,7 @@ export default class ExtractTag extends Atom {
    * Adds the cutAway tag to the part
    */
   updateValue() {
+    super.updateValue();
     var inputID = this.findIOValue("geometry");
     var tag = this.tag;
 

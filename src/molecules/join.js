@@ -121,6 +121,7 @@ export default class Join extends Atom {
   }
 
   updateValue() {
+    super.updateValue();
     if (this.inputs.every((x) => x.ready)) {
       var inputValues = [];
       this.inputs.forEach((io) => {
@@ -136,6 +137,8 @@ export default class Join extends Atom {
           })
           .catch(this.alertingErrorHandler());
       } else if (this.unionType === "Assembly") {
+        //console.log("assembly processing");
+        this.processing = true;
         GlobalVariables.cad
           .assembly(this.uniqueID, inputValues)
           .then(() => {

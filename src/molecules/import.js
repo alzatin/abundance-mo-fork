@@ -96,9 +96,10 @@ export default class Import extends Atom {
    * Update the displayed svg file
    */
   updateValue() {
+    super.updateValue();
     try {
       if (this.file != null) {
-        this.processing = true;
+        // this.processing = true;
         let file = this.file;
         let fileType = this.type;
 

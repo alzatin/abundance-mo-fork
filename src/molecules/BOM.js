@@ -60,6 +60,7 @@ export default class AddBOMTag extends Atom {
    * Set the value to be the BOMitem
    */
   updateValue() {
+    super.updateValue();
     var inputID = this.findIOValue("geometry");
     var bomItem = this.BOMitem;
 

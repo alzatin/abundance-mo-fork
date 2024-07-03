@@ -68,6 +68,7 @@ export default class Extrude extends Atom {
    * Pass the input shape to the worker thread to compute the extruded shape.
    */
   updateValue() {
+    super.updateValue();
     var inputID = this.findIOValue("geometry");
     var extrudeDistance = this.findIOValue("height");
 
