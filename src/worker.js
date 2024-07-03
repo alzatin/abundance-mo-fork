@@ -187,44 +187,49 @@ function move(targetID, inputID, x, y, z) {
 }
 
 function rotate(targetID, inputID, x, y, z) {
-  return started.then(() => {
-    if (is3D(library[inputID])) {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-        let leafCenter = leaf.geometry[0].boundingBox.center;
-        return {
-          geometry: [
-            leaf.geometry[0]
-              .clone()
-              .rotate(x, [0, 0, 0], [1, 0, 0])
-              .rotate(y, [0, 0, 0], [0, 1, 0])
-              .rotate(z, [0, 0, 0], [0, 0, 1]),
-          ],
-          tags: leaf.tags,
-          plane: leaf.plane,
-          color: leaf.color,
-          bom: leaf.bom,
-        };
-      });
-    } else {
-      library[targetID] = actOnLeafs(
-        library[inputID],
-        (leaf) => {
+  return started
+    .then(() => {
+      if (is3D(library[inputID])) {
+        library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+          console.log(leaf);
           return {
             geometry: [
-              leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
+              leaf.geometry[0]
+                .clone()
+                .rotate(x, [0, 0, 0], [1, 0, 0])
+                .rotate(y, [0, 0, 0], [0, 1, 0])
+                .rotate(z, [0, 0, 0], [0, 0, 1]),
             ],
             tags: leaf.tags,
-            plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+            plane: leaf.plane,
             color: leaf.color,
             bom: leaf.bom,
           };
-        },
-        library[inputID].plane.pivot(x, "X").pivot(y, "Y")
-      );
-    }
+        });
+      } else {
+        library[targetID] = actOnLeafs(
+          library[inputID],
+          (leaf) => {
+            return {
+              geometry: [
+                leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
+              ],
+              tags: leaf.tags,
+              plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+              color: leaf.color,
+              bom: leaf.bom,
+            };
+          },
+          library[inputID].plane.pivot(x, "X").pivot(y, "Y")
+        );
+      }
 
-    return true;
-  });
+      return true;
+    })
+    .catch((e) => {
+      console.error("Rotation failed", inputID, library[inputID]);
+      throw new Error("Rotation failed");
+    });
 }
 
 function difference(targetID, input1ID, input2ID) {
@@ -730,7 +735,7 @@ function isAssembly(part) {
 
 /** Cut assembly function that takes in a part to cut (library object), cutting parts (unique IDS), assembly id and index */
 /** Returns a new single cut part or an assembly of cut parts */
-function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
+function cutAssembly(partToCut, cuttingParts, assemblyID) {
   try {
     //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
     if (isAssembly(partToCut)) {
@@ -738,9 +743,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID, index) {
       let assemblyCut = [];
       assemblyToCut.forEach((part) => {
         // make new assembly from cut parts
-        assemblyCut.push(
-          cutAssembly(part, cuttingParts, assemblyID, assemblyID)
-        );
+        assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID));
       });
 
       let subID = generateUniqueID();
@@ -791,7 +794,8 @@ function recursiveCut(partToCut, cuttingPart) {
       return cutPart;
     }
   } catch (e) {
-    console.error("Recursive Cut failed", partToCut);
+    console.error("Recursive Cut failed", partToCut, cuttingPart);
+
     throw new Error("Recursive Cut failed");
   }
 }
@@ -809,12 +813,7 @@ function assembly(targetID, inputIDs) {
       ) {
         for (let i = 0; i < inputIDs.length; i++) {
           assembly.push(
-            cutAssembly(
-              library[inputIDs[i]],
-              inputIDs.slice(i + 1),
-              targetID,
-              i
-            )
+            cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID)
           );
           if (library[inputIDs[i]].bom.length > 0) {
             bomAssembly.push(...library[inputIDs[i]].bom);
@@ -892,7 +891,7 @@ function actOnLeafs(assembly, action, plane) {
       geometry: transformedAssembly,
       tags: assembly.tags,
       bom: assembly.bom,
-      plane: plane,
+      //plane: [],
     };
   }
 }
