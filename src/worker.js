@@ -518,35 +518,6 @@ function generateThumbnail(inputID) {
   });
 }
 
-// Functions like Extracttags() but takes color as input
-function extractColors(inputGeometry, color) {
-  if (inputGeometry.color == color) {
-    return inputGeometry;
-  } else if (isAssembly(inputGeometry)) {
-    let geometryWithColor = [];
-    inputGeometry.geometry.forEach((subAssembly) => {
-      let extractedGeometry = extractColors(subAssembly, color);
-
-      if (extractedGeometry != false) {
-        geometryWithColor.push(extractedGeometry);
-      }
-    });
-
-    if (geometryWithColor.length > 0) {
-      let thethingtoreturn = {
-        geometry: geometryWithColor,
-        tags: inputGeometry.tags,
-        color: color,
-      };
-      return thethingtoreturn;
-    } else {
-      return false;
-    }
-  } else {
-    return false;
-  }
-}
-
 function extractTags(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return inputGeometry;
