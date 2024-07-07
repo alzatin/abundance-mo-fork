@@ -187,48 +187,55 @@ function move(targetID, inputID, x, y, z) {
 }
 
 function rotate(targetID, inputID, x, y, z) {
-  return started.then(() => {
-    if (is3D(library[inputID])) {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-        return {
-          geometry: [
-            leaf.geometry[0]
-              .clone()
-              .rotate(x, [0, 0, 0], [1, 0, 0])
-              .rotate(y, [0, 0, 0], [0, 1, 0])
-              .rotate(z, [0, 0, 0], [0, 0, 1]),
-          ],
-          tags: leaf.tags,
-          plane: leaf.plane,
-          color: leaf.color,
-          bom: leaf.bom,
-        };
-      });
-    } else {
-      library[targetID] = actOnLeafs(
-        library[inputID],
-        (leaf) => {
+  return started
+    .then(() => {
+      if (is3D(library[inputID])) {
+        library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+          console.log(leaf);
           return {
             geometry: [
-              leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
+              leaf.geometry[0]
+                .clone()
+                .rotate(x, [0, 0, 0], [1, 0, 0])
+                .rotate(y, [0, 0, 0], [0, 1, 0])
+                .rotate(z, [0, 0, 0], [0, 0, 1]),
             ],
             tags: leaf.tags,
-            plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+            plane: leaf.plane,
             color: leaf.color,
             bom: leaf.bom,
           };
-        },
-        library[inputID].plane.pivot(x, "X").pivot(y, "Y")
-      );
-    }
+        });
+      } else {
+        library[targetID] = actOnLeafs(
+          library[inputID],
+          (leaf) => {
+            return {
+              geometry: [
+                leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
+              ],
+              tags: leaf.tags,
+              plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+              color: leaf.color,
+              bom: leaf.bom,
+            };
+          },
+          library[inputID].plane.pivot(x, "X").pivot(y, "Y")
+        );
+      }
 
-    return true;
-  });
+      return true;
+    })
+    .catch((e) => {
+      console.error("Rotation failed", inputID, library[inputID]);
+      throw new Error("Rotation failed");
+    });
 }
 
 function difference(targetID, input1ID, input2ID) {
   return started.then(() => {
     let cutTemplate;
+
     if (
       (is3D(library[input1ID]) && is3D(library[input2ID])) ||
       (!is3D(library[input1ID]) && !is3D(library[input2ID]))
@@ -511,6 +518,35 @@ function generateThumbnail(inputID) {
   });
 }
 
+// Functions like Extracttags() but takes color as input
+function extractColors(inputGeometry, color) {
+  if (inputGeometry.color == color) {
+    return inputGeometry;
+  } else if (isAssembly(inputGeometry)) {
+    let geometryWithColor = [];
+    inputGeometry.geometry.forEach((subAssembly) => {
+      let extractedGeometry = extractColors(subAssembly, color);
+
+      if (extractedGeometry != false) {
+        geometryWithColor.push(extractedGeometry);
+      }
+    });
+
+    if (geometryWithColor.length > 0) {
+      let thethingtoreturn = {
+        geometry: geometryWithColor,
+        tags: inputGeometry.tags,
+        color: color,
+      };
+      return thethingtoreturn;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
 function extractTags(inputGeometry, TAG) {
   if (inputGeometry.tags.includes(TAG)) {
     return inputGeometry;
@@ -760,7 +796,7 @@ function recursiveCut(partToCut, cuttingPart) {
   } catch (e) {
     console.error("Recursive Cut failed", partToCut, cuttingPart);
 
-    //throw new Error("Recursive Cut failed");
+    throw new Error("Recursive Cut failed");
   }
 }
 
@@ -794,7 +830,6 @@ function assembly(targetID, inputIDs) {
         bomAssembly.push(...library[inputIDs[0]].bom);
       }
     }
-    console.log(assembly);
     const newPlane = new Plane().pivot(0, "Y");
     library[targetID] = {
       geometry: assembly,
@@ -889,33 +924,26 @@ function chainFuse(chain) {
     return fused;
   } catch (e) {
     console.error(chain);
-    // throw new Error("Fusion failed");
+    throw new Error("Fusion failed");
   }
 }
 
 function digFuse(assembly) {
-  try {
-    console.log(assembly);
-    var flattened = [];
-    if (isAssembly(assembly)) {
-      assembly.geometry.forEach((subAssembly) => {
-        if (isAssembly(subAssembly)) {
-          // if it is an assembly keep digging
-          // add the fused things in
-          flattened.push(digFuse(subAssembly));
-        } else {
-          //if it's not an assembly hold on add it to the fusion list
-          flattened.push(subAssembly.geometry[0]);
-        }
-      });
-      console.log(flattened);
-      return chainFuse(flattened);
-    } else {
-      return assembly.geometry[0];
-    }
-  } catch (e) {
-    console.log("Fusion failed in digFuse");
-    //throw new Error("Fusion failed in digFuse");
+  var flattened = [];
+  if (isAssembly(assembly)) {
+    assembly.geometry.forEach((subAssembly) => {
+      if (!isAssembly(subAssembly)) {
+        //if it's not an assembly hold on add it to the fusion list
+        flattened.push(subAssembly.geometry[0]);
+      } else {
+        // if it is an assembly keep digging
+        // add the fused things in
+        flattened.push(digFuse(subAssembly));
+      }
+    });
+    return chainFuse(flattened);
+  } else {
+    return assembly.geometry[0];
   }
 }
 
