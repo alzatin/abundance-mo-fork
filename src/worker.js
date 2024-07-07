@@ -15,6 +15,7 @@ import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 
 var library = {};
+var cancelQueue = [];
 
 // This is the logic to load the web assembly code into replicad
 let loaded = false;
@@ -41,6 +42,21 @@ function generateUniqueID() {
   const newID = dateString + randomness;
   return newID;
 }
+
+function addCancelQueue(targetID) {
+  if (!cancelQueue.includes(targetID)) {
+    console.log("added to cancel queue", cancelQueue);
+    cancelQueue.push(targetID);
+  }
+  return true;
+}
+
+function removeQueue(targetID) {
+  cancelQueue = cancelQueue.filter((id) => id !== targetID);
+  console.log("remove from queue", cancelQueue);
+  return true;
+}
+
 /**
  * A function that deletes a geometry from the library.
  */
@@ -369,6 +385,12 @@ function bom(targetID, inputID, BOM) {
 
 function extractTag(targetID, inputID, TAG) {
   return started.then(() => {
+    if (cancelQueue.includes(targetID)) {
+      console.log("Canceling extract cmpute");
+      cancelQueue = cancelQueue.filter((item) => item !== targetID);
+      throw new Error("Canceled");
+    }
+
     let taggedGeometry = extractTags(library[inputID], TAG);
     if (taggedGeometry != false) {
       library[targetID] = {
@@ -419,7 +441,8 @@ function extractBomList(inputID) {
 /** Visualize STL or STEP*/
 function visExport(targetID, inputID, fileType) {
   return started.then(() => {
-    let fusedGeometry = digFuse(library[inputID]);
+    //let fusedGeometry = digFuse(library[inputID]);
+    console.log("export not working while we fix fuse issue");
     let displayColor =
       fileType == "STL"
         ? "#91C8D5"
@@ -434,7 +457,7 @@ function visExport(targetID, inputID, fileType) {
       finalGeometry = [fusedGeometry];
     }
     library[targetID] = {
-      geometry: finalGeometry,
+      geometry: library[inputID], //finalGeometry,
       color: displayColor,
       plane: library[inputID].plane,
     };
@@ -901,6 +924,8 @@ function chainFuse(chain) {
 
 function digFuse(assembly) {
   var flattened = [];
+  console.log("digfuse input");
+  console.log(assembly);
   if (isAssembly(assembly)) {
     assembly.geometry.forEach((subAssembly) => {
       if (!isAssembly(subAssembly)) {
@@ -945,6 +970,11 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
+    if (cancelQueue.includes(id)) {
+      console.log("Canceling display mesh generation");
+      cancelQueue = cancelQueue.filter((item) => item !== id);
+      throw new Error("Canceled");
+    }
     console.log(library[id]);
     if (library[id] == undefined) {
       throw new Error("ID not found in library");
@@ -997,6 +1027,8 @@ function generateDisplayMesh(id) {
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
 expose({
+  addCancelQueue,
+  removeQueue,
   deleteFromLibrary,
   importingSTEP,
   importingSTL,
