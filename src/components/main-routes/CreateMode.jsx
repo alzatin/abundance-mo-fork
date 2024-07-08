@@ -233,6 +233,7 @@ function CreateMode(props) {
    * Saves project by making a commit to the Github repository.
    */
   const saveProject = async (setState) => {
+    console.log(GlobalVariables.topLevelMolecule);
     setState(5);
 
     let finalSVG;
@@ -254,7 +255,7 @@ function CreateMode(props) {
     var bomItems = GlobalVariables.topLevelMolecule.compiledBom;
     var totalParts = 0;
     var totalCost = 0;
-    if (bomItems != undefined) {
+    if (bomItems.length > 0) {
       bomItems.forEach((item) => {
         totalParts += item.numberNeeded;
         totalCost += item.costUSD;
