@@ -56,7 +56,7 @@ export default class Constant extends Atom {
      * The default value for the constant
      * @type {float}
      */
-    this.value = 10;
+    this.value = 10.0001;
 
     this.setValues(values);
 

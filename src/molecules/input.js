@@ -45,7 +45,13 @@ export default class Input extends Atom {
      */
     this.oldName = this.name;
 
-    this.addIO("output", "number or geometry", this, "number or geometry", 10);
+    this.addIO(
+      "output",
+      "number or geometry",
+      this,
+      "number or geometry",
+      10.0001
+    );
 
     //Add a new input to the current molecule
     if (typeof this.parent !== "undefined") {
