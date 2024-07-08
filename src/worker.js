@@ -15,7 +15,6 @@ import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 
 var library = {};
-var cancelQueue = [];
 
 // This is the logic to load the web assembly code into replicad
 let loaded = false;
@@ -41,20 +40,6 @@ function generateUniqueID() {
   const randomness = Math.floor(Math.random() * 1000);
   const newID = dateString + randomness;
   return newID;
-}
-
-function addCancelQueue(targetID) {
-  if (!cancelQueue.includes(targetID)) {
-    console.log("added to cancel queue", cancelQueue);
-    cancelQueue.push(targetID);
-  }
-  return true;
-}
-
-function removeQueue(targetID) {
-  cancelQueue = cancelQueue.filter((id) => id !== targetID);
-  console.log("remove from queue", cancelQueue);
-  return true;
 }
 
 /**
@@ -970,11 +955,6 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
-    if (cancelQueue.includes(id)) {
-      console.log("Canceling display mesh generation");
-      cancelQueue = cancelQueue.filter((item) => item !== id);
-      throw new Error("Canceled");
-    }
     console.log(library[id]);
     if (library[id] == undefined) {
       throw new Error("ID not found in library");
@@ -1027,8 +1007,6 @@ function generateDisplayMesh(id) {
 // comlink is great to expose your functions within the worker as a simple API
 // to your app.
 expose({
-  addCancelQueue,
-  removeQueue,
   deleteFromLibrary,
   importingSTEP,
   importingSTL,
