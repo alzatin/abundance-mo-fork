@@ -177,7 +177,7 @@ export default class Color extends Atom {
             onChange: (value) => {
               if (input.value !== value) {
                 input.setValue(value);
-                this.sendToRender();
+                //this.sendToRender();
               }
             },
           };

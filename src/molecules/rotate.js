@@ -83,8 +83,6 @@ export default class Rotate extends Atom {
               if (input.value !== value) {
                 console.log(input.name, value);
                 input.setValue(value);
-                /** should we run updateValue too? */
-                this.sendToRender();
               }
             },
           };

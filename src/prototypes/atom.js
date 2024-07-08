@@ -122,10 +122,6 @@ export default class Atom {
      * A function which can be called to cancel the processing being done for this atom.
      * @type {function}
      */
-    /*this.cancelProcessing = () => {
-      console.warn("Nothing to cancel");
-    };*/
-    this.cancelNextUpdateValue = 0;
 
     for (var key in values) {
       /**
@@ -622,18 +618,12 @@ export default class Atom {
    * Calls a worker thread to compute the atom's value.
    */
   basicThreadValueProcessing() {
-    //Then we update the value
-    //this.waitOnComingInformation(); //This sends a chain command through the tree to lock all the inputs which are down stream of this one. It also cancels anything processing if this atom was doing a calculation already.
-    //this.processing = true;
     this.decreaseToProcessCountByOne();
     this.clearAlert();
-
-    //If this has an output pass the unique ID to the output
     if (this.output) {
       this.output.setValue(this.uniqueID);
       this.output.ready = true;
     }
-
     this.processing = false;
     if (this.selected) {
       this.sendToRender();
@@ -691,7 +681,7 @@ export default class Atom {
             onChange: (value) => {
               if (input.value !== value) {
                 input.setValue(value);
-                this.sendToRender();
+                //this.sendToRender();
               }
             },
           };
@@ -713,7 +703,6 @@ export default class Atom {
         ioValue = child.getValue();
       }
     });
-
     return ioValue;
   }
 }

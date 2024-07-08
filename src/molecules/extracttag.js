@@ -92,7 +92,7 @@ export default class ExtractTag extends Atom {
         if (this.tag != tagOptions[this.tagIndex]) {
           this.tag = tagOptions[this.tagIndex];
           this.updateValue();
-          this.sendToRender();
+          //this.sendToRender();
         }
       },
     };

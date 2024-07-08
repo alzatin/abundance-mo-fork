@@ -170,8 +170,8 @@ export default class Equation extends Atom {
             disabled: checkConnector(),
             onChange: (value) => {
               input.setValue(value);
-              /** should we run updateValue too? */
-              this.sendToRender();
+
+              //this.sendToRender();
             },
           };
         }
