@@ -13,7 +13,7 @@ export default class RegularPolygon extends Atom {
     super(values);
 
     this.addIO("input", "number of sides", this, "number", 6);
-    this.addIO("input", "diameter", this, "number", 10.0001);
+    this.addIO("input", "diameter", this, "number", 10.0);
     this.addIO("output", "geometry", this, "geometry", "");
 
     /**

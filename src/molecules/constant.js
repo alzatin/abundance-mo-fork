@@ -56,11 +56,11 @@ export default class Constant extends Atom {
      * The default value for the constant
      * @type {float}
      */
-    this.value = 10.0001;
+    this.value = 10.0;
 
     this.setValues(values);
 
-    this.addIO("output", "number", this, "number", 10);
+    this.addIO("output", "number", this, "number", 10.0);
 
     this.decreaseToProcessCountByOne(); //Since there is nothing upstream this needs to be removed from the list here
   }

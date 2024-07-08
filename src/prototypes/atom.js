@@ -696,6 +696,7 @@ export default class Atom {
           inputParams[this.uniqueID + input.name] = {
             value: input.value,
             label: input.name,
+            step: 0.25,
             disabled: checkConnector(),
             onChange: (value) => {
               if (input.value !== value) {
