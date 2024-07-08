@@ -5,8 +5,8 @@ import { Plane } from "@react-three/drei";
 //
 // Author: Fyrestar https://mevedia.com (https://github.com/Fyrestar/THREE.InfiniteGridHelper)
 const infiniteGridMaterial = function InfiniteGridMaterial({
-  size1 = 10,
-  size2 = 100,
+  size1 = 1,
+  size2 = 1000,
   color = new THREE.Color("#efe3fd"),
   distance = 1000,
   axes = "xyz",
