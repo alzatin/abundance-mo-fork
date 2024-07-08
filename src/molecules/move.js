@@ -82,7 +82,7 @@ export default class Move extends Atom {
       if (this.inputs.every((x) => x.ready)) {
         this.processing = true;
         var inputID = this.findIOValue("geometry");
-        console.error("inputID", inputID);
+
         var x = this.findIOValue("xDist");
         var y = this.findIOValue("yDist");
         var z = this.findIOValue("zDist");
