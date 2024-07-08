@@ -157,7 +157,7 @@ export default class Join extends Atom {
     const importOptions = ["Assembly", "Fusion"];
 
     inputParams[this.uniqueID + "union_ops"] = {
-      value: importOptions[this.unionIndex],
+      value: this.unionType || importOptions[this.unionIndex],
       options: importOptions,
       label: "Union Type",
       onChange: (value) => {
