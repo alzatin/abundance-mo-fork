@@ -104,15 +104,22 @@ export default class ExtractTag extends Atom {
    */
   updateValue() {
     super.updateValue();
-    var inputID = this.findIOValue("geometry");
-    var tag = this.tag;
+    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
+      return;
+    } else {
+      if (this.inputs.every((x) => x.ready)) {
+        this.processing = true;
+        var inputID = this.findIOValue("geometry");
+        var tag = this.tag;
 
-    GlobalVariables.cad
-      .extractTag(this.uniqueID, inputID, tag)
-      .then(() => {
-        this.basicThreadValueProcessing();
-      })
-      .catch(this.alertingErrorHandler());
+        GlobalVariables.cad
+          .extractTag(this.uniqueID, inputID, tag)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          })
+          .catch(this.alertingErrorHandler());
+      }
+    }
   }
 
   /**

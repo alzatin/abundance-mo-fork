@@ -192,7 +192,6 @@ function rotate(targetID, inputID, x, y, z) {
     .then(() => {
       if (is3D(library[inputID])) {
         library[targetID] = actOnLeafs(library[inputID], (leaf) => {
-          console.log(leaf);
           return {
             geometry: [
               leaf.geometry[0]
@@ -370,12 +369,6 @@ function bom(targetID, inputID, BOM) {
 
 function extractTag(targetID, inputID, TAG) {
   return started.then(() => {
-    if (cancelQueue.includes(targetID)) {
-      console.log("Canceling extract cmpute");
-      cancelQueue = cancelQueue.filter((item) => item !== targetID);
-      throw new Error("Canceled");
-    }
-
     let taggedGeometry = extractTags(library[inputID], TAG);
     if (taggedGeometry != false) {
       library[targetID] = {
@@ -426,8 +419,7 @@ function extractBomList(inputID) {
 /** Visualize STL or STEP*/
 function visExport(targetID, inputID, fileType) {
   return started.then(() => {
-    //let fusedGeometry = digFuse(library[inputID]);
-    console.log("export not working while we fix fuse issue");
+    let fusedGeometry = digFuse(library[inputID]);
     let displayColor =
       fileType == "STL"
         ? "#91C8D5"
@@ -442,7 +434,7 @@ function visExport(targetID, inputID, fileType) {
       finalGeometry = [fusedGeometry];
     }
     library[targetID] = {
-      geometry: library[inputID], //finalGeometry,
+      geometry: finalGeometry,
       color: displayColor,
       plane: library[inputID].plane,
     };
@@ -909,8 +901,7 @@ function chainFuse(chain) {
 
 function digFuse(assembly) {
   var flattened = [];
-  console.log("digfuse input");
-  console.log(assembly);
+
   if (isAssembly(assembly)) {
     assembly.geometry.forEach((subAssembly) => {
       if (!isAssembly(subAssembly)) {

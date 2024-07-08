@@ -125,6 +125,7 @@ export default class Atom {
     /*this.cancelProcessing = () => {
       console.warn("Nothing to cancel");
     };*/
+    this.cancelNextUpdateValue = 0;
 
     for (var key in values) {
       /**
@@ -133,14 +134,6 @@ export default class Atom {
       this[key] = values[key];
     }
   }
-
-  cancelProcessing = (uniqueID) => {
-    //needs to happen not in the worker
-    //GlobalVariables.addCancelQueue(uniqueID);
-    /* GlobalVariables.cad.addCancelQueue(uniqueID).then(() => {
-      console.log("Back from worker");
-    });*/
-  };
 
   /**
    * Applies each of the passed values to this as this.x
@@ -333,6 +326,7 @@ export default class Atom {
    */
   alertingErrorHandler() {
     return (err) => {
+      this.processing = false;
       console.log(err);
       this.setAlert(err.message);
     };
@@ -594,7 +588,6 @@ export default class Atom {
    * Token update value function to give each atom one by default
    */
   updateValue() {
-    this.processing = true;
     this.waitOnComingInformation();
   }
 
@@ -617,11 +610,11 @@ export default class Atom {
     if (this.output) {
       this.output.waitOnComingInformation();
     }
-
     if (this.processing) {
       console.warn("Processing " + this.name + " Canceled");
-      this.cancelProcessing(this.uniqueID);
-      this.processing = false;
+      if (!GlobalVariables.cancelQueue.includes(this.uniqueID)) {
+        GlobalVariables.cancelQueue.push(this.uniqueID);
+      }
     }
   }
 
@@ -640,10 +633,7 @@ export default class Atom {
       this.output.setValue(this.uniqueID);
       this.output.ready = true;
     }
-    console.log(this.uniqueID, this.processing);
-    GlobalVariables.cad.removeQueue(this.uniqueID).then(() => {
-      console.log("Removed from cancel queue");
-    });
+
     this.processing = false;
     if (this.selected) {
       this.sendToRender();
