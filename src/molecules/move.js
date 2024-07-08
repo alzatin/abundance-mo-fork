@@ -13,9 +13,9 @@ export default class Move extends Atom {
     super(values);
 
     this.addIO("input", "geometry", this, "geometry", "", false, true);
-    this.addIO("input", "xDist", this, "number", 0.0001);
-    this.addIO("input", "yDist", this, "number", 0.0001);
-    this.addIO("input", "zDist", this, "number", 0.0001);
+    this.addIO("input", "xDist", this, "number", 0.0);
+    this.addIO("input", "yDist", this, "number", 0.0);
+    this.addIO("input", "zDist", this, "number", 0.0);
     this.addIO("output", "geometry", this, "geometry", "");
 
     /**

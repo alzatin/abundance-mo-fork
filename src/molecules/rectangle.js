@@ -12,8 +12,8 @@ export default class Rectangle extends Atom {
   constructor(values) {
     super(values);
 
-    this.addIO("input", "x length", this, "number", 10.0001);
-    this.addIO("input", "y length", this, "number", 10.0001);
+    this.addIO("input", "x length", this, "number", 10.0);
+    this.addIO("input", "y length", this, "number", 10.0);
     this.addIO("output", "geometry", this, "geometry", "");
 
     /**

@@ -50,7 +50,7 @@ export default class Input extends Atom {
       "number or geometry",
       this,
       "number or geometry",
-      10.0001
+      10.0
     );
 
     //Add a new input to the current molecule
