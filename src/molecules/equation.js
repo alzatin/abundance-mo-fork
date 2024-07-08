@@ -184,6 +184,7 @@ export default class Equation extends Atom {
    * Evaluate the equation adding and removing inputs as needed
    */
   updateValue() {
+    // super.updateValue();
     try {
       this.addAndRemoveInputs();
 

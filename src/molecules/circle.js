@@ -69,6 +69,7 @@ export default class Circle extends Atom {
    * Update the value of the circle in worker.
    */
   updateValue() {
+    super.updateValue();
     var diameter = this.findIOValue("diameter");
     GlobalVariables.cad
       .circle(this.uniqueID, diameter)

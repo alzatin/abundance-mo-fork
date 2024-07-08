@@ -97,6 +97,7 @@ export default class Rotate extends Atom {
    * Pass the input shape to a worker thread to compute the rotation
    */
   updateValue() {
+    super.updateValue();
     var inputID = this.findIOValue("geometry");
     var x = this.findIOValue("x-axis degrees");
     var y = this.findIOValue("y-axis degrees");

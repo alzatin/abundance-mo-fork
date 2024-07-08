@@ -155,6 +155,7 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
    * Grab the code as a text string and execute it.
    */
   updateValue(value) {
+    super.updateValue();
     //Parse the inputs
     this.parseInputs();
 

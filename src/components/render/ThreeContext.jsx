@@ -18,25 +18,43 @@ THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
 //
 // Depending on your needs I would advice not using a light and relying on
 // a matcap material instead of the meshStandardMaterial used here.
-export default function ThreeContext({ children, ...props }) {
+export default function ext({ children, ...props }) {
   const dpr = Math.min(window.devicePixelRatio, 2);
+
+  let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
 
   return (
     <Suspense fallback={null}>
       <Canvas
         id="threeCanvas"
         style={{
-          backgroundColor: "#f5f5f5",
+          backgroundColor: backColor,
         }}
         dpr={dpr}
         frameloop="demand"
-        camera={{ position: [20, 40, 50] }}
+        orthographic={true}
+        camera={{
+          fov: 75,
+          near: 0.1,
+          far: 1000,
+          position: [50, 50, 60],
+          zoom: 7,
+        }}
+        shadows={true}
       >
         {props.gridParam ? <InfiniteGrid /> : null}
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
-        <ambientLight />
-        <pointLight position={[100, 100, 100]} />
-
+        <ambientLight intensity={0.5} />
+        {!props.outdatedMesh ? (
+          <directionalLight position={[50, 50, 50]} />
+        ) : (
+          <directionalLight
+            color={"grey"}
+            intensity={0.2}
+            position={[50, 50, 50]}
+          />
+        )}
+        {!props.outdatedMesh ? <ambientLight intensity={0.5} /> : null}
         {children}
       </Canvas>
     </Suspense>

@@ -586,7 +586,7 @@ export default class Atom {
    * Token update value function to give each atom one by default
    */
   updateValue() {
-    console.log("No update value function for this atom");
+    this.processing = true;
   }
 
   /**
@@ -610,8 +610,7 @@ export default class Atom {
     }
 
     if (this.processing) {
-      console.log("wait on coming info inside atom processing true");
-      console.warn("Processing " + this.name + " Canceled");
+      //console.warn("Processing " + this.name + " Canceled");
       this.cancelProcessing();
       this.processing = false;
     }
@@ -633,8 +632,8 @@ export default class Atom {
 
       this.waitOnComingInformation(); //This sends a chain command through the tree to lock all the inputs which are down stream of this one. It also cancels anything processing if this atom was doing a calculation already.
 
-      this.processing = true;
-      //this.decreaseToProcessCountByOne()
+      //this.processing = true;
+      this.decreaseToProcessCountByOne();
 
       this.clearAlert();
 

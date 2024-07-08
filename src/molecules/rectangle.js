@@ -70,6 +70,7 @@ export default class Rectangle extends Atom {
    * Create a new rectangle in a worker thread.
    */
   updateValue() {
+    super.updateValue();
     var xVal = this.findIOValue("x length");
     var yVal = this.findIOValue("y length");
 

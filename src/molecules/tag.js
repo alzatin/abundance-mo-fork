@@ -124,6 +124,7 @@ export default class Tag extends Atom {
    * Add a tag to the input geometry. The substance is not changed.
    */
   updateValue() {
+    super.updateValue();
     var inputID = this.findIOValue("geometry");
     var tags = this.tags;
     this.addTagsToAvailableTags();

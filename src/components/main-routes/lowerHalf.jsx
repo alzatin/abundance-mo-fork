@@ -56,9 +56,14 @@ export default memo(function LowerHalf(props) {
             <ThreeContext
               gridParam={props.props.gridParam}
               axesParam={props.props.axesParam}
+              outdatedMesh={props.displayProps.outdatedMesh}
             >
               {props.props.wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
-              <ReplicadMesh mesh={mesh} isSolid={props.props.solidParam} />
+              <ReplicadMesh
+                mesh={mesh}
+                isSolid={props.props.solidParam}
+                setOutdatedMesh={props.displayProps.setOutdatedMesh}
+              />
             </ThreeContext>
           ) : (
             <div

@@ -105,6 +105,7 @@ export default class Constant extends Atom {
   updateValue() {
     this.value = this.output.getValue();
     this.output.ready = true;
+    this.processing = false;
   }
   /**
    * Send the value of this atom to the 3D display. Used to display the number

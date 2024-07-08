@@ -72,6 +72,7 @@ export default class Export extends Atom {
    * Update the displayed svg file
    */
   updateValue() {
+    super.updateValue();
     try {
       let inputID = this.findIOValue("geometry");
       let fileType = this.type;

@@ -33,6 +33,7 @@ export default function ReplicadApp() {
   const [size, setSize] = useState(5);
   const [mesh, setMesh] = useState({});
   const [wireMesh, setWireMesh] = useState(null);
+  const [outdatedMesh, setOutdatedMesh] = useState(false);
 
   useEffect(() => {
     cad.createMesh(size).then((m) => setMesh(m));
@@ -46,11 +47,13 @@ export default function ReplicadApp() {
   useEffect(() => {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
+      setOutdatedMesh(true);
 
       cad
         .generateDisplayMesh(id)
         .then((m) => {
           setMesh(m);
+          setOutdatedMesh(false);
         })
         .catch((e) => {
           console.error("Can't display Mesh " + e);
@@ -172,6 +175,8 @@ export default function ReplicadApp() {
                   cad: cad,
                   wireMesh: wireMesh,
                   setWireMesh: setWireMesh,
+                  outdatedMesh: outdatedMesh,
+                  setOutdatedMesh: setOutdatedMesh,
                 }}
               />
             }

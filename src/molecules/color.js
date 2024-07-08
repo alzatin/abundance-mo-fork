@@ -120,6 +120,7 @@ export default class Color extends Atom {
    * Applies a color tag to the object in a worker thread.
    */
   updateValue() {
+    super.updateValue();
     var inputID = this.findIOValue("geometry");
     var color = Object.values(this.colorOptions)[this.selectedColorIndex];
     GlobalVariables.cad

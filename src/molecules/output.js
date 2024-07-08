@@ -74,6 +74,7 @@ export default class Output extends Atom {
    * Take the input value of this function and pass it to the parent Molecule to go up one level.
    */
   updateValue() {
+    super.updateValue();
     if (this.inputs.every((x) => x.ready)) {
       //still need to understand this
       this.decreaseToProcessCountByOne();

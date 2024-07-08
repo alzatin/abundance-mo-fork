@@ -7,7 +7,11 @@ import {
   syncLinesFromFaces,
 } from "replicad-threejs-helper";
 
-export default React.memo(function ShapeMeshes({ mesh, isSolid }) {
+export default React.memo(function ShapeMeshes({
+  mesh,
+  isSolid,
+  setOutdatedMesh,
+}) {
   const { invalidate } = useThree();
   //const body = useRef(new BufferGeometry());
   //const lines = useRef(new BufferGeometry());
@@ -42,6 +46,7 @@ export default React.memo(function ShapeMeshes({ mesh, isSolid }) {
     () => () => {
       //body.current.dispose();
       //lines.current.dispose();
+      setOutdatedMesh(false);
       invalidate();
     },
     [invalidate]

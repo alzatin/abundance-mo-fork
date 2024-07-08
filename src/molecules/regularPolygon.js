@@ -91,6 +91,7 @@ export default class RegularPolygon extends Atom {
    * Create a new regular polygon in a worker thread.
    */
   updateValue() {
+    super.updateValue();
     var numberOfSides = this.findIOValue("number of sides");
     var diameter = this.findIOValue("diameter");
 
