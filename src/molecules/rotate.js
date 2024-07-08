@@ -13,9 +13,9 @@ export default class Rotate extends Atom {
     super(values);
 
     this.addIO("input", "geometry", this, "geometry", "", false, true);
-    this.addIO("input", "x-axis degrees", this, "number", 0);
-    this.addIO("input", "y-axis degrees", this, "number", 0);
-    this.addIO("input", "z-axis degrees", this, "number", 0);
+    this.addIO("input", "x-axis degrees", this, "number", 0.0);
+    this.addIO("input", "y-axis degrees", this, "number", 0.0);
+    this.addIO("input", "z-axis degrees", this, "number", 0.0);
     this.addIO("output", "geometry", this, "geometry", "");
 
     /**
@@ -77,6 +77,7 @@ export default class Rotate extends Atom {
           inputParams[this.uniqueID + input.name] = {
             value: input.value,
             label: input.name,
+            step: 0.5,
             disabled: checkConnector(),
             onChange: (value) => {
               if (input.value !== value) {

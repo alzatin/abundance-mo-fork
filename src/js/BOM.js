@@ -20,7 +20,7 @@ export class BOMEntry {
      * The cost of one of this item in USD.
      * @type {number}
      */
-    this.costUSD = 0;
+    this.costUSD = 0.0;
     /**
      * A link to where to purchase the item.
      * @type {string}
