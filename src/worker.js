@@ -122,6 +122,7 @@ function loftShapes(targetID, inputsIDs) {
       tags: [],
       plane: newPlane,
       color: "#FF9065",
+      bom: [],
     };
     return true;
   });
@@ -188,48 +189,44 @@ function move(targetID, inputID, x, y, z) {
 }
 
 function rotate(targetID, inputID, x, y, z) {
-  return started
-    .then(() => {
-      if (is3D(library[inputID])) {
-        library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+  return started.then(() => {
+    if (is3D(library[inputID])) {
+      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [
+            leaf.geometry[0]
+              .clone()
+              .rotate(x, [0, 0, 0], [1, 0, 0])
+              .rotate(y, [0, 0, 0], [0, 1, 0])
+              .rotate(z, [0, 0, 0], [0, 0, 1]),
+          ],
+          tags: leaf.tags,
+          plane: leaf.plane,
+          color: leaf.color,
+          bom: leaf.bom,
+        };
+      });
+    } else {
+      console.log("rotating 2d");
+      library[targetID] = actOnLeafs(
+        library[inputID],
+        (leaf) => {
           return {
             geometry: [
-              leaf.geometry[0]
-                .clone()
-                .rotate(x, [0, 0, 0], [1, 0, 0])
-                .rotate(y, [0, 0, 0], [0, 1, 0])
-                .rotate(z, [0, 0, 0], [0, 0, 1]),
+              leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
             ],
             tags: leaf.tags,
-            plane: leaf.plane,
+            plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
             color: leaf.color,
             bom: leaf.bom,
           };
-        });
-      } else {
-        library[targetID] = actOnLeafs(
-          library[inputID],
-          (leaf) => {
-            return {
-              geometry: [
-                leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
-              ],
-              tags: leaf.tags,
-              plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
-              color: leaf.color,
-              bom: leaf.bom,
-            };
-          },
-          library[inputID].plane.pivot(x, "X").pivot(y, "Y")
-        );
-      }
+        },
+        library[inputID].plane.pivot(x, "X").pivot(y, "Y")
+      );
+    }
 
-      return true;
-    })
-    .catch((e) => {
-      console.error("Rotation failed", inputID, library[inputID]);
-      throw new Error("Rotation failed");
-    });
+    return true;
+  });
 }
 
 function difference(targetID, input1ID, input2ID) {
@@ -862,7 +859,7 @@ function actOnLeafs(assembly, action, plane) {
       geometry: transformedAssembly,
       tags: assembly.tags,
       bom: assembly.bom,
-      //plane: [],
+      plane: plane,
     };
   }
 }
