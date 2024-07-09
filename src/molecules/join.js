@@ -122,36 +122,33 @@ export default class Join extends Atom {
 
   updateValue() {
     super.updateValue();
-    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
-      return;
-    } else {
-      if (this.inputs.every((x) => x.ready)) {
-        this.processing = true;
-        var inputValues = [];
-        this.inputs.forEach((io) => {
-          if (io.connectors.length > 0 && io.type == "input") {
-            inputValues.push(io.getValue());
-          }
-        });
-        if (this.unionType === "Fusion") {
-          GlobalVariables.cad
-            .fusion(this.uniqueID, inputValues)
-            .then(() => {
-              this.basicThreadValueProcessing();
-            })
-            .catch(this.alertingErrorHandler());
-        } else if (this.unionType === "Assembly") {
-          GlobalVariables.cad
-            .assembly(this.uniqueID, inputValues)
-            .then(() => {
-              this.basicThreadValueProcessing();
-            })
-            .catch(this.alertingErrorHandler());
-        }
 
-        //Delete or add ports as needed
-        addOrDeletePorts(this);
+    if (this.inputs.every((x) => x.ready)) {
+      this.processing = true;
+      var inputValues = [];
+      this.inputs.forEach((io) => {
+        if (io.connectors.length > 0 && io.type == "input") {
+          inputValues.push(io.getValue());
+        }
+      });
+      if (this.unionType === "Fusion") {
+        GlobalVariables.cad
+          .fusion(this.uniqueID, inputValues)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          })
+          .catch(this.alertingErrorHandler());
+      } else if (this.unionType === "Assembly") {
+        GlobalVariables.cad
+          .assembly(this.uniqueID, inputValues)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          })
+          .catch(this.alertingErrorHandler());
       }
+
+      //Delete or add ports as needed
+      addOrDeletePorts(this);
     }
   }
 

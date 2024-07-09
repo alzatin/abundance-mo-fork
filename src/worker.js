@@ -207,7 +207,6 @@ function rotate(targetID, inputID, x, y, z) {
         };
       });
     } else {
-      console.log("rotating 2d");
       library[targetID] = actOnLeafs(
         library[inputID],
         (leaf) => {

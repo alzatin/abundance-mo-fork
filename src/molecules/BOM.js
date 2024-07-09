@@ -62,20 +62,17 @@ export default class AddBOMTag extends Atom {
    */
   updateValue() {
     super.updateValue();
-    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
-      return;
-    } else {
-      if (this.inputs.every((x) => x.ready)) {
-        var inputID = this.findIOValue("geometry");
-        var bomItem = this.BOMitem;
 
-        GlobalVariables.cad
-          .bom(this.uniqueID, inputID, bomItem)
-          .then(() => {
-            this.basicThreadValueProcessing();
-          })
-          .catch(this.alertingErrorHandler());
-      }
+    if (this.inputs.every((x) => x.ready)) {
+      var inputID = this.findIOValue("geometry");
+      var bomItem = this.BOMitem;
+
+      GlobalVariables.cad
+        .bom(this.uniqueID, inputID, bomItem)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        })
+        .catch(this.alertingErrorHandler());
     }
   }
 

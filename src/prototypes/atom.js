@@ -607,11 +607,8 @@ export default class Atom {
       this.output.waitOnComingInformation();
     }
     if (this.processing) {
-      console.warn("Processing " + this.name + " Canceled");
-      if (!GlobalVariables.cancelQueue.includes(this.uniqueID)) {
-        GlobalVariables.cancelQueue.push(this.uniqueID);
-      }
-      this.processing = false;
+      console.log("information was sent to something already processing");
+      // this.processing = false;
     }
   }
 
