@@ -73,21 +73,18 @@ export default class Export extends Atom {
    */
   updateValue() {
     super.updateValue();
-    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
-      return;
-    } else {
-      if (this.inputs.every((x) => x.ready)) {
-        this.processing = true;
-        let inputID = this.findIOValue("geometry");
-        let fileType = this.type;
 
-        GlobalVariables.cad
-          .visExport(this.uniqueID, inputID, fileType)
-          .then((result) => {
-            this.basicThreadValueProcessing();
-          })
-          .catch(this.alertingErrorHandler());
-      }
+    if (this.inputs.every((x) => x.ready)) {
+      this.processing = true;
+      let inputID = this.findIOValue("geometry");
+      let fileType = this.type;
+
+      GlobalVariables.cad
+        .visExport(this.uniqueID, inputID, fileType)
+        .then((result) => {
+          this.basicThreadValueProcessing();
+        })
+        .catch(this.alertingErrorHandler());
     }
   }
 

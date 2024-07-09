@@ -76,23 +76,19 @@ export default class Move extends Atom {
   updateValue() {
     super.updateValue();
 
-    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
-      return;
-    } else {
-      if (this.inputs.every((x) => x.ready)) {
-        this.processing = true;
-        var inputID = this.findIOValue("geometry");
+    if (this.inputs.every((x) => x.ready)) {
+      this.processing = true;
+      var inputID = this.findIOValue("geometry");
 
-        var x = this.findIOValue("xDist");
-        var y = this.findIOValue("yDist");
-        var z = this.findIOValue("zDist");
-        GlobalVariables.cad
-          .move(this.uniqueID, inputID, x, y, z)
-          .then(() => {
-            this.basicThreadValueProcessing();
-          })
-          .catch(this.alertingErrorHandler());
-      }
+      var x = this.findIOValue("xDist");
+      var y = this.findIOValue("yDist");
+      var z = this.findIOValue("zDist");
+      GlobalVariables.cad
+        .move(this.uniqueID, inputID, x, y, z)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        })
+        .catch(this.alertingErrorHandler());
     }
   }
 }

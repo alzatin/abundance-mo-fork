@@ -69,20 +69,17 @@ export default class Extrude extends Atom {
    */
   updateValue() {
     super.updateValue();
-    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
-      return;
-    } else {
-      if (this.inputs.every((x) => x.ready)) {
-        var inputID = this.findIOValue("geometry");
-        var extrudeDistance = this.findIOValue("height");
 
-        GlobalVariables.cad
-          .extrude(this.uniqueID, inputID, extrudeDistance)
-          .then(() => {
-            this.basicThreadValueProcessing();
-          })
-          .catch(this.alertingErrorHandler());
-      }
+    if (this.inputs.every((x) => x.ready)) {
+      var inputID = this.findIOValue("geometry");
+      var extrudeDistance = this.findIOValue("height");
+
+      GlobalVariables.cad
+        .extrude(this.uniqueID, inputID, extrudeDistance)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        })
+        .catch(this.alertingErrorHandler());
     }
   }
 }

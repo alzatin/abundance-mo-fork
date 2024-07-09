@@ -121,20 +121,17 @@ export default class Color extends Atom {
    */
   updateValue() {
     super.updateValue();
-    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
-      return;
-    } else {
-      if (this.inputs.every((x) => x.ready)) {
-        this.processing = true;
-        var inputID = this.findIOValue("geometry");
-        var color = Object.values(this.colorOptions)[this.selectedColorIndex];
-        GlobalVariables.cad
-          .color(this.uniqueID, inputID, color)
-          .then(() => {
-            this.basicThreadValueProcessing();
-          })
-          .catch(this.alertingErrorHandler());
-      }
+
+    if (this.inputs.every((x) => x.ready)) {
+      this.processing = true;
+      var inputID = this.findIOValue("geometry");
+      var color = Object.values(this.colorOptions)[this.selectedColorIndex];
+      GlobalVariables.cad
+        .color(this.uniqueID, inputID, color)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        })
+        .catch(this.alertingErrorHandler());
     }
   }
 
