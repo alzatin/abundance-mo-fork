@@ -1,6 +1,7 @@
 import Atom from "../prototypes/atom.js";
 import GlobalVariables from "../js/globalvariables.js";
 import { BOMEntry } from "../js/BOM.js";
+import { re } from "mathjs";
 
 /**
  * The addBOMTag molecule type adds a tag containing information about a bill of materials item to the input geometry. The input geometry is not modified in any other way
@@ -61,15 +62,21 @@ export default class AddBOMTag extends Atom {
    */
   updateValue() {
     super.updateValue();
-    var inputID = this.findIOValue("geometry");
-    var bomItem = this.BOMitem;
+    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
+      return;
+    } else {
+      if (this.inputs.every((x) => x.ready)) {
+        var inputID = this.findIOValue("geometry");
+        var bomItem = this.BOMitem;
 
-    GlobalVariables.cad
-      .bom(this.uniqueID, inputID, bomItem)
-      .then(() => {
-        this.basicThreadValueProcessing();
-      })
-      .catch(this.alertingErrorHandler());
+        GlobalVariables.cad
+          .bom(this.uniqueID, inputID, bomItem)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          })
+          .catch(this.alertingErrorHandler());
+      }
+    }
   }
 
   /**

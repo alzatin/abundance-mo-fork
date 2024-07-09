@@ -72,14 +72,21 @@ export default class Difference extends Atom {
    */
   updateValue() {
     super.updateValue();
-    const input1ID = this.findIOValue("geometry1");
-    const input2ID = this.findIOValue("geometry2");
+    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
+      return;
+    } else {
+      if (this.inputs.every((x) => x.ready)) {
+        this.processing = true;
+        const input1ID = this.findIOValue("geometry1");
+        const input2ID = this.findIOValue("geometry2");
 
-    GlobalVariables.cad
-      .difference(this.uniqueID, input1ID, input2ID)
-      .then(() => {
-        this.basicThreadValueProcessing();
-      })
-      .catch(this.alertingErrorHandler());
+        GlobalVariables.cad
+          .difference(this.uniqueID, input1ID, input2ID)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          })
+          .catch(this.alertingErrorHandler());
+      }
+    }
   }
 }

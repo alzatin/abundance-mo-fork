@@ -130,7 +130,7 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
           onChange: (value) => {
             if (input.value !== value) {
               input.setValue(value);
-              this.sendToRender();
+              //this.sendToRender();
             }
           },
         };

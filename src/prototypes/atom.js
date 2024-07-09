@@ -122,9 +122,6 @@ export default class Atom {
      * A function which can be called to cancel the processing being done for this atom.
      * @type {function}
      */
-    this.cancelProcessing = () => {
-      console.warn("Nothing to cancel");
-    };
 
     for (var key in values) {
       /**
@@ -325,6 +322,7 @@ export default class Atom {
    */
   alertingErrorHandler() {
     return (err) => {
+      this.processing = false;
       console.log(err);
       this.setAlert(err.message);
     };
@@ -586,7 +584,7 @@ export default class Atom {
    * Token update value function to give each atom one by default
    */
   updateValue() {
-    this.processing = true;
+    this.waitOnComingInformation();
   }
 
   /**
@@ -608,10 +606,11 @@ export default class Atom {
     if (this.output) {
       this.output.waitOnComingInformation();
     }
-
     if (this.processing) {
-      //console.warn("Processing " + this.name + " Canceled");
-      this.cancelProcessing();
+      console.warn("Processing " + this.name + " Canceled");
+      if (!GlobalVariables.cancelQueue.includes(this.uniqueID)) {
+        GlobalVariables.cancelQueue.push(this.uniqueID);
+      }
       this.processing = false;
     }
   }
@@ -620,30 +619,15 @@ export default class Atom {
    * Calls a worker thread to compute the atom's value.
    */
   basicThreadValueProcessing() {
-    //If the inputs are all ready
-    var go = true;
-    this.inputs.forEach((input) => {
-      if (!input.ready) {
-        go = false;
-      }
-    });
-    if (go) {
-      //Then we update the value
-
-      this.waitOnComingInformation(); //This sends a chain command through the tree to lock all the inputs which are down stream of this one. It also cancels anything processing if this atom was doing a calculation already.
-
-      //this.processing = true;
-      this.decreaseToProcessCountByOne();
-
-      this.clearAlert();
-
-      //If this has an output pass the unique ID to the output
-      if (this.output) {
-        this.output.setValue(this.uniqueID);
-        this.output.ready = true;
-      }
-
-      this.processing = false;
+    this.decreaseToProcessCountByOne();
+    this.clearAlert();
+    if (this.output) {
+      this.output.setValue(this.uniqueID);
+      this.output.ready = true;
+    }
+    this.processing = false;
+    if (this.selected) {
+      this.sendToRender();
     }
   }
 
@@ -698,7 +682,7 @@ export default class Atom {
             onChange: (value) => {
               if (input.value !== value) {
                 input.setValue(value);
-                this.sendToRender();
+                //this.sendToRender();
               }
             },
           };
@@ -720,7 +704,6 @@ export default class Atom {
         ioValue = child.getValue();
       }
     });
-
     return ioValue;
   }
 }

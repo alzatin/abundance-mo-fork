@@ -245,6 +245,7 @@ class GlobalVariables {
      * @type {function}
      */
     this.cancelLastDisplayWorker = function () {};
+    this.cancelQueue = [];
     /**
      * A flag to indicate if a grid should be displayed behind the shape
      * @type {boolean}
@@ -296,6 +297,20 @@ class GlobalVariables {
       },
       { override: true }
     );
+  }
+
+  /**
+   * Checks if the id is in the cancel queue, stops next update value if true and removes it if it is.
+   *  @param {number} id - unique id of atom
+   * **/
+  isInCancelQueue(id) {
+    if (this.cancelQueue.includes(id)) {
+      console.log("Canceling update value");
+      this.cancelQueue = this.cancelQueue.filter((item) => item !== id);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /**

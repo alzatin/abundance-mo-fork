@@ -98,6 +98,7 @@ export default class Import extends Atom {
   updateValue() {
     super.updateValue();
     try {
+      this.processing = true;
       if (this.file != null) {
         // this.processing = true;
         let file = this.file;

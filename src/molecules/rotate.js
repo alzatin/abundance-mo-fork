@@ -83,8 +83,6 @@ export default class Rotate extends Atom {
               if (input.value !== value) {
                 console.log(input.name, value);
                 input.setValue(value);
-                /** should we run updateValue too? */
-                this.sendToRender();
               }
             },
           };
@@ -99,15 +97,22 @@ export default class Rotate extends Atom {
    */
   updateValue() {
     super.updateValue();
-    var inputID = this.findIOValue("geometry");
-    var x = this.findIOValue("x-axis degrees");
-    var y = this.findIOValue("y-axis degrees");
-    var z = this.findIOValue("z-axis degrees");
-    GlobalVariables.cad
-      .rotate(this.uniqueID, inputID, x, y, z)
-      .then(() => {
-        this.basicThreadValueProcessing();
-      })
-      .catch(this.alertingErrorHandler());
+    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
+      return;
+    } else {
+      if (this.inputs.every((x) => x.ready)) {
+        this.processing = true;
+        var inputID = this.findIOValue("geometry");
+        var x = this.findIOValue("x-axis degrees");
+        var y = this.findIOValue("y-axis degrees");
+        var z = this.findIOValue("z-axis degrees");
+        GlobalVariables.cad
+          .rotate(this.uniqueID, inputID, x, y, z)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          })
+          .catch(this.alertingErrorHandler());
+      }
+    }
   }
 }

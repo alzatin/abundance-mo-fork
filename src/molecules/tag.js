@@ -125,15 +125,22 @@ export default class Tag extends Atom {
    */
   updateValue() {
     super.updateValue();
-    var inputID = this.findIOValue("geometry");
-    var tags = this.tags;
-    this.addTagsToAvailableTags();
-    GlobalVariables.cad
-      .tag(this.uniqueID, inputID, tags)
-      .then(() => {
-        this.basicThreadValueProcessing();
-      })
-      .catch(this.alertingErrorHandler());
+    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
+      return;
+    } else {
+      if (this.inputs.every((x) => x.ready)) {
+        this.processing = true;
+        var inputID = this.findIOValue("geometry");
+        var tags = this.tags;
+        this.addTagsToAvailableTags();
+        GlobalVariables.cad
+          .tag(this.uniqueID, inputID, tags)
+          .then(() => {
+            this.basicThreadValueProcessing();
+          })
+          .catch(this.alertingErrorHandler());
+      }
+    }
   }
   /**
    * Send the value of this atom to the 3D display. Used to display the number
