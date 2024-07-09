@@ -75,15 +75,10 @@ const InitialLog = (props) => {
   );
 };
 
-/* to add: if current user is null show this next part */
-const ShowProjects = (props) => {
+// adds individual projects after API call
+const AddProject = (props) => {
   const [nodes, setNodes] = useState([]);
-  const [projectsLoaded, setStateLoaded] = React.useState(false);
-  const [searchBarValue, setSearchBarValue] = useState("");
-  const exportPopUp = props.exportPopUp;
-  const setExportPopUp = props.setExportPopUp;
-  const authorizedUserOcto = props.authorizedUserOcto;
-
+  let searchBarValue = props.searchBarValue;
   // conditional query for maslow projects
   useEffect(() => {
     var query;
@@ -108,7 +103,7 @@ const ShowProjects = (props) => {
           userRepos.push(repo);
         });
         setNodes([...userRepos]);
-        setStateLoaded(true);
+        //setStateLoaded(true);
       })
       .catch((err) => {
         window.alert(
@@ -117,18 +112,86 @@ const ShowProjects = (props) => {
       });
   }, [props.userBrowsing, searchBarValue]);
 
+  //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"
+
+  return nodes.map((node) => (
+    <Link
+      key={node.id}
+      to={
+        node.owner.login == globalvariables.currentUser
+          ? `/${node.id}`
+          : `/run/${node.id}`
+      }
+      className="product__item"
+    >
+      <div
+        className="project"
+        key={node.id}
+        id={node.name}
+        onClick={() => {
+          GlobalVariables.currentRepo = node;
+        }}
+      >
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "80%",
+          }}
+        >
+          {node.name}
+        </p>
+        <img
+          className="project_image"
+          src={
+            "https://raw.githubusercontent.com/" +
+            node.full_name +
+            "/master/project.svg?sanitize=true"
+          }
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src = "/imgs/defaultThumbnail.svg";
+          }}
+          alt={node.name}
+        ></img>
+        <div style={{ display: "inline" }}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ transform: "scale(.7)" }}
+            width="16"
+            height="16"
+          >
+            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+          </svg>
+          <p style={{ fontSize: ".5em" }}>{node.stargazers_count}</p>
+        </div>
+      </div>
+    </Link>
+  ));
+};
+
+/* to add: if current user is null show this next part */
+const ShowProjects = (props) => {
+  //const [projectsLoaded, setStateLoaded] = useState(false);
+  const [searchBarValue, setSearchBarValue] = useState("");
+  const exportPopUp = props.exportPopUp;
+  const setExportPopUp = props.setExportPopUp;
+  const authorizedUserOcto = props.authorizedUserOcto;
+
   // Browse display
   const ClassicBrowse = () => {
     const loadBrowse = () => {
       props.setBrowsing(!props.userBrowsing);
-      setStateLoaded(true);
+      //setStateLoaded(true);
     };
     const handleSearchChange = (e) => {
       if (e.code == "Enter") {
         setSearchBarValue(e.target.value);
       }
     };
-    const [searchBarType, setSearchBarType] = useState(searchBarValue);
+
     return (
       <>
         {props.isloggedIn ? (
@@ -162,9 +225,9 @@ const ShowProjects = (props) => {
           <input
             type="text"
             key="project-search-bar"
-            placeholder={searchBarType}
-            value={searchBarType}
-            onChange={(e) => setSearchBarType(e.target.value)}
+            placeholder={searchBarValue}
+            //value={target.value}
+            //onChange={(e) => setSearchBarType(e.target.value)}
             onKeyDown={(e) => {
               handleSearchChange(e);
             }}
@@ -183,76 +246,15 @@ const ShowProjects = (props) => {
           />
         </div>
 
-        {projectsLoaded ? (
-          <div className="project-item-div">
-            <AddProject />
-          </div>
-        ) : (
-          <div>"Loading Projects..."</div>
-        )}
+        <div className="project-item-div">
+          <AddProject
+            searchBarValue={searchBarValue}
+            user={props.user}
+            userBrowsing={props.userBrowsing}
+          />
+        </div>
       </>
     );
-  };
-
-  // adds individual projects after API call
-  const AddProject = () => {
-    //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"
-    return nodes.map((node) => (
-      <Link
-        key={node.id}
-        to={
-          node.owner.login == globalvariables.currentUser
-            ? `/${node.id}`
-            : `/run/${node.id}`
-        }
-        className="product__item"
-      >
-        <div
-          className="project"
-          key={node.id}
-          id={node.name}
-          onClick={() => {
-            GlobalVariables.currentRepo = node;
-          }}
-        >
-          <p
-            style={{
-              fontSize: "1em",
-              textOverflow: "ellipsis",
-              display: "block",
-              overflow: "hidden",
-              width: "80%",
-            }}
-          >
-            {node.name}
-          </p>
-          <img
-            className="project_image"
-            src={
-              "https://raw.githubusercontent.com/" +
-              node.full_name +
-              "/master/project.svg?sanitize=true"
-            }
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null; // prevents looping
-              currentTarget.src = "/imgs/defaultThumbnail.svg";
-            }}
-            alt={node.name}
-          ></img>
-          <div style={{ display: "inline" }}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ transform: "scale(.7)" }}
-              width="16"
-              height="16"
-            >
-              <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
-            </svg>
-            <p style={{ fontSize: ".5em" }}>{node.stargazers_count}</p>
-          </div>
-        </div>
-      </Link>
-    ));
   };
 
   const openInNewTab = (url) => {
