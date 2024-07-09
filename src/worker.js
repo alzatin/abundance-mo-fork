@@ -13,6 +13,7 @@ import {
 } from "replicad";
 import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
+import { addSVG } from "replicad-decorate";
 
 var library = {};
 
@@ -460,6 +461,7 @@ async function importingSTEP(targetID, file) {
     geometry: [STEPresult],
     tags: [],
     color: "#FF9065",
+    bom: [],
   };
   return true;
 }
@@ -471,8 +473,29 @@ async function importingSTL(targetID, file) {
     geometry: [STLresult],
     tags: [],
     color: "#FF9065",
+    bom: [],
   };
   return true;
+}
+
+async function importingSVG(targetID, file) {
+  const baseShape = drawRectangle(80, 80).sketchOnPlane().extrude(1);
+  const svgString = file;
+  addSVG(baseShape, {
+    faceIndex: 5,
+    depth: 2,
+    svgString: svgString,
+    width: 30,
+  }).then((shape) => {
+    library[targetID] = {
+      geometry: [shape],
+      tags: [],
+      color: "#FF9065",
+      bom: [],
+    };
+    console.log(library[targetID]);
+    return true;
+  });
 }
 
 const prettyProjection = (shape) => {
@@ -997,6 +1020,7 @@ expose({
   deleteFromLibrary,
   importingSTEP,
   importingSTL,
+  importingSVG,
   createMesh,
   circle,
   color,
