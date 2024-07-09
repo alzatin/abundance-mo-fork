@@ -611,6 +611,7 @@ export default class Atom {
       if (!GlobalVariables.cancelQueue.includes(this.uniqueID)) {
         GlobalVariables.cancelQueue.push(this.uniqueID);
       }
+      this.processing = false;
     }
   }
 
