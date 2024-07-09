@@ -106,27 +106,24 @@ export default class CutLayout extends Atom {
    */
   updateValue() {
     super.updateValue();
-    if (GlobalVariables.isInCancelQueue(this.uniqueID)) {
-      return;
-    } else {
-      if (this.inputs.every((x) => x.ready)) {
-        this.processing = true;
-        var inputID = this.findIOValue("geometry");
-        var materialThickness = this.findIOValue("Material Thickness");
-        var tag = "cutLayout";
 
-        if (!inputID) {
-          this.setAlert('"geometry" input is missing');
-          return;
-        }
+    if (this.inputs.every((x) => x.ready)) {
+      this.processing = true;
+      var inputID = this.findIOValue("geometry");
+      var materialThickness = this.findIOValue("Material Thickness");
+      var tag = "cutLayout";
 
-        GlobalVariables.cad
-          .layout(this.uniqueID, inputID, tag, materialThickness)
-          .then(() => {
-            this.basicThreadValueProcessing();
-          })
-          .catch(this.alertingErrorHandler());
+      if (!inputID) {
+        this.setAlert('"geometry" input is missing');
+        return;
       }
+
+      GlobalVariables.cad
+        .layout(this.uniqueID, inputID, tag, materialThickness)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        })
+        .catch(this.alertingErrorHandler());
     }
   }
 }
