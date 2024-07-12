@@ -130,7 +130,6 @@ export default class Import extends Atom {
         );
       } else {
         this.getAFile().then((result) => {
-          console.log(result);
           this.sha = result.data.sha;
           this.file = this.newBlobFromBase64(result);
           this.updateValue();
