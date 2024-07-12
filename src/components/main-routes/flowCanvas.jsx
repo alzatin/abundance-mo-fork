@@ -48,7 +48,7 @@ export default memo(function FlowCanvas(props) {
         atomType: "Molecule",
       });
       GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-      console.log("running load on create mode");
+
       loadProject(GlobalVariables.currentRepo);
     }
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
@@ -115,6 +115,10 @@ export default memo(function FlowCanvas(props) {
         GlobalVariables.atomsSelected.forEach((item) => {
           let newAtomID = GlobalVariables.generateUniqueID();
           item.uniqueID = newAtomID;
+
+          if (item.atomType == "Molecule" || "GitHubMolecule") {
+            item = GlobalVariables.currentMolecule.remapIDs(item);
+          }
           GlobalVariables.currentMolecule.placeAtom(item, true);
         });
       }
