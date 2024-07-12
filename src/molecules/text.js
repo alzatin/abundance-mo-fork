@@ -1,6 +1,6 @@
 import Atom from "../prototypes/atom.js";
 import GlobalVariables from "../js/globalvariables.js";
-import WebFont from "webfontloader";
+import Fonts from "../js/fonts.js";
 
 /**
  * This class creates the circle atom.
@@ -29,7 +29,9 @@ export default class Text extends Atom {
      */
     this.description = "Creates a new text sketch.";
 
-    this.addIO("input", "width", this, "number", 10.0);
+    this.fontFamily = "ROBOTO";
+
+    this.addIO("input", "Font Size", this, "number", 10.0);
     this.addIO("input", "Text", this, "string", "Lorem Ipsum");
     this.addIO("output", "geometry", this, "geometry", "");
 
@@ -66,18 +68,80 @@ export default class Text extends Atom {
     GlobalVariables.c.closePath();
   }
 
+  createLevaInputs() {
+    let inputParams = {};
+
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+
+        /* Makes inputs for Io's other than geometry */
+        if (input.valueType !== "geometry") {
+          inputParams[this.uniqueID + input.name] = {
+            value: input.value,
+            label: input.name,
+            step: 0.25,
+            disabled: checkConnector(),
+            onChange: (value) => {
+              if (input.value !== value) {
+                input.setValue(value);
+                //this.sendToRender();
+              }
+            },
+          };
+        }
+      });
+    }
+    const fontOptions = Fonts;
+    inputParams["Font Family"] = {
+      options: Object.keys(fontOptions),
+      label: "Font Family",
+      onChange: (value) => {
+        this.fontFamily = value;
+        this.updateValue();
+        //importIndex = fontOptions.indexOf(value);
+      },
+    };
+
+    return inputParams;
+  }
+
   /**
    * Update the value of the circle in worker.
    */
   updateValue() {
     super.updateValue();
-    var diameter = this.findIOValue("diameter");
+    var fontSize = this.findIOValue("Font Size");
     var text = this.findIOValue("Text");
+    let fontFamily = this.fontFamily;
     GlobalVariables.cad
-      .text(this.uniqueID, text)
+      .text(this.uniqueID, text, fontSize, fontFamily)
       .then(() => {
         this.basicThreadValueProcessing();
       })
       .catch(this.alertingErrorHandler());
+  }
+
+  serialize() {
+    var thisAsObject = super.serialize(savedObject);
+
+    var ioValues = [];
+    this.inputs.forEach((io) => {
+      if (io.connectors.length > 0) {
+        var saveIO = {
+          name: io.name,
+          ioValue: io.getValue(),
+        };
+        ioValues.push(saveIO);
+      }
+    });
+
+    thisAsObject.ioValues = ioValues;
+    thisAsObject.fontFamily = this.fontFamily;
+
+    return thisAsObject;
   }
 }

@@ -15,6 +15,7 @@ import {
 import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 import { addSVG } from "replicad-decorate";
+import Fonts from "./js/fonts.js";
 
 var library = {};
 
@@ -102,10 +103,10 @@ function regularPolygon(id, radius, numberOfSides) {
     return true;
   });
 }
-async function text(id, text) {
-  let ROBOTO =
-    "https://fonts.gstatic.com/s/roboto/v15/W5F8_SL0XFawnjxHGsZjJA.ttf";
-  await loadFont(ROBOTO);
+async function text(id, text, fontSize, fontFamily) {
+  await loadFont(Fonts[fontFamily])
+    .then(() => console.log("Font loaded"))
+    .catch((err) => console.error("Error loading font: ", err));
 
   return started.then(() => {
     const newPlane = new Plane().pivot(0, "Y");
@@ -113,9 +114,9 @@ async function text(id, text) {
     const textGeometry = drawText(text, {
       startX: 0,
       startY: 0,
-      fontSize: 16,
+      fontSize: fontSize,
+      font: fontFamily,
     });
-    console.log(textGeometry);
     library[id] = {
       geometry: [textGeometry],
       tags: [],
