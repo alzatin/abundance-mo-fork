@@ -311,19 +311,26 @@ function CreateMode(props) {
     let filesObject = {
       "BillOfMaterials.md": bomContent,
       "README.md": readmeContent,
-      "project.svg": finalSVG ? finalSVG : "",
       "project.abundance": projectContent,
     };
 
     /* add any new SVGs to the project change files*/
     const readmeSVGs = readMeRequestResult;
+    let backupProjectSVG;
     if (readmeSVGs) {
       readmeSVGs.forEach((item) => {
         if (item.svg != null) {
           filesObject["readme" + item.uniqueID + ".svg"] = item.svg;
+          backupProjectSVG = item.svg;
         }
       });
     }
+    filesObject["project.svg"] = finalSVG
+      ? finalSVG
+      : backupProjectSVG
+      ? backupProjectSVG
+      : "";
+
     setState(30);
 
     createCommit(
