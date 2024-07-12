@@ -382,7 +382,6 @@ export default class Molecule extends Atom {
       node.beginPropagation(force);
     });
     this.inputs.forEach((input) => {
-      console.log("input", input);
       input.beginPropagation();
     });
   }
