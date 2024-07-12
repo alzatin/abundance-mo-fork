@@ -102,7 +102,11 @@ function regularPolygon(id, radius, numberOfSides) {
     return true;
   });
 }
-function text(id, text) {
+async function text(id, text) {
+  let ROBOTO =
+    "https://fonts.gstatic.com/s/roboto/v15/W5F8_SL0XFawnjxHGsZjJA.ttf";
+  await loadFont(ROBOTO);
+
   return started.then(() => {
     const newPlane = new Plane().pivot(0, "Y");
 
@@ -110,7 +114,6 @@ function text(id, text) {
       startX: 0,
       startY: 0,
       fontSize: 16,
-      fontFamily: font,
     });
     console.log(textGeometry);
     library[id] = {
