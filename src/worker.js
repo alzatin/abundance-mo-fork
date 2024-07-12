@@ -1,11 +1,12 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC } from "replicad";
+import { setOC, loadFont } from "replicad";
 import { expose } from "comlink";
 import {
   drawCircle,
   drawRectangle,
   drawPolysides,
+  drawText,
   Plane,
   Vector,
   importSTEP,
@@ -93,6 +94,27 @@ function regularPolygon(id, radius, numberOfSides) {
     const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawPolysides(radius, numberOfSides)],
+      tags: [],
+      plane: newPlane,
+      color: "#FF9065",
+      bom: [],
+    };
+    return true;
+  });
+}
+function text(id, text) {
+  return started.then(() => {
+    const newPlane = new Plane().pivot(0, "Y");
+
+    const textGeometry = drawText(text, {
+      startX: 0,
+      startY: 0,
+      fontSize: 16,
+      fontFamily: font,
+    });
+    console.log(textGeometry);
+    library[id] = {
+      geometry: [textGeometry],
       tags: [],
       plane: newPlane,
       color: "#FF9065",
@@ -1050,4 +1072,5 @@ expose({
   intersect,
   assembly,
   loftShapes,
+  text,
 });

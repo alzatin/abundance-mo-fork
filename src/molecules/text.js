@@ -1,5 +1,6 @@
 import Atom from "../prototypes/atom.js";
 import GlobalVariables from "../js/globalvariables.js";
+import WebFont from "webfontloader";
 
 /**
  * This class creates the circle atom.
@@ -28,7 +29,8 @@ export default class Text extends Atom {
      */
     this.description = "Creates a new text sketch.";
 
-    this.addIO("input", "diameter", this, "number", 10.0);
+    this.addIO("input", "width", this, "number", 10.0);
+    this.addIO("input", "Text", this, "string", "Lorem Ipsum");
     this.addIO("output", "geometry", this, "geometry", "");
 
     this.setValues(values);
@@ -70,8 +72,9 @@ export default class Text extends Atom {
   updateValue() {
     super.updateValue();
     var diameter = this.findIOValue("diameter");
+    var text = this.findIOValue("Text");
     GlobalVariables.cad
-      .circle(this.uniqueID, diameter)
+      .text(this.uniqueID, text)
       .then(() => {
         this.basicThreadValueProcessing();
       })
