@@ -2,6 +2,7 @@ import Atom from "../prototypes/atom.js";
 import GlobalVariables from "../js/globalvariables.js";
 import { button, LevaInputs } from "leva";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
+import { saveAs } from "file-saver";
 
 /**
  * This class creates an atom which supports uploading a .svg file
