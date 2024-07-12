@@ -478,14 +478,17 @@ async function importingSTL(targetID, file) {
   return true;
 }
 
-async function importingSVG(targetID, file) {
-  const baseShape = drawRectangle(80, 80).sketchOnPlane().extrude(1);
+async function importingSVG(targetID, file, depth, width) {
+  const baseWidth = width + width * 0.05;
+  const baseShape = drawRectangle(baseWidth, baseWidth)
+    .sketchOnPlane()
+    .extrude(1);
   const svgString = file;
   addSVG(baseShape, {
     faceIndex: 5,
-    depth: 2,
+    depth: depth,
     svgString: svgString,
-    width: 30,
+    width: width,
   }).then((shape) => {
     library[targetID] = {
       geometry: [shape],

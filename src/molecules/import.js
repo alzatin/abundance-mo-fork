@@ -46,11 +46,15 @@ export default class Import extends Atom {
      * @type {string}
      */
     this.type = null;
+
     /**
      * The sha of the file. Need to keep track of it to be able to delete file from github
      * @type {string}
      */
     this.sha = null;
+
+    this.SVGdepth = 10;
+    this.SVGwidth = 10;
 
     this.addIO("output", "geometry", this, "geometry", "");
 
@@ -105,12 +109,6 @@ export default class Import extends Atom {
         let file = this.file;
         let fileType = this.type;
 
-        file = `<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1.32952 19L0.731445 17.9641L5.06157 15.4641L7.10302 19H1.32952Z" fill="#000000"/>
-        <path d="M15.1859 19H9.41243L5.79362 12.7321L10.1237 10.2321L15.1859 19Z" fill="#000000"/>
-        <path d="M23.2688 19H17.4953L10.8558 7.5L15.1859 5L23.2688 19Z" fill="#000000"/>
-        </svg>`;
-
         let funcToCall =
           fileType == "STL"
             ? GlobalVariables.cad.importingSTL
@@ -123,12 +121,16 @@ export default class Import extends Atom {
         if (funcToCall == null) {
           throw "Invalid file type";
         }
-        funcToCall(this.uniqueID, file).then((result) => {
-          this.basicThreadValueProcessing();
-          this.sendToRender();
-        });
+
+        funcToCall(this.uniqueID, file, this.SVGdepth, this.SVGwidth).then(
+          (result) => {
+            this.basicThreadValueProcessing();
+            this.sendToRender();
+          }
+        );
       } else {
         this.getAFile().then((result) => {
+          console.log(result);
           this.sha = result.data.sha;
           this.file = this.newBlobFromBase64(result);
           this.updateValue();
@@ -144,13 +146,20 @@ export default class Import extends Atom {
   newBlobFromBase64(result) {
     // Your base64 string
     let base64String = result.data.content;
+
     // Convert base64 string to binary
     let binary = atob(base64String);
+
+    if (this.type == "SVG") {
+      return binary;
+    }
+
     // Create an array to store the binary data
     let array = [];
     for (let i = 0; i < binary.length; i++) {
       array.push(binary.charCodeAt(i));
     }
+
     // Create a new Blob from the binary data
     return new Blob([new Uint8Array(array)], {
       type: "application/octet-stream",
@@ -183,6 +192,24 @@ export default class Import extends Atom {
         this.loadFile(importOptions[importIndex])
       );
     } else {
+      if (this.type == "SVG") {
+        inputParams["Width"] = {
+          value: this.SVGwidth, //href to the file
+          label: "Width",
+          onChange: (value) => {
+            this.SVGwidth = value;
+            this.updateValue();
+          },
+        };
+        inputParams["Depth"] = {
+          value: this.SVGdepth, //href to the file
+          label: "Depth",
+          onChange: (value) => {
+            this.SVGdepth = value;
+            this.updateValue();
+          },
+        };
+      }
       inputParams["Loaded File"] = {
         value: this.fileName, //href to the file
         label: "Loaded File",
@@ -230,6 +257,8 @@ export default class Import extends Atom {
     superSerialObject.fileName = this.fileName; // might delete, maybe we just save as library object
     superSerialObject.name = this.name;
     superSerialObject.type = this.type;
+    superSerialObject.SVGdepth = this.SVGdepth;
+    superSerialObject.SVGwidth = this.SVGwidth;
 
     return superSerialObject;
   }
