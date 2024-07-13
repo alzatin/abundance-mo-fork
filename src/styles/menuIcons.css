@@ -23,6 +23,11 @@
   width: 150%;
   height: 150%;
 }
+.Join {
+  background: url("./imgs/join.png");
+  width: 150%;
+  height: 150%;
+}
 .Interaction {
   background: url("./imgs/interaction.png");
   width: 150%;
