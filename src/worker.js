@@ -133,6 +133,9 @@ function loftShapes(targetID, inputsIDs) {
     let arrayOfSketchedGeometry = [];
 
     inputsIDs.forEach((inputID) => {
+      if (is3D(library[inputID])) {
+        throw new Error("Parts to be lofted must be sketches");
+      }
       let partToLoft = digFuse(library[inputID]);
       let sketchedpart = partToLoft.sketchOnPlane(library[inputID].plane);
       if (!sketchedpart.sketches) {
