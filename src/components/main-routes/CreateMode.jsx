@@ -357,7 +357,7 @@ function CreateMode(props) {
           <div id="headerBar">
             <img
               className="thumnail-logo"
-              src="/imgs/maslow-logo.png"
+              src="/imgs/abundance_logo.png"
               alt="logo"
             />
           </div>

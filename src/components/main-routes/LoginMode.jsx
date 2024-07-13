@@ -20,12 +20,12 @@ const InitialLog = (props) => {
     <div className="login-page">
       <div className="form animate fadeInUp one">
         <div id="gitSide" className="logindiv">
-          <img className="logo" src="/imgs/maslow-logo.png" alt="logo" />
+          <img className="logo" src="/imgs/abundance_logo.png" alt="logo" />
           <div id="welcome">
             <img
-              src="/imgs/maslowcreate.svg"
+              src="/imgs/abundance_lettering.png"
               alt="logo"
-              style={{ width: "300px", padding: "10px", margin: "0" }}
+              style={{ width: "300px" }}
             />
           </div>
           <p style={{ padding: "0 20px" }}>
@@ -269,12 +269,12 @@ const ShowProjects = (props) => {
           style={{ display: "flex", margin: "10px", alignItems: "center" }}
         >
           <img
-            src="/imgs/maslow-logo.png"
+            src="/imgs/abundance_logo.png"
             alt="logo"
-            style={{ width: "25px", height: "25px", borderRadius: "50%" }}
+            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
           />
           <img
-            src="/imgs/maslowcreate.svg"
+            src="/imgs/abundance_lettering.png"
             alt="logo"
             style={{ height: "20px", padding: "10px" }}
           />
