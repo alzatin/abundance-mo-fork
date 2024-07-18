@@ -444,12 +444,16 @@
   box-sizing: border-box;
 }
 #project_search {
-  width: 85%;
+  width: 25%;
   margin-right: 10px;
   border: 3px solid #353232;
   border-radius: 5px 5px;
   outline: none;
-  align-self: flex-end;
+}
+.project-item-div {
+  overflow-y: scroll;
+  margin-top: 10px;
+  padding: 20px;
 }
 .project-item-div {
   overflow-y: scroll;
@@ -481,10 +485,18 @@
 .tab {
 }
 
+.list_thumb_button {
+  padding: 0 3px;
+  border: none;
+  background: none;
+}
+
 .search-bar-div {
-  align-self: flex-end;
-  width: 40%;
   height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 10px 20px;
 }
 .custom-select {
   position: relative;

@@ -78,6 +78,7 @@ const InitialLog = (props) => {
 // adds individual projects after API call
 const AddProject = (props) => {
   const [nodes, setNodes] = useState([]);
+  const [browseType, setBrowseType] = useState("list");
   let searchBarValue = props.searchBarValue;
   // conditional query for maslow projects
   useEffect(() => {
@@ -112,64 +113,108 @@ const AddProject = (props) => {
       });
   }, [props.userBrowsing, searchBarValue]);
 
-  //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"
-
-  return nodes.map((node) => (
-    <Link
-      key={node.id}
-      to={
-        node.owner.login == globalvariables.currentUser
-          ? `/${node.id}`
-          : `/run/${node.id}`
-      }
-      className="product__item"
-    >
-      <div
-        className="project"
-        key={node.id}
-        id={node.name}
-        onClick={() => {
-          GlobalVariables.currentRepo = node;
-        }}
+  return (
+    <>
+      <button
+        className="list_thumb_button"
+        key="list-filter-button"
+        onClick={() => setBrowseType("list")}
       >
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
-        >
-          {node.name}
-        </p>
         <img
-          className="project_image"
-          src={
-            "https://raw.githubusercontent.com/" +
-            node.full_name +
-            "/master/project.svg?sanitize=true"
-          }
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null; // prevents looping
-            currentTarget.src = "/imgs/defaultThumbnail.svg";
+          src="/imgs/list.svg"
+          alt="list_search"
+          style={{
+            width: "20px",
+            marginRight: "5px",
+            opacity: "0.8",
           }}
-          alt={node.name}
-        ></img>
-        <div style={{ display: "inline" }}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ transform: "scale(.7)" }}
-            width="16"
-            height="16"
+        />
+      </button>
+      <button
+        className="list_thumb_button"
+        key="thumb-filter-button"
+        onClick={() => setBrowseType("thumb")}
+      >
+        <img
+          src="/imgs/thumbnail.svg"
+          alt="thumb_search"
+          style={{
+            width: "20px",
+            marginRight: "5px",
+            opacity: "0.8",
+          }}
+        />
+      </button>
+      <ProjectDiv browseType={browseType} nodes={nodes} />
+    </>
+  );
+};
+
+const ProjectDiv = (props) => {
+  const nodes = props.nodes;
+  const browseType = props.browseType;
+  return (
+    <>
+      <div className={browseType == "list" ? "project-item-div" : null}>
+        {nodes.map((node) => (
+          <Link
+            key={node.id}
+            to={
+              node.owner.login == globalvariables.currentUser
+                ? `/${node.id}`
+                : `/run/${node.id}`
+            }
+            className="product__item"
           >
-            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
-          </svg>
-          <p style={{ fontSize: ".5em" }}>{node.stargazers_count}</p>
-        </div>
+            <div
+              className="project"
+              key={node.id}
+              id={node.name}
+              onClick={() => {
+                GlobalVariables.currentRepo = node;
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "1em",
+                  textOverflow: "ellipsis",
+                  display: "block",
+                  overflow: "hidden",
+                  width: "80%",
+                }}
+              >
+                {browseType == "list" ? node.name : "test"}
+              </p>
+              <img
+                className="project_image"
+                src={
+                  "https://raw.githubusercontent.com/" +
+                  node.full_name +
+                  "/master/project.svg?sanitize=true"
+                }
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src = "/imgs/defaultThumbnail.svg";
+                }}
+                alt={node.name}
+              ></img>
+              <div style={{ display: "inline" }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ transform: "scale(.7)" }}
+                  width="16"
+                  height="16"
+                >
+                  <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+                </svg>
+                <p style={{ fontSize: ".5em" }}>{node.stargazers_count}</p>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
-    </Link>
-  ));
+    </>
+  );
 };
 
 /* to add: if current user is null show this next part */
@@ -222,6 +267,36 @@ const ShowProjects = (props) => {
           </div>
         ) : null}
         <div className="search-bar-div">
+          <button
+            className="list_thumb_button"
+            key="list-filter-button"
+            onClick={() => setBrowseType("list")}
+          >
+            <img
+              src="/imgs/list.svg"
+              alt="list_search"
+              style={{
+                width: "20px",
+                marginRight: "5px",
+                opacity: "0.8",
+              }}
+            />
+          </button>
+          <button
+            className="list_thumb_button"
+            key="thumb-filter-button"
+            onClick={() => setBrowseType("thumb")}
+          >
+            <img
+              src="/imgs/thumbnail.svg"
+              alt="thumb_search"
+              style={{
+                width: "20px",
+                marginRight: "5px",
+                opacity: "0.8",
+              }}
+            />
+          </button>
           <input
             type="text"
             key="project-search-bar"
@@ -234,25 +309,25 @@ const ShowProjects = (props) => {
             className="menu_search searchButton"
             id="project_search"
           />
-          <img
-            src="/imgs/search_icon.svg"
-            alt="search"
-            style={{
-              width: "20px",
-              color: "white",
-              marginRight: "5px",
-              opacity: "0.5",
-            }}
-          />
+          <button className="list_thumb_button">
+            <img
+              src="/imgs/search_icon.svg"
+              alt="search"
+              style={{
+                width: "20px",
+                color: "white",
+                marginRight: "5px",
+                opacity: "0.5",
+              }}
+            />
+          </button>
         </div>
 
-        <div className="project-item-div">
-          <AddProject
-            searchBarValue={searchBarValue}
-            user={props.user}
-            userBrowsing={props.userBrowsing}
-          />
-        </div>
+        <AddProject
+          searchBarValue={searchBarValue}
+          user={props.user}
+          userBrowsing={props.userBrowsing}
+        />
       </>
     );
   };
