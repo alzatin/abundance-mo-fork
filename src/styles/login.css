@@ -639,6 +639,16 @@
   border: 2px solid #f2f2f200;
 }
 
+.project_list {
+  text-wrap: nowrap;
+  display: flex;
+  background-color: #ffffff7d;
+  margin: 10px;
+
+  font-size: 13px;
+  justify-content: flex-start;
+  border: 2px solid #f2f2f200;
+}
 .project_image {
   display: block;
   margin: auto;

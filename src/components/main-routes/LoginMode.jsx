@@ -153,9 +153,117 @@ const AddProject = (props) => {
 const ProjectDiv = (props) => {
   const nodes = props.nodes;
   const browseType = props.browseType;
+
+  const ThumbItem = ({ node }) => {
+    return (
+      <div
+        className="project"
+        key={node.id}
+        id={node.name}
+        onClick={() => {
+          GlobalVariables.currentRepo = node;
+        }}
+      >
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "80%",
+          }}
+        >
+          {node.name}
+        </p>
+        <img
+          className="project_image"
+          src={
+            "https://raw.githubusercontent.com/" +
+            node.full_name +
+            "/master/project.svg?sanitize=true"
+          }
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src = "/imgs/defaultThumbnail.svg";
+          }}
+          alt={node.name}
+        ></img>
+        <div style={{ display: "inline" }}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ transform: "scale(.7)" }}
+            width="16"
+            height="16"
+          >
+            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+          </svg>
+          <p style={{ fontSize: ".5em" }}>{node.stargazers_count}</p>
+        </div>
+      </div>
+    );
+  };
+  const ListItem = (node) => {
+    console.log(node);
+    return (
+      <div
+        className="project_list"
+        key={node.node.id}
+        id={node.node.name}
+        onClick={() => {
+          GlobalVariables.currentRepo = node.node;
+        }}
+      >
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "80%",
+          }}
+        >
+          {node.node.name}
+        </p>
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "80%",
+          }}
+        >
+          {node.node.owner.login}
+        </p>
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "70%",
+          }}
+        >
+          {node.node.forks_count}
+        </p>
+        <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>
+          <p style={{ fontSize: "1em" }}>{node.node.stargazers_count}</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ transform: "scale(1)" }}
+            width="16"
+            height="16"
+          >
+            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+          </svg>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
-      <div className={browseType == "list" ? "project-item-div" : null}>
+      <div className="project-item-div">
         {nodes.map((node) => (
           <Link
             key={node.id}
@@ -164,52 +272,12 @@ const ProjectDiv = (props) => {
                 ? `/${node.id}`
                 : `/run/${node.id}`
             }
-            className="product__item"
           >
-            <div
-              className="project"
-              key={node.id}
-              id={node.name}
-              onClick={() => {
-                GlobalVariables.currentRepo = node;
-              }}
-            >
-              <p
-                style={{
-                  fontSize: "1em",
-                  textOverflow: "ellipsis",
-                  display: "block",
-                  overflow: "hidden",
-                  width: "80%",
-                }}
-              >
-                {browseType == "list" ? node.name : "test"}
-              </p>
-              <img
-                className="project_image"
-                src={
-                  "https://raw.githubusercontent.com/" +
-                  node.full_name +
-                  "/master/project.svg?sanitize=true"
-                }
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null; // prevents looping
-                  currentTarget.src = "/imgs/defaultThumbnail.svg";
-                }}
-                alt={node.name}
-              ></img>
-              <div style={{ display: "inline" }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{ transform: "scale(.7)" }}
-                  width="16"
-                  height="16"
-                >
-                  <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
-                </svg>
-                <p style={{ fontSize: ".5em" }}>{node.stargazers_count}</p>
-              </div>
-            </div>
+            {browseType == "list" ? (
+              <ListItem node={node} />
+            ) : (
+              <ThumbItem node={node} />
+            )}
           </Link>
         ))}
       </div>
@@ -267,36 +335,6 @@ const ShowProjects = (props) => {
           </div>
         ) : null}
         <div className="search-bar-div">
-          <button
-            className="list_thumb_button"
-            key="list-filter-button"
-            onClick={() => setBrowseType("list")}
-          >
-            <img
-              src="/imgs/list.svg"
-              alt="list_search"
-              style={{
-                width: "20px",
-                marginRight: "5px",
-                opacity: "0.8",
-              }}
-            />
-          </button>
-          <button
-            className="list_thumb_button"
-            key="thumb-filter-button"
-            onClick={() => setBrowseType("thumb")}
-          >
-            <img
-              src="/imgs/thumbnail.svg"
-              alt="thumb_search"
-              style={{
-                width: "20px",
-                marginRight: "5px",
-                opacity: "0.8",
-              }}
-            />
-          </button>
           <input
             type="text"
             key="project-search-bar"
