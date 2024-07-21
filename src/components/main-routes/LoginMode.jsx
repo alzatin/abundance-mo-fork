@@ -78,7 +78,8 @@ const InitialLog = (props) => {
 // adds individual projects after API call
 const AddProject = (props) => {
   const [nodes, setNodes] = useState([]);
-  const [browseType, setBrowseType] = useState("list");
+  const [browseType, setBrowseType] = useState("thumb");
+  const [orderType, setOrderType] = useState("Name");
   let searchBarValue = props.searchBarValue;
   // conditional query for maslow projects
   useEffect(() => {
@@ -115,37 +116,59 @@ const AddProject = (props) => {
 
   return (
     <>
-      <button
-        className="list_thumb_button"
-        key="list-filter-button"
-        onClick={() => setBrowseType("list")}
-      >
-        <img
-          src="/imgs/list.svg"
-          alt="list_search"
-          style={{
-            width: "20px",
-            marginRight: "5px",
-            opacity: "0.8",
-          }}
-        />
-      </button>
-      <button
-        className="list_thumb_button"
-        key="thumb-filter-button"
-        onClick={() => setBrowseType("thumb")}
-      >
-        <img
-          src="/imgs/thumbnail.svg"
-          alt="thumb_search"
-          style={{
-            width: "20px",
-            marginRight: "5px",
-            opacity: "0.8",
-          }}
-        />
-      </button>
-      <ProjectDiv browseType={browseType} nodes={nodes} />
+      <div style={{ marginLeft: "20px", marginTop: "-40px", display: "flex" }}>
+        <button
+          className="list_thumb_button"
+          key="list-filter-button"
+          onClick={() => setBrowseType("list")}
+        >
+          <img
+            src="/imgs/list.svg"
+            alt="list_search"
+            style={{
+              width: "20px",
+              marginRight: "5px",
+              opacity: "0.8",
+            }}
+          />
+        </button>
+        <button
+          className="list_thumb_button"
+          key="thumb-filter-button"
+          onClick={() => setBrowseType("thumb")}
+        >
+          <img
+            src="/imgs/thumbnail.svg"
+            alt="thumb_search"
+            style={{
+              width: "20px",
+              marginRight: "5px",
+              opacity: "0.8",
+            }}
+          />
+        </button>
+        <label htmlFor="order-by">
+          Sort by:
+          <select id="order-by" onChange={(e) => setOrderType(e.target.value)}>
+            <option key={"name_order"} value={"byName"}>
+              Name
+            </option>
+            <option key={"forks_order"} value={"byForks"}>
+              Forks
+            </option>
+            <option key={"stars_order"} value={"byStars"}>
+              Stars
+            </option>
+            <option key={"owner_order"} value={"byOwnerName"}>
+              Creator
+            </option>
+            <option key={"date_order"} value={"byDateCreated"}>
+              Date Created
+            </option>
+          </select>
+        </label>
+      </div>
+      <ProjectDiv browseType={browseType} nodes={nodes} orderType={orderType} />
     </>
   );
 };
@@ -153,6 +176,7 @@ const AddProject = (props) => {
 const ProjectDiv = (props) => {
   const nodes = props.nodes;
   const browseType = props.browseType;
+  const orderType = props.orderType;
 
   const ThumbItem = ({ node }) => {
     return (
@@ -203,7 +227,6 @@ const ProjectDiv = (props) => {
     );
   };
   const ListItem = (node) => {
-    console.log(node);
     return (
       <div
         className="project_list"
@@ -261,10 +284,36 @@ const ProjectDiv = (props) => {
     );
   };
 
+  var sorters = {
+    byName: function (a, b) {
+      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+    },
+    byForks: function (a, b) {
+      return b.forks_count - a.forks_count;
+    },
+    byStars: function (a, b) {
+      return b.stargazers_count - a.stargazers_count;
+    },
+    byOwnerName: function (a, b) {
+      return a.owner.login < b.owner.login
+        ? -1
+        : a.owner.login > b.owner.login
+        ? 1
+        : 0;
+    },
+    byDateCreated: function (a, b) {
+      return new Date(a.created_at) > new Date(b.created_at)
+        ? -1
+        : new Date(a.created_at) < new Date(b.created_at)
+        ? 1
+        : 0;
+    },
+  };
+
   return (
     <>
       <div className="project-item-div">
-        {nodes.map((node) => (
+        {nodes.sort(sorters[orderType]).map((node) => (
           <Link
             key={node.id}
             to={
@@ -347,7 +396,7 @@ const ShowProjects = (props) => {
             className="menu_search searchButton"
             id="project_search"
           />
-          <button className="list_thumb_button">
+          <button>
             <img
               src="/imgs/search_icon.svg"
               alt="search"
