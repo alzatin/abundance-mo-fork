@@ -116,7 +116,14 @@ const AddProject = (props) => {
 
   return (
     <>
-      <div style={{ marginLeft: "20px", marginTop: "-40px", display: "flex" }}>
+      <div
+        style={{
+          flexDirection: "row",
+          height: "30px",
+          margin: "-20px 0 10px 20px",
+          display: "flex",
+        }}
+      >
         <button
           className="list_thumb_button"
           key="list-filter-button"
@@ -148,8 +155,12 @@ const AddProject = (props) => {
           />
         </button>
         <label htmlFor="order-by">
-          Sort by:
-          <select id="order-by" onChange={(e) => setOrderType(e.target.value)}>
+          <img src="/imgs/sort.svg" alt="Sort by" style={{ width: "15px" }} />
+          <select
+            className="order_dropdown"
+            id="order-by"
+            onChange={(e) => setOrderType(e.target.value)}
+          >
             <option key={"name_order"} value={"byName"}>
               Name
             </option>
@@ -269,6 +280,17 @@ const ProjectDiv = (props) => {
         >
           {node.node.forks_count}
         </p>
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "80%",
+          }}
+        >
+          {node.node.created_at}
+        </p>
         <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>
           <p style={{ fontSize: "1em" }}>{node.node.stargazers_count}</p>
           <svg
@@ -309,10 +331,18 @@ const ProjectDiv = (props) => {
         : 0;
     },
   };
+  const dummyNode = {
+    forks_count: "Forks",
+    stargazers_count: "#",
+    created_at: "Date Created",
+    owner: { login: "Creator" },
+    name: "Name",
+  };
 
   return (
     <>
       <div className="project-item-div">
+        {browseType == "list" ? <ListItem node={dummyNode} /> : null}
         {nodes.sort(sorters[orderType]).map((node) => (
           <Link
             key={node.id}
@@ -396,7 +426,7 @@ const ShowProjects = (props) => {
             className="menu_search searchButton"
             id="project_search"
           />
-          <button>
+          <button className="list_thumb_button">
             <img
               src="/imgs/search_icon.svg"
               alt="search"

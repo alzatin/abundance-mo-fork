@@ -450,6 +450,15 @@
   border-radius: 5px 5px;
   outline: none;
 }
+.order_dropdown {
+  align-self: center;
+
+  border: 3px solid #353232;
+  color: #d2cbcb;
+  background-color: #353232;
+  border-radius: 5px 5px;
+  outline: none;
+}
 .project-item-div {
   overflow-y: scroll;
   margin-top: 10px;
@@ -492,11 +501,11 @@
 }
 
 .search-bar-div {
-  height: 50px;
+  height: 30px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  padding: 10px 20px;
+  margin: 10px 10px 0 0;
 }
 .custom-select {
   position: relative;
