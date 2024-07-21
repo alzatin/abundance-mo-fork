@@ -120,6 +120,7 @@ const AddProject = (props) => {
         style={{
           flexDirection: "row",
           height: "30px",
+          widht: "50%",
           margin: "-25px 0 10px 20px",
           display: "flex",
         }}
