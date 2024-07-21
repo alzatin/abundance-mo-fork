@@ -120,7 +120,7 @@ const AddProject = (props) => {
         style={{
           flexDirection: "row",
           height: "30px",
-          margin: "-20px 0 10px 20px",
+          margin: "-25px 0 10px 20px",
           display: "flex",
         }}
       >
@@ -232,7 +232,9 @@ const ProjectDiv = (props) => {
           >
             <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
           </svg>
-          <p style={{ fontSize: ".5em" }}>{node.stargazers_count}</p>
+          <p style={{ fontSize: ".7em", display: "inline" }}>
+            {node.stargazers_count}
+          </p>
         </div>
       </div>
     );
@@ -242,7 +244,7 @@ const ProjectDiv = (props) => {
       <div
         className="project_list"
         key={node.node.id}
-        id={node.node.name}
+        id={node.node.id}
         onClick={() => {
           GlobalVariables.currentRepo = node.node;
         }}

@@ -506,6 +506,7 @@
   flex-direction: row;
   justify-content: flex-end;
   margin: 10px 10px 0 0;
+  z-index: 3;
 }
 .custom-select {
   position: relative;
