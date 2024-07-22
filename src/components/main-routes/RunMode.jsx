@@ -149,10 +149,18 @@ function runMode(props) {
             }}
           >
             {wireMesh ? (
-              <ThreeContext gridParam={gridParamRun} axesParam={axesParamRun}>
+              <ThreeContext
+                gridParam={gridParamRun}
+                axesParam={axesParamRun}
+                outdatedMesh={props.displayProps.outdatedMesh}
+              >
                 {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
 
-                <ReplicadMesh mesh={mesh} isSolid={solidParam} />
+                <ReplicadMesh
+                  mesh={mesh}
+                  isSolid={solidParam}
+                  setOutdatedMesh={props.displayProps.setOutdatedMesh}
+                />
               </ThreeContext>
             ) : (
               <div
