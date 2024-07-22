@@ -62,10 +62,10 @@ function ShareDialog(props) {
           </div>
         ) : null}
 
-        <button
+        <a
           className="closeButton"
           onClick={() => props.setShareDialog(false)}
-        ></button>
+        ></a>
       </dialog>
     </>
   );
