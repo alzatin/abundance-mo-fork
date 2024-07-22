@@ -193,8 +193,47 @@ export default class Molecule extends Atom {
           };
         }
       });
-      return inputParams;
     }
+    if (GlobalVariables.currentRepo.fork) {
+      inputParams["Reload from Github"] = button(() => {
+        //Future compare to main branch
+        this.reloadFork();
+      });
+    }
+    return inputParams;
+  }
+
+  async reloadFork() {
+    const octokit = new Octokit();
+    var owner = GlobalVariables.currentRepo.owner.login;
+    var repo = GlobalVariables.currentRepo.name;
+    octokit
+      .request("GET /repos/{owner}/{repo}", {
+        owner: owner,
+        repo: repo,
+      })
+      .then((response) => {
+        octokit.rest.repos
+          .getContent({
+            owner: response.data.source.owner.login,
+            repo: response.data.source.name,
+            path: "project.abundance",
+          })
+          .then((response) => {
+            // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
+            GlobalVariables.topLevelMolecule.nodesOnTheScreen.forEach(
+              (atom) => {
+                atom.deleteNode();
+              }
+            );
+            let rawFile = JSON.parse(atob(response.data.content));
+
+            if (rawFile.filetypeVersion == 1) {
+              GlobalVariables.topLevelMolecule.deserialize(rawFile);
+            }
+            GlobalVariables.currentMolecule.selected = true;
+          });
+      });
   }
 
   /**

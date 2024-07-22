@@ -126,7 +126,7 @@ export default class Text extends Atom {
   }
 
   serialize() {
-    var thisAsObject = super.serialize(savedObject);
+    var thisAsObject = super.serialize();
 
     var ioValues = [];
     this.inputs.forEach((io) => {
