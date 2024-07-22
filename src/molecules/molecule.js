@@ -230,10 +230,6 @@ export default class Molecule extends Atom {
 
             if (rawFile.filetypeVersion == 1) {
               GlobalVariables.topLevelMolecule.deserialize(rawFile);
-            } else {
-              GlobalVariables.topLevelMolecule.deserialize(
-                convertFromOldFormat(rawFile)
-              );
             }
             GlobalVariables.currentMolecule.selected = true;
           });
