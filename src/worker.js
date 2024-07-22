@@ -133,6 +133,9 @@ function loftShapes(targetID, inputsIDs) {
     let arrayOfSketchedGeometry = [];
 
     inputsIDs.forEach((inputID) => {
+      if (is3D(library[inputID])) {
+        throw new Error("Parts to be lofted must be sketches");
+      }
       let partToLoft = digFuse(library[inputID]);
       let sketchedpart = partToLoft.sketchOnPlane(library[inputID].plane);
       if (!sketchedpart.sketches) {
@@ -297,11 +300,12 @@ function shrinkWrapSketches(targetID, inputIDs) {
         BOM.push(library[inputID].bom);
       });
       let geometryToWrap = chainFuse(inputsToFuse);
+      const newPlane = new Plane().pivot(0, "Y");
       library[targetID] = {
         geometry: [shrinkWrap(geometryToWrap, 50)],
         tags: [],
         color: "#FF9065",
-        plane: "XY",
+        plane: newPlane,
         bom: BOM,
       };
       return true;
@@ -522,7 +526,6 @@ async function importingSVG(targetID, file, depth, width) {
       color: "#FF9065",
       bom: [],
     };
-    console.log(library[targetID]);
     return true;
   });
 }
@@ -813,8 +816,6 @@ function recursiveCut(partToCut, cuttingPart) {
       return cutPart;
     }
   } catch (e) {
-    console.error("Recursive Cut failed", partToCut, cuttingPart);
-
     throw new Error("Recursive Cut failed");
   }
 }
@@ -942,7 +943,6 @@ function chainFuse(chain) {
     }
     return fused;
   } catch (e) {
-    console.error(chain);
     throw new Error("Fusion failed");
   }
 }
@@ -994,7 +994,6 @@ let colorOptions = {
 
 function generateDisplayMesh(id) {
   return started.then(() => {
-    console.log(library[id]);
     if (library[id] == undefined) {
       throw new Error("ID not found in library");
     }
