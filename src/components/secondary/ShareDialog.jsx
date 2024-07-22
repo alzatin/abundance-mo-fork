@@ -1,6 +1,30 @@
 import GlobalVariables from "../../js/globalvariables.js";
+import { saveAs } from "file-saver";
 
 function ShareDialog(props) {
+  const handleExport = (exportType) => {
+    GlobalVariables.cad
+      .visExport(
+        props.activeAtom.uniqueID,
+        props.activeAtom.uniqueID,
+        exportType
+      )
+      .then((result) => {
+        GlobalVariables.cad
+          .downExport(props.activeAtom.uniqueID, exportType)
+          .then((result) => {
+            saveAs(
+              result,
+              GlobalVariables.currentMolecule.name +
+                "." +
+                exportType.toLowerCase()
+            );
+          })
+          .catch("Error downloading export file");
+      })
+      .catch("Error creating export geometry");
+  };
+
   const dialogContent = props.dialogContent;
   return (
     <>
@@ -23,15 +47,15 @@ function ShareDialog(props) {
         ) : dialogContent == "export" ? (
           <div style={{ display: "flex", margin: "10px" }}>
             <p>Export as:</p>
-            <button autoFocus onClick={() => console.log("STL")}>
+            <button autoFocus onClick={() => handleExport("STL")}>
               {" "}
               STL
             </button>
-            <button autoFocus onClick={() => console.log("STEP")}>
+            <button autoFocus onClick={() => handleExport("STEP")}>
               {" "}
               STEP
             </button>
-            <button autoFocus onClick={() => console.log("SVG")}>
+            <button autoFocus onClick={() => handleExport("SVG")}>
               {" "}
               SVG
             </button>

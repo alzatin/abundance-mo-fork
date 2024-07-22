@@ -125,6 +125,7 @@ function runMode(props) {
       <RunNavigation
         authorizedUserOcto={authorizedUserOcto}
         tryLogin={tryLogin}
+        activeAtom={activeAtom}
       />
       {globalvariables.currentRepo ? (
         <div className="info_run_div">

@@ -229,6 +229,7 @@ function RunNavigation(props) {
         <ShareDialog
           setShareDialog={setShareDialog}
           dialogContent={dialogContent}
+          activeAtom={props.activeAtom}
         />
       ) : null}
       <div className="run-navigation">
