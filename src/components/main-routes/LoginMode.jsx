@@ -78,6 +78,8 @@ const InitialLog = (props) => {
 // adds individual projects after API call
 const AddProject = (props) => {
   const [nodes, setNodes] = useState([]);
+  const [browseType, setBrowseType] = useState("thumb");
+  const [orderType, setOrderType] = useState("Name");
   let searchBarValue = props.searchBarValue;
   // conditional query for maslow projects
   useEffect(() => {
@@ -112,18 +114,84 @@ const AddProject = (props) => {
       });
   }, [props.userBrowsing, searchBarValue]);
 
-  //const thumbnailPath = "https://raw.githubusercontent.com/"+node.full_name+"/master/project.svg?sanitize=true"
+  return (
+    <>
+      <div
+        style={{
+          flexDirection: "row",
+          height: "30px",
+          widht: "50%",
+          margin: "-25px 0 10px 20px",
+          display: "flex",
+        }}
+      >
+        <button
+          className="list_thumb_button"
+          key="list-filter-button"
+          onClick={() => setBrowseType("list")}
+        >
+          <img
+            src="/imgs/list.svg"
+            alt="list_search"
+            style={{
+              width: "20px",
+              marginRight: "5px",
+              opacity: "0.8",
+            }}
+          />
+        </button>
+        <button
+          className="list_thumb_button"
+          key="thumb-filter-button"
+          onClick={() => setBrowseType("thumb")}
+        >
+          <img
+            src="/imgs/thumbnail.svg"
+            alt="thumb_search"
+            style={{
+              width: "20px",
+              marginRight: "5px",
+              opacity: "0.8",
+            }}
+          />
+        </button>
+        <label htmlFor="order-by">
+          <img src="/imgs/sort.svg" alt="Sort by" style={{ width: "15px" }} />
+          <select
+            className="order_dropdown"
+            id="order-by"
+            onChange={(e) => setOrderType(e.target.value)}
+          >
+            <option key={"name_order"} value={"byName"}>
+              Name
+            </option>
+            <option key={"forks_order"} value={"byForks"}>
+              Forks
+            </option>
+            <option key={"stars_order"} value={"byStars"}>
+              Stars
+            </option>
+            <option key={"owner_order"} value={"byOwnerName"}>
+              Creator
+            </option>
+            <option key={"date_order"} value={"byDateCreated"}>
+              Date Created
+            </option>
+          </select>
+        </label>
+      </div>
+      <ProjectDiv browseType={browseType} nodes={nodes} orderType={orderType} />
+    </>
+  );
+};
 
-  return nodes.map((node) => (
-    <Link
-      key={node.id}
-      to={
-        node.owner.login == globalvariables.currentUser
-          ? `/${node.id}`
-          : `/run/${node.id}`
-      }
-      className="product__item"
-    >
+const ProjectDiv = (props) => {
+  const nodes = props.nodes;
+  const browseType = props.browseType;
+  const orderType = props.orderType;
+
+  const ThumbItem = ({ node }) => {
+    return (
       <div
         className="project"
         key={node.id}
@@ -165,11 +233,138 @@ const AddProject = (props) => {
           >
             <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
           </svg>
-          <p style={{ fontSize: ".5em" }}>{node.stargazers_count}</p>
+          <p style={{ fontSize: ".7em", display: "inline" }}>
+            {node.stargazers_count}
+          </p>
         </div>
       </div>
-    </Link>
-  ));
+    );
+  };
+  const ListItem = (node) => {
+    return (
+      <div
+        className="project_list"
+        key={node.node.id}
+        id={node.node.id}
+        onClick={() => {
+          GlobalVariables.currentRepo = node.node;
+        }}
+      >
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "80%",
+          }}
+        >
+          {node.node.name}
+        </p>
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "80%",
+          }}
+        >
+          {node.node.owner.login}
+        </p>
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "70%",
+          }}
+        >
+          {node.node.forks_count}
+        </p>
+        <p
+          style={{
+            fontSize: "1em",
+            textOverflow: "ellipsis",
+            display: "block",
+            overflow: "hidden",
+            width: "80%",
+          }}
+        >
+          {node.node.created_at}
+        </p>
+        <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>
+          <p style={{ fontSize: "1em" }}>{node.node.stargazers_count}</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ transform: "scale(1)" }}
+            width="16"
+            height="16"
+          >
+            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+          </svg>
+        </div>
+      </div>
+    );
+  };
+
+  var sorters = {
+    byName: function (a, b) {
+      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+    },
+    byForks: function (a, b) {
+      return b.forks_count - a.forks_count;
+    },
+    byStars: function (a, b) {
+      return b.stargazers_count - a.stargazers_count;
+    },
+    byOwnerName: function (a, b) {
+      return a.owner.login < b.owner.login
+        ? -1
+        : a.owner.login > b.owner.login
+        ? 1
+        : 0;
+    },
+    byDateCreated: function (a, b) {
+      return new Date(a.created_at) > new Date(b.created_at)
+        ? -1
+        : new Date(a.created_at) < new Date(b.created_at)
+        ? 1
+        : 0;
+    },
+  };
+  const dummyNode = {
+    forks_count: "Forks",
+    stargazers_count: "#",
+    created_at: "Date Created",
+    owner: { login: "Creator" },
+    name: "Name",
+  };
+
+  return (
+    <>
+      <div className="project-item-div">
+        {browseType == "list" ? <ListItem node={dummyNode} /> : null}
+        {nodes.sort(sorters[orderType]).map((node) => (
+          <Link
+            key={node.id}
+            to={
+              node.owner.login == globalvariables.currentUser
+                ? `/${node.id}`
+                : `/run/${node.id}`
+            }
+          >
+            {browseType == "list" ? (
+              <ListItem node={node} />
+            ) : (
+              <ThumbItem node={node} />
+            )}
+          </Link>
+        ))}
+      </div>
+    </>
+  );
 };
 
 /* to add: if current user is null show this next part */
@@ -234,25 +429,25 @@ const ShowProjects = (props) => {
             className="menu_search searchButton"
             id="project_search"
           />
-          <img
-            src="/imgs/search_icon.svg"
-            alt="search"
-            style={{
-              width: "20px",
-              color: "white",
-              marginRight: "5px",
-              opacity: "0.5",
-            }}
-          />
+          <button className="list_thumb_button">
+            <img
+              src="/imgs/search_icon.svg"
+              alt="search"
+              style={{
+                width: "20px",
+                color: "white",
+                marginRight: "5px",
+                opacity: "0.5",
+              }}
+            />
+          </button>
         </div>
 
-        <div className="project-item-div">
-          <AddProject
-            searchBarValue={searchBarValue}
-            user={props.user}
-            userBrowsing={props.userBrowsing}
-          />
-        </div>
+        <AddProject
+          searchBarValue={searchBarValue}
+          user={props.user}
+          userBrowsing={props.userBrowsing}
+        />
       </>
     );
   };
