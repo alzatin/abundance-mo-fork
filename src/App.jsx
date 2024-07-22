@@ -196,6 +196,8 @@ export default function ReplicadApp() {
                 displayProps={{
                   mesh: mesh,
                   wireMesh: wireMesh,
+                  outdatedMesh: outdatedMesh,
+                  setOutdatedMesh: setOutdatedMesh,
                 }}
               />
             }

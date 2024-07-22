@@ -296,7 +296,7 @@
 .closeButton {
   position: absolute;
   top: 5px;
-  right: 5px;
+  right: 15px;
   border: none;
   height: 2em;
   background: transparent;
@@ -304,7 +304,7 @@
   cursor: pointer;
   margin-top: 3px;
   border-color: #ffffff;
-  color: #ffffff;
+  color: #3c3a3a;
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;

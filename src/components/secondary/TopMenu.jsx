@@ -229,7 +229,7 @@ function TopMenu(props) {
           setSavePopUp={props.setSavePopUp}
         />
       ) : null}
-      <ShareDialog shareDialog={shareDialog} setShareDialog={setShareDialog} />
+      {shareDialog ? <ShareDialog setShareDialog={setShareDialog} /> : null}
       {currentMoleculeTop ? <TopLevel /> : null}
       <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>

@@ -843,10 +843,10 @@ Sidebar navigation
 }
 .bomEditorDivRun {
   position: absolute;
-  top: 37%;
-  right: 10px;
+  top: 5%;
+  right: 310px;
   width: 280px;
-  z-index: 3;
+  z-index: 2;
 }
 
 /* Run Navigation */
@@ -855,7 +855,7 @@ Sidebar navigation
   position: absolute;
   width: 60px;
 
-  top: 200px;
+  top: 150px;
   left: 100px;
   z-index: 3;
 }
