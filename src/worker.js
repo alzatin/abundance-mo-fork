@@ -1,11 +1,12 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC } from "replicad";
+import { setOC, loadFont } from "replicad";
 import { expose } from "comlink";
 import {
   drawCircle,
   drawRectangle,
   drawPolysides,
+  drawText,
   Plane,
   Vector,
   importSTEP,
@@ -14,6 +15,7 @@ import {
 import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 import { addSVG } from "replicad-decorate";
+import Fonts from "./js/fonts.js";
 
 var library = {};
 
@@ -93,6 +95,30 @@ function regularPolygon(id, radius, numberOfSides) {
     const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
       geometry: [drawPolysides(radius, numberOfSides)],
+      tags: [],
+      plane: newPlane,
+      color: "#FF9065",
+      bom: [],
+    };
+    return true;
+  });
+}
+async function text(id, text, fontSize, fontFamily) {
+  await loadFont(Fonts[fontFamily])
+    .then(() => console.log("Font loaded"))
+    .catch((err) => console.error("Error loading font: ", err));
+
+  return started.then(() => {
+    const newPlane = new Plane().pivot(0, "Y");
+
+    const textGeometry = drawText(text, {
+      startX: 0,
+      startY: 0,
+      fontSize: fontSize,
+      font: fontFamily,
+    });
+    library[id] = {
+      geometry: [textGeometry],
       tags: [],
       plane: newPlane,
       color: "#FF9065",
@@ -1050,4 +1076,5 @@ expose({
   intersect,
   assembly,
   loftShapes,
+  text,
 });

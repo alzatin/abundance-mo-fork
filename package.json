@@ -31,7 +31,8 @@
     "replicad-threejs-helper": "^0.15.2",
     "showdown": "^2.1.0",
     "three": "0.161.0",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "4.2.1",
