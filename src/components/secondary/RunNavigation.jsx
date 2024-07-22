@@ -131,6 +131,7 @@ let exportSvg = (
 
 function RunNavigation(props) {
   let [shareDialog, setShareDialog] = useState(false);
+  let [dialogContent, setDialog] = useState("");
   let authorizedUserOcto = props.authorizedUserOcto;
 
   var navigate = useNavigate();
@@ -224,10 +225,16 @@ function RunNavigation(props) {
 
   return (
     <>
-      <ShareDialog setShareDialog={setShareDialog} shareDialog={shareDialog} />
+      {shareDialog ? (
+        <ShareDialog
+          setShareDialog={setShareDialog}
+          dialogContent={dialogContent}
+        />
+      ) : null}
       <div className="run-navigation">
         <button
           onClick={() => {
+            setDialog("share");
             setShareDialog(true);
           }}
           className=" run-navigation-button"
@@ -255,8 +262,8 @@ function RunNavigation(props) {
         </button>
         <button
           onClick={() => {
-            console.log("export");
-            //setShareDialog(true);
+            setDialog("export");
+            setShareDialog(true);
           }}
           className=" run-navigation-button"
           id="Export-button"
