@@ -262,11 +262,12 @@ export default memo(function FlowCanvas(props) {
       ></canvas>
       <div>
         <p
+          className="repo-name"
           style={{
             position: "absolute",
             zIndex: "5",
             top: "1%",
-            right: "5%",
+            right: "55px",
             color: "rgb(255 255 255 / 34%)",
           }}
         >

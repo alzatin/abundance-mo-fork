@@ -23,6 +23,11 @@
   width: 150%;
   height: 150%;
 }
+.Join {
+  background: url("./imgs/join.png");
+  width: 150%;
+  height: 150%;
+}
 .Interaction {
   background: url("./imgs/interaction.png");
   width: 150%;
@@ -30,6 +35,11 @@
 }
 .Intersection {
   background: url("./imgs/intersection.png");
+  width: 150%;
+  height: 150%;
+}
+.ShrinkWrap {
+  background: url("./imgs/shrinkWrap.png");
   width: 150%;
   height: 150%;
 }
@@ -51,8 +61,25 @@
   height: 150%;
 }
 
+.Export {
+  background: url("./imgs/Export_menu.svg");
+  width: 150%;
+  height: 150%;
+}
+
+.Import {
+  background: url("./imgs/Import_menu.svg");
+  width: 150%;
+  height: 150%;
+}
+
 .Group {
   background: url("./imgs/Group.png");
+  width: 150%;
+  height: 150%;
+}
+.Text {
+  background: url("./imgs/text.png");
   width: 150%;
   height: 150%;
 }
@@ -155,7 +182,7 @@
 }
 
 .Loft {
-  background: url("./imgs/shrinkwrap.png");
+  background: url("./imgs/loft.png");
   width: 150%;
   height: 150%;
 }
