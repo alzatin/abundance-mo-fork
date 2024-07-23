@@ -191,17 +191,29 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
       if (variables[1]) {
         variables = variables[1].split(/\s*,\s*/);
       }
-
+      let variableNames = [];
       //Add any inputs which are needed
       for (var variable in variables) {
-        if (!this.inputs.some((input) => input.Name === variables[variable])) {
-          this.addIO("input", variables[variable], this, "geometry", 10, ready);
+        variables[variable] = variables[variable].split(/\s*=\s*/);
+        let variableName = variables[variable][0];
+        variableNames.push(variableName);
+        let defaultVal = variables[variable][1] ? variables[variable][1] : 10;
+
+        if (!this.inputs.some((input) => input.Name === variableName)) {
+          this.addIO(
+            "input",
+            variableName,
+            this,
+            "geometry",
+            defaultVal,
+            ready
+          );
         }
       }
 
       //Remove any inputs which are not needed
       for (var input in this.inputs) {
-        if (!variables.includes(this.inputs[input].name)) {
+        if (!variableNames.includes(this.inputs[input].name)) {
           this.removeIO("input", this.inputs[input].name, this);
         }
       }
