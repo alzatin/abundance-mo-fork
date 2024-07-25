@@ -177,12 +177,30 @@ const ProjectDiv = (props) => {
     return (
       <div
         className="project"
+        style={
+          node.owner.login != GlobalVariables.currentUser
+            ? { backgroundColor: "rgb(233 221 242 / 58%)" }
+            : null
+        }
         key={node.id + node.owner.login}
         id={node.name}
         onClick={() => {
           GlobalVariables.currentRepo = node;
         }}
       >
+        {node.topics.includes("abundance-tool") ? (
+          <h2
+            style={{
+              float: "right",
+              position: "relative",
+              top: "-10px",
+              padding: "0",
+            }}
+          >
+            {" "}
+            {"\u{1F528} "}{" "}
+          </h2>
+        ) : null}
         <p
           style={{
             fontSize: "1em",
@@ -374,7 +392,7 @@ const ShowProjects = (props) => {
     }
     const repoSearchRequest = async () => {
       let repoCount = 0;
-      const repos = await authorizedUserOcto.paginate(
+      const repos = await octokit.paginate(
         "GET /search/repositories",
         {
           q: query,
