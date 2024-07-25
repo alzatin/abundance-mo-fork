@@ -159,7 +159,15 @@ const AddProject = (props) => {
           </select>
         </label>
       </div>
-      <ProjectDiv browseType={browseType} nodes={nodes} orderType={orderType} />
+      {nodes.length > 0 ? (
+        <ProjectDiv
+          browseType={browseType}
+          nodes={nodes}
+          orderType={orderType}
+        />
+      ) : (
+        <p>No projects match your search</p>
+      )}
     </>
   );
 };
@@ -458,7 +466,6 @@ const ClassicBrowse = (props) => {
   const [pageNumber, setPageNumber] = useState(0);
   let projectsLoaded = props.projectsLoaded;
   if (projectsLoaded.length > 0) {
-    console.log(projectsLoaded[pageNumber].data);
     var userRepos = [];
     projectsLoaded[pageNumber].data.forEach((repo) => {
       userRepos.push(repo);
@@ -506,22 +513,27 @@ const ClassicBrowse = (props) => {
       ) : null}
 
       <div className="search-bar-div">
-        <button
-          onClick={() => {
-            setPageNumber(pageNumber - 1);
-          }}
-          className="page_back_button"
-        >
-          d
-        </button>
-        <button
-          className="page_forward_button"
-          onClick={() => {
-            setPageNumber(pageNumber + 1);
-          }}
-        >
-          p
-        </button>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <button
+            onClick={() => {
+              setPageNumber(pageNumber - 1);
+            }}
+            className="page_back_button"
+          >
+            {"\u2190"}
+          </button>
+          <p style={{ alignSelf: "center", fontSize: ".7em", padding: "3px" }}>
+            Page {pageNumber + 1} of {projectsLoaded.length}
+          </p>
+          <button
+            className="page_forward_button"
+            onClick={() => {
+              setPageNumber(pageNumber + 1);
+            }}
+          >
+            {"\u2192"}
+          </button>
+        </div>
         <input
           type="text"
           key="project-search-bar"
@@ -555,7 +567,7 @@ const ClassicBrowse = (props) => {
           nodes={nodes}
         />
       ) : (
-        "Loading..."
+        <p> Loading...</p>
       )}
     </>
   );
