@@ -81,57 +81,18 @@ const InitialLog = (props) => {
 
 // adds individual projects after API call
 const AddProject = (props) => {
-  const [nodes, setNodes] = useState([]);
   const [browseType, setBrowseType] = useState("thumb");
   const [orderType, setOrderType] = useState("Name");
   let searchBarValue = props.searchBarValue;
-  // conditional query for maslow projects
-  const searchProjects = () => {
-    octokit
-      .paginate("GET /search/repositories", {
-        q: "" + "  topic:abundance-project" + " fork:true",
-        page: 2,
-      })
-      .then((response) => {
-        console.log(response);
-      });
-  };
+  console.log("searchBarValue: " + searchBarValue);
+  let nodes = props.nodes;
 
-  octokit = new Octokit();
-
-  useEffect(() => {
-    searchProjects();
-    var query;
-    if (props.user == "" || props.userBrowsing) {
-      query = searchBarValue + " topic:abundance-project";
-    } else {
-      query =
-        searchBarValue +
-        " user:" +
-        props.user +
-        " topic:abundance-project" +
-        " fork:true";
-    }
-
-    octokit.rest.search
-      .repos({
-        q: query,
-        per_page: 100,
-      })
-      .then((result) => {
-        var userRepos = [];
-        result.data.items.forEach((repo) => {
-          userRepos.push(repo);
-        });
-        setNodes([...userRepos]);
-        //setStateLoaded(true);
-      })
-      .catch((err) => {
-        window.alert(
-          "Error loading projects. Please wait a few minutes then try again."
-        );
-      });
-  }, [props.userBrowsing, searchBarValue]);
+  //filter nodes by search bar value
+  if (searchBarValue != "") {
+    nodes = nodes.filter((node) => {
+      return node.name.toLowerCase().includes(searchBarValue.toLowerCase());
+    });
+  }
 
   return (
     <>
@@ -394,6 +355,37 @@ const ShowProjects = (props) => {
   const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
 
+  const [nodes, setNodes] = useState([]);
+
+  useEffect(() => {
+    octokit = new Octokit();
+    var query;
+    if (props.user == "" || props.userBrowsing) {
+      query = " topic:abundance-project" + " fork:true";
+    } else {
+      query = " user:" + props.user + " topic:abundance-project" + " fork:true";
+    }
+
+    octokit
+      .paginate("GET /search/repositories", {
+        q: query,
+      })
+      .then((result) => {
+        console.log(result);
+        var userRepos = [];
+        result.forEach((repo) => {
+          userRepos.push(repo);
+        });
+        setNodes([...userRepos]);
+        //setStateLoaded(true);
+      })
+      .catch((err) => {
+        window.alert(
+          "Error loading projects. Please wait a few minutes then try again."
+        );
+      });
+  }, []);
+
   // Browse display
   const ClassicBrowse = () => {
     const loadBrowse = () => {
@@ -466,6 +458,7 @@ const ShowProjects = (props) => {
           searchBarValue={searchBarValue}
           user={props.user}
           userBrowsing={props.userBrowsing}
+          nodes={nodes}
         />
       </>
     );
