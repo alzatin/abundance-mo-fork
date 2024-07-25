@@ -4,10 +4,6 @@ import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { Link } from "react-router-dom";
 import globalvariables from "../../js/globalvariables.js";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
-import {
-  paginateRest,
-  composePaginateRest,
-} from "@octokit/plugin-paginate-rest";
 
 /**
  * The octokit instance which allows interaction with GitHub.
@@ -357,18 +353,25 @@ const ProjectDiv = (props) => {
 /* to add: if current user is null show this next part */
 const ShowProjects = (props) => {
   const [projectsLoaded, setStateLoaded] = useState([]);
+
+  const [searchBarValue, setSearchBarValue] = useState("");
   const exportPopUp = props.exportPopUp;
   const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
-  let allLoadedPages;
 
   useEffect(() => {
+    console.log("useEffect after search");
     octokit = new Octokit();
     var query;
     if (props.user == "" || props.userBrowsing) {
-      query = " topic:abundance-project" + " fork:true";
+      query = searchBarValue + " topic:abundance-project" + " fork:true";
     } else {
-      query = " user:" + props.user + " topic:abundance-project" + " fork:true";
+      query =
+        searchBarValue +
+        " user:" +
+        props.user +
+        " topic:abundance-project" +
+        " fork:true";
     }
     const repoSearchRequest = async () => {
       let repoCount = 0;
@@ -397,7 +400,7 @@ const ShowProjects = (props) => {
           "Error loading projects. Please wait a few minutes then try again."
         );
       });
-  }, [props.user]);
+  }, [props.user, searchBarValue]);
 
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
@@ -450,6 +453,8 @@ const ShowProjects = (props) => {
       ) : (
         <ClassicBrowse
           projectsLoaded={projectsLoaded}
+          setSearchBarValue={setSearchBarValue}
+          searchBarValue={searchBarValue}
           user={props.user}
           userBrowsing={props.userBrowsing}
           isloggedIn={props.isloggedIn}
@@ -461,10 +466,12 @@ const ShowProjects = (props) => {
 
 // Browse display
 const ClassicBrowse = (props) => {
-  const [searchBarValue, setSearchBarValue] = useState("");
   let nodes = [];
   const [pageNumber, setPageNumber] = useState(0);
   let projectsLoaded = props.projectsLoaded;
+  let searchBarValue = props.searchBarValue;
+  let setSearchBarValue = props.setSearchBarValue;
+
   if (projectsLoaded.length > 0) {
     var userRepos = [];
     projectsLoaded[pageNumber].data.forEach((repo) => {
@@ -479,6 +486,7 @@ const ClassicBrowse = (props) => {
   const handleSearchChange = (e) => {
     if (e.code == "Enter") {
       setSearchBarValue(e.target.value);
+      setPageNumber(0);
     }
   };
 
@@ -513,27 +521,31 @@ const ClassicBrowse = (props) => {
       ) : null}
 
       <div className="search-bar-div">
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <button
-            onClick={() => {
-              setPageNumber(pageNumber - 1);
-            }}
-            className="page_back_button"
-          >
-            {"\u2190"}
-          </button>
-          <p style={{ alignSelf: "center", fontSize: ".7em", padding: "3px" }}>
-            Page {pageNumber + 1} of {projectsLoaded.length}
-          </p>
-          <button
-            className="page_forward_button"
-            onClick={() => {
-              setPageNumber(pageNumber + 1);
-            }}
-          >
-            {"\u2192"}
-          </button>
-        </div>
+        {projectsLoaded.length > 1 ? (
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <button
+              onClick={() => {
+                setPageNumber(pageNumber - 1);
+              }}
+              className="page_back_button"
+            >
+              {"\u2190"}
+            </button>
+            <p
+              style={{ alignSelf: "center", fontSize: ".7em", padding: "3px" }}
+            >
+              Page {pageNumber + 1} of {projectsLoaded.length}
+            </p>
+            <button
+              className="page_forward_button"
+              onClick={() => {
+                setPageNumber(pageNumber + 1);
+              }}
+            >
+              {"\u2192"}
+            </button>
+          </div>
+        ) : null}
         <input
           type="text"
           key="project-search-bar"
