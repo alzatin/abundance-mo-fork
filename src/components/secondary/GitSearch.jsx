@@ -26,7 +26,7 @@ function GitSearch(props) {
     octokit
       .request("GET /search/repositories", {
         q: query,
-        per_page: 100,
+        per_page: 50,
         headers: {
           accept: "application/vnd.github.mercy-preview+json",
         },
