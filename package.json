@@ -9,6 +9,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@octokit/plugin-paginate-rest": "^11.3.3",
     "@react-three/drei": "^9.97.0",
     "@react-three/fiber": "8.15.16",
     "@uiw/react-codemirror": "^4.22.0",

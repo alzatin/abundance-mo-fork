@@ -4,6 +4,10 @@ import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { Link } from "react-router-dom";
 import globalvariables from "../../js/globalvariables.js";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
+import {
+  paginateRest,
+  composePaginateRest,
+} from "@octokit/plugin-paginate-rest";
 
 /**
  * The octokit instance which allows interaction with GitHub.
@@ -82,7 +86,21 @@ const AddProject = (props) => {
   const [orderType, setOrderType] = useState("Name");
   let searchBarValue = props.searchBarValue;
   // conditional query for maslow projects
+  const searchProjects = () => {
+    octokit
+      .paginate("GET /search/repositories", {
+        q: "" + "  topic:abundance-project" + " fork:true",
+        page: 2,
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  };
+
+  octokit = new Octokit();
+
   useEffect(() => {
+    searchProjects();
     var query;
     if (props.user == "" || props.userBrowsing) {
       query = searchBarValue + " topic:abundance-project";
@@ -94,7 +112,7 @@ const AddProject = (props) => {
         " topic:abundance-project" +
         " fork:true";
     }
-    octokit = new Octokit();
+
     octokit.rest.search
       .repos({
         q: query,
