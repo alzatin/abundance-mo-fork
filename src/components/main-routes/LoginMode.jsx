@@ -379,7 +379,7 @@ const ShowProjects = (props) => {
         "GET /search/repositories",
         {
           q: query,
-          per_page: 10,
+          per_page: 20,
         },
         (response, done) => {
           repoCount += response.data.length;
@@ -525,7 +525,9 @@ const ClassicBrowse = (props) => {
           <div style={{ display: "flex", flexDirection: "row" }}>
             <button
               onClick={() => {
-                setPageNumber(pageNumber - 1);
+                if (pageNumber + 1 > 1) {
+                  setPageNumber(pageNumber - 1);
+                }
               }}
               className="page_back_button"
             >
@@ -539,7 +541,9 @@ const ClassicBrowse = (props) => {
             <button
               className="page_forward_button"
               onClick={() => {
-                setPageNumber(pageNumber + 1);
+                if (projectsLoaded.length > pageNumber + 1) {
+                  setPageNumber(pageNumber + 1);
+                }
               }}
             >
               {"\u2192"}
