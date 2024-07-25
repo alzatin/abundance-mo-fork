@@ -242,6 +242,7 @@ const ProjectDiv = (props) => {
     );
   };
   const ListItem = (node) => {
+    console.log(node);
     return (
       <div
         className="project_list"
@@ -262,17 +263,24 @@ const ProjectDiv = (props) => {
         >
           {node.node.name}
         </p>
+
         <p
           style={{
             fontSize: "1em",
             textOverflow: "ellipsis",
             display: "block",
             overflow: "hidden",
-            width: "80%",
+            width: "50%",
           }}
         >
           {node.node.owner.login}
         </p>
+        <h2 style={{ width: "20%", display: "block" }}>
+          {" "}
+          {node.node.topics && node.node.topics.includes("abundance-tool")
+            ? "\u{1F528} "
+            : null}
+        </h2>
         <p
           style={{
             fontSize: "1em",
@@ -284,6 +292,7 @@ const ProjectDiv = (props) => {
         >
           {node.node.forks_count}
         </p>
+
         <p
           style={{
             fontSize: "1em",
@@ -295,6 +304,7 @@ const ProjectDiv = (props) => {
         >
           {node.node.created_at}
         </p>
+
         <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>
           <p style={{ fontSize: "1em" }}>{node.node.stargazers_count}</p>
           <svg
