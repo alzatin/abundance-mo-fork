@@ -360,7 +360,6 @@ const ShowProjects = (props) => {
   const authorizedUserOcto = props.authorizedUserOcto;
 
   useEffect(() => {
-    console.log("useEffect after search");
     octokit = new Octokit();
     var query;
     if (props.user == "" || props.userBrowsing) {
@@ -457,6 +456,7 @@ const ShowProjects = (props) => {
           searchBarValue={searchBarValue}
           user={props.user}
           userBrowsing={props.userBrowsing}
+          setBrowsing={props.setBrowsing}
           isloggedIn={props.isloggedIn}
         />
       )}
@@ -482,6 +482,7 @@ const ClassicBrowse = (props) => {
 
   const loadBrowse = () => {
     props.setBrowsing(!props.userBrowsing);
+    setPageNumber(0);
   };
   const handleSearchChange = (e) => {
     if (e.code == "Enter") {
@@ -522,7 +523,13 @@ const ClassicBrowse = (props) => {
 
       <div className="search-bar-div">
         {projectsLoaded.length > 1 ? (
-          <div style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              margin: "0px 10px 0px 10px",
+            }}
+          >
             <button
               onClick={() => {
                 if (pageNumber + 1 > 1) {
