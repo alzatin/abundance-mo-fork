@@ -82,9 +82,8 @@ const InitialLog = (props) => {
 // adds individual projects after API call
 const AddProject = (props) => {
   const [browseType, setBrowseType] = useState("thumb");
-  const [orderType, setOrderType] = useState("Name");
+  const [orderType, setOrderType] = useState("byName");
   let searchBarValue = props.searchBarValue;
-  console.log("searchBarValue: " + searchBarValue);
   let nodes = props.nodes;
 
   //filter nodes by search bar value
@@ -174,7 +173,7 @@ const ProjectDiv = (props) => {
     return (
       <div
         className="project"
-        key={node.id}
+        key={node.id + node.owner.login}
         id={node.name}
         onClick={() => {
           GlobalVariables.currentRepo = node;
@@ -349,13 +348,11 @@ const ProjectDiv = (props) => {
 
 /* to add: if current user is null show this next part */
 const ShowProjects = (props) => {
-  //const [projectsLoaded, setStateLoaded] = useState(false);
-  const [searchBarValue, setSearchBarValue] = useState("");
+  const [projectsLoaded, setStateLoaded] = useState([]);
   const exportPopUp = props.exportPopUp;
   const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
-
-  const [nodes, setNodes] = useState([]);
+  let allLoadedPages;
 
   useEffect(() => {
     octokit = new Octokit();
@@ -365,104 +362,34 @@ const ShowProjects = (props) => {
     } else {
       query = " user:" + props.user + " topic:abundance-project" + " fork:true";
     }
-
-    octokit
-      .paginate("GET /search/repositories", {
-        q: query,
-      })
+    const repoSearchRequest = async () => {
+      let repoCount = 0;
+      const repos = await authorizedUserOcto.paginate(
+        "GET /search/repositories",
+        {
+          q: query,
+          per_page: 10,
+        },
+        (response, done) => {
+          repoCount += response.data.length;
+          if (repoCount >= 250) {
+            done();
+          }
+          return response;
+        }
+      );
+      return repos;
+    };
+    repoSearchRequest()
       .then((result) => {
-        console.log(result);
-        var userRepos = [];
-        result.forEach((repo) => {
-          userRepos.push(repo);
-        });
-        setNodes([...userRepos]);
-        //setStateLoaded(true);
+        setStateLoaded(result);
       })
       .catch((err) => {
         window.alert(
           "Error loading projects. Please wait a few minutes then try again."
         );
       });
-  }, []);
-
-  // Browse display
-  const ClassicBrowse = () => {
-    const loadBrowse = () => {
-      props.setBrowsing(!props.userBrowsing);
-      //setStateLoaded(true);
-    };
-    const handleSearchChange = (e) => {
-      if (e.code == "Enter") {
-        setSearchBarValue(e.target.value);
-      }
-    };
-
-    return (
-      <>
-        {props.isloggedIn ? (
-          <div className="top_browse_menu">
-            <div
-              onClick={() => {
-                setExportPopUp(true);
-              }}
-              className="newProjectDiv"
-            >
-              <span style={{ alignSelf: "center" }}>Start a new project</span>
-              <img
-                src="/imgs/defaultThumbnail.svg"
-                style={{ height: "80%", float: "left" }}
-              ></img>
-            </div>
-            <div className="newProjectDiv" onClick={() => loadBrowse()}>
-              <span style={{ alignSelf: "center" }}>
-                {!props.userBrowsing
-                  ? "Browse Other Projects"
-                  : "Return to my Projects"}
-              </span>
-              <img
-                src="/imgs/defaultThumbnail.svg"
-                style={{ height: "80%", float: "right" }}
-              ></img>
-            </div>
-          </div>
-        ) : null}
-        <div className="search-bar-div">
-          <input
-            type="text"
-            key="project-search-bar"
-            placeholder={searchBarValue}
-            //value={target.value}
-            //onChange={(e) => setSearchBarType(e.target.value)}
-            onKeyDown={(e) => {
-              handleSearchChange(e);
-            }}
-            className="menu_search searchButton"
-            id="project_search"
-          />
-          <button className="list_thumb_button">
-            <img
-              src="/imgs/search_icon.svg"
-              alt="search"
-              style={{
-                width: "20px",
-                color: "white",
-                marginRight: "5px",
-                opacity: "0.5",
-              }}
-            />
-          </button>
-        </div>
-
-        <AddProject
-          searchBarValue={searchBarValue}
-          user={props.user}
-          userBrowsing={props.userBrowsing}
-          nodes={nodes}
-        />
-      </>
-    );
-  };
+  }, [props.user]);
 
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
@@ -513,7 +440,122 @@ const ShowProjects = (props) => {
           exporting={false}
         />
       ) : (
-        <ClassicBrowse />
+        <ClassicBrowse
+          projectsLoaded={projectsLoaded}
+          user={props.user}
+          userBrowsing={props.userBrowsing}
+          isloggedIn={props.isloggedIn}
+        />
+      )}
+    </>
+  );
+};
+
+// Browse display
+const ClassicBrowse = (props) => {
+  const [searchBarValue, setSearchBarValue] = useState("");
+  let nodes = [];
+  const [pageNumber, setPageNumber] = useState(0);
+  let projectsLoaded = props.projectsLoaded;
+  if (projectsLoaded.length > 0) {
+    console.log(projectsLoaded[pageNumber].data);
+    var userRepos = [];
+    projectsLoaded[pageNumber].data.forEach((repo) => {
+      userRepos.push(repo);
+    });
+    nodes = [...userRepos];
+  }
+
+  const loadBrowse = () => {
+    props.setBrowsing(!props.userBrowsing);
+  };
+  const handleSearchChange = (e) => {
+    if (e.code == "Enter") {
+      setSearchBarValue(e.target.value);
+    }
+  };
+
+  return (
+    <>
+      {props.isloggedIn ? (
+        <div className="top_browse_menu">
+          <div
+            onClick={() => {
+              setExportPopUp(true);
+            }}
+            className="newProjectDiv"
+          >
+            <span style={{ alignSelf: "center" }}>Start a new project</span>
+            <img
+              src="/imgs/defaultThumbnail.svg"
+              style={{ height: "80%", float: "left" }}
+            ></img>
+          </div>
+          <div className="newProjectDiv" onClick={() => loadBrowse()}>
+            <span style={{ alignSelf: "center" }}>
+              {!props.userBrowsing
+                ? "Browse Other Projects"
+                : "Return to my Projects"}
+            </span>
+            <img
+              src="/imgs/defaultThumbnail.svg"
+              style={{ height: "80%", float: "right" }}
+            ></img>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="search-bar-div">
+        <button
+          onClick={() => {
+            setPageNumber(pageNumber - 1);
+          }}
+          className="page_back_button"
+        >
+          d
+        </button>
+        <button
+          className="page_forward_button"
+          onClick={() => {
+            setPageNumber(pageNumber + 1);
+          }}
+        >
+          p
+        </button>
+        <input
+          type="text"
+          key="project-search-bar"
+          placeholder={searchBarValue}
+          //value={target.value}
+          //onChange={(e) => setSearchBarType(e.target.value)}
+          onKeyDown={(e) => {
+            handleSearchChange(e);
+          }}
+          className="menu_search searchButton"
+          id="project_search"
+        />
+        <button className="list_thumb_button">
+          <img
+            src="/imgs/search_icon.svg"
+            alt="search"
+            style={{
+              width: "20px",
+              color: "white",
+              marginRight: "5px",
+              opacity: "0.5",
+            }}
+          />
+        </button>
+      </div>
+      {projectsLoaded.length > 0 ? (
+        <AddProject
+          searchBarValue={searchBarValue}
+          user={props.user}
+          userBrowsing={props.userBrowsing}
+          nodes={nodes}
+        />
+      ) : (
+        "Loading..."
       )}
     </>
   );
