@@ -116,6 +116,7 @@ const AddProject = (props) => {
     octokit.rest.search
       .repos({
         q: query,
+        per_page: 100,
       })
       .then((result) => {
         var userRepos = [];
