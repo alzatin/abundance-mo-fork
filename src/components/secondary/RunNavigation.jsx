@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ShareDialog from "./ShareDialog.jsx";
 import { useNavigate } from "react-router-dom";
 import GlobalVariables from "../../js/globalvariables.js";
@@ -131,11 +131,40 @@ let exportSvg = (
 
 function RunNavigation(props) {
   let [shareDialog, setShareDialog] = useState(false);
+  let [starred, setStarred] = useState(false);
   let [dialogContent, setDialog] = useState("");
   let authorizedUserOcto = props.authorizedUserOcto;
 
   var navigate = useNavigate();
 
+  useEffect(() => {
+    // check if the current user has starred the project
+    if (authorizedUserOcto) {
+      var owner = GlobalVariables.currentRepo.owner.login;
+      var repoName = GlobalVariables.currentRepo.name;
+      console.log(owner, repoName);
+      authorizedUserOcto.rest.activity
+        .checkRepoIsStarredByAuthenticatedUser({
+          owner: owner,
+          repo: repoName,
+        })
+        .then((result) => {
+          console.log(result);
+          setStarred(true);
+          document.getElementById("Star-button").style.backgroundColor = "gray";
+        })
+        .catch((error) => {
+          setStarred(false);
+        });
+
+      // check if the current user owns the project
+      if (
+        GlobalVariables.currentRepo.owner.login === GlobalVariables.currentUser
+      ) {
+        document.getElementById("Fork-button").style.display = "none";
+      }
+    }
+  });
   /**
    * Like a project on github by unique ID.
    */
@@ -145,29 +174,29 @@ function RunNavigation(props) {
     var owner = GlobalVariables.currentRepo.owner.login;
     var repoName = GlobalVariables.currentRepo.name;
 
-    document.getElementById("Star-button").style.backgroundColor = "gray";
-
-    authorizedUserOcto.rest.activity
-      .starRepoForAuthenticatedUser({
-        owner: owner,
-        repo: repoName,
-      })
-      .then(() => {
-        console.log("starred");
-      });
-    //Find out if the project has been starred and unstar if it is
-    /* octokit.activity.checkStarringRepo({
-                      owner:user,
-                      repo: repoName
-                  }).then(() => { 
-                      var button= document.getElementById("Star-button")
-                      button.setAttribute("class","browseButton")
-                      button.innerHTML = "Star"
-                      octokit.activity.unstarRepo({
-                          owner: user,
-                          repo: repoName
-                      })
-                  })*/
+    if (!starred) {
+      authorizedUserOcto.rest.activity
+        .starRepoForAuthenticatedUser({
+          owner: owner,
+          repo: repoName,
+        })
+        .then(() => {
+          setStarred(true);
+          document.getElementById("Star-button").style.backgroundColor = "gray";
+        });
+    } else {
+      authorizedUserOcto.rest.activity
+        .unstarRepoForAuthenticatedUser({
+          owner: owner,
+          repo: repoName,
+        })
+        .then(() => {
+          document.getElementById("Star-button").style.backgroundColor =
+            "white";
+          setStarred(false);
+          console.log("unstarred");
+        });
+    }
   };
 
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
