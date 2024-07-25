@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 function TopMenu(props) {
   let currentMoleculeTop = props.currentMoleculeTop;
+  let activeAtom = props.activeAtom;
   let [shareDialog, setShareDialog] = useState(false);
+  let [dialogContent, setDialog] = useState("");
 
   const navigate = useNavigate();
 
@@ -56,6 +58,7 @@ function TopMenu(props) {
        */
       id: "Share",
       buttonFunc: () => {
+        setDialog("share");
         setShareDialog(true);
       },
       icon: "Open.svg",
@@ -93,7 +96,8 @@ function TopMenu(props) {
        */
       id: "Export",
       buttonFunc: () => {
-        props.setExportPopUp(true);
+        setDialog("export");
+        setShareDialog(true);
       },
       icon: "Open.svg",
     },
@@ -229,7 +233,13 @@ function TopMenu(props) {
           setSavePopUp={props.setSavePopUp}
         />
       ) : null}
-      {shareDialog ? <ShareDialog setShareDialog={setShareDialog} /> : null}
+      {shareDialog ? (
+        <ShareDialog
+          setShareDialog={setShareDialog}
+          dialogContent={dialogContent}
+          activeAtom={props.activeAtom}
+        />
+      ) : null}
       {currentMoleculeTop ? <TopLevel /> : null}
       <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>

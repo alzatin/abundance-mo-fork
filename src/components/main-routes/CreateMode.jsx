@@ -398,6 +398,7 @@ function CreateMode(props) {
             saveState={saveState}
             setSaveState={setSaveState}
             currentMoleculeTop={currentMoleculeTop}
+            activeAtom={activeAtom}
             setActiveAtom={setActiveAtom}
           />
           <CodeWindow activeAtom={activeAtom} />
