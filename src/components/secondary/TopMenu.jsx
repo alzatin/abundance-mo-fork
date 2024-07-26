@@ -18,14 +18,12 @@ function TopMenu(props) {
       buttonFunc: () => {
         navigate("/");
       },
-      icon: "Open.svg",
     },
     {
       id: "GitHub",
       buttonFunc: () => {
         window.open(GlobalVariables.currentRepo.html_url);
       },
-      icon: "GitHub.svg",
     },
     {
       /**
@@ -37,7 +35,6 @@ function TopMenu(props) {
           GlobalVariables.currentRepo.html_url + "/blob/master/README.md";
         window.open(url);
       },
-      icon: "Open.svg",
     },
     {
       /**
@@ -50,7 +47,6 @@ function TopMenu(props) {
           "/blob/master/BillOfMaterials.md";
         window.open(url);
       },
-      icon: "Open.svg",
     },
     {
       /**
@@ -61,7 +57,6 @@ function TopMenu(props) {
         setDialog("share");
         setShareDialog(true);
       },
-      icon: "Open.svg",
     },
     {
       id: "Save Project",
@@ -69,7 +64,6 @@ function TopMenu(props) {
         props.setSavePopUp(true);
         props.saveProject(props.setSaveState);
       },
-      icon: "Open.svg",
     },
     {
       /**
@@ -88,7 +82,6 @@ function TopMenu(props) {
             GlobalVariables.currentRepo.default_branch
         );
       },
-      icon: "Export.svg",
     },
     {
       /**
@@ -96,10 +89,8 @@ function TopMenu(props) {
        */
       id: "Export",
       buttonFunc: () => {
-        setDialog("export");
-        setShareDialog(true);
+        props.setExportPopUp(true);
       },
-      icon: "Open.svg",
     },
     {
       /**
@@ -111,7 +102,6 @@ function TopMenu(props) {
         window.open(url);
         //tryDelete();
       },
-      icon: "Open.svg",
     },
   ];
 
