@@ -37,6 +37,7 @@ const NewProjectPopUp = (props) => {
   const authorizedUserOcto = props.authorizedUserOcto;
   const setExportPopUp = props.setExportPopUp;
   const exporting = props.exporting;
+  console.log(exporting);
 
   const keys_ar = [];
   Object.keys(licenses).forEach((key) => {
@@ -266,7 +267,11 @@ const NewProjectPopUp = (props) => {
               handleSubmit(e);
             }}
           >
-            <h2>Create a New Project</h2>
+            <h2>
+              {exporting
+                ? "Export this molecule to Github"
+                : "Create a New Project"}
+            </h2>
             <label htmlFor="project-name">Project Name</label>
             <input
               name="Project Name"
