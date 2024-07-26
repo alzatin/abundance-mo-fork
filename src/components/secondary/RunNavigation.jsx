@@ -142,14 +142,13 @@ function RunNavigation(props) {
     if (authorizedUserOcto) {
       var owner = GlobalVariables.currentRepo.owner.login;
       var repoName = GlobalVariables.currentRepo.name;
-      console.log(owner, repoName);
+
       authorizedUserOcto.rest.activity
         .checkRepoIsStarredByAuthenticatedUser({
           owner: owner,
           repo: repoName,
         })
         .then((result) => {
-          console.log(result);
           setStarred(true);
           document.getElementById("Star-button").style.backgroundColor = "gray";
         })
