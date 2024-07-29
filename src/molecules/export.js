@@ -152,6 +152,7 @@ export default class Export extends Atom {
     var superSerialObject = super.serialize();
     superSerialObject.type = this.type;
     superSerialObject.resolution = this.resolution;
+    superSerialObject.importIndex = this.importIndex;
 
     return superSerialObject;
   }
