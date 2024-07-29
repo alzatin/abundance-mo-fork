@@ -470,11 +470,15 @@ function visExport(targetID, inputID, fileType) {
 }
 
 /** down STL*/
-function downExport(ID, fileType) {
+function downExport(ID, fileType, svgResolution, units) {
   return started.then(() => {
+    let scaleUnit = units == "Inches" ? 1 : units == "MM" ? 25.4 : 1;
     if (fileType == "SVG") {
-      let svg = library[ID].geometry[0].toSVG();
+      let svg = library[ID].geometry[0]
+        .scale(svgResolution / scaleUnit)
+        .toSVG(svgResolution / scaleUnit);
       var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+
       return blob;
     } else if (fileType == "STL") {
       return library[ID].geometry[0].clone().blobSTL();

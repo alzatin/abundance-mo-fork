@@ -78,7 +78,7 @@ export default class Molecule extends Atom {
      * A list of available units with corresponding scaling numbers.
      * @type {object}
      */
-    this.units = { MM: 1, Inches: 20 };
+    this.units = { MM: "MM", Inches: "Inches" };
     /**
      * The key of the currently selected unit.
      * @type {string}
@@ -173,6 +173,17 @@ export default class Molecule extends Atom {
         this.name = value;
       },
     };
+    if (this.topLevel == true) {
+      inputParams["molecule name" + this.uniqueID + "units"] = {
+        value: this.unitsKey,
+        label: "Project Units",
+        options: Object.keys(this.units),
+        disabled: false,
+        onChange: (value) => {
+          this.unitsKey = this.units[value];
+        },
+      };
+    }
     /** Runs through active atom inputs and adds IO parameters to default param*/
     if (this.inputs) {
       this.inputs.map((input) => {

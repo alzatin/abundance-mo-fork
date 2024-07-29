@@ -87,7 +87,7 @@ function TopMenu(props) {
       /**
        * Open pull request if it's a forked project.
        */
-      id: "Export",
+      id: "ExportGit",
       buttonFunc: () => {
         props.setExportPopUp(true);
       },

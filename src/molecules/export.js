@@ -42,6 +42,8 @@ export default class Export extends Atom {
      */
     this.type = null;
 
+    this.resolution = 72;
+
     this.addIO("input", "geometry", this, "geometry", "");
 
     this.setValues(values);
@@ -94,7 +96,7 @@ export default class Export extends Atom {
     const importOptions = ["STL", "SVG", "STEP"];
 
     inputParams[this.uniqueID + "file_ops"] = {
-      value: importOptions[this.importIndex],
+      value: this.type,
       options: importOptions,
       label: "File Type",
       onChange: (value) => {
@@ -105,6 +107,15 @@ export default class Export extends Atom {
         }
       },
     };
+    inputParams["Resolution (dpi)"] = {
+      value: this.resolution,
+      disabled: this.type != "SVG" ? true : false,
+      onChange: (value) => {
+        this.resolution = value;
+        this.updateValue();
+      },
+    };
+
     inputParams["Download File"] = button(() =>
       //this.loadFile(importOptions[importIndex])
       this.exportFile()
@@ -120,7 +131,12 @@ export default class Export extends Atom {
     let fileType = this.type;
 
     GlobalVariables.cad
-      .downExport(this.uniqueID, fileType)
+      .downExport(
+        this.uniqueID,
+        fileType,
+        this.resolution,
+        GlobalVariables.topLevelMolecule.unitsKey
+      )
       .then((result) => {
         saveAs(
           result,
@@ -128,5 +144,16 @@ export default class Export extends Atom {
         );
       })
       .catch(this.alertingErrorHandler());
+  }
+  /**
+   * Add the file name to the object which is saved for this molecule
+   */
+  serialize() {
+    var superSerialObject = super.serialize();
+    superSerialObject.type = this.type;
+    superSerialObject.resolution = this.resolution;
+    superSerialObject.importIndex = this.importIndex;
+
+    return superSerialObject;
   }
 }
