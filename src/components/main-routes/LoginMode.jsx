@@ -78,7 +78,7 @@ const InitialLog = (props) => {
 // adds individual projects after API call
 const AddProject = (props) => {
   const [browseType, setBrowseType] = useState("thumb");
-  const [orderType, setOrderType] = useState("byName");
+  const [orderType, setOrderType] = useState("byDateCreated");
   let searchBarValue = props.searchBarValue;
   let nodes = props.nodes;
 
@@ -135,6 +135,7 @@ const AddProject = (props) => {
           <select
             className="order_dropdown"
             id="order-by"
+            defaultValue={orderType}
             onChange={(e) => setOrderType(e.target.value)}
           >
             <option key={"name_order"} value={"byName"}>
@@ -406,7 +407,7 @@ const ShowProjects = (props) => {
         "GET /search/repositories",
         {
           q: query,
-          per_page: 20,
+          per_page: 50,
         },
         (response, done) => {
           repoCount += response.data.length;
