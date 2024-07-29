@@ -473,9 +473,7 @@ function visExport(targetID, inputID, fileType) {
 /** down STL*/
 function downExport(ID, fileType, svgResolution, units) {
   return started.then(() => {
-    console.log(units);
     let scaleUnit = units == "Inches" ? 1 : units == "MM" ? 25.4 : 1;
-    console.log(scaleUnit);
     if (fileType == "SVG") {
       let svg = library[ID].geometry[0]
         .scale(svgResolution / scaleUnit)
