@@ -96,7 +96,7 @@ export default class Export extends Atom {
     const importOptions = ["STL", "SVG", "STEP"];
 
     inputParams[this.uniqueID + "file_ops"] = {
-      value: importOptions[this.importIndex],
+      value: this.type,
       options: importOptions,
       label: "File Type",
       onChange: (value) => {
@@ -107,7 +107,7 @@ export default class Export extends Atom {
         }
       },
     };
-    inputParams["Resolution"] = {
+    inputParams["Resolution (dpi)"] = {
       value: this.resolution,
       disabled: this.type != "SVG" ? true : false,
       onChange: (value) => {
@@ -144,5 +144,19 @@ export default class Export extends Atom {
         );
       })
       .catch(this.alertingErrorHandler());
+  }
+  /**
+   * Add the file name to the object which is saved for this molecule
+   */
+  serialize() {
+    var superSerialObject = super.serialize();
+
+    //Write the current equation to the serialized object
+
+    superSerialObject.type = this.type;
+    superSerialObject.resolution = this.resolution;
+    superSerialObject.importIndex = this.importIndex;
+
+    return superSerialObject;
   }
 }
