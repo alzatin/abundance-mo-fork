@@ -460,7 +460,6 @@ function visExport(targetID, inputID, fileType) {
     } else {
       finalGeometry = [fusedGeometry];
     }
-    console.log(finalGeometry);
     library[targetID] = {
       geometry: finalGeometry,
       color: displayColor,
