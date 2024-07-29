@@ -42,6 +42,8 @@ export default class Export extends Atom {
      */
     this.type = null;
 
+    this.resolution = 72;
+
     this.addIO("input", "geometry", this, "geometry", "");
 
     this.setValues(values);
@@ -105,6 +107,15 @@ export default class Export extends Atom {
         }
       },
     };
+    inputParams["Resolution"] = {
+      value: this.resolution,
+      disabled: this.type != "SVG" ? true : false,
+      onChange: (value) => {
+        this.resolution = value;
+        this.updateValue();
+      },
+    };
+
     inputParams["Download File"] = button(() =>
       //this.loadFile(importOptions[importIndex])
       this.exportFile()
@@ -120,7 +131,12 @@ export default class Export extends Atom {
     let fileType = this.type;
 
     GlobalVariables.cad
-      .downExport(this.uniqueID, fileType)
+      .downExport(
+        this.uniqueID,
+        fileType,
+        this.resolution,
+        GlobalVariables.topLevelMolecule.unitsKey
+      )
       .then((result) => {
         saveAs(
           result,

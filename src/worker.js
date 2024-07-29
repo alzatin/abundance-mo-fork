@@ -16,7 +16,6 @@ import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 import { addSVG } from "replicad-decorate";
 import Fonts from "./js/fonts.js";
-import { createElement } from "react";
 
 var library = {};
 
@@ -472,10 +471,15 @@ function visExport(targetID, inputID, fileType) {
 }
 
 /** down STL*/
-function downExport(ID, fileType) {
+function downExport(ID, fileType, svgResolution, units) {
   return started.then(() => {
+    console.log(units);
+    let scaleUnit = units == "Inches" ? 1 : units == "MM" ? 25.4 : 1;
+    console.log(scaleUnit);
     if (fileType == "SVG") {
-      let svg = library[ID].geometry[0].scale(72).toSVG(72);
+      let svg = library[ID].geometry[0]
+        .scale(svgResolution / scaleUnit)
+        .toSVG(svgResolution / scaleUnit);
       var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
 
       return blob;
