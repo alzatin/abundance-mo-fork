@@ -150,12 +150,8 @@ export default class Export extends Atom {
    */
   serialize() {
     var superSerialObject = super.serialize();
-
-    //Write the current equation to the serialized object
-
     superSerialObject.type = this.type;
     superSerialObject.resolution = this.resolution;
-    superSerialObject.importIndex = this.importIndex;
 
     return superSerialObject;
   }
