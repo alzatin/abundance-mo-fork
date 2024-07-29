@@ -475,19 +475,9 @@ function visExport(targetID, inputID, fileType) {
 function downExport(ID, fileType) {
   return started.then(() => {
     if (fileType == "SVG") {
-      //let svg = library[ID].geometry[0].toSVG(1);
-      let svgPath = library[ID].geometry[0].toSVGPaths();
-      let svgViewBox = library[ID].geometry[0].toSVGViewBox(1);
-      const bounds = library[ID].geometry[0].boundingBox;
-      let svgPaths = "";
-      svgPath.forEach((path) => {
-        svgPaths += '<path d="' + path + '"/>';
-      });
-
-      let svg = `<svg width="${bounds.width}mm" height="${bounds.height}mm" xmlns="http://www.w3.org/2000/svg" viewBox="${svgViewBox}"> ${svgPaths} </svg>`;
-      console.log(svg);
+      let svg = library[ID].geometry[0].scale(72).toSVG(72);
       var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
-      console.log(blob);
+
       return blob;
     } else if (fileType == "STL") {
       return library[ID].geometry[0].clone().blobSTL();
