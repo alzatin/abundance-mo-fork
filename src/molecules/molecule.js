@@ -181,7 +181,6 @@ export default class Molecule extends Atom {
         disabled: false,
         onChange: (value) => {
           this.unitsKey = this.units[value];
-          console.log(this.unitsKey);
         },
       };
     }
