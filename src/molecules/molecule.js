@@ -365,8 +365,8 @@ export default class Molecule extends Atom {
       if (this.compiledBom.length > 0) {
         this.compiledBom.map((item) => {
           bomParams[item.BOMitemName] = {
-            value: item.costUSD + " USD",
-            label: item.BOMitemName + "(x" + item.numberNeeded + ")",
+            value: item.numberNeeded,
+            label: item.BOMitemName + " x",
             disabled: true,
           };
         });

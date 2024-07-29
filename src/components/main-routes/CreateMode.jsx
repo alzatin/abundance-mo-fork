@@ -232,6 +232,17 @@ function CreateMode(props) {
   };
 
   /**
+   * Takes a link and converts it to be an affiliate link if it should be.
+   * @param {string} link - The link to check.
+   */
+  const convertLinks = function (link) {
+    if (link.toLowerCase().includes("amazon")) {
+      return "[Amazon](" + link + "?tag=maslowcnc01-20)";
+    }
+    return link;
+  };
+
+  /**
    * Saves project by making a commit to the Github repository.
    */
   const saveProject = async (setState) => {
@@ -269,7 +280,7 @@ function CreateMode(props) {
           "|$" +
           item.costUSD.toFixed(2) +
           "|" +
-          // convertLinks(item.source) +
+          convertLinks(item.source) +
           "|";
       });
     }
