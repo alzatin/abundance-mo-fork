@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 function TopMenu(props) {
   let currentMoleculeTop = props.currentMoleculeTop;
+  let activeAtom = props.activeAtom;
   let [shareDialog, setShareDialog] = useState(false);
+  let [dialogContent, setDialog] = useState("");
 
   const navigate = useNavigate();
 
@@ -16,14 +18,12 @@ function TopMenu(props) {
       buttonFunc: () => {
         navigate("/");
       },
-      icon: "Open.svg",
     },
     {
       id: "GitHub",
       buttonFunc: () => {
         window.open(GlobalVariables.currentRepo.html_url);
       },
-      icon: "GitHub.svg",
     },
     {
       /**
@@ -35,7 +35,6 @@ function TopMenu(props) {
           GlobalVariables.currentRepo.html_url + "/blob/master/README.md";
         window.open(url);
       },
-      icon: "Open.svg",
     },
     {
       /**
@@ -48,7 +47,6 @@ function TopMenu(props) {
           "/blob/master/BillOfMaterials.md";
         window.open(url);
       },
-      icon: "Open.svg",
     },
     {
       /**
@@ -56,9 +54,9 @@ function TopMenu(props) {
        */
       id: "Share",
       buttonFunc: () => {
+        setDialog("share");
         setShareDialog(true);
       },
-      icon: "Open.svg",
     },
     {
       id: "Save Project",
@@ -66,7 +64,6 @@ function TopMenu(props) {
         props.setSavePopUp(true);
         props.saveProject(props.setSaveState);
       },
-      icon: "Open.svg",
     },
     {
       /**
@@ -85,7 +82,6 @@ function TopMenu(props) {
             GlobalVariables.currentRepo.default_branch
         );
       },
-      icon: "Export.svg",
     },
     {
       /**
@@ -95,7 +91,6 @@ function TopMenu(props) {
       buttonFunc: () => {
         props.setExportPopUp(true);
       },
-      icon: "Open.svg",
     },
     {
       /**
@@ -107,7 +102,6 @@ function TopMenu(props) {
         window.open(url);
         //tryDelete();
       },
-      icon: "Open.svg",
     },
   ];
 
@@ -229,7 +223,13 @@ function TopMenu(props) {
           setSavePopUp={props.setSavePopUp}
         />
       ) : null}
-      {shareDialog ? <ShareDialog setShareDialog={setShareDialog} /> : null}
+      {shareDialog ? (
+        <ShareDialog
+          setShareDialog={setShareDialog}
+          dialogContent={dialogContent}
+          activeAtom={props.activeAtom}
+        />
+      ) : null}
       {currentMoleculeTop ? <TopLevel /> : null}
       <Navbar currentMoleculeTop={currentMoleculeTop} />
     </>

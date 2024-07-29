@@ -7,13 +7,15 @@ import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
 import ParamsEditor from "../secondary/ParameterEditor.jsx";
 import CodeWindow from "../secondary/codeWindow.jsx";
+
 import {
   BrowserRouter as Router,
   useParams,
   useNavigate,
 } from "react-router-dom";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
-import { re } from "mathjs";
+import { exp, re } from "mathjs";
+import { Link } from "react-router-dom";
 
 /**
  * Create mode component appears displays flow canvas, renderer and sidebar when
@@ -361,12 +363,33 @@ function CreateMode(props) {
               alt="logo"
             />
           </div>
+
           {exportPopUp ? (
-            <NewProjectPopUp
-              setExportPopUp={setExportPopUp}
-              exporting={true}
-              authorizedUserOcto={authorizedUserOcto}
-            />
+            <div
+              className="login-popup"
+              id="exporting-popup-back"
+              style={{
+                padding: "0",
+                border: "10px solid #3e3d3d",
+              }}
+            >
+              <div>
+                {" "}
+                {GlobalVariables.currentRepo ? (
+                  <Link to={`/${GlobalVariables.currentRepo.id}`}>
+                    <button className="closeButton">
+                      <img></img>
+                    </button>
+                  </Link>
+                ) : null}
+              </div>
+
+              <NewProjectPopUp
+                setExportPopUp={setExportPopUp}
+                exporting={true}
+                authorizedUserOcto={authorizedUserOcto}
+              />
+            </div>
           ) : null}
           <ToggleRunCreate run={false} />
           <button
@@ -398,6 +421,7 @@ function CreateMode(props) {
             saveState={saveState}
             setSaveState={setSaveState}
             currentMoleculeTop={currentMoleculeTop}
+            activeAtom={activeAtom}
             setActiveAtom={setActiveAtom}
           />
           <CodeWindow activeAtom={activeAtom} />
