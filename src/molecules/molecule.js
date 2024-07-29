@@ -370,9 +370,16 @@ export default class Molecule extends Atom {
             disabled: true,
           };
         });
-        bomParams["Download List of Materials"] = button(() =>
-          console.log(result)
-        );
+        bomParams["Download List of Materials"] = button(() => {
+          var fileName =
+            GlobalVariables.currentRepoName + "-Bill-of-Materials.txt";
+          var bomItems = GlobalVariables.topLevelMolecule.compiledBom;
+          console.log(bomItems);
+          var fileContent = "Page content...";
+          var myFile = new Blob([fileContent], { type: "text/plain" });
+
+          saveAs(myFile, fileName + "." + "txt");
+        });
 
         return bomParams;
       }
