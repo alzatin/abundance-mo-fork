@@ -703,7 +703,37 @@ function layout(targetID, inputID, TAG, materialThickness) {
           }
         });
       }
+      let newLeaf = {
+        geometry: [selected.geom],
+        id: localId,
+        referencePoint: selected.face.center,
+        tags: leaf.tags,
+        color: leaf.color,
+        plane: leaf.plane,
+        bom: leaf.bom,
+      };
 
+      shapesForLayout.push({id: localId, shape: selected.face});
+      localId += 1;
+
+      return newLeaf;
+    });
+    console.log(shapesForLayout);
+    // Compute target positions and relative rotations for our shapes to put them
+    // in a good packing.
+    let packedPositions = computePositions(shapesForLayout, spacing);
+    
+    // apply transforms to move our shapes.
+    library[targetID] = actOnLeafs(extractTags(library[inputID], TAG), (leaf) => {
+      let transform = packedPositions.filter((transform) => transform.id == leaf.id)[0];
+      // apply rotation first, rotate around the referencePoint so we don't mess up the translation
+      let newGeom = leaf.geometry[0].clone()
+        .rotate(transform.rotation, leaf.referencePoint, new Vector([0,0,1]));
+
+      // compute and apply the translation to our target position
+      let translation = transform.targetPosition.sub(leaf.referencePoint);
+      newGeom = newGeom.translate(translation.x, translation.y, 0);
+        
       let newGeom = selected.geom.clone().translate(lateralOffset, 0, 0);
       lateralOffset += newGeom.boundingBox.width;
 
@@ -718,7 +748,77 @@ function layout(targetID, inputID, TAG, materialThickness) {
     return true;
   });
 }
+/**
+ * A bad packing algorithm currently standing in for something more sophisticated.
+ * I think this is the API we want in terms of computing the layout using faces then returning a set of
+ * transformations that move our parts to their nested positions.
+ * TODO:
+ *  * replace with a better nesting algo
+ *  * pass in the spacing between shapes
+ *  * pass in the material dimensions / shape
+ *  * P2 generate and output the remaining shape of the material for re-use in subsequent prints
+ */
+function computePositions(shapesForLayout, spacing) {
+  let transforms = [];
+  let lateralOffset = 0;
+  console.log("face edge meshes");
+  let nestingEngine = new AnyNest();
+  nestingEngine.setBin({id: 1, points: [0, 0, 0, 1000, 0, 0, 1000, 1000, 0, 0, 1000, 0]});
 
+  let parts = [];
+
+  shapesForLayout.forEach((shape) => {
+    let face = shape.shape;
+    // TODO: meshEdges does appear to generate a list of coordinates tracing the path of hte outerWire here
+    // Note that for a simple circle with default accuracy this generates a 12k points with a lot of decimal
+    // precisions. We should consider 1) can we provide rougher approximation
+    //2) do we need to translate to integers later in the process
+    // Yes, but this is handled within the library, we can (should?) pass an ArrayPolygon which accepts floats
+    let temp = face.clone().outerWire().meshEdges();
+    // translate into an acceptable format for nesting engine.
+    parts.push({id: shape.id, points: temp.lines.slice()});
+
+    // rotate for minimum width
+    var minWidth = face.boundingBox.width;
+    var degrees = 0;
+    for (var i = 0; i < 180; i++) {
+      var width = face.clone().rotate(i).boundingBox.width;
+      if (width < minWidth) {
+        minWidth = width;
+        degrees = i;
+      }
+    }
+    face = face.rotate(degrees);
+    let targetPosition = new Vector([lateralOffset + 0.5 * face.boundingBox.width, 0.5 * face.boundingBox.height, 0]);
+
+    transforms.push({id: shape.id, targetPosition: targetPosition, rotation: degrees});
+    lateralOffset += face.boundingBox.width + spacing;
+  });
+
+  console.log("starting nest engine");
+  nestingEngine.setParts(parts);
+  console.log("parts set");
+  let status = nestingEngine.start(5, (num) => {console.log("progress: " + num)}, (placement, utilization, parts, totalParts) => {
+    console.log("display result called with data: ");
+    console.log(placement);
+    console.log(utilization);
+    console.log(parts);
+    console.log(totalParts);
+  });
+  console.log("start status: " + status);
+  setTimeout(() => {nestingEngine.stop();}, 10000);
+
+  return transforms;
+}
+
+function meshToArrayPolygon(mesh, id) {
+  const result = [];
+  for (var i = 0; i < mesh.lines.length; i++) {
+    result.push({x: mesh.lines[i][0], y: mesh.lines[i][1]});
+  }
+  return result;
+}
+  
 function moveFaceToCuttingPlane(geom, face) {
   let pointOnSurface = face.pointOnSurface(0, 0);
   let faceNormal = face.normalAt();
