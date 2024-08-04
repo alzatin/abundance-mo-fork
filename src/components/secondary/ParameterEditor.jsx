@@ -117,6 +117,24 @@ export default (function ParamsEditor({
     [activeAtom]
   );
 
+  const abundanceTheme = {
+    colors: {
+      elevation1: "#3F4243",
+      elevation2: "var(--bg-color)",
+      elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
+
+      highlight1: "#C4A3D5",
+      highlight2: "#ededed",
+      highlight3: "#ededed",
+
+      accent1: "#C4A3D5",
+      accent2: "#88748F", //apply button
+      accent3: "#88748F",
+
+      vivid1: "red",
+    },
+  };
+
   return (
     <>
       {" "}
@@ -136,23 +154,7 @@ export default (function ParamsEditor({
             title: activeAtom.name || globalvariables.currentRepo.name,
             drag: false,
           }}
-          theme={{
-            colors: {
-              elevation1: "#3F4243",
-              elevation2: "var(--bg-color)",
-              elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
-
-              highlight1: "#C4A3D5",
-              highlight2: "#ededed",
-              highlight3: "#ededed",
-
-              accent1: "#C4A3D5",
-              accent2: "#88748F", //apply button
-              accent3: "#88748F",
-
-              vivid1: "red",
-            },
-          }}
+          theme={abundanceTheme}
         />
       </div>
       <div className={run ? "gridEditorDivRun" : "gridEditorDiv"}>
@@ -166,23 +168,7 @@ export default (function ParamsEditor({
             title: "Render Settings",
             drag: false,
           }}
-          theme={{
-            colors: {
-              elevation1: "#3F4243",
-              elevation2: "var(--bg-color)",
-              elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
-
-              highlight1: "#C4A3D5",
-              highlight2: "#ededed",
-              highlight3: "#ededed",
-
-              accent1: "#C4A3D5",
-              accent2: "#88748F", //apply button
-              accent3: "#88748F",
-
-              vivid1: "red",
-            },
-          }}
+          theme={abundanceTheme}
         />
       </div>
       {activeAtom.atomType == "Molecule" ? (
@@ -197,23 +183,7 @@ export default (function ParamsEditor({
               title: "Bill of Materials",
               drag: false,
             }}
-            theme={{
-              colors: {
-                elevation1: "#3F4243",
-                elevation2: "var(--bg-color)",
-                elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
-
-                highlight1: "#C4A3D5",
-                highlight2: "#ededed",
-                highlight3: "#ededed",
-
-                accent1: "#C4A3D5",
-                accent2: "#88748F", //apply button
-                accent3: "#88748F",
-
-                vivid1: "red",
-              },
-            }}
+            theme={abundanceTheme}
           />
         </div>
       ) : null}
@@ -229,23 +199,7 @@ export default (function ParamsEditor({
               title: "Export Parts",
               drag: false,
             }}
-            theme={{
-              colors: {
-                elevation1: "#3F4243",
-                elevation2: "var(--bg-color)",
-                elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
-
-                highlight1: "#C4A3D5",
-                highlight2: "#ededed",
-                highlight3: "#ededed",
-
-                accent1: "#C4A3D5",
-                accent2: "#88748F", //apply button
-                accent3: "#88748F",
-
-                vivid1: "red",
-              },
-            }}
+            theme={abundanceTheme}
           />
         </div>
       ) : null}
