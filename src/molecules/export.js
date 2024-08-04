@@ -95,18 +95,15 @@ export default class Export extends Atom {
 
   createLevaInputs() {
     let inputParams = {};
-    const importOptions = ["STL", "SVG", "STEP"];
+    const exportOptions = ["STL", "SVG", "STEP"];
 
     inputParams[this.uniqueID + "file_ops"] = {
       value: this.type,
-      options: importOptions,
+      options: exportOptions,
       label: "File Type",
       onChange: (value) => {
-        this.importIndex = importOptions.indexOf(value);
-        if (this.type != importOptions[this.importIndex]) {
-          this.type = importOptions[this.importIndex];
-          this.updateValue();
-        }
+        this.type = value;
+        this.updateValue();
       },
     };
     inputParams["Resolution (dpi)"] = {
@@ -117,7 +114,7 @@ export default class Export extends Atom {
         this.updateValue();
       },
     };
-    inputParams["File Export Name"] = {
+    inputParams["Part"] = {
       value: this.fileName || GlobalVariables.currentMolecule.name,
       onChange: (value) => {
         this.fileName = value;
@@ -138,7 +135,7 @@ export default class Export extends Atom {
    */
   exportFile() {
     let fileType = this.type;
-
+    console.log(this);
     GlobalVariables.cad
       .downExport(
         this.uniqueID,

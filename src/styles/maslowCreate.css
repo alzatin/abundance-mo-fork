@@ -820,6 +820,14 @@ Sidebar navigation
   z-index: 3;
 }
 
+.exportEditorDivRun {
+  position: absolute;
+  top: 32%;
+  right: 10px;
+  width: 280px;
+  z-index: 3;
+}
+
 .gridEditorDiv {
   position: absolute;
   top: 47%;

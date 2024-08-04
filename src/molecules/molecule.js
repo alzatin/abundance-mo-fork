@@ -92,6 +92,8 @@ export default class Molecule extends Atom {
 
     this.compiledBom = {};
 
+    this.partToExport = null;
+
     /**
      * List of all available tags in project.
      * @type {array}
@@ -213,6 +215,47 @@ export default class Molecule extends Atom {
     }
 
     return inputParams;
+  }
+
+  createLevaExport() {
+    console.log(this.nodesOnTheScreen);
+    let exportParams = {};
+    const exportOptions = ["STL", "SVG", "STEP"];
+    const exportAtoms = this.nodesOnTheScreen.filter(
+      (node) => node.atomType === "Export"
+    );
+
+    exportParams[this.uniqueID + "part_ops"] = {
+      value: this.partToExport
+        ? this.partToExport.fileName
+        : "Pick a part to export",
+      options: exportAtoms.map((option) => option.fileName),
+      label: "Part",
+      onChange: (value) => {
+        this.partToExport = exportAtoms.find((atom) => atom.fileName === value);
+        this.updateValue();
+      },
+    };
+
+    exportParams[this.uniqueID + "file_ops"] = {
+      value: this.partToExport
+        ? this.partToExport.fileType
+        : "Pick a file type",
+      options: exportOptions,
+      label: "File Type",
+      onChange: (value) => {
+        if (this.partToExport) {
+          this.partToExport.type = value;
+        }
+        //atom.exportFile()
+      },
+    };
+
+    exportParams["Export As"] = button(() => {
+      this.partToExport.exportFile();
+    });
+
+    return exportParams;
   }
 
   async reloadFork() {
