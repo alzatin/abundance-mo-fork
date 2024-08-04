@@ -166,9 +166,9 @@ export default class Molecule extends Atom {
   createLevaInputs() {
     let inputParams = {};
     inputParams["molecule name" + this.uniqueID] = {
-      value: this.name,
+      value: this.topLevel ? GlobalVariables.currentRepoName : this.name,
       label: "Molecule Name",
-      disabled: false,
+      disabled: this.topLevel ? true : false,
       onChange: (value) => {
         this.name = value;
       },
