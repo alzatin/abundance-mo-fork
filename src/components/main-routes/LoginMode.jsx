@@ -682,7 +682,12 @@ function LoginMode(props) {
         {" "}
         {GlobalVariables.currentRepo ? (
           <Link to={`/${GlobalVariables.currentRepo.id}`}>
-            <button className="closeButton">
+            <button
+              className="closeButton"
+              onClick={() => {
+                setExportPopUp(false);
+              }}
+            >
               <img></img>
             </button>
           </Link>
