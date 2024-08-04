@@ -205,6 +205,17 @@ export default class Molecule extends Atom {
         }
       });
     }
+    inputParams["Test api"] = button(() => {
+      const apiUrl =
+        "https://rzvhpou0sa.execute-api.us-east-2.amazonaws.com/test/example?user=mo";
+      fetch(apiUrl)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+        });
+    });
     if (GlobalVariables.currentRepo.fork) {
       inputParams["Reload from Github"] = button(() => {
         //Future compare to main branch
