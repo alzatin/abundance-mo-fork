@@ -48,6 +48,8 @@ export default class Export extends Atom {
 
     this.setValues(values);
 
+    this.fileName = null;
+
     this.importIndex = 0;
   }
 
@@ -115,6 +117,13 @@ export default class Export extends Atom {
         this.updateValue();
       },
     };
+    inputParams["File Export Name"] = {
+      value: this.fileName || GlobalVariables.currentMolecule.name,
+      onChange: (value) => {
+        this.fileName = value;
+        this.updateValue();
+      },
+    };
 
     inputParams["Download File"] = button(() =>
       //this.loadFile(importOptions[importIndex])
@@ -138,10 +147,7 @@ export default class Export extends Atom {
         GlobalVariables.topLevelMolecule.unitsKey
       )
       .then((result) => {
-        saveAs(
-          result,
-          GlobalVariables.currentMolecule.name + "." + fileType.toLowerCase()
-        );
+        saveAs(result, this.fileName + "." + fileType.toLowerCase());
       })
       .catch(this.alertingErrorHandler());
   }
@@ -153,6 +159,7 @@ export default class Export extends Atom {
     superSerialObject.type = this.type;
     superSerialObject.resolution = this.resolution;
     superSerialObject.importIndex = this.importIndex;
+    superSerialObject.fileName = this.fileName;
 
     return superSerialObject;
   }

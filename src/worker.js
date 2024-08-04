@@ -456,7 +456,11 @@ function visExport(targetID, inputID, fileType) {
     let finalGeometry;
     if (fileType == "SVG") {
       /** Fuses input geometry, draws a top view projection*/
-      finalGeometry = [drawProjection(fusedGeometry, "top").visible];
+      if (is3D(library[inputID])) {
+        finalGeometry = [drawProjection(fusedGeometry, "top").visible];
+      } else {
+        finalGeometry = [fusedGeometry];
+      }
     } else {
       finalGeometry = [fusedGeometry];
     }

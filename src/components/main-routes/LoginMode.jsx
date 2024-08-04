@@ -483,6 +483,7 @@ const ShowProjects = (props) => {
           projectsLoaded={projectsLoaded}
           setSearchBarValue={setSearchBarValue}
           searchBarValue={searchBarValue}
+          setExportPopUp={setExportPopUp}
           user={props.user}
           userBrowsing={props.userBrowsing}
           setBrowsing={props.setBrowsing}
@@ -500,6 +501,7 @@ const ClassicBrowse = (props) => {
   let projectsLoaded = props.projectsLoaded;
   let searchBarValue = props.searchBarValue;
   let setSearchBarValue = props.setSearchBarValue;
+  let setExportPopUp = props.setExportPopUp;
 
   if (projectsLoaded.length > 0) {
     var userRepos = [];
