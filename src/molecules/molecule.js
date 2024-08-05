@@ -218,7 +218,6 @@ export default class Molecule extends Atom {
   }
 
   createLevaExport() {
-    console.log(this.nodesOnTheScreen);
     let exportParams = {};
     const exportOptions = ["STL", "SVG", "STEP"];
     const exportAtoms = this.nodesOnTheScreen.filter(
@@ -229,10 +228,18 @@ export default class Molecule extends Atom {
       value: this.partToExport
         ? this.partToExport.fileName
         : "Pick a part to export",
-      options: exportAtoms.map((option) => option.fileName),
+      options: exportAtoms.map(
+        (option) =>
+          option.inputs.filter((input) => input.name === "Part Name")[0].value
+      ),
       label: "Part",
       onChange: (value) => {
-        this.partToExport = exportAtoms.find((atom) => atom.fileName === value);
+        this.partToExport = exportAtoms.find(
+          (atom) =>
+            atom.inputs.filter((input) => input.name === "Part Name")[0]
+              .value === value
+        );
+        console.log(this.partToExport);
         this.updateValue();
       },
     };

@@ -116,7 +116,7 @@ export default (function ParamsEditor({
     },
     [activeAtom]
   );
-
+  // color theme for Leva
   const abundanceTheme = {
     colors: {
       elevation1: "#3F4243",

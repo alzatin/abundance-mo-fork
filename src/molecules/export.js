@@ -45,6 +45,11 @@ export default class Export extends Atom {
     this.resolution = 72;
 
     this.addIO("input", "geometry", this, "geometry", "");
+    this.addIO("input", "Resolution (dpi)", this, "number", 72);
+
+    this.addIO("input", "Part Name", this, "string", "Part Name");
+
+    this.addIO("input", "File Type", this, "string", "SVG");
 
     this.setValues(values);
 
@@ -97,30 +102,53 @@ export default class Export extends Atom {
     let inputParams = {};
     const exportOptions = ["STL", "SVG", "STEP"];
 
-    inputParams[this.uniqueID + "file_ops"] = {
-      value: this.type,
-      options: exportOptions,
-      label: "File Type",
-      onChange: (value) => {
-        this.type = value;
-        this.updateValue();
-      },
-    };
-    inputParams["Resolution (dpi)"] = {
-      value: this.resolution,
-      disabled: this.type != "SVG" ? true : false,
-      onChange: (value) => {
-        this.resolution = value;
-        this.updateValue();
-      },
-    };
-    inputParams["Part"] = {
-      value: this.fileName || GlobalVariables.currentMolecule.name,
-      onChange: (value) => {
-        this.fileName = value;
-        this.updateValue();
-      },
-    };
+    console.log(this.inputs);
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+
+    if (this.inputs) {
+      this.inputs.map((input) => {
+        const checkConnector = () => {
+          return input.connectors.length > 0;
+        };
+        if (input.name == "File Type") {
+          inputParams[this.uniqueID + "file_ops"] = {
+            value: input.value,
+            options: exportOptions,
+            label: "File Type",
+            onChange: (value) => {
+              if (input.value !== value) {
+                input.setValue(value);
+              }
+            },
+          };
+        }
+        /* Makes inputs for Io's other than geometry */
+        if (input.name == "Resolution (dpi)") {
+          inputParams[this.uniqueID + input.name] = {
+            value: input.value,
+            label: input.name,
+            disabled: this.type != "SVG" ? true : false,
+            onChange: (value) => {
+              if (input.value !== value) {
+                input.setValue(value);
+              }
+            },
+          };
+        }
+        if (input.name == "Part Name") {
+          inputParams[this.uniqueID + input.name] = {
+            value: input.value,
+            label: input.name,
+            disabled: false,
+            onChange: (value) => {
+              if (input.value !== value) {
+                input.setValue(value);
+              }
+            },
+          };
+        }
+      });
+    }
 
     inputParams["Download File"] = button(() =>
       //this.loadFile(importOptions[importIndex])
@@ -135,16 +163,18 @@ export default class Export extends Atom {
    */
   exportFile() {
     let fileType = this.type;
+    let resolution = this.findIOValue("Resolution (dpi)");
+    let partName = this.findIOValue("Part Name");
     console.log(this);
     GlobalVariables.cad
       .downExport(
         this.uniqueID,
         fileType,
-        this.resolution,
+        resolution,
         GlobalVariables.topLevelMolecule.unitsKey
       )
       .then((result) => {
-        saveAs(result, this.fileName + "." + fileType.toLowerCase());
+        saveAs(result, partName + "." + fileType.toLowerCase());
       })
       .catch(this.alertingErrorHandler());
   }
