@@ -662,6 +662,8 @@ function LoginMode(props) {
         setBrowsing={setBrowsing}
         isloggedIn={props.isloggedIn}
         tryLogin={props.tryLogin}
+        exportPopUp={exportPopUp}
+        setExportPopUp={setExportPopUp}
       />
     );
   } else {
