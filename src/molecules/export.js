@@ -87,7 +87,7 @@ export default class Export extends Atom {
     if (this.inputs.every((x) => x.ready)) {
       this.processing = true;
       let inputID = this.findIOValue("geometry");
-      let fileType = this.type;
+      let fileType = this.findIOValue("File Type");
 
       GlobalVariables.cad
         .visExport(this.uniqueID, inputID, fileType)
@@ -127,7 +127,7 @@ export default class Export extends Atom {
           inputParams[this.uniqueID + input.name] = {
             value: input.value,
             label: input.name,
-            disabled: this.type != "SVG" ? true : false,
+            disabled: this.findIOValue("File Type") != "SVG" ? true : false,
             onChange: (value) => {
               if (input.value !== value) {
                 input.setValue(value);
@@ -162,9 +162,10 @@ export default class Export extends Atom {
    * The function which is called when you press the download button.
    */
   exportFile() {
-    let fileType = this.type;
+    let fileType = this.findIOValue("File Type");
     let resolution = this.findIOValue("Resolution (dpi)");
     let partName = this.findIOValue("Part Name");
+
     console.log(this);
     GlobalVariables.cad
       .downExport(
