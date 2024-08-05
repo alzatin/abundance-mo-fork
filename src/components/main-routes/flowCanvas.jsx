@@ -115,8 +115,10 @@ export default memo(function FlowCanvas(props) {
         GlobalVariables.atomsSelected.forEach((item) => {
           let newAtomID = GlobalVariables.generateUniqueID();
           item.uniqueID = newAtomID;
-
-          if (item.atomType == "Molecule" || "GitHubMolecule") {
+          if (
+            item.atomType == "Molecule" ||
+            item.atomType == "GitHubMolecule"
+          ) {
             item = GlobalVariables.currentMolecule.remapIDs(item);
           }
           GlobalVariables.currentMolecule.placeAtom(item, true);
