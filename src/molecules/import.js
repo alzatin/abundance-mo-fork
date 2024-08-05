@@ -53,7 +53,6 @@ export default class Import extends Atom {
      */
     this.sha = null;
 
-    this.SVGdepth = 10;
     this.SVGwidth = 10;
 
     this.addIO("output", "geometry", this, "geometry", "");
@@ -124,12 +123,10 @@ export default class Import extends Atom {
             throw "Invalid file type";
           }
 
-          funcToCall(this.uniqueID, file, this.SVGdepth, this.SVGwidth).then(
-            (result) => {
-              this.basicThreadValueProcessing();
-              this.sendToRender();
-            }
-          );
+          funcToCall(this.uniqueID, file, this.SVGwidth).then((result) => {
+            this.basicThreadValueProcessing();
+            this.sendToRender();
+          });
         });
       }
     } catch (err) {
@@ -197,14 +194,6 @@ export default class Import extends Atom {
             this.updateValue();
           },
         };
-        inputParams["Depth"] = {
-          value: this.SVGdepth, //href to the file
-          label: "Depth",
-          onChange: (value) => {
-            this.SVGdepth = value;
-            this.updateValue();
-          },
-        };
       }
       inputParams["Loaded File"] = {
         value: this.fileName, //href to the file
@@ -252,7 +241,6 @@ export default class Import extends Atom {
     superSerialObject.fileName = this.fileName; // might delete, maybe we just save as library object
     superSerialObject.name = this.name;
     superSerialObject.type = this.type;
-    superSerialObject.SVGdepth = this.SVGdepth;
     superSerialObject.SVGwidth = this.SVGwidth;
 
     return superSerialObject;
