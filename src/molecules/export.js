@@ -102,7 +102,6 @@ export default class Export extends Atom {
     let inputParams = {};
     const exportOptions = ["STL", "SVG", "STEP"];
 
-    console.log(this.inputs);
     /** Runs through active atom inputs and adds IO parameters to default param*/
 
     if (this.inputs) {
@@ -114,6 +113,7 @@ export default class Export extends Atom {
           inputParams[this.uniqueID + "file_ops"] = {
             value: input.value,
             options: exportOptions,
+            disabled: checkConnector(),
             label: "File Type",
             onChange: (value) => {
               if (input.value !== value) {
@@ -139,7 +139,7 @@ export default class Export extends Atom {
           inputParams[this.uniqueID + input.name] = {
             value: input.value,
             label: input.name,
-            disabled: false,
+            disabled: checkConnector(),
             onChange: (value) => {
               if (input.value !== value) {
                 input.setValue(value);
