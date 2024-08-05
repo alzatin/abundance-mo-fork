@@ -4,6 +4,7 @@ import GlobalVariables from "../js/globalvariables.js";
 import { button } from "leva";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { BOMEntry } from "../js/BOM";
+import globalvariables from "../js/globalvariables.js";
 
 /**
  * This class creates the Molecule atom.
@@ -239,7 +240,7 @@ export default class Molecule extends Atom {
             atom.inputs.filter((input) => input.name === "Part Name")[0]
               .value === value
         );
-        console.log(this.partToExport);
+
         this.updateValue();
       },
     };
