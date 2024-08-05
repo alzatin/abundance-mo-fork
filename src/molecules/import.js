@@ -101,38 +101,35 @@ export default class Import extends Atom {
    */
   updateValue() {
     super.updateValue();
-
+    this.processing = true;
     try {
-      this.processing = true;
-      if (this.file != null) {
-        // this.processing = true;
-        let file = this.file;
-        let fileType = this.type;
-
-        let funcToCall =
-          fileType == "STL"
-            ? GlobalVariables.cad.importingSTL
-            : fileType == "SVG"
-            ? GlobalVariables.cad.importingSVG
-            : fileType == "STEP"
-            ? GlobalVariables.cad.importingSTEP
-            : null;
-
-        if (funcToCall == null) {
-          throw "Invalid file type";
-        }
-
-        funcToCall(this.uniqueID, file, this.SVGdepth, this.SVGwidth).then(
-          (result) => {
-            this.basicThreadValueProcessing();
-            this.sendToRender();
-          }
-        );
-      } else {
+      if (this.fileName != null) {
         this.getAFile().then((result) => {
           this.sha = result.data.sha;
           this.file = this.newBlobFromBase64(result);
-          this.updateValue();
+          // this.processing = true;
+          let file = this.file;
+          let fileType = this.type;
+
+          let funcToCall =
+            fileType == "STL"
+              ? GlobalVariables.cad.importingSTL
+              : fileType == "SVG"
+              ? GlobalVariables.cad.importingSVG
+              : fileType == "STEP"
+              ? GlobalVariables.cad.importingSTEP
+              : null;
+
+          if (funcToCall == null) {
+            throw "Invalid file type";
+          }
+
+          funcToCall(this.uniqueID, file, this.SVGdepth, this.SVGwidth).then(
+            (result) => {
+              this.basicThreadValueProcessing();
+              this.sendToRender();
+            }
+          );
         });
       }
     } catch (err) {
@@ -241,10 +238,9 @@ export default class Import extends Atom {
    * Update the file, filename and sha of the atom
    */
   updateFile(file, sha) {
-    this.file = file;
     this.fileName = file.name;
     this.sha = sha;
-    this.updateValue(this.type, this.file);
+    this.updateValue();
   }
   /**
    * Add the file name to the object which is saved for this molecule
