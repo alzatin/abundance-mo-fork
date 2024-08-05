@@ -814,6 +814,14 @@ Sidebar navigation
 
 .paramEditorDivRun {
   position: absolute;
+  top: 19%;
+  right: 10px;
+  width: 280px;
+  z-index: 3;
+}
+
+.exportEditorDivRun {
+  position: absolute;
   top: 12%;
   right: 10px;
   width: 280px;

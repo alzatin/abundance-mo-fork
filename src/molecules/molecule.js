@@ -4,6 +4,7 @@ import GlobalVariables from "../js/globalvariables.js";
 import { button } from "leva";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { BOMEntry } from "../js/BOM";
+import globalvariables from "../js/globalvariables.js";
 
 /**
  * This class creates the Molecule atom.
@@ -91,6 +92,8 @@ export default class Molecule extends Atom {
     this.BOMlist;
 
     this.compiledBom = {};
+
+    this.partToExport = null;
 
     /**
      * List of all available tags in project.
@@ -213,6 +216,54 @@ export default class Molecule extends Atom {
     }
 
     return inputParams;
+  }
+
+  createLevaExport() {
+    let exportParams = {};
+    const exportOptions = ["STL", "SVG", "STEP"];
+    const exportAtoms = this.nodesOnTheScreen.filter(
+      (node) => node.atomType === "Export"
+    );
+
+    exportParams[this.uniqueID + "part_ops"] = {
+      value: this.partToExport
+        ? this.partToExport.fileName
+        : "Pick a part to export",
+      options: exportAtoms.map(
+        (option) =>
+          option.inputs.filter((input) => input.name === "Part Name")[0].value
+      ),
+      label: "Part",
+      onChange: (value) => {
+        this.partToExport = exportAtoms.find(
+          (atom) =>
+            atom.inputs.filter((input) => input.name === "Part Name")[0]
+              .value === value
+        );
+
+        this.updateValue();
+      },
+    };
+
+    exportParams[this.uniqueID + "file_ops"] = {
+      value: this.partToExport
+        ? this.partToExport.fileType
+        : "Pick a file type",
+      options: exportOptions,
+      label: "File Type",
+      onChange: (value) => {
+        if (this.partToExport) {
+          this.partToExport.type = value;
+        }
+        //atom.exportFile()
+      },
+    };
+
+    exportParams["Export As"] = button(() => {
+      this.partToExport.exportFile();
+    });
+
+    return exportParams;
   }
 
   async reloadFork() {
