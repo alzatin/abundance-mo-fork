@@ -47,17 +47,12 @@ export default function ext({ children, ...props }) {
       >
         {props.gridParam ? <InfiniteGrid /> : null}
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
-        <ambientLight intensity={0.2} />
+
         {!props.outdatedMesh ? (
-          <directionalLight position={[0, 1, 0]} />
+          <ambientLight intensity={0.7} />
         ) : (
-          <directionalLight
-            color={"grey"}
-            intensity={0.2}
-            position={[0, 1, 0]}
-          />
+          <ambientLight intensity={0.4} />
         )}
-        {!props.outdatedMesh ? <ambientLight intensity={0.5} /> : null}
         {children}
       </Canvas>
     </Suspense>

@@ -6,7 +6,7 @@ import {
   syncLines,
   syncLinesFromFaces,
 } from "replicad-threejs-helper";
-
+import { Wireframe } from "@react-three/drei";
 export default React.memo(function ShapeMeshes({
   mesh,
   isSolid,
@@ -57,10 +57,10 @@ export default React.memo(function ShapeMeshes({
       {fullMesh.map((m, index) => {
         return (
           <group key={"group" + m.color + index}>
-            {isSolid ? (
+            {!isSolid ? (
               <mesh geometry={m.body} key={"mesh" + m.color}>
                 {/*the offsets are here to avoid z fighting between the mesh and the lines*/}
-                <meshStandardMaterial
+                <meshMatcapMaterial
                   color={m.color}
                   key={"material" + m.color}
                   opacity={0.5}
@@ -69,7 +69,15 @@ export default React.memo(function ShapeMeshes({
                   polygonOffsetUnits={1.0}
                 />
               </mesh>
-            ) : null}
+            ) : (
+              <Wireframe
+                geometry={m.body}
+                stroke={"#d2cece"}
+                squeeze={true}
+                dash={false}
+              />
+            )}
+
             <lineSegments
               key={"lines" + m.color}
               geometry={m.lines}
