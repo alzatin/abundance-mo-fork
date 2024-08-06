@@ -76,12 +76,12 @@ body {
 #shortcutDiv {
   width: 150px;
   position: absolute;
-  left: calc(100% - 300px);
+  left: calc(100% - 210px);
   top: 5px;
   visibility: hidden;
   opacity: 0;
   color: rgb(255, 255, 255);
-  background-color: #e2ccf47c;
+  background-color: #e2ccf491;
   transition: visibility 0s, opacity 0.5s linear;
   z-index: 1000;
   padding: 10px;
@@ -93,12 +93,11 @@ body {
   border-bottom: 1px solid #fff;
 }
 .shortcut-button {
-  width: 20px;
-  height: 20px;
+  padding: 0 2px;
   position: absolute;
   top: 44%;
   right: 0%;
-  transform: translate(-50%, -50%);
+  transform: translate(-20%, -60%);
 }
 .shortcut-button:hover + #shortcutDiv {
   visibility: visible;
