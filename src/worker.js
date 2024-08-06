@@ -16,6 +16,7 @@ import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 import { addSVG, drawSVG } from "replicad-decorate";
 import Fonts from "./js/fonts.js";
+import {AnyNest, FloatPolygon} from "any-nest";
 
 var library = {};
 
@@ -727,14 +728,14 @@ function layout(targetID, inputID, TAG, materialThickness) {
     library[targetID] = actOnLeafs(extractTags(library[inputID], TAG), (leaf) => {
       let transform = packedPositions.filter((transform) => transform.id == leaf.id)[0];
       // apply rotation first, rotate around the referencePoint so we don't mess up the translation
-      let newGeom = leaf.geometry[0].clone()
+      newGeom = leaf.geometry[0].clone()
         .rotate(transform.rotation, leaf.referencePoint, new Vector([0,0,1]));
 
       // compute and apply the translation to our target position
       let translation = transform.targetPosition.sub(leaf.referencePoint);
       newGeom = newGeom.translate(translation.x, translation.y, 0);
         
-      let newGeom = selected.geom.clone().translate(lateralOffset, 0, 0);
+      newGeom = selected.geom.clone().translate(lateralOffset, 0, 0);
       lateralOffset += newGeom.boundingBox.width;
 
       return {
@@ -760,10 +761,18 @@ function layout(targetID, inputID, TAG, materialThickness) {
  */
 function computePositions(shapesForLayout, spacing) {
   let transforms = [];
-  let lateralOffset = 0;
-  console.log("face edge meshes");
   let nestingEngine = new AnyNest();
-  nestingEngine.setBin({id: 1, points: [0, 0, 0, 1000, 0, 0, 1000, 1000, 0, 0, 1000, 0]});
+  // Temporarily default to a 4ft x 8ft board
+  const binDimensions = units == "MM" ? {width: 25.4 * 8 * 12, height: 25.4 * 4 * 12} : {width: 8 * 12, height: 4 * 12};
+
+  nestingEngine.config({spacing: spacing, binSpacing: units == "MM" ? 3 * 25.4 : 3});
+  nestingEngine.setBin(FloatPolygon.fromPoints(
+    [
+      {x: 0, y: 0},
+      {x: binDimensions.width, y: 0},
+      {x: binDimensions.width, y: binDimensions.height},
+      {x: 0, y: binDimensions.height}
+    ], "bin"));
 
   let parts = [];
 
@@ -772,12 +781,12 @@ function computePositions(shapesForLayout, spacing) {
     // TODO: meshEdges does appear to generate a list of coordinates tracing the path of hte outerWire here
     // Note that for a simple circle with default accuracy this generates a 12k points with a lot of decimal
     // precisions. We should consider 1) can we provide rougher approximation
-    //2) do we need to translate to integers later in the process
-    // Yes, but this is handled within the library, we can (should?) pass an ArrayPolygon which accepts floats
     let temp = face.clone().outerWire().meshEdges();
     // translate into an acceptable format for nesting engine.
+    // TODO: format incorrect here?
     parts.push({id: shape.id, points: temp.lines.slice()});
 
+    /*
     // rotate for minimum width
     var minWidth = face.boundingBox.width;
     var degrees = 0;
@@ -793,17 +802,14 @@ function computePositions(shapesForLayout, spacing) {
 
     transforms.push({id: shape.id, targetPosition: targetPosition, rotation: degrees});
     lateralOffset += face.boundingBox.width + spacing;
+    */
   });
-
-  console.log("starting nest engine");
   nestingEngine.setParts(parts);
   console.log("parts set");
-  let status = nestingEngine.start(5, (num) => {console.log("progress: " + num)}, (placement, utilization, parts, totalParts) => {
+  let status = nestingEngine.start(5, (num) => {console.log("progress: " + num)}, (placement, utilization) => {
     console.log("display result called with data: ");
     console.log(placement);
     console.log(utilization);
-    console.log(parts);
-    console.log(totalParts);
   });
   console.log("start status: " + status);
   setTimeout(() => {nestingEngine.stop();}, 10000);
