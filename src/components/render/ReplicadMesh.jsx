@@ -72,9 +72,13 @@ export default React.memo(function ShapeMeshes({
             ) : (
               <Wireframe
                 geometry={m.body}
-                stroke={"#d2cece"}
+                stroke={m.color}
                 squeeze={true}
                 dash={false}
+                simplify={true}
+                fill={m.color}
+                fillOpacity={0.2}
+                strokeOpacity={0.5}
               />
             )}
 

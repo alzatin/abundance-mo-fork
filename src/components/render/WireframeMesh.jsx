@@ -1,7 +1,12 @@
 import React, { useRef, useLayoutEffect, useEffect, useState } from "react";
 import { useThree } from "@react-three/fiber";
-import { WireframeGeometry } from "three";
-import { syncLines, syncLinesFromFaces } from "replicad-threejs-helper";
+import { BufferGeometry } from "three";
+import {
+  syncLines,
+  syncFaces,
+  syncLinesFromFaces,
+} from "replicad-threejs-helper";
+import { Wireframe } from "@react-three/drei";
 
 export default React.memo(function ShapeMeshes({ mesh }) {
   const { invalidate } = useThree();
@@ -11,13 +16,20 @@ export default React.memo(function ShapeMeshes({ mesh }) {
   useLayoutEffect(() => {
     let meshArray = [];
     mesh.map((m) => {
-      const wire = new WireframeGeometry();
+      const body = new BufferGeometry();
+      const lines = new BufferGeometry();
       // We use the three helpers to synchronise the buffer geometry with the
       // new data from the parameters
-      if (m.edges) syncLines(wire, m.edges);
-      else if (m.faces) syncLinesFromFaces(wire);
-      const thisLines = wire;
-      meshArray.push({ lines: thisLines, color: m.color });
+      if (m.faces) syncFaces(body, m.faces);
+      //if (faces) syncFaces(wire.current, faces);
+
+      if (m.edges) syncLines(lines, m.edges);
+      else if (m.faces) syncLinesFromFaces(lines, body);
+
+      const thisBody = body;
+      const thisLines = lines;
+      const thisColor = m.color;
+      meshArray.push({ body: thisBody, lines: thisLines, color: thisColor });
     });
     setFullMesh(meshArray);
     // We have configured the canvas to only refresh when there is a change,
@@ -38,9 +50,16 @@ export default React.memo(function ShapeMeshes({ mesh }) {
       {fullMesh.map((m, index) => {
         return (
           <group key={"groupwire" + m.color + index}>
-            <lineSegments geometry={m.lines}>
-              <lineBasicMaterial color={"#3c5a6e"} opacity={".75"} />
-            </lineSegments>
+            <Wireframe
+              geometry={m.body}
+              stroke={"#bebbbf"}
+              squeeze={true}
+              dash={false}
+              simplify={true}
+              fill={"#bebbbf"}
+              fillOpacity={0.1}
+              strokeOpacity={0.2}
+            />
           </group>
         );
       })}
