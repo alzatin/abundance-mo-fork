@@ -355,26 +355,23 @@ function CreateMode(props) {
             </div>
           ) : null}
           <ToggleRunCreate run={false} />
-          <button
-            className="round-button"
-            style={{
-              width: "20px",
-              height: "20px",
-              borderRadius: "50%",
-              position: "absolute",
-              top: "44%",
-              right: "1%",
-              opacity: "0.5",
-              transform: "translate(-50%, -50%)",
-            }}
-            onClick={() => {
-              console.log(
-                Object.entries(shortCuts)
-                  .map(([key, value]) => `${key}: ${value}`)
-                  .join("\n")
+          <button className="shortcut-button">
+            <img
+              style={{ width: "20px" }}
+              src="/imgs/keyboard.svg"
+              alt="keyboard"
+            />
+          </button>
+          <div id="shortcutDiv" className="hidden">
+            <li style={{ fontSize: "12px" }}>Keyboard Shortcuts (Cmmd +)</li>
+            {Object.entries(shortCuts).map(([key, value]) => {
+              return (
+                <li key={key} className="shortcut">
+                  {key} : {value}
+                </li>
               );
-            }}
-          ></button>
+            })}
+          </div>
           <TopMenu
             authorizedUserOcto={authorizedUserOcto}
             savePopUp={savePopUp}

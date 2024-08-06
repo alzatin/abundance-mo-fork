@@ -85,8 +85,12 @@ function GitSearch(props) {
           <div
             id="git_search"
             style={{
-              top: GlobalVariables.lastClick[1] + "px",
-              left: GlobalVariables.lastClick[0] + "px",
+              top: GlobalVariables.lastClick
+                ? GlobalVariables.lastClick[1] + "px"
+                : "25%",
+              left: GlobalVariables.lastClick
+                ? GlobalVariables.lastClick[0] + "px"
+                : "50%",
             }}
           >
             <input
