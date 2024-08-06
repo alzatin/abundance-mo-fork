@@ -49,7 +49,7 @@ export default function ext({ children, ...props }) {
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
 
         {!props.outdatedMesh ? (
-          <ambientLight intensity={0.7} />
+          <ambientLight intensity={0.9} />
         ) : (
           <ambientLight intensity={0.4} />
         )}
