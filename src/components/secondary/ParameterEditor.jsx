@@ -99,9 +99,9 @@ export default (function ParamsEditor({
           setWire(value);
         },
       },
-      solid: {
-        value: true,
-        label: "Solid",
+      wireframe: {
+        value: false,
+        label: "Wireframe",
         onChange: (value) => {
           setSolid(value);
         },
