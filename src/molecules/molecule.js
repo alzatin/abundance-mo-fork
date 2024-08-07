@@ -386,7 +386,6 @@ export default class Molecule extends Atom {
       let bomList = [];
       let compileBomItems = [];
       if (result) {
-        console.log(result);
         result.forEach(function (bomElement) {
           if (bomElement.BOMitemName) {
             if (!bomList[bomElement.BOMitemName]) {
@@ -411,7 +410,6 @@ export default class Molecule extends Atom {
         return compileBomItems;
       }
     });
-    console.log(compiled);
     return compiled;
   }
 
@@ -435,10 +433,8 @@ export default class Molecule extends Atom {
     var bomContent = bomHeader;
     var totalParts = 0;
     var totalCost = 0;
-    console.log(bomItems);
     if (bomItems.length > 0) {
       bomItems.forEach((item) => {
-        console.log(item);
         totalParts += item.numberNeeded;
         totalCost += item.costUSD;
         bomContent =
