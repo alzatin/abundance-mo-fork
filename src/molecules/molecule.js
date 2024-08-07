@@ -387,18 +387,20 @@ export default class Molecule extends Atom {
       let compileBomItems = [];
       if (result) {
         result.forEach(function (bomElement) {
-          if (!bomList[bomElement.BOMitemName]) {
-            //If the list of items doesn't already have one of these
-            bomList[bomElement.BOMitemName] = new BOMEntry(); //Create one
-            bomList[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
-            bomList[bomElement.BOMitemName].BOMitemName =
-              bomElement.BOMitemName; //With the information from the item
-            bomList[bomElement.BOMitemName].source = bomElement.source;
-            compileBomItems.push(bomList[bomElement.BOMitemName]);
+          if (bomElement.BOMitemName) {
+            if (!bomList[bomElement.BOMitemName]) {
+              //If the list of items doesn't already have one of these
+              bomList[bomElement.BOMitemName] = new BOMEntry(); //Create one
+              bomList[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
+              bomList[bomElement.BOMitemName].BOMitemName =
+                bomElement.BOMitemName; //With the information from the item
+              bomList[bomElement.BOMitemName].source = bomElement.source;
+              compileBomItems.push(bomList[bomElement.BOMitemName]);
+            }
+            bomList[bomElement.BOMitemName].numberNeeded +=
+              bomElement.numberNeeded;
+            bomList[bomElement.BOMitemName].costUSD += bomElement.costUSD;
           }
-          bomList[bomElement.BOMitemName].numberNeeded +=
-            bomElement.numberNeeded;
-          bomList[bomElement.BOMitemName].costUSD += bomElement.costUSD;
         });
 
         // Alphabetize by source
