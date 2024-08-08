@@ -36,25 +36,23 @@ export default function ext({ children, ...props }) {
         camera={{
           fov: 75,
           near: 0.1,
-          far: 1000,
-          position: [50, 50, 60],
+          right: 2000,
+          left: -2000,
+          bottom: -2000,
+          far: 2000,
+          position: [500, 500, 500],
           zoom: 7,
         }}
         shadows={true}
       >
         {props.gridParam ? <InfiniteGrid /> : null}
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
-        <ambientLight intensity={0.5} />
+
         {!props.outdatedMesh ? (
-          <directionalLight position={[50, 50, 50]} />
+          <ambientLight intensity={0.9} />
         ) : (
-          <directionalLight
-            color={"grey"}
-            intensity={0.2}
-            position={[50, 50, 50]}
-          />
+          <ambientLight intensity={0.4} />
         )}
-        {!props.outdatedMesh ? <ambientLight intensity={0.5} /> : null}
         {children}
       </Canvas>
     </Suspense>

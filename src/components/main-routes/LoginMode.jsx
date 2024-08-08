@@ -4,6 +4,7 @@ import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { Link } from "react-router-dom";
 import globalvariables from "../../js/globalvariables.js";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
+import { re } from "mathjs";
 
 /**
  * The octokit instance which allows interaction with GitHub.
@@ -401,6 +402,41 @@ const ShowProjects = (props) => {
         " topic:abundance-project" +
         " fork:true";
     }
+    const forkDummyProject = async function (authorizedUserOcto) {
+      var owner = "alzatin";
+      var repo = "My-first-Abundance-project";
+      // if authenticated and it is not your project, make a clone of the project and return to create mode
+      authorizedUserOcto
+        .request("GET /repos/{owner}/{repo}", {
+          owner: owner,
+          repo: repo,
+        })
+        .then((result) => {
+          authorizedUserOcto.rest.repos
+            .createFork({
+              owner: owner,
+              repo: repo,
+            })
+            .then(() => {
+              var activeUser = GlobalVariables.currentUser;
+              // return to create mode
+              authorizedUserOcto
+                .request("GET /repos/{owner}/{repo}", {
+                  owner: activeUser,
+                  repo: repo,
+                })
+                .then((result) => {
+                  GlobalVariables.currentRepo = result.data;
+
+                  authorizedUserOcto.rest.repos.replaceAllTopics({
+                    owner: activeUser,
+                    repo: GlobalVariables.currentRepo.name,
+                    names: ["abundance-project"],
+                  });
+                });
+            });
+        });
+    };
     const repoSearchRequest = async () => {
       let repoCount = 0;
       const repos = await octokit.paginate(
@@ -421,7 +457,16 @@ const ShowProjects = (props) => {
     };
     repoSearchRequest()
       .then((result) => {
-        setStateLoaded(result);
+        if (result[0].data.total_count == 0 && props.user !== "") {
+          forkDummyProject(authorizedUserOcto).then(() => {
+            repoSearchRequest().then((result) => {
+              props.setBrowsing(true);
+              setStateLoaded(result);
+            });
+          });
+        } else {
+          setStateLoaded(result);
+        }
       })
       .catch((err) => {
         window.alert(
@@ -483,6 +528,7 @@ const ShowProjects = (props) => {
           projectsLoaded={projectsLoaded}
           setSearchBarValue={setSearchBarValue}
           searchBarValue={searchBarValue}
+          setExportPopUp={setExportPopUp}
           user={props.user}
           userBrowsing={props.userBrowsing}
           setBrowsing={props.setBrowsing}
@@ -500,6 +546,7 @@ const ClassicBrowse = (props) => {
   let projectsLoaded = props.projectsLoaded;
   let searchBarValue = props.searchBarValue;
   let setSearchBarValue = props.setSearchBarValue;
+  let setExportPopUp = props.setExportPopUp;
 
   if (projectsLoaded.length > 0) {
     var userRepos = [];
@@ -660,6 +707,8 @@ function LoginMode(props) {
         setBrowsing={setBrowsing}
         isloggedIn={props.isloggedIn}
         tryLogin={props.tryLogin}
+        exportPopUp={exportPopUp}
+        setExportPopUp={setExportPopUp}
       />
     );
   } else {
@@ -680,7 +729,12 @@ function LoginMode(props) {
         {" "}
         {GlobalVariables.currentRepo ? (
           <Link to={`/${GlobalVariables.currentRepo.id}`}>
-            <button className="closeButton">
+            <button
+              className="closeButton"
+              onClick={() => {
+                setExportPopUp(false);
+              }}
+            >
               <img></img>
             </button>
           </Link>

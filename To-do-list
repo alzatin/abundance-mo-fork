@@ -22,8 +22,8 @@ now:
 
     - model some things :S [deckle box, stool] > need to start creating new actions with gitmolecules otherwise it's very hard to model anything.
     
-    - Cut layout should separate by height
-    - Bug : LEVA input error ? - seems like its wire 
+    - Cut layout should separate by height (t)
+    - Bug : LEVA input error ? - seems like its render store
     
 mid :
     - our own filtering?
@@ -32,21 +32,13 @@ mid :
     - replicad packing? 
     - fix shortcut button
     - github search needs css help
-    - tag drop downs for extract tag
     - github topic filter search
     - REDO login/browse to use link/reroute
     - allow filtering of projects
-    - nest
-    - implement three/drei wireframe?
     - GET request sometimes failing at browsing for projects
     - Face lift for project browse and new project (later)
-    - Check on accuracy of draw projection in SVG
-    - add missing icons BOM,etc, change maslow icon
     - goUp molecule still not working correctly
     - some places still have JSCAD code // clean up
-    - BOM summary when molecule is active , button to download
-    - Fix gitmolecule search bar max quota issue
-    - Top molecule - choose units of measurement 
       - maybe in run mode, inputs should have ranges instead of open numbers
 
 future:

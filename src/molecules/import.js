@@ -53,7 +53,6 @@ export default class Import extends Atom {
      */
     this.sha = null;
 
-    this.SVGdepth = 10;
     this.SVGwidth = 10;
 
     this.addIO("output", "geometry", this, "geometry", "");
@@ -101,38 +100,33 @@ export default class Import extends Atom {
    */
   updateValue() {
     super.updateValue();
-
+    this.processing = true;
     try {
-      this.processing = true;
-      if (this.file != null) {
-        // this.processing = true;
-        let file = this.file;
-        let fileType = this.type;
-
-        let funcToCall =
-          fileType == "STL"
-            ? GlobalVariables.cad.importingSTL
-            : fileType == "SVG"
-            ? GlobalVariables.cad.importingSVG
-            : fileType == "STEP"
-            ? GlobalVariables.cad.importingSTEP
-            : null;
-
-        if (funcToCall == null) {
-          throw "Invalid file type";
-        }
-
-        funcToCall(this.uniqueID, file, this.SVGdepth, this.SVGwidth).then(
-          (result) => {
-            this.basicThreadValueProcessing();
-            this.sendToRender();
-          }
-        );
-      } else {
+      if (this.fileName != null) {
         this.getAFile().then((result) => {
           this.sha = result.data.sha;
           this.file = this.newBlobFromBase64(result);
-          this.updateValue();
+          // this.processing = true;
+          let file = this.file;
+          let fileType = this.type;
+
+          let funcToCall =
+            fileType == "STL"
+              ? GlobalVariables.cad.importingSTL
+              : fileType == "SVG"
+              ? GlobalVariables.cad.importingSVG
+              : fileType == "STEP"
+              ? GlobalVariables.cad.importingSTEP
+              : null;
+
+          if (funcToCall == null) {
+            throw "Invalid file type";
+          }
+
+          funcToCall(this.uniqueID, file, this.SVGwidth).then((result) => {
+            this.basicThreadValueProcessing();
+            this.sendToRender();
+          });
         });
       }
     } catch (err) {
@@ -200,14 +194,6 @@ export default class Import extends Atom {
             this.updateValue();
           },
         };
-        inputParams["Depth"] = {
-          value: this.SVGdepth, //href to the file
-          label: "Depth",
-          onChange: (value) => {
-            this.SVGdepth = value;
-            this.updateValue();
-          },
-        };
       }
       inputParams["Loaded File"] = {
         value: this.fileName, //href to the file
@@ -241,10 +227,9 @@ export default class Import extends Atom {
    * Update the file, filename and sha of the atom
    */
   updateFile(file, sha) {
-    this.file = file;
     this.fileName = file.name;
     this.sha = sha;
-    this.updateValue(this.type, this.file);
+    this.updateValue();
   }
   /**
    * Add the file name to the object which is saved for this molecule
@@ -256,7 +241,6 @@ export default class Import extends Atom {
     superSerialObject.fileName = this.fileName; // might delete, maybe we just save as library object
     superSerialObject.name = this.name;
     superSerialObject.type = this.type;
-    superSerialObject.SVGdepth = this.SVGdepth;
     superSerialObject.SVGwidth = this.SVGwidth;
 
     return superSerialObject;

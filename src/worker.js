@@ -14,7 +14,7 @@ import {
 } from "replicad";
 import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
-import { addSVG } from "replicad-decorate";
+import { addSVG, drawSVG } from "replicad-decorate";
 import Fonts from "./js/fonts.js";
 
 var library = {};
@@ -456,7 +456,11 @@ function visExport(targetID, inputID, fileType) {
     let finalGeometry;
     if (fileType == "SVG") {
       /** Fuses input geometry, draws a top view projection*/
-      finalGeometry = [drawProjection(fusedGeometry, "top").visible];
+      if (is3D(library[inputID])) {
+        finalGeometry = [drawProjection(fusedGeometry, "top").visible];
+      } else {
+        finalGeometry = [fusedGeometry];
+      }
     } else {
       finalGeometry = [fusedGeometry];
     }
@@ -512,26 +516,27 @@ async function importingSTL(targetID, file) {
   return true;
 }
 
-async function importingSVG(targetID, file, depth, width) {
+async function importingSVG(targetID, svg, width) {
   const baseWidth = width + width * 0.05;
   const baseShape = drawRectangle(baseWidth, baseWidth)
     .sketchOnPlane()
     .extrude(1);
-  const svgString = file;
+  const svgString = svg;
+
+  /* Add svg to face, consider bringing back if we are ever able to choose faces or want to add pattern to face
   addSVG(baseShape, {
     faceIndex: 5,
     depth: depth,
     svgString: svgString,
     width: width,
-  }).then((shape) => {
-    library[targetID] = {
-      geometry: [shape],
-      tags: [],
-      color: "#FF9065",
-      bom: [],
-    };
-    return true;
-  });
+  })*/
+  library[targetID] = {
+    geometry: [drawSVG(svgString, { width: width })],
+    tags: [],
+    color: "#FF9065",
+    bom: [],
+  };
+  return true;
 }
 
 const prettyProjection = (shape) => {

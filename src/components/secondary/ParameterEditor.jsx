@@ -15,10 +15,12 @@ export default (function ParamsEditor({
   compiledBom,
 }) {
   let inputParams = {};
+  let exportParams = {};
 
   const store1 = useCreateStore();
   const store2 = useCreateStore();
   const store3 = useCreateStore();
+  const store4 = useCreateStore();
 
   /*Work around Leva collapse issue */
   /**https://github.com/pmndrs/leva/issues/456#issuecomment-1537510948 */
@@ -33,6 +35,9 @@ export default (function ParamsEditor({
   if (activeAtom !== null) {
     /** Creates Leva inputs inside each atom */
     inputParams = activeAtom.createLevaInputs();
+    if (run) {
+      exportParams = activeAtom.createLevaExport();
+    }
   }
 
   if (activeAtom.atomType == "Molecule") {
@@ -43,6 +48,9 @@ export default (function ParamsEditor({
   const bomParamsConfig = useMemo(() => {
     return { ...compiledBom };
   }, [compiledBom]);
+  const exportParamsConfig = useMemo(() => {
+    return { ...exportParams };
+  }, [exportParams]);
   const inputParamsConfig = useMemo(() => {
     return { ...inputParams };
   }, [inputParams]);
@@ -62,6 +70,7 @@ export default (function ParamsEditor({
     [activeAtom]
   );
 
+  useControls(() => exportParamsConfig, { store: store4 }, [activeAtom]);
   useControls(() => bomParamsConfig, { store: store3 }, [activeAtom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
 
@@ -90,9 +99,9 @@ export default (function ParamsEditor({
           setWire(value);
         },
       },
-      solid: {
-        value: true,
-        label: "Solid",
+      wireframe: {
+        value: false,
+        label: "Wireframe",
         onChange: (value) => {
           setSolid(value);
         },
@@ -107,6 +116,24 @@ export default (function ParamsEditor({
     },
     [activeAtom]
   );
+  // color theme for Leva
+  const abundanceTheme = {
+    colors: {
+      elevation1: "#3F4243",
+      elevation2: "var(--bg-color)",
+      elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
+
+      highlight1: "#C4A3D5",
+      highlight2: "#ededed",
+      highlight3: "#ededed",
+
+      accent1: "#C4A3D5",
+      accent2: "#88748F", //apply button
+      accent3: "#88748F",
+
+      vivid1: "red",
+    },
+  };
 
   return (
     <>
@@ -127,23 +154,7 @@ export default (function ParamsEditor({
             title: activeAtom.name || globalvariables.currentRepo.name,
             drag: false,
           }}
-          theme={{
-            colors: {
-              elevation1: "#3F4243",
-              elevation2: "var(--bg-color)",
-              elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
-
-              highlight1: "#C4A3D5",
-              highlight2: "#ededed",
-              highlight3: "#ededed",
-
-              accent1: "#C4A3D5",
-              accent2: "#88748F", //apply button
-              accent3: "#88748F",
-
-              vivid1: "red",
-            },
-          }}
+          theme={abundanceTheme}
         />
       </div>
       <div className={run ? "gridEditorDivRun" : "gridEditorDiv"}>
@@ -157,23 +168,7 @@ export default (function ParamsEditor({
             title: "Render Settings",
             drag: false,
           }}
-          theme={{
-            colors: {
-              elevation1: "#3F4243",
-              elevation2: "var(--bg-color)",
-              elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
-
-              highlight1: "#C4A3D5",
-              highlight2: "#ededed",
-              highlight3: "#ededed",
-
-              accent1: "#C4A3D5",
-              accent2: "#88748F", //apply button
-              accent3: "#88748F",
-
-              vivid1: "red",
-            },
-          }}
+          theme={abundanceTheme}
         />
       </div>
       {activeAtom.atomType == "Molecule" ? (
@@ -188,23 +183,23 @@ export default (function ParamsEditor({
               title: "Bill of Materials",
               drag: false,
             }}
-            theme={{
-              colors: {
-                elevation1: "#3F4243",
-                elevation2: "var(--bg-color)",
-                elevation3: "#C4A3D5", // bg color of the root panel (main title bar)
-
-                highlight1: "#C4A3D5",
-                highlight2: "#ededed",
-                highlight3: "#ededed",
-
-                accent1: "#C4A3D5",
-                accent2: "#88748F", //apply button
-                accent3: "#88748F",
-
-                vivid1: "red",
-              },
+            theme={abundanceTheme}
+          />
+        </div>
+      ) : null}
+      {run ? (
+        <div className={"exportEditorDivRun"}>
+          <LevaPanel
+            store={store4}
+            fill
+            hidden={false}
+            collapsed={true}
+            hideCopyButton
+            titleBar={{
+              title: "Export Parts",
+              drag: false,
             }}
+            theme={abundanceTheme}
           />
         </div>
       ) : null}
