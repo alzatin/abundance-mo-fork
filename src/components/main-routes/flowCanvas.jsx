@@ -268,8 +268,8 @@ export default memo(function FlowCanvas(props) {
           style={{
             position: "absolute",
             zIndex: "5",
-            top: "1%",
-            right: "55px",
+            top: "2px",
+            left: "55px",
             color: "rgb(255 255 255 / 34%)",
           }}
         >

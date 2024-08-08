@@ -23,7 +23,7 @@ body {
 #headerBar {
   position: absolute;
   top: 15px;
-  right: 15px;
+  left: 15px;
   z-index: 1000;
 }
 
@@ -63,8 +63,8 @@ body {
 }
 
 .thumnail-logo {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   display: inline;
   padding: 1px;
 }
@@ -98,6 +98,8 @@ body {
   top: 44%;
   right: 0%;
   transform: translate(-20%, -60%);
+  background-color: #ffffffd7;
+  border: none;
 }
 .shortcut-button:hover + #shortcutDiv {
   visibility: visible;
@@ -757,7 +759,7 @@ Sidebar navigation
 ========================*/
 .toggle {
   position: fixed;
-  left: 40px;
+  right: 10px;
   top: 0;
   cursor: pointer;
   border: none;
@@ -767,10 +769,10 @@ Sidebar navigation
   transform: rotate(90deg);
 }
 .rotati-right {
-  transform: translate(-30px);
+  transform: translate(0px);
 }
 .rotati-plus {
-  transform: translate(-30px) rotate(90deg);
+  transform: translate(0px) rotate(90deg);
 }
 .menu-nav-button {
   background-color: transparent;
@@ -779,14 +781,14 @@ Sidebar navigation
 }
 .menu-nav {
   position: absolute;
-  left: 70px;
-  top: -20px;
+  right: 80px;
+  top: -15px;
   list-style: none;
   width: 0;
   overflow: hidden;
-  max-width: 500px;
+  max-width: 415px;
   z-index: 9;
-  transform: translateX(-160px);
+  transform: translateX(150px);
   transition: transform ease-in-out 0.1s;
   /* transition: width ease 0.2s; */
 }
@@ -804,10 +806,9 @@ Sidebar navigation
 
 .go-up-button {
   position: fixed;
-  left: 5px;
+  right: 45px;
   top: 0;
   cursor: pointer;
-  border: none;
 }
 
 /* The toggle switch between run and create */
