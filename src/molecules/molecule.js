@@ -207,8 +207,19 @@ export default class Molecule extends Atom {
     }
     inputParams["Test api"] = button(() => {
       const apiUrl =
-        "https://rzvhpou0sa.execute-api.us-east-2.amazonaws.com/test/example?user=mo";
-      fetch(apiUrl)
+        "https://rzvhpou0sa.execute-api.us-east-2.amazonaws.com/test//store-data";
+      fetch(apiUrl, {
+        method: "POST",
+        body: JSON.stringify({
+          id: "mo",
+          owner: 6,
+          stars: 30,
+          forks: 0,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
         .then((response) => {
           return response.json();
         })

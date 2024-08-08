@@ -102,6 +102,7 @@ const NewProjectPopUp = (props) => {
         setPending(false);
       })
       .then((result) => {
+        console.log(result);
         setNewProjectBar(10);
         //Once we have created the new repo we need to create a file within it to store the project in
         currentRepoName = result.data.name;
