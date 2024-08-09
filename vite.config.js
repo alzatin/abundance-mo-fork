@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [reactPlugin()],
   base: "/Abundance/",
   build: {
-    outDir: "build",
+    outDir: "dist",
   },
   server: {
     port: 4444,
