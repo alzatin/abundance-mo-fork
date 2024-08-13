@@ -439,11 +439,12 @@ const ShowProjects = (props) => {
     };
     const repoSearchRequest = async () => {
       let repoCount = 0;
+
       const repos = await octokit.paginate(
         "GET /search/repositories",
         {
-          q: query,
-          per_page: 50,
+          q: " topic:abundance-project" + " fork:true",
+          per_page: 20,
         },
         (response, done) => {
           repoCount += response.data.length;
@@ -453,10 +454,64 @@ const ShowProjects = (props) => {
           return response;
         }
       );
+      /*const scanApiUrl =
+        "https://biyzycram3.execute-api.us-east-2.amazonaws.com/Abundance-test//scan-table?attribute=repoName&query=circle";
+
+      let repos = await fetch(scanApiUrl);
+      return repos.json();
+*/
+      //populateAWS(repos[0].data); // can only handle 20 items at a time
+
       return repos;
     };
+    const populateAWS = async (repos) => {
+      console.log(repos);
+      let repoArray = [];
+
+      // getReadMeContent
+      //let readMeContent
+
+      repos.forEach((result) => {
+        repoArray.push({
+          owner: result.owner.login,
+          repoName: result.name,
+          ranking: result.stargazers_count,
+          forks: result.forks_count,
+          topMoleculeID: result.id,
+          topics: result.topics,
+          readme:
+            "https://raw.githubusercontent.com/" +
+            result.full_name +
+            "/master/README.md?sanitize=true",
+          contentURL:
+            "https://raw.githubusercontent.com/" +
+            result.full_name +
+            "/master/project.abundance?sanitize=true",
+          githubMoleculesUsed: [],
+          svgURL:
+            "https://raw.githubusercontent.com/" +
+            result.full_name +
+            "/master/project.svg?sanitize=true",
+          dateCreated: result.created_at,
+        });
+      });
+      const apiUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//populate-table";
+      console.log(repoArray.length);
+      fetch(apiUrl, {
+        method: "POST",
+        body: JSON.stringify({ repos: repoArray }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).then((response) => {
+        console.log(response);
+      });
+    };
+
     repoSearchRequest()
       .then((result) => {
+        console.log(result);
         if (result[0].data.total_count == 0 && props.user !== "") {
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
