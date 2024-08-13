@@ -440,11 +440,11 @@ const ShowProjects = (props) => {
     const repoSearchRequest = async () => {
       let repoCount = 0;
 
-      const repos = await octokit.paginate(
+      /*const repos = await octokit.paginate(
         "GET /search/repositories",
         {
-          q: " topic:abundance-project" + " fork:true",
-          per_page: 20,
+          q: query,
+          per_page: 50,
         },
         (response, done) => {
           repoCount += response.data.length;
@@ -453,17 +453,19 @@ const ShowProjects = (props) => {
           }
           return response;
         }
-      );
-      /*const scanApiUrl =
-        "https://biyzycram3.execute-api.us-east-2.amazonaws.com/Abundance-test//scan-table?attribute=repoName&query=circle";
+      );*/
+      const scanApiUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?attribute=repoName&query=aws_2";
 
-      let repos = await fetch(scanApiUrl);
-      return repos.json();
-*/
+      let awsRepos = await fetch(scanApiUrl);
+      console.log(awsRepos.json());
+      //return repos.json();
+
       //populateAWS(repos[0].data); // can only handle 20 items at a time
 
-      return repos;
+      //return repos;
     };
+    /*initialize the AWS database with the projects from the search- don't need anymore but will leave for ref*/
     const populateAWS = async (repos) => {
       console.log(repos);
       let repoArray = [];
@@ -511,7 +513,6 @@ const ShowProjects = (props) => {
 
     repoSearchRequest()
       .then((result) => {
-        console.log(result);
         if (result[0].data.total_count == 0 && props.user !== "") {
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {

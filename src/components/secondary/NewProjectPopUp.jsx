@@ -148,13 +148,9 @@ const NewProjectPopUp = (props) => {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
-        })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        }).then((response) => {
+          console.log(response);
+        });
 
         //Create the project file
 
