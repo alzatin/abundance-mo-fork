@@ -151,7 +151,7 @@ export default (function ParamsEditor({
           hideCopyButton
           fill
           titleBar={{
-            title: activeAtom.name || globalvariables.currentRepo.name,
+            title: activeAtom.name || globalvariables.currentRepo.repoName,
             drag: false,
           }}
           theme={abundanceTheme}

@@ -141,7 +141,7 @@ function RunNavigation(props) {
     // check if the current user has starred the project
     if (authorizedUserOcto) {
       var owner = GlobalVariables.currentRepo.owner.login;
-      var repoName = GlobalVariables.currentRepo.name;
+      var repoName = GlobalVariables.currentRepo.repoName;
 
       authorizedUserOcto.rest.activity
         .checkRepoIsStarredByAuthenticatedUser({
@@ -171,7 +171,7 @@ function RunNavigation(props) {
     //Find out the information of who owns the project we are trying to like
 
     var owner = GlobalVariables.currentRepo.owner.login;
-    var repoName = GlobalVariables.currentRepo.name;
+    var repoName = GlobalVariables.currentRepo.repoName;
 
     if (!starred) {
       authorizedUserOcto.rest.activity
@@ -201,7 +201,7 @@ function RunNavigation(props) {
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function (authorizedUserOcto) {
     var owner = GlobalVariables.currentRepo.owner.login;
-    var repo = GlobalVariables.currentRepo.name;
+    var repo = GlobalVariables.currentRepo.repoName;
     // if authenticated and it is not your project, make a clone of the project and return to create mode
     authorizedUserOcto
       .request("GET /repos/{owner}/{repo}", {
@@ -227,7 +227,7 @@ function RunNavigation(props) {
 
                 authorizedUserOcto.rest.repos.replaceAllTopics({
                   owner: activeUser,
-                  repo: GlobalVariables.currentRepo.name,
+                  repo: GlobalVariables.currentRepo.repoName,
                   names: ["abundance-project"],
                 });
                 navigate(`/${GlobalVariables.currentRepo.id}`),

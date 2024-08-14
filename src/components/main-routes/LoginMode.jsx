@@ -429,7 +429,7 @@ const ShowProjects = (props) => {
 
                   authorizedUserOcto.rest.repos.replaceAllTopics({
                     owner: activeUser,
-                    repo: GlobalVariables.currentRepo.name,
+                    repo: GlobalVariables.currentRepo.repoName,
                     names: ["abundance-project"],
                   });
                 });

@@ -270,7 +270,7 @@ export default class Molecule extends Atom {
   async reloadFork() {
     const octokit = new Octokit();
     var owner = GlobalVariables.currentRepo.owner.login;
-    var repo = GlobalVariables.currentRepo.name;
+    var repo = GlobalVariables.currentRepo.repoName;
     octokit
       .request("GET /repos/{owner}/{repo}", {
         owner: owner,
