@@ -84,11 +84,11 @@ const AddProject = (props) => {
   let searchBarValue = props.searchBarValue;
   let nodes = props.nodes;
   //filter nodes by search bar value
-  if (searchBarValue != "") {
+  /* if (searchBarValue != "") {
     nodes = nodes.filter((node) => {
       return node.name.toLowerCase().includes(searchBarValue.toLowerCase());
     });
-  }
+  }*/
 
   return (
     <>
@@ -391,7 +391,7 @@ const ShowProjects = (props) => {
   useEffect(() => {
     octokit = new Octokit();
     var query;
-    if (props.user == "" || props.userBrowsing) {
+    /*if (props.user == "" || props.userBrowsing) {
       query = searchBarValue + " topic:abundance-project" + " fork:true";
     } else {
       query =
@@ -400,7 +400,7 @@ const ShowProjects = (props) => {
         props.user +
         " topic:abundance-project" +
         " fork:true";
-    }
+    }*/
     const forkDummyProject = async function (authorizedUserOcto) {
       var owner = "alzatin";
       var repo = "My-first-Abundance-project";
@@ -452,8 +452,21 @@ const ShowProjects = (props) => {
           return response;
         }
       );*/
+      let searchQuery;
+      if (searchBarValue != "") {
+        searchQuery = "&query=" + searchBarValue;
+      } else {
+        searchQuery = "&query";
+      }
+      if (props.user == "" || props.userBrowsing) {
+        query = "attribute=repoName" + searchQuery + searchBarValue + "&user";
+      } else {
+        query = "attribute=repoName" + searchQuery + "&user=" + props.user;
+      }
+      console.log(query);
       const scanApiUrl =
-        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?attribute&query";
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
+        query;
 
       let awsRepos = await fetch(scanApiUrl);
       return awsRepos.json();
