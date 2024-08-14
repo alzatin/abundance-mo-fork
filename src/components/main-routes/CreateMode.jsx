@@ -302,7 +302,7 @@ function CreateMode(props) {
       authorizedUserOcto,
       {
         owner: GlobalVariables.currentUser,
-        repo: GlobalVariables.currentRepo.name,
+        repo: GlobalVariables.currentRepo.repoName,
         changes: {
           files: filesObject,
           commit: "Autosave",

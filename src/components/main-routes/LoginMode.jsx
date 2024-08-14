@@ -437,21 +437,6 @@ const ShowProjects = (props) => {
         });
     };
     const repoSearchRequest = async () => {
-      let repoCount = 0;
-      /*const repos = await octokit.paginate(
-        "GET /search/repositories",
-        {
-          q: query,
-          per_page: 50,
-        },
-        (response, done) => {
-          repoCount += response.data.length;
-          if (repoCount >= 250) {
-            done();
-          }
-          return response;
-        }
-      );*/
       let searchQuery;
       if (searchBarValue != "") {
         searchQuery = "&query=" + searchBarValue;
@@ -459,7 +444,7 @@ const ShowProjects = (props) => {
         searchQuery = "&query";
       }
       if (props.user == "" || props.userBrowsing) {
-        query = "attribute=repoName" + searchQuery + searchBarValue + "&user";
+        query = "attribute=repoName" + searchQuery + "&user";
       } else {
         query = "attribute=repoName" + searchQuery + "&user=" + props.user;
       }
@@ -474,8 +459,21 @@ const ShowProjects = (props) => {
       //populateAWS(repos[0].data); // can only handle 20 items at a time
     };
     /*initialize the AWS database with the projects from the search- don't need anymore but will leave for ref*/
-    const populateAWS = async (repos) => {
-      console.log(repos);
+    const populateAWS = async () => {
+      const repos = await octokit.paginate(
+        "GET /search/repositories",
+        {
+          q: query,
+          per_page: 50,
+        },
+        (response, done) => {
+          repoCount += response.data.length;
+          if (repoCount >= 250) {
+            done();
+          }
+          return response;
+        }
+      );
       let repoArray = [];
 
       // getReadMeContent
