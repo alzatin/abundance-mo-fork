@@ -34,11 +34,11 @@ export default memo(function FlowCanvas(props) {
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
     GlobalVariables.c = canvasRef.current.getContext("2d");
-
     /** Only run loadproject() if the project is different from what is already loaded  */
     if (
       !GlobalVariables.loadedRepo ||
-      GlobalVariables.currentRepo.name !== GlobalVariables.loadedRepo.name
+      GlobalVariables.currentRepo.repoName !==
+        GlobalVariables.loadedRepo.repoName
     ) {
       //Load a blank project
       GlobalVariables.topLevelMolecule = new Molecule({
@@ -273,7 +273,7 @@ export default memo(function FlowCanvas(props) {
             color: "rgb(255 255 255 / 34%)",
           }}
         >
-          {GlobalVariables.currentRepo.name}
+          {GlobalVariables.currentRepo.repoName}
         </p>
       </div>
       <div>

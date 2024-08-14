@@ -411,6 +411,8 @@ function CreateMode(props) {
               setSaveState: setSaveState,
               setTop: setTop,
               shortCuts: shortCuts,
+              currentRepo: props.currentRepo,
+              setCurrentRepo: props.setCurrentRepo,
             }}
             displayProps={{
               setMesh: setMesh,

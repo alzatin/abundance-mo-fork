@@ -73,10 +73,16 @@ function runMode(props) {
     var octokit = new Octokit();
     octokit.request("GET /repositories/:id", { id }).then((result) => {
       globalvariables.currentRepo = result.data;
+      /*temp variables while we change to aws*/
+      globalvariables.currentRepo.repoName = globalvariables.currentRepo.name;
+      globalvariables.currentRepo.owner =
+        globalvariables.currentRepo.owner.login;
+      //make an aws call to get the project data before loading the project?
       /** Only run loadproject() if the project is different from what is already loaded  */
       if (
         !GlobalVariables.loadedRepo ||
-        globalvariables.currentRepo.name !== GlobalVariables.loadedRepo.name
+        globalvariables.currentRepo.repoName !==
+          GlobalVariables.loadedRepo.repoName
       ) {
         //Load a blank project
         GlobalVariables.topLevelMolecule = new Molecule({
@@ -129,8 +135,8 @@ function runMode(props) {
       />
       {globalvariables.currentRepo ? (
         <div className="info_run_div">
-          <p>{"Project Name: " + globalvariables.currentRepo.name}</p>
-          <p>{"Repo Owner: " + globalvariables.currentRepo.owner.login}</p>
+          <p>{"Project Name: " + globalvariables.currentRepo.repoName}</p>
+          <p>{"Repo Owner: " + globalvariables.currentRepo.owner}</p>
         </div>
       ) : null}
       <div className="runContainer">

@@ -78,11 +78,11 @@ const InitialLog = (props) => {
 
 // adds individual projects after API call
 const AddProject = (props) => {
+  const authorizedUserOcto = props.authorizedUserOcto;
   const [browseType, setBrowseType] = useState("thumb");
   const [orderType, setOrderType] = useState("byDateCreated");
   let searchBarValue = props.searchBarValue;
   let nodes = props.nodes;
-
   //filter nodes by search bar value
   if (searchBarValue != "") {
     nodes = nodes.filter((node) => {
@@ -160,6 +160,7 @@ const AddProject = (props) => {
       {nodes.length > 0 ? (
         <ProjectDiv
           browseType={browseType}
+          authorizedUserOcto={authorizedUserOcto}
           nodes={nodes}
           orderType={orderType}
         />
@@ -180,12 +181,12 @@ const ProjectDiv = (props) => {
       <div
         className="project"
         style={
-          node.owner.login != GlobalVariables.currentUser
+          node.owner != GlobalVariables.currentUser
             ? { backgroundColor: "rgb(233 221 242 / 58%)" }
             : null
         }
-        key={node.id + node.owner.login}
-        id={node.name}
+        key={node.topMoleculeID + node.owner}
+        id={node.repoName}
         onClick={() => {
           GlobalVariables.currentRepo = node;
         }}
@@ -212,20 +213,20 @@ const ProjectDiv = (props) => {
             width: "80%",
           }}
         >
-          {node.name}
+          {node.repoName}
         </p>
         <img
           className="project_image"
           src={
             "https://raw.githubusercontent.com/" +
-            node.full_name +
+            node.repoName +
             "/master/project.svg?sanitize=true"
           }
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
             currentTarget.src = "/imgs/defaultThumbnail.svg";
           }}
-          alt={node.name}
+          alt={node.repoName}
         ></img>
         <div style={{ display: "inline" }}>
           <svg
@@ -236,9 +237,7 @@ const ProjectDiv = (props) => {
           >
             <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
           </svg>
-          <p style={{ fontSize: ".7em", display: "inline" }}>
-            {node.stargazers_count}
-          </p>
+          <p style={{ fontSize: ".7em", display: "inline" }}>{node.ranking}</p>
         </div>
       </div>
     );
@@ -361,11 +360,11 @@ const ProjectDiv = (props) => {
         {browseType == "list" ? <ListItem node={dummyNode} /> : null}
         {nodes.sort(sorters[orderType]).map((node) => (
           <Link
-            key={node.id}
+            key={node.topMoleculeID}
             to={
-              node.owner.login == globalvariables.currentUser
-                ? `/${node.id}`
-                : `/run/${node.id}`
+              node.owner == globalvariables.currentUser
+                ? `/${node.topMoleculeID}`
+                : `/run/${node.topMoleculeID}`
             }
           >
             {browseType == "list" ? (
@@ -439,7 +438,6 @@ const ShowProjects = (props) => {
     };
     const repoSearchRequest = async () => {
       let repoCount = 0;
-
       /*const repos = await octokit.paginate(
         "GET /search/repositories",
         {
@@ -455,15 +453,12 @@ const ShowProjects = (props) => {
         }
       );*/
       const scanApiUrl =
-        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?attribute=repoName&query=aws_2";
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?attribute&query";
 
       let awsRepos = await fetch(scanApiUrl);
-      console.log(awsRepos.json());
-      //return repos.json();
+      return awsRepos.json();
 
       //populateAWS(repos[0].data); // can only handle 20 items at a time
-
-      //return repos;
     };
     /*initialize the AWS database with the projects from the search- don't need anymore but will leave for ref*/
     const populateAWS = async (repos) => {
@@ -499,7 +494,6 @@ const ShowProjects = (props) => {
       });
       const apiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//populate-table";
-      console.log(repoArray.length);
       fetch(apiUrl, {
         method: "POST",
         body: JSON.stringify({ repos: repoArray }),
@@ -513,15 +507,15 @@ const ShowProjects = (props) => {
 
     repoSearchRequest()
       .then((result) => {
-        if (result[0].data.total_count == 0 && props.user !== "") {
+        if (result["repos"].length == 0 && props.user !== "") {
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
               props.setBrowsing(true);
-              setStateLoaded(result);
+              setStateLoaded(result["repos"]);
             });
           });
         } else {
-          setStateLoaded(result);
+          setStateLoaded(result["repos"]);
         }
       })
       .catch((err) => {
@@ -582,6 +576,7 @@ const ShowProjects = (props) => {
       ) : (
         <ClassicBrowse
           projectsLoaded={projectsLoaded}
+          authorizedUserOcto={authorizedUserOcto}
           setSearchBarValue={setSearchBarValue}
           searchBarValue={searchBarValue}
           setExportPopUp={setExportPopUp}
@@ -603,12 +598,14 @@ const ClassicBrowse = (props) => {
   let searchBarValue = props.searchBarValue;
   let setSearchBarValue = props.setSearchBarValue;
   let setExportPopUp = props.setExportPopUp;
+  let authorizedUserOcto = props.authorizedUserOcto;
 
   if (projectsLoaded.length > 0) {
     var userRepos = [];
-    projectsLoaded[pageNumber].data.forEach((repo) => {
-      userRepos.push(repo);
-    });
+    projectsLoaded /*[pageNumber].data.*/
+      .forEach((repo) => {
+        userRepos.push(repo);
+      });
     nodes = [...userRepos];
   }
 
@@ -717,6 +714,7 @@ const ClassicBrowse = (props) => {
       {projectsLoaded.length > 0 ? (
         <AddProject
           searchBarValue={searchBarValue}
+          authorizedUserOcto={authorizedUserOcto}
           user={props.user}
           userBrowsing={props.userBrowsing}
           nodes={nodes}

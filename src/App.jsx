@@ -43,6 +43,7 @@ export default function ReplicadApp() {
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
   const [exportPopUp, setExportPopUp] = useState(false);
+  const [currentRepo, setCurrentRepo] = useState(null);
 
   useEffect(() => {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
@@ -105,6 +106,7 @@ export default function ReplicadApp() {
 
   // Loads project
   const loadProject = function (project) {
+    console.log(project);
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.name;
     GlobalVariables.currentRepo = project;
@@ -116,8 +118,8 @@ export default function ReplicadApp() {
 
     octokit
       .request("GET /repos/{owner}/{repo}/contents/project.abundance", {
-        owner: project.owner.login,
-        repo: project.name,
+        owner: project.owner,
+        repo: project.repoName,
       })
       .then((response) => {
         //content will be base64 encoded
@@ -152,6 +154,8 @@ export default function ReplicadApp() {
                 isloggedIn={isloggedIn}
                 exportPopUp={exportPopUp}
                 setExportPopUp={setExportPopUp}
+                currentRepo={currentRepo}
+                setCurrentRepo={setCurrentRepo}
               />
             }
           />
@@ -167,6 +171,8 @@ export default function ReplicadApp() {
                   loadProject: loadProject,
                   exportPopUp: exportPopUp,
                   setExportPopUp: setExportPopUp,
+                  currentRepo: currentRepo,
+                  setCurrentRepo: setCurrentRepo,
                 }}
                 displayProps={{
                   mesh: mesh,
@@ -192,6 +198,8 @@ export default function ReplicadApp() {
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
                   loadProject: loadProject,
+                  currentRepo: currentRepo,
+                  setCurrentRepo: setCurrentRepo,
                 }}
                 displayProps={{
                   mesh: mesh,
