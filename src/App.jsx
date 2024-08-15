@@ -43,7 +43,6 @@ export default function ReplicadApp() {
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
   const [exportPopUp, setExportPopUp] = useState(false);
-  const [currentRepo, setCurrentRepo] = useState(null);
 
   useEffect(() => {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
@@ -154,8 +153,6 @@ export default function ReplicadApp() {
                 isloggedIn={isloggedIn}
                 exportPopUp={exportPopUp}
                 setExportPopUp={setExportPopUp}
-                currentRepo={currentRepo}
-                setCurrentRepo={setCurrentRepo}
               />
             }
           />
@@ -171,8 +168,6 @@ export default function ReplicadApp() {
                   loadProject: loadProject,
                   exportPopUp: exportPopUp,
                   setExportPopUp: setExportPopUp,
-                  currentRepo: currentRepo,
-                  setCurrentRepo: setCurrentRepo,
                 }}
                 displayProps={{
                   mesh: mesh,
@@ -198,8 +193,6 @@ export default function ReplicadApp() {
                   authorizedUserOcto: authorizedUserOcto,
                   tryLogin: tryLogin,
                   loadProject: loadProject,
-                  currentRepo: currentRepo,
-                  setCurrentRepo: setCurrentRepo,
                 }}
                 displayProps={{
                   mesh: mesh,
