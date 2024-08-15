@@ -176,7 +176,7 @@ function CreateMode(props) {
                       parents: [latestCommitSha],
                     })
                     .then((response) => {
-                      setState(80);
+                      setState(70);
                       latestCommitSha = response.data.sha;
 
                       octokit.rest.git
@@ -188,9 +188,27 @@ function CreateMode(props) {
                           force: true,
                         })
                         .then((response) => {
-                          setState(90);
-                          console.warn("Project saved");
-                          setState(100);
+                          setState(80);
+
+                          /*aws dynamo update-item lambda*/
+                          const apiUpdateUrl =
+                            "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
+                          fetch(apiUpdateUrl, {
+                            method: "POST",
+                            body: JSON.stringify({
+                              owner: owner,
+                              repoName: repo,
+                            }),
+                            headers: {
+                              "Content-type": "application/json; charset=UTF-8",
+                            },
+                          }).then((response) => {
+                            console.log(response);
+                            console.warn(
+                              "Project saved on git and aws updated"
+                            );
+                            setState(100);
+                          });
                         });
                     });
                 });

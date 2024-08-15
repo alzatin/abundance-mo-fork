@@ -243,7 +243,6 @@ const ProjectDiv = (props) => {
     );
   };
   const ListItem = (node) => {
-    console.log(node);
     return (
       <div
         className="project_list"
@@ -262,7 +261,7 @@ const ProjectDiv = (props) => {
             width: "80%",
           }}
         >
-          {node.node.name}
+          {node.node.repoName}
         </p>
 
         <p
@@ -274,7 +273,7 @@ const ProjectDiv = (props) => {
             width: "50%",
           }}
         >
-          {node.node.owner.login}
+          {node.node.owner}
         </p>
         <h2 style={{ width: "20%", display: "block" }}>
           {" "}
@@ -291,7 +290,7 @@ const ProjectDiv = (props) => {
             width: "70%",
           }}
         >
-          {node.node.forks_count}
+          {node.node.forks}
         </p>
 
         <p
@@ -303,11 +302,11 @@ const ProjectDiv = (props) => {
             width: "80%",
           }}
         >
-          {node.node.created_at}
+          {node.node.dateCreated}
         </p>
 
         <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>
-          <p style={{ fontSize: "1em" }}>{node.node.stargazers_count}</p>
+          <p style={{ fontSize: "1em" }}>{node.node.ranking}</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             style={{ transform: "scale(1)" }}
@@ -323,35 +322,31 @@ const ProjectDiv = (props) => {
 
   var sorters = {
     byName: function (a, b) {
-      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+      return a.repoName < b.repoName ? -1 : a.repoName > b.repoName ? 1 : 0;
     },
     byForks: function (a, b) {
-      return b.forks_count - a.forks_count;
+      return b.forks - a.forks;
     },
     byStars: function (a, b) {
-      return b.stargazers_count - a.stargazers_count;
+      return b.ranking - a.ranking;
     },
     byOwnerName: function (a, b) {
-      return a.owner.login < b.owner.login
-        ? -1
-        : a.owner.login > b.owner.login
-        ? 1
-        : 0;
+      return a.owner < b.owner ? -1 : a.owner > b.owner ? 1 : 0;
     },
     byDateCreated: function (a, b) {
-      return new Date(a.created_at) > new Date(b.created_at)
+      return new Date(a.dateCreated) > new Date(b.dateCreated)
         ? -1
-        : new Date(a.created_at) < new Date(b.created_at)
+        : new Date(a.dateCreated) < new Date(b.dateCreated)
         ? 1
         : 0;
     },
   };
   const dummyNode = {
-    forks_count: "Forks",
-    stargazers_count: "#",
-    created_at: "Date Created",
-    owner: { login: "Creator" },
-    name: "Name",
+    forks: "Forks",
+    ranking: "#",
+    dateCreated: "Date Created",
+    owner: "Creator",
+    repoName: "Name",
   };
 
   return (
