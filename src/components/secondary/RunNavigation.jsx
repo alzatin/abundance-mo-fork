@@ -170,10 +170,32 @@ function RunNavigation(props) {
   const starProject = function (authorizedUserOcto) {
     //Find out the information of who owns the project we are trying to like
 
-    var owner = GlobalVariables.currentRepo.owner.login;
+    //two things need to happen when you like a project. One is to add to the count of likes on the
+    //project-abundance table and the second is to add the project to the user table (to come) as a liked project.
+    // When run mode is first initialized, if user is logged in, check if project is already in their liked projects
+    // and if it is, change the color of the star button to gray.
+
+    var owner = GlobalVariables.currentRepo.owner;
     var repoName = GlobalVariables.currentRepo.repoName;
 
-    if (!starred) {
+    /*aws dynamo update-item lambda*/
+    const apiUpdateUrl =
+      "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
+    fetch(apiUpdateUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        owner: owner,
+        repoName: repoName,
+        attributeUpdates: { ranking: 1, topics: ["testing_Aws"] },
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+
+    /*if (!starred) {
       authorizedUserOcto.rest.activity
         .starRepoForAuthenticatedUser({
           owner: owner,
@@ -195,7 +217,7 @@ function RunNavigation(props) {
           setStarred(false);
           console.log("unstarred");
         });
-    }
+    }*/
   };
 
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
