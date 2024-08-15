@@ -69,7 +69,7 @@ const NewProjectPopUp = (props) => {
     molecule,
     exporting
   ) => {
-    topics.push("abundance-project");
+    //topics.push("abundance-project");
     // If there is a molecule and we are exporting replace current top molecule
     if (molecule !== undefined && exporting) {
       GlobalVariables.topLevelMolecule = molecule;

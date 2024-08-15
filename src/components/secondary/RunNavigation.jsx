@@ -200,7 +200,7 @@ function RunNavigation(props) {
 
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function (authorizedUserOcto) {
-    var owner = GlobalVariables.currentRepo.owner.login;
+    var owner = GlobalVariables.currentRepo.owner;
     var repo = GlobalVariables.currentRepo.repoName;
     // if authenticated and it is not your project, make a clone of the project and return to create mode
     authorizedUserOcto
@@ -215,24 +215,46 @@ function RunNavigation(props) {
             repo: repo,
           })
           .then(() => {
-            var activeUser = GlobalVariables.currentUser;
-            // return to create mode
-            authorizedUserOcto
-              .request("GET /repos/{owner}/{repo}", {
-                owner: activeUser,
-                repo: repo,
-              })
-              .then((result) => {
-                GlobalVariables.currentRepo = result.data;
-
-                authorizedUserOcto.rest.repos.replaceAllTopics({
-                  owner: activeUser,
-                  repo: GlobalVariables.currentRepo.repoName,
-                  names: ["abundance-project"],
-                });
-                navigate(`/${GlobalVariables.currentRepo.id}`),
-                  { replace: true };
-              });
+            //push fork to aws
+            /*aws dynamo post*/
+            const apiUrl =
+              "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
+            let forkedNodeBody = {
+              owner: result.data.owner.login,
+              ranking: result.data.stargazers_count,
+              repoName: result.data.name,
+              forks: result.data.forks_count,
+              topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
+              topics: [],
+              readme:
+                "https://raw.githubusercontent.com/" +
+                result.data.full_name +
+                "/master/README.md?sanitize=true",
+              contentURL:
+                "https://raw.githubusercontent.com/" +
+                result.data.full_name +
+                "/master/project.abundance?sanitize=true",
+              githubMoleculesUsed: [],
+              svgURL:
+                "https://raw.githubusercontent.com/" +
+                result.data.full_name +
+                "/master/project.svg?sanitize=true",
+              dateCreated: result.data.created_at,
+            };
+            fetch(apiUrl, {
+              method: "POST",
+              body: JSON.stringify(forkedNodeBody),
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+              },
+            }).then((response) => {
+              console.log(response);
+              GlobalVariables.currentRepo = forkedNodeBody;
+              navigate(
+                `/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
+              ),
+                { replace: true };
+            });
           });
       });
   };
