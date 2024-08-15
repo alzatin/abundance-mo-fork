@@ -220,7 +220,7 @@ function RunNavigation(props) {
             const apiUrl =
               "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
             let forkedNodeBody = {
-              owner: result.data.owner.login,
+              owner: GlobalVariables.currentUser,
               ranking: result.data.stargazers_count,
               repoName: result.data.name,
               forks: result.data.forks_count,
@@ -228,16 +228,22 @@ function RunNavigation(props) {
               topics: [],
               readme:
                 "https://raw.githubusercontent.com/" +
-                result.data.full_name +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
                 "/master/README.md?sanitize=true",
               contentURL:
                 "https://raw.githubusercontent.com/" +
-                result.data.full_name +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
                 "/master/project.abundance?sanitize=true",
               githubMoleculesUsed: [],
               svgURL:
                 "https://raw.githubusercontent.com/" +
-                result.data.full_name +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
                 "/master/project.svg?sanitize=true",
               dateCreated: result.data.created_at,
             };
