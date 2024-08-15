@@ -358,8 +358,8 @@ const ProjectDiv = (props) => {
             key={node.topMoleculeID}
             to={
               node.owner == globalvariables.currentUser
-                ? `/${node.topMoleculeID}`
-                : `/run/${node.topMoleculeID}`
+                ? `/${node.owner}/${node.repoName}`
+                : `/run/${node.owner}/${node.repoName}`
             }
           >
             {browseType == "list" ? (

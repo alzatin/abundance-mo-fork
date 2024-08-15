@@ -475,13 +475,18 @@ function CreateMode(props) {
   } else {
     /** get repository from github by the id in the url */
     console.warn("You are not logged in");
-    const { id } = useParams();
+    const { owner, repoName } = useParams();
     var octokit = new Octokit();
-    octokit.request("GET /repositories/:id", { id }).then((result) => {
-      GlobalVariables.currentRepoName = result.data.name;
-      GlobalVariables.currentRepo = result.data;
-      //auto login - turned off for development
-      /*props.props
+    octokit
+      .request("GET /repos/{owner}/{repo}", {
+        owner: owner,
+        repo: repoName,
+      })
+      .then((result) => {
+        GlobalVariables.currentRepoName = result.data.name;
+        GlobalVariables.currentRepo = result.data;
+        //auto login - turned off for development
+        /*props.props
         .tryLogin()
         .then((result) => {
           navigate(`/${GlobalVariables.currentRepo.id}`);
@@ -489,7 +494,7 @@ function CreateMode(props) {
         .catch((error) => {
           navigate(`/run/${GlobalVariables.currentRepo.id}`);
         });*/
-    });
+      });
 
     //tryLogin();
   }

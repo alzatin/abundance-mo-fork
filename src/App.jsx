@@ -107,7 +107,7 @@ export default function ReplicadApp() {
   const loadProject = function (project) {
     console.log(project);
     GlobalVariables.loadedRepo = project;
-    GlobalVariables.currentRepoName = project.name;
+    GlobalVariables.currentRepoName = project.repoName;
     GlobalVariables.currentRepo = project;
     GlobalVariables.totalAtomCount = 0;
     GlobalVariables.numberOfAtomsToLoad = 0;
@@ -157,7 +157,7 @@ export default function ReplicadApp() {
             }
           />
           <Route
-            path="/:id"
+            path="/:owner/:repoName"
             element={
               <CreateMode
                 props={{
@@ -183,7 +183,7 @@ export default function ReplicadApp() {
             }
           />
           <Route
-            path="/run/:id"
+            path="/run/:owner/:repoName"
             element={
               <RunMode
                 props={{
