@@ -140,10 +140,34 @@ function RunNavigation(props) {
   useEffect(() => {
     // check if the current user has starred the project
     if (authorizedUserOcto) {
-      var owner = GlobalVariables.currentRepo.owner.login;
+      var owner = GlobalVariables.currentRepo.owner;
       var repoName = GlobalVariables.currentRepo.repoName;
 
-      authorizedUserOcto.rest.activity
+      const fetchUserData = async () => {
+        const queryUserApiUrl =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=" +
+          GlobalVariables.currentUser;
+
+        let awsUser = await fetch(queryUserApiUrl);
+        let awsUserJson = await awsUser.json();
+        console.log(awsUserJson);
+        return awsUserJson;
+      };
+
+      fetchUserData().then((awsUserJson) => {
+        console.log(owner + "/" + repoName);
+        const isLiked = awsUserJson[0].likedProjects.some(
+          (project) => project == owner + "/" + repoName
+        );
+
+        if (isLiked) {
+          setStarred(true);
+          document.getElementById("Star-button").style.backgroundColor = "gray";
+        } else {
+          setStarred(false);
+        }
+      });
+      /*authorizedUserOcto.rest.activity
         .checkRepoIsStarredByAuthenticatedUser({
           owner: owner,
           repo: repoName,
@@ -155,7 +179,7 @@ function RunNavigation(props) {
         .catch((error) => {
           setStarred(false);
         });
-
+        */
       // check if the current user owns the project
       if (
         GlobalVariables.currentRepo.owner.login === GlobalVariables.currentUser
@@ -192,7 +216,22 @@ function RunNavigation(props) {
         "Content-type": "application/json; charset=UTF-8",
       },
     }).then((response) => {
-      console.log(response);
+      /*add item to your liked projects on aws*/
+      const apiUpdateUserUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE";
+      fetch(apiUpdateUserUrl, {
+        method: "POST",
+        body: JSON.stringify({
+          user: GlobalVariables.currentUser,
+          attributeUpdates: { likedProjects: [`${owner}/${repoName}`] },
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).then((response) => {
+        setStarred(true);
+        document.getElementById("Star-button").style.backgroundColor = "gray";
+      });
     });
 
     /*if (!starred) {
