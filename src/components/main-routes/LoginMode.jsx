@@ -355,7 +355,7 @@ const ProjectDiv = (props) => {
         {browseType == "list" ? <ListItem node={dummyNode} /> : null}
         {nodes.sort(sorters[orderType]).map((node) => (
           <Link
-            key={node.topMoleculeID}
+            key={node.owner + node.repoName}
             to={
               node.owner == globalvariables.currentUser
                 ? `/${node.owner}/${node.repoName}`
