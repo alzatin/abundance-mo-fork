@@ -21,7 +21,7 @@ function ToggleRunCreate(props) {
             }
             to={
               GlobalVariables.currentRepo
-                ? `/run/${GlobalVariables.currentRepo.id}`
+                ? `/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
                 : "/run"
             }
             onClick={handleChange}

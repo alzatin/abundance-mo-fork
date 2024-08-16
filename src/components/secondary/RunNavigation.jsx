@@ -150,12 +150,11 @@ function RunNavigation(props) {
 
         let awsUser = await fetch(queryUserApiUrl);
         let awsUserJson = await awsUser.json();
-        console.log(awsUserJson);
+
         return awsUserJson;
       };
 
       fetchUserData().then((awsUserJson) => {
-        console.log(owner + "/" + repoName);
         const isLiked = awsUserJson[0].likedProjects.some(
           (project) => project == owner + "/" + repoName
         );
@@ -163,27 +162,12 @@ function RunNavigation(props) {
         if (isLiked) {
           setStarred(true);
           document.getElementById("Star-button").style.backgroundColor = "gray";
+          //should disable instead of just graying out
         } else {
           setStarred(false);
         }
       });
-      /*authorizedUserOcto.rest.activity
-        .checkRepoIsStarredByAuthenticatedUser({
-          owner: owner,
-          repo: repoName,
-        })
-        .then((result) => {
-          setStarred(true);
-          document.getElementById("Star-button").style.backgroundColor = "gray";
-        })
-        .catch((error) => {
-          setStarred(false);
-        });
-        */
-      // check if the current user owns the project
-      if (
-        GlobalVariables.currentRepo.owner.login === GlobalVariables.currentUser
-      ) {
+      if (GlobalVariables.currentRepo.owner === GlobalVariables.currentUser) {
         document.getElementById("Fork-button").style.display = "none";
       }
     }
@@ -191,14 +175,7 @@ function RunNavigation(props) {
   /**
    * Like a project on github by unique ID.
    */
-  const starProject = function (authorizedUserOcto) {
-    //Find out the information of who owns the project we are trying to like
-
-    //two things need to happen when you like a project. One is to add to the count of likes on the
-    //project-abundance table and the second is to add the project to the user table (to come) as a liked project.
-    // When run mode is first initialized, if user is logged in, check if project is already in their liked projects
-    // and if it is, change the color of the star button to gray.
-
+  const likeProject = function () {
     var owner = GlobalVariables.currentRepo.owner;
     var repoName = GlobalVariables.currentRepo.repoName;
 
@@ -327,9 +304,9 @@ function RunNavigation(props) {
   };
 
   /** Runs if star is clicked but there's no logged in user */
-  const loginStar = function () {
+  const loginLike = function () {
     props.tryLogin().then((result) => {
-      starProject(result);
+      likeProject(result);
     });
   };
 
@@ -373,7 +350,7 @@ function RunNavigation(props) {
           className=" run-navigation-button"
           id="Star-button"
           onClick={() => {
-            authorizedUserOcto ? starProject(authorizedUserOcto) : loginStar();
+            authorizedUserOcto ? likeProject(authorizedUserOcto) : loginLike();
           }}
         >
           {starSvg}

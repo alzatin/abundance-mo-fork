@@ -470,7 +470,9 @@ function CreateMode(props) {
         </>
       );
     } else {
-      navigate(`/run/${GlobalVariables.currentRepo.id}`);
+      navigate(
+        `/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
+      );
     }
   } else {
     /** get repository from github by the id in the url */
