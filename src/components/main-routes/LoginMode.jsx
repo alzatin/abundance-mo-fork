@@ -449,9 +449,11 @@ const ShowProjects = (props) => {
         query;
 
       let awsRepos = await fetch(scanApiUrl);
+      //populateUserAWS();
+
       return awsRepos.json();
 
-      //populateAWS(repos[0].data); // can only handle 20 items at a time
+      populateAWS(repos[0].data); // can only handle 20 items at a time
     };
     /*initialize the AWS database with the projects from the search- don't need anymore but will leave for ref*/
     const populateAWS = async () => {
@@ -503,6 +505,58 @@ const ShowProjects = (props) => {
       fetch(apiUrl, {
         method: "POST",
         body: JSON.stringify({ repos: repoArray }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).then((response) => {
+        console.log(response);
+      });
+    };
+    const populateUserAWS = async () => {
+      let repoCount = 0;
+      const repos = await octokit.paginate(
+        "GET /search/repositories",
+        {
+          q: " topic:abundance-project" + " fork:true",
+          per_page: 100,
+        },
+        (response, done) => {
+          repoCount += response.data.length;
+          if (repoCount >= 250) {
+            done();
+          }
+          return response;
+        }
+      );
+
+      let userArray = [];
+
+      // getReadMeContent
+      //let readMeContent
+
+      repos[0].data.forEach((result) => {
+        const found = userArray.some(
+          (user) => user["user"] == result.owner.login
+        );
+        if (found) {
+          let obj = userArray.find(
+            (item) => item["user"] === result.owner.login
+          );
+          obj["numProjectsOwned"] += 1;
+        } else {
+          userArray.push({
+            user: result.owner.login,
+            likedProjects: [],
+            numProjectsOwned: 1,
+          });
+        }
+      });
+      console.log(userArray);
+      const apiUserUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/populate-user-table";
+      fetch(apiUserUrl, {
+        method: "POST",
+        body: JSON.stringify({ users: userArray }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
