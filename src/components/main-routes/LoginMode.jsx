@@ -449,11 +449,11 @@ const ShowProjects = (props) => {
         query;
 
       let awsRepos = await fetch(scanApiUrl);
+
       //populateUserAWS();
+      //populateAWS(repos[0].data); // can only handle 20 items at a time
 
       return awsRepos.json();
-
-      populateAWS(repos[0].data); // can only handle 20 items at a time
     };
     /*initialize the AWS database with the projects from the search- don't need anymore but will leave for ref*/
     const populateAWS = async () => {
