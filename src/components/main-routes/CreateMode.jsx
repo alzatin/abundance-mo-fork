@@ -491,10 +491,10 @@ function CreateMode(props) {
         /*props.props
         .tryLogin()
         .then((result) => {
-          navigate(`/${GlobalVariables.currentRepo.id}`);
+          navigate(`/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
         })
         .catch((error) => {
-          navigate(`/run/${GlobalVariables.currentRepo.id}`);
+          navigate(`/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
         });*/
       });
 
