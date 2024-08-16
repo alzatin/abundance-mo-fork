@@ -20,25 +20,30 @@ function GitSearch(props) {
   }
   // conditional query for maslow projects
   const searchGitHub = function () {
-    var query =
-      searchBarValue + " topic:abundance-project " + maslowTopic.current.value;
-    let octokit = new Octokit();
-    octokit
-      .request("GET /search/repositories", {
-        q: query,
-        per_page: 50,
-        headers: {
-          accept: "application/vnd.github.mercy-preview+json",
-        },
-      })
-      .then((result) => {
-        let resultingRepos = [];
-        result.data.items.forEach((repo) => {
-          resultingRepos.push(repo);
-        });
-        setGitRepos(resultingRepos);
-        setLoadingGit(false);
+    const repoSearchRequest = async () => {
+      let searchQuery;
+      if (searchBarValue != "") {
+        searchQuery = "&query=" + searchBarValue;
+      } else {
+        searchQuery = "&query";
+      }
+      let query = "attribute=repoName" + searchQuery + "&user";
+      const scanApiUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
+        query;
+
+      let awsRepos = await fetch(scanApiUrl);
+
+      return awsRepos.json();
+    };
+    repoSearchRequest().then((result) => {
+      let resultingRepos = [];
+      result["repos"].forEach((repo) => {
+        resultingRepos.push(repo);
       });
+      setGitRepos(resultingRepos);
+      setLoadingGit(false);
+    });
   };
 
   const handleKeyDown = function (e) {
@@ -64,6 +69,7 @@ function GitSearch(props) {
   };
 
   const GitList = function () {
+    console.log("gitRepos", gitRepos);
     return gitRepos.map((item, key) => {
       return (
         <li
@@ -72,7 +78,7 @@ function GitSearch(props) {
           onMouseEnter={() => handleMouseOver(item, key)}
           onMouseLeave={() => handleMouseOut()}
         >
-          {item.name}
+          {item.repoName}
         </li>
       );
     });

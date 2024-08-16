@@ -64,31 +64,42 @@ function runMode(props) {
   const windowSize = useWindowSize();
 
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { owner, repoName } = useParams();
 
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
     GlobalVariables.c = canvasRef.current.getContext("2d");
 
     var octokit = new Octokit();
-    octokit.request("GET /repositories/:id", { id }).then((result) => {
-      globalvariables.currentRepo = result.data;
-      /** Only run loadproject() if the project is different from what is already loaded  */
-      if (
-        !GlobalVariables.loadedRepo ||
-        globalvariables.currentRepo.name !== GlobalVariables.loadedRepo.name
-      ) {
-        //Load a blank project
-        GlobalVariables.topLevelMolecule = new Molecule({
-          x: 0,
-          y: 0,
-          topLevel: true,
-          atomType: "Molecule",
-        });
-        GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-        props.props.loadProject(GlobalVariables.currentRepo);
-      }
-    });
+    octokit
+      .request("GET /repos/{owner}/{repo}", {
+        owner: owner,
+        repo: repoName,
+      })
+      .then((result) => {
+        globalvariables.currentRepo = result.data;
+        /*temp variables while we change to aws*/
+        globalvariables.currentRepo.repoName = globalvariables.currentRepo.name;
+        globalvariables.currentRepo.owner =
+          globalvariables.currentRepo.owner.login;
+        //make an aws call to get the project data before loading the project?
+        /** Only run loadproject() if the project is different from what is already loaded  */
+        if (
+          !GlobalVariables.loadedRepo ||
+          globalvariables.currentRepo.repoName !==
+            GlobalVariables.loadedRepo.repoName
+        ) {
+          //Load a blank project
+          GlobalVariables.topLevelMolecule = new Molecule({
+            x: 0,
+            y: 0,
+            topLevel: true,
+            atomType: "Molecule",
+          });
+          GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
+          props.props.loadProject(GlobalVariables.currentRepo);
+        }
+      });
 
     if (
       GlobalVariables.currentRepo &&
@@ -129,8 +140,8 @@ function runMode(props) {
       />
       {globalvariables.currentRepo ? (
         <div className="info_run_div">
-          <p>{"Project Name: " + globalvariables.currentRepo.name}</p>
-          <p>{"Repo Owner: " + globalvariables.currentRepo.owner.login}</p>
+          <p>{"Project Name: " + globalvariables.currentRepo.repoName}</p>
+          <p>{"Repo Owner: " + globalvariables.currentRepo.owner}</p>
         </div>
       ) : null}
       <div className="runContainer">

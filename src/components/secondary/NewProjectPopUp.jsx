@@ -5,6 +5,7 @@ import Molecule from "../../molecules/molecule.js";
 import { useNavigate } from "react-router-dom";
 import CreatableSelect from "react-select/creatable";
 import topics from "../../js/maslowTopics.js";
+import { re } from "mathjs";
 //Replaces the loaded projects if the user clicks on new project button
 const NewProjectPopUp = (props) => {
   /**
@@ -68,7 +69,7 @@ const NewProjectPopUp = (props) => {
     molecule,
     exporting
   ) => {
-    topics.push("abundance-project");
+    //topics.push("abundance-project");
     // If there is a molecule and we are exporting replace current top molecule
     if (molecule !== undefined && exporting) {
       GlobalVariables.topLevelMolecule = molecule;
@@ -102,6 +103,7 @@ const NewProjectPopUp = (props) => {
         setPending(false);
       })
       .then((result) => {
+        console.log(result);
         setNewProjectBar(10);
         //Once we have created the new repo we need to create a file within it to store the project in
         currentRepoName = result.data.name;
@@ -109,10 +111,48 @@ const NewProjectPopUp = (props) => {
         GlobalVariables.currentRepo = result.data;
 
         var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
+        console.log(jsonRepOfProject);
         jsonRepOfProject.filetypeVersion = 1;
         const projectContent = window.btoa(
           JSON.stringify(jsonRepOfProject, null, 4)
         );
+
+        /*aws dynamo post*/
+
+        const apiUrl =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
+        fetch(apiUrl, {
+          method: "POST",
+          body: JSON.stringify({
+            owner: result.data.owner.login,
+            ranking: result.data.stargazers_count,
+            repoName: result.data.name,
+            forks: result.data.forks_count,
+            topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
+            topics: topics,
+            readme:
+              "https://raw.githubusercontent.com/" +
+              result.data.full_name +
+              "/master/README.md?sanitize=true",
+            contentURL:
+              "https://raw.githubusercontent.com/" +
+              result.data.full_name +
+              "/master/project.abundance?sanitize=true",
+            githubMoleculesUsed: [],
+            svgURL:
+              "https://raw.githubusercontent.com/" +
+              result.data.full_name +
+              "/master/project.svg?sanitize=true",
+            dateCreated: result.data.created_at,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }).then((response) => {
+          console.log(response);
+        });
+
+        //Create the project file
 
         authorizedUserOcto.rest.repos
           .createOrUpdateFileContents({

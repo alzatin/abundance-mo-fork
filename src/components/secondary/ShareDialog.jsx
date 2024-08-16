@@ -38,10 +38,16 @@ function ShareDialog(props) {
             <p>Use this link to share this project:</p>
             <a
               style={{ margin: "16px" }}
-              href={"/run/" + GlobalVariables.currentRepo.id}
+              href={
+                "/run/" +
+                GlobalVariables.currentRepo.owner +
+                "/" +
+                GlobalVariables.currentRepo.repoName
+              }
               target="_blank"
             >
-              /run/{GlobalVariables.currentRepo.id}
+              /run/{GlobalVariables.currentRepo.owner}/
+              {GlobalVariables.currentRepo.repoName}
             </a>
           </div>
         ) : dialogContent == "export" ? (

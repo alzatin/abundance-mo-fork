@@ -78,17 +78,17 @@ const InitialLog = (props) => {
 
 // adds individual projects after API call
 const AddProject = (props) => {
+  const authorizedUserOcto = props.authorizedUserOcto;
   const [browseType, setBrowseType] = useState("thumb");
   const [orderType, setOrderType] = useState("byDateCreated");
   let searchBarValue = props.searchBarValue;
   let nodes = props.nodes;
-
   //filter nodes by search bar value
-  if (searchBarValue != "") {
+  /* if (searchBarValue != "") {
     nodes = nodes.filter((node) => {
       return node.name.toLowerCase().includes(searchBarValue.toLowerCase());
     });
-  }
+  }*/
 
   return (
     <>
@@ -160,6 +160,7 @@ const AddProject = (props) => {
       {nodes.length > 0 ? (
         <ProjectDiv
           browseType={browseType}
+          authorizedUserOcto={authorizedUserOcto}
           nodes={nodes}
           orderType={orderType}
         />
@@ -180,12 +181,12 @@ const ProjectDiv = (props) => {
       <div
         className="project"
         style={
-          node.owner.login != GlobalVariables.currentUser
+          node.owner != GlobalVariables.currentUser
             ? { backgroundColor: "rgb(233 221 242 / 58%)" }
             : null
         }
-        key={node.id + node.owner.login}
-        id={node.name}
+        key={node.topMoleculeID + node.owner}
+        id={node.repoName}
         onClick={() => {
           GlobalVariables.currentRepo = node;
         }}
@@ -212,20 +213,20 @@ const ProjectDiv = (props) => {
             width: "80%",
           }}
         >
-          {node.name}
+          {node.repoName}
         </p>
         <img
           className="project_image"
           src={
             "https://raw.githubusercontent.com/" +
-            node.full_name +
+            node.repoName +
             "/master/project.svg?sanitize=true"
           }
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
             currentTarget.src = "/imgs/defaultThumbnail.svg";
           }}
-          alt={node.name}
+          alt={node.repoName}
         ></img>
         <div style={{ display: "inline" }}>
           <svg
@@ -236,15 +237,12 @@ const ProjectDiv = (props) => {
           >
             <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
           </svg>
-          <p style={{ fontSize: ".7em", display: "inline" }}>
-            {node.stargazers_count}
-          </p>
+          <p style={{ fontSize: ".7em", display: "inline" }}>{node.ranking}</p>
         </div>
       </div>
     );
   };
   const ListItem = (node) => {
-    console.log(node);
     return (
       <div
         className="project_list"
@@ -263,7 +261,7 @@ const ProjectDiv = (props) => {
             width: "80%",
           }}
         >
-          {node.node.name}
+          {node.node.repoName}
         </p>
 
         <p
@@ -275,7 +273,7 @@ const ProjectDiv = (props) => {
             width: "50%",
           }}
         >
-          {node.node.owner.login}
+          {node.node.owner}
         </p>
         <h2 style={{ width: "20%", display: "block" }}>
           {" "}
@@ -292,7 +290,7 @@ const ProjectDiv = (props) => {
             width: "70%",
           }}
         >
-          {node.node.forks_count}
+          {node.node.forks}
         </p>
 
         <p
@@ -304,11 +302,11 @@ const ProjectDiv = (props) => {
             width: "80%",
           }}
         >
-          {node.node.created_at}
+          {node.node.dateCreated}
         </p>
 
         <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>
-          <p style={{ fontSize: "1em" }}>{node.node.stargazers_count}</p>
+          <p style={{ fontSize: "1em" }}>{node.node.ranking}</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             style={{ transform: "scale(1)" }}
@@ -324,35 +322,31 @@ const ProjectDiv = (props) => {
 
   var sorters = {
     byName: function (a, b) {
-      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+      return a.repoName < b.repoName ? -1 : a.repoName > b.repoName ? 1 : 0;
     },
     byForks: function (a, b) {
-      return b.forks_count - a.forks_count;
+      return b.forks - a.forks;
     },
     byStars: function (a, b) {
-      return b.stargazers_count - a.stargazers_count;
+      return b.ranking - a.ranking;
     },
     byOwnerName: function (a, b) {
-      return a.owner.login < b.owner.login
-        ? -1
-        : a.owner.login > b.owner.login
-        ? 1
-        : 0;
+      return a.owner < b.owner ? -1 : a.owner > b.owner ? 1 : 0;
     },
     byDateCreated: function (a, b) {
-      return new Date(a.created_at) > new Date(b.created_at)
+      return new Date(a.dateCreated) > new Date(b.dateCreated)
         ? -1
-        : new Date(a.created_at) < new Date(b.created_at)
+        : new Date(a.dateCreated) < new Date(b.dateCreated)
         ? 1
         : 0;
     },
   };
   const dummyNode = {
-    forks_count: "Forks",
-    stargazers_count: "#",
-    created_at: "Date Created",
-    owner: { login: "Creator" },
-    name: "Name",
+    forks: "Forks",
+    ranking: "#",
+    dateCreated: "Date Created",
+    owner: "Creator",
+    repoName: "Name",
   };
 
   return (
@@ -361,11 +355,11 @@ const ProjectDiv = (props) => {
         {browseType == "list" ? <ListItem node={dummyNode} /> : null}
         {nodes.sort(sorters[orderType]).map((node) => (
           <Link
-            key={node.id}
+            key={node.owner + node.repoName}
             to={
-              node.owner.login == globalvariables.currentUser
-                ? `/${node.id}`
-                : `/run/${node.id}`
+              node.owner == globalvariables.currentUser
+                ? `/${node.owner}/${node.repoName}`
+                : `/run/${node.owner}/${node.repoName}`
             }
           >
             {browseType == "list" ? (
@@ -392,7 +386,7 @@ const ShowProjects = (props) => {
   useEffect(() => {
     octokit = new Octokit();
     var query;
-    if (props.user == "" || props.userBrowsing) {
+    /*if (props.user == "" || props.userBrowsing) {
       query = searchBarValue + " topic:abundance-project" + " fork:true";
     } else {
       query =
@@ -401,7 +395,7 @@ const ShowProjects = (props) => {
         props.user +
         " topic:abundance-project" +
         " fork:true";
-    }
+    }*/
     const forkDummyProject = async function (authorizedUserOcto) {
       var owner = "alzatin";
       var repo = "My-first-Abundance-project";
@@ -430,7 +424,7 @@ const ShowProjects = (props) => {
 
                   authorizedUserOcto.rest.repos.replaceAllTopics({
                     owner: activeUser,
-                    repo: GlobalVariables.currentRepo.name,
+                    repo: GlobalVariables.currentRepo.repoName,
                     names: ["abundance-project"],
                   });
                 });
@@ -438,7 +432,31 @@ const ShowProjects = (props) => {
         });
     };
     const repoSearchRequest = async () => {
-      let repoCount = 0;
+      let searchQuery;
+      if (searchBarValue != "") {
+        searchQuery = "&query=" + searchBarValue;
+      } else {
+        searchQuery = "&query";
+      }
+      if (props.user == "" || props.userBrowsing) {
+        query = "attribute=repoName" + searchQuery + "&user";
+      } else {
+        query = "attribute=repoName" + searchQuery + "&user=" + props.user;
+      }
+      console.log(query);
+      const scanApiUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
+        query;
+
+      let awsRepos = await fetch(scanApiUrl);
+
+      //populateUserAWS();
+      //populateAWS(repos[0].data); // can only handle 20 items at a time
+
+      return awsRepos.json();
+    };
+    /*initialize the AWS database with the projects from the search- don't need anymore but will leave for ref*/
+    const populateAWS = async () => {
       const repos = await octokit.paginate(
         "GET /search/repositories",
         {
@@ -453,19 +471,111 @@ const ShowProjects = (props) => {
           return response;
         }
       );
-      return repos;
+      let repoArray = [];
+
+      // getReadMeContent
+      //let readMeContent
+
+      repos.forEach((result) => {
+        repoArray.push({
+          owner: result.owner.login,
+          repoName: result.name,
+          ranking: result.stargazers_count,
+          forks: result.forks_count,
+          topMoleculeID: result.id,
+          topics: result.topics,
+          readme:
+            "https://raw.githubusercontent.com/" +
+            result.full_name +
+            "/master/README.md?sanitize=true",
+          contentURL:
+            "https://raw.githubusercontent.com/" +
+            result.full_name +
+            "/master/project.abundance?sanitize=true",
+          githubMoleculesUsed: [],
+          svgURL:
+            "https://raw.githubusercontent.com/" +
+            result.full_name +
+            "/master/project.svg?sanitize=true",
+          dateCreated: result.created_at,
+        });
+      });
+      const apiUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//populate-table";
+      fetch(apiUrl, {
+        method: "POST",
+        body: JSON.stringify({ repos: repoArray }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).then((response) => {
+        console.log(response);
+      });
     };
+    const populateUserAWS = async () => {
+      let repoCount = 0;
+      const repos = await octokit.paginate(
+        "GET /search/repositories",
+        {
+          q: " topic:abundance-project" + " fork:true",
+          per_page: 100,
+        },
+        (response, done) => {
+          repoCount += response.data.length;
+          if (repoCount >= 250) {
+            done();
+          }
+          return response;
+        }
+      );
+
+      let userArray = [];
+
+      // getReadMeContent
+      //let readMeContent
+
+      repos[0].data.forEach((result) => {
+        const found = userArray.some(
+          (user) => user["user"] == result.owner.login
+        );
+        if (found) {
+          let obj = userArray.find(
+            (item) => item["user"] === result.owner.login
+          );
+          obj["numProjectsOwned"] += 1;
+        } else {
+          userArray.push({
+            user: result.owner.login,
+            likedProjects: [],
+            numProjectsOwned: 1,
+          });
+        }
+      });
+      console.log(userArray);
+      const apiUserUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/populate-user-table";
+      fetch(apiUserUrl, {
+        method: "POST",
+        body: JSON.stringify({ users: userArray }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).then((response) => {
+        console.log(response);
+      });
+    };
+
     repoSearchRequest()
       .then((result) => {
-        if (result[0].data.total_count == 0 && props.user !== "") {
+        if (result["repos"].length == 0 && props.user !== "") {
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
               props.setBrowsing(true);
-              setStateLoaded(result);
+              setStateLoaded(result["repos"]);
             });
           });
         } else {
-          setStateLoaded(result);
+          setStateLoaded(result["repos"]);
         }
       })
       .catch((err) => {
@@ -526,6 +636,7 @@ const ShowProjects = (props) => {
       ) : (
         <ClassicBrowse
           projectsLoaded={projectsLoaded}
+          authorizedUserOcto={authorizedUserOcto}
           setSearchBarValue={setSearchBarValue}
           searchBarValue={searchBarValue}
           setExportPopUp={setExportPopUp}
@@ -547,12 +658,14 @@ const ClassicBrowse = (props) => {
   let searchBarValue = props.searchBarValue;
   let setSearchBarValue = props.setSearchBarValue;
   let setExportPopUp = props.setExportPopUp;
+  let authorizedUserOcto = props.authorizedUserOcto;
 
   if (projectsLoaded.length > 0) {
     var userRepos = [];
-    projectsLoaded[pageNumber].data.forEach((repo) => {
-      userRepos.push(repo);
-    });
+    projectsLoaded /*[pageNumber].data.*/
+      .forEach((repo) => {
+        userRepos.push(repo);
+      });
     nodes = [...userRepos];
   }
 
@@ -661,6 +774,7 @@ const ClassicBrowse = (props) => {
       {projectsLoaded.length > 0 ? (
         <AddProject
           searchBarValue={searchBarValue}
+          authorizedUserOcto={authorizedUserOcto}
           user={props.user}
           userBrowsing={props.userBrowsing}
           nodes={nodes}

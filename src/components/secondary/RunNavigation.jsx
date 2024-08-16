@@ -140,26 +140,34 @@ function RunNavigation(props) {
   useEffect(() => {
     // check if the current user has starred the project
     if (authorizedUserOcto) {
-      var owner = GlobalVariables.currentRepo.owner.login;
-      var repoName = GlobalVariables.currentRepo.name;
+      var owner = GlobalVariables.currentRepo.owner;
+      var repoName = GlobalVariables.currentRepo.repoName;
 
-      authorizedUserOcto.rest.activity
-        .checkRepoIsStarredByAuthenticatedUser({
-          owner: owner,
-          repo: repoName,
-        })
-        .then((result) => {
+      const fetchUserData = async () => {
+        const queryUserApiUrl =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=" +
+          GlobalVariables.currentUser;
+
+        let awsUser = await fetch(queryUserApiUrl);
+        let awsUserJson = await awsUser.json();
+
+        return awsUserJson;
+      };
+
+      fetchUserData().then((awsUserJson) => {
+        const isLiked = awsUserJson[0].likedProjects.some(
+          (project) => project == owner + "/" + repoName
+        );
+
+        if (isLiked) {
           setStarred(true);
           document.getElementById("Star-button").style.backgroundColor = "gray";
-        })
-        .catch((error) => {
+          //should disable instead of just graying out
+        } else {
           setStarred(false);
-        });
-
-      // check if the current user owns the project
-      if (
-        GlobalVariables.currentRepo.owner.login === GlobalVariables.currentUser
-      ) {
+        }
+      });
+      if (GlobalVariables.currentRepo.owner === GlobalVariables.currentUser) {
         document.getElementById("Fork-button").style.display = "none";
       }
     }
@@ -167,13 +175,43 @@ function RunNavigation(props) {
   /**
    * Like a project on github by unique ID.
    */
-  const starProject = function (authorizedUserOcto) {
-    //Find out the information of who owns the project we are trying to like
+  const likeProject = function () {
+    var owner = GlobalVariables.currentRepo.owner;
+    var repoName = GlobalVariables.currentRepo.repoName;
 
-    var owner = GlobalVariables.currentRepo.owner.login;
-    var repoName = GlobalVariables.currentRepo.name;
+    /*aws dynamo update-item lambda*/
+    const apiUpdateUrl =
+      "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
+    fetch(apiUpdateUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        owner: owner,
+        repoName: repoName,
+        attributeUpdates: { ranking: 1, topics: ["testing_Aws"] },
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then((response) => {
+      /*add item to your liked projects on aws*/
+      const apiUpdateUserUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE";
+      fetch(apiUpdateUserUrl, {
+        method: "POST",
+        body: JSON.stringify({
+          user: GlobalVariables.currentUser,
+          attributeUpdates: { likedProjects: [`${owner}/${repoName}`] },
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).then((response) => {
+        setStarred(true);
+        document.getElementById("Star-button").style.backgroundColor = "gray";
+      });
+    });
 
-    if (!starred) {
+    /*if (!starred) {
       authorizedUserOcto.rest.activity
         .starRepoForAuthenticatedUser({
           owner: owner,
@@ -195,13 +233,13 @@ function RunNavigation(props) {
           setStarred(false);
           console.log("unstarred");
         });
-    }
+    }*/
   };
 
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function (authorizedUserOcto) {
-    var owner = GlobalVariables.currentRepo.owner.login;
-    var repo = GlobalVariables.currentRepo.name;
+    var owner = GlobalVariables.currentRepo.owner;
+    var repo = GlobalVariables.currentRepo.repoName;
     // if authenticated and it is not your project, make a clone of the project and return to create mode
     authorizedUserOcto
       .request("GET /repos/{owner}/{repo}", {
@@ -215,32 +253,60 @@ function RunNavigation(props) {
             repo: repo,
           })
           .then(() => {
-            var activeUser = GlobalVariables.currentUser;
-            // return to create mode
-            authorizedUserOcto
-              .request("GET /repos/{owner}/{repo}", {
-                owner: activeUser,
-                repo: repo,
-              })
-              .then((result) => {
-                GlobalVariables.currentRepo = result.data;
-
-                authorizedUserOcto.rest.repos.replaceAllTopics({
-                  owner: activeUser,
-                  repo: GlobalVariables.currentRepo.name,
-                  names: ["abundance-project"],
-                });
-                navigate(`/${GlobalVariables.currentRepo.id}`),
-                  { replace: true };
-              });
+            //push fork to aws
+            /*aws dynamo post*/
+            const apiUrl =
+              "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
+            let forkedNodeBody = {
+              owner: GlobalVariables.currentUser,
+              ranking: result.data.stargazers_count,
+              repoName: result.data.name,
+              forks: result.data.forks_count,
+              topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
+              topics: [],
+              readme:
+                "https://raw.githubusercontent.com/" +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
+                "/master/README.md?sanitize=true",
+              contentURL:
+                "https://raw.githubusercontent.com/" +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
+                "/master/project.abundance?sanitize=true",
+              githubMoleculesUsed: [],
+              svgURL:
+                "https://raw.githubusercontent.com/" +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
+                "/master/project.svg?sanitize=true",
+              dateCreated: result.data.created_at,
+            };
+            fetch(apiUrl, {
+              method: "POST",
+              body: JSON.stringify(forkedNodeBody),
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+              },
+            }).then((response) => {
+              console.log(response);
+              GlobalVariables.currentRepo = forkedNodeBody;
+              navigate(
+                `/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
+              ),
+                { replace: true };
+            });
           });
       });
   };
 
   /** Runs if star is clicked but there's no logged in user */
-  const loginStar = function () {
+  const loginLike = function () {
     props.tryLogin().then((result) => {
-      starProject(result);
+      likeProject(result);
     });
   };
 
@@ -284,7 +350,7 @@ function RunNavigation(props) {
           className=" run-navigation-button"
           id="Star-button"
           onClick={() => {
-            authorizedUserOcto ? starProject(authorizedUserOcto) : loginStar();
+            authorizedUserOcto ? likeProject(authorizedUserOcto) : loginLike();
           }}
         >
           {starSvg}

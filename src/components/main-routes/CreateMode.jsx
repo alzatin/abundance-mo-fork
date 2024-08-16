@@ -176,7 +176,7 @@ function CreateMode(props) {
                       parents: [latestCommitSha],
                     })
                     .then((response) => {
-                      setState(80);
+                      setState(70);
                       latestCommitSha = response.data.sha;
 
                       octokit.rest.git
@@ -188,9 +188,27 @@ function CreateMode(props) {
                           force: true,
                         })
                         .then((response) => {
-                          setState(90);
-                          console.warn("Project saved");
-                          setState(100);
+                          setState(80);
+
+                          /*aws dynamo update-item lambda*/
+                          const apiUpdateUrl =
+                            "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
+                          fetch(apiUpdateUrl, {
+                            method: "POST",
+                            body: JSON.stringify({
+                              owner: owner,
+                              repoName: repo,
+                            }),
+                            headers: {
+                              "Content-type": "application/json; charset=UTF-8",
+                            },
+                          }).then((response) => {
+                            console.log(response);
+                            console.warn(
+                              "Project saved on git and aws updated"
+                            );
+                            setState(100);
+                          });
                         });
                     });
                 });
@@ -302,7 +320,7 @@ function CreateMode(props) {
       authorizedUserOcto,
       {
         owner: GlobalVariables.currentUser,
-        repo: GlobalVariables.currentRepo.name,
+        repo: GlobalVariables.currentRepo.repoName,
         changes: {
           files: filesObject,
           commit: "Autosave",
@@ -411,6 +429,8 @@ function CreateMode(props) {
               setSaveState: setSaveState,
               setTop: setTop,
               shortCuts: shortCuts,
+              currentRepo: props.currentRepo,
+              setCurrentRepo: props.setCurrentRepo,
             }}
             displayProps={{
               setMesh: setMesh,
@@ -450,26 +470,33 @@ function CreateMode(props) {
         </>
       );
     } else {
-      navigate(`/run/${GlobalVariables.currentRepo.id}`);
+      navigate(
+        `/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
+      );
     }
   } else {
     /** get repository from github by the id in the url */
     console.warn("You are not logged in");
-    const { id } = useParams();
+    const { owner, repoName } = useParams();
     var octokit = new Octokit();
-    octokit.request("GET /repositories/:id", { id }).then((result) => {
-      GlobalVariables.currentRepoName = result.data.name;
-      GlobalVariables.currentRepo = result.data;
-      //auto login - turned off for development
-      /*props.props
+    octokit
+      .request("GET /repos/{owner}/{repo}", {
+        owner: owner,
+        repo: repoName,
+      })
+      .then((result) => {
+        GlobalVariables.currentRepoName = result.data.name;
+        GlobalVariables.currentRepo = result.data;
+        //auto login - turned off for development
+        /*props.props
         .tryLogin()
         .then((result) => {
-          navigate(`/${GlobalVariables.currentRepo.id}`);
+          navigate(`/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
         })
         .catch((error) => {
-          navigate(`/run/${GlobalVariables.currentRepo.id}`);
+          navigate(`/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
         });*/
-    });
+      });
 
     //tryLogin();
   }
