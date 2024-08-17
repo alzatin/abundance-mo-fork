@@ -48,35 +48,35 @@ export default class CutLayout extends Atom {
       "Material Thickness",
       this,
       "number",
-      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 19 : 0.75
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 19 : 0.75
     );
     this.addIO(
       "input",
       "Sheet Width",
       this,
       "number",
-      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 2438 : 96
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 2438 : 96
     );
     this.addIO(
       "input",
       "Sheet Height",
       this,
       "number",
-      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 1219 : 48
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 1219 : 48
     );
     this.addIO(
       "input",
       "Part Padding",
       this,
       "number",
-      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 6 : .25
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 6 : .25
     );
     this.addIO(
       "input",
       "Sheet Padding",
       this,
       "number",
-      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 76 : 3
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 76 : 3
     );
 
     this.addIO("output", "geometry", this, "geometry", "");
