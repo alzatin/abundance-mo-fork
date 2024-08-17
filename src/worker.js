@@ -607,7 +607,18 @@ function extractTags(inputGeometry, TAG) {
   }
 }
 
-function layout(targetID, inputID, TAG, materialThickness) {
+
+/**
+ * 
+ * @param {*} layoutConfig - dictionary with keys:
+ *    - thickness thickness of the stock material
+ *    - width
+ *    - height together with width specifies the demensions of the stock material
+ *    - sheetPadding space from the edge of the material where no parts will be placed
+ *    - partPadding space between parts in the resulting placement
+ */
+function layout(targetID, inputID, TAG, layoutConfig) {
+  console.log(layoutConfig);
   return started.then(() => {
     var THICKNESS_TOLLERANCE = 0.001;
 
@@ -615,10 +626,8 @@ function layout(targetID, inputID, TAG, materialThickness) {
     if (!taggedGeometry) {
       throw new Error("No Upstream Geometries Tagged for Cut");
     }
-
-    // a temporary solution to ensure shapes don't overlap. This is not an
-    // efficient packing algorithm.
-    let lateralOffset = 0;
+    let localId = 0;
+    let shapesForLayout = [];
 
     // Rotate all shapes to be most cuttable.
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
@@ -630,12 +639,13 @@ function layout(targetID, inputID, TAG, materialThickness) {
       //  3) there must be no parts of the shape which protrude "below" this face
       let candidates = [];
       let hasFlatFace = false;
+      let faceIndex = 0;
       leaf.geometry[0].faces.forEach((face) => {
         if (face.geomType == "PLANE") {
           hasFlatFace = true;
           let prospectiveGoem = moveFaceToCuttingPlane(leaf.geometry[0], face);
           let thickness = prospectiveGoem.boundingBox.depth;
-          if (thickness < materialThickness + THICKNESS_TOLLERANCE) {
+          if (thickness < layoutConfig.thickness + THICKNESS_TOLLERANCE) {
             // Check for protrusions "below" the bottom of the raw material.
             if (
               prospectiveGoem.boundingBox.bounds[0][2] >
@@ -644,10 +654,12 @@ function layout(targetID, inputID, TAG, materialThickness) {
               candidates.push({
                 face: face,
                 geom: prospectiveGoem,
+                faceIndex: faceIndex
               });
             }
           }
         }
+        faceIndex++;
       });
 
       let selected;
@@ -686,7 +698,7 @@ function layout(targetID, inputID, TAG, materialThickness) {
         // prefer candidates whose thickness is equal to material thickness, if any.
         let temp = candidates.filter((c) => {
           return (
-            Math.abs(c.geom.boundingBox.depth - materialThickness) <
+            Math.abs(c.geom.boundingBox.depth - layoutConfig.thickness) <
             THICKNESS_TOLLERANCE
           );
         });
@@ -713,118 +725,111 @@ function layout(targetID, inputID, TAG, materialThickness) {
         plane: leaf.plane,
         bom: leaf.bom,
       };
-
-      shapesForLayout.push({id: localId, shape: selected.face});
-      localId += 1;
+      shapesForLayout.push({id: localId, shape: newLeaf.geometry[0].faces[selected.faceIndex]});
+      localId++;
 
       return newLeaf;
     });
-    console.log(shapesForLayout);
-    // Compute target positions and relative rotations for our shapes to put them
-    // in a good packing.
-    let packedPositions = computePositions(shapesForLayout, spacing);
-    
-    // apply transforms to move our shapes.
-    library[targetID] = actOnLeafs(extractTags(library[inputID], TAG), (leaf) => {
-      let transform = packedPositions.filter((transform) => transform.id == leaf.id)[0];
-      // apply rotation first, rotate around the referencePoint so we don't mess up the translation
-      newGeom = leaf.geometry[0].clone()
-        .rotate(transform.rotation, leaf.referencePoint, new Vector([0,0,1]));
+    let positionsPromise = computePositions(shapesForLayout, layoutConfig);
+    return positionsPromise.then((positions) => {
+      console.log("positions future has resolved... " + JSON.stringify(positions));
 
-      // compute and apply the translation to our target position
-      let translation = transform.targetPosition.sub(leaf.referencePoint);
-      newGeom = newGeom.translate(translation.x, translation.y, 0);
-        
-      newGeom = selected.geom.clone().translate(lateralOffset, 0, 0);
-      lateralOffset += newGeom.boundingBox.width;
+      library[targetID] = actOnLeafs(extractTags(library[targetID], TAG), (leaf) => {
+        let transform = positions.flat().filter((transform) => transform.id == leaf.id);
+        if (transform.length == 0) {
+          console.log("didn't find transform...");
+          return leaf;
+        } else if (transform.length > 1) {
+          console.warn("Found more than one transformation for same id");
+        }
 
-      return {
-        geometry: [newGeom],
-        tags: leaf.tags,
-        color: leaf.color,
-        plane: leaf.plane,
-        bom: leaf.bom,
-      };
+        transform = transform[0];
+        // apply rotation first. All rotations are around (0, 0, 0)
+        console.log("applying transform: " + JSON.stringify(transform));
+        let newGeom = leaf.geometry[0].clone()
+          .rotate(transform.rotate, new Vector([0,0,0]), new Vector([0,0,1]))
+          .translate(transform.translate.x, transform.translate.y, 0);
+  
+        return {
+          geometry: [newGeom],
+          tags: leaf.tags,
+          color: leaf.color,
+          plane: leaf.plane,
+          bom: leaf.bom,
+        };
+      });
+      return true;
     });
-    return true;
   });
 }
-/**
- * A bad packing algorithm currently standing in for something more sophisticated.
- * I think this is the API we want in terms of computing the layout using faces then returning a set of
- * transformations that move our parts to their nested positions.
- * TODO:
- *  * replace with a better nesting algo
- *  * pass in the spacing between shapes
- *  * pass in the material dimensions / shape
- *  * P2 generate and output the remaining shape of the material for re-use in subsequent prints
- */
-function computePositions(shapesForLayout, spacing) {
-  let transforms = [];
-  let nestingEngine = new AnyNest();
-  // Temporarily default to a 4ft x 8ft board
-  const binDimensions = units == "MM" ? {width: 25.4 * 8 * 12, height: 25.4 * 4 * 12} : {width: 8 * 12, height: 4 * 12};
 
-  nestingEngine.config({spacing: spacing, binSpacing: units == "MM" ? 3 * 25.4 : 3});
+/**
+ * Use the packing engine, note this is potentially time consuming step.
+ */
+function computePositions(shapesForLayout, layoutConfig) {
+  const populationSize = 10;
+  const nestingEngine = new AnyNest();
+  const tolerance = 0.1;
+  
+  // include tolerance * 2 to ensure padding is the minimum spacing between parts.
+  nestingEngine.config({
+    spacing: layoutConfig.partPadding + (tolerance * 2), 
+    binSpacing: layoutConfig.sheetPadding,
+    populationSize: populationSize});
   nestingEngine.setBin(FloatPolygon.fromPoints(
     [
       {x: 0, y: 0},
-      {x: binDimensions.width, y: 0},
-      {x: binDimensions.width, y: binDimensions.height},
-      {x: 0, y: binDimensions.height}
+      {x: layoutConfig.width, y: 0},
+      {x: layoutConfig.width, y: layoutConfig.height},
+      {x: 0, y: layoutConfig.height}
     ], "bin"));
 
   let parts = [];
 
   shapesForLayout.forEach((shape) => {
     let face = shape.shape;
-    // TODO: meshEdges does appear to generate a list of coordinates tracing the path of hte outerWire here
-    // Note that for a simple circle with default accuracy this generates a 12k points with a lot of decimal
-    // precisions. We should consider 1) can we provide rougher approximation
     let temp = face.clone().outerWire().meshEdges();
-    // translate into an acceptable format for nesting engine.
-    // TODO: format incorrect here?
-    parts.push({id: shape.id, points: temp.lines.slice()});
-
-    /*
-    // rotate for minimum width
-    var minWidth = face.boundingBox.width;
-    var degrees = 0;
-    for (var i = 0; i < 180; i++) {
-      var width = face.clone().rotate(i).boundingBox.width;
-      if (width < minWidth) {
-        minWidth = width;
-        degrees = i;
-      }
-    }
-    face = face.rotate(degrees);
-    let targetPosition = new Vector([lateralOffset + 0.5 * face.boundingBox.width, 0.5 * face.boundingBox.height, 0]);
-
-    transforms.push({id: shape.id, targetPosition: targetPosition, rotation: degrees});
-    lateralOffset += face.boundingBox.width + spacing;
-    */
+    temp = face.clone().outerWire().meshEdges({tolerance: tolerance, angularTolerance: 1});
+    console.log("mesh approximation for layout, e-1 and 1.0: " + temp.lines.length);
+    parts.push(FloatPolygon.fromPoints(preparePoints(temp.lines), shape.id));
   });
   nestingEngine.setParts(parts);
-  console.log("parts set");
-  let status = nestingEngine.start(5, (num) => {console.log("progress: " + num)}, (placement, utilization) => {
-    console.log("display result called with data: ");
-    console.log(placement);
-    console.log(utilization);
+  let callbackCounter = 0;
+  const targetGenerations = 5;
+  return new Promise((resolve, reject) => {
+    try {
+      nestingEngine.start((num) => {
+        const fraction = 1 / (targetGenerations * populationSize);
+        console.log("computed progress: " + (num + callbackCounter) * fraction);
+      },
+      (placement, utilization) => {
+        console.log("display result called with data: ");
+        console.log(placement);
+        callbackCounter++;
+        if (callbackCounter >= targetGenerations * populationSize) {
+          console.log("completed " + targetGenerations + " generations in " + callbackCounter + " callbacks");
+          nestingEngine.stop();
+          resolve(placement);
+        }
+      });
+    } catch (err) {
+      console.log("error in nesting engine: " + err);
+      nestingEngine.stop();
+      reject(err);
+    }
   });
-  console.log("start status: " + status);
-  setTimeout(() => {nestingEngine.stop();}, 10000);
-
-  return transforms;
 }
 
-function meshToArrayPolygon(mesh, id) {
+// from the mesh format of [x1, y1, z1, x2, y2, z2, ...] to FloatPolygon friendly format of
+// [{x: x1, y: y1}, {x: x2, y: y2}...]
+function preparePoints(meshArray) {
   const result = [];
-  for (var i = 0; i < mesh.lines.length; i++) {
-    result.push({x: mesh.lines[i][0], y: mesh.lines[i][1]});
+  for (var i = 0; i < meshArray.length; i += 3) {
+    result.push({x: meshArray[i], y: meshArray[i + 1]});
   }
   return result;
 }
-  
+
 function moveFaceToCuttingPlane(geom, face) {
   let pointOnSurface = face.pointOnSurface(0, 0);
   let faceNormal = face.normalAt();

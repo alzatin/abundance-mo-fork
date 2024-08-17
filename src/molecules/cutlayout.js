@@ -36,6 +36,7 @@ export default class CutLayout extends Atom {
       "Extracts all parts tagged for cutting and lays them out on a sheet to cut.";
 
     this.addIO("input", "geometry", this, "geometry", null);
+
     this.addIO(
       "input",
       "Material Thickness",
@@ -43,6 +44,35 @@ export default class CutLayout extends Atom {
       "number",
       GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 19 : 0.75
     );
+    this.addIO(
+      "input",
+      "Sheet Width",
+      this,
+      "number",
+      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 2438 : 96
+    );
+    this.addIO(
+      "input",
+      "Sheet Height",
+      this,
+      "number",
+      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 1219 : 48
+    );
+    this.addIO(
+      "input",
+      "Part Padding",
+      this,
+      "number",
+      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 6 : .25
+    );
+    this.addIO(
+      "input",
+      "Sheet Padding",
+      this,
+      "number",
+      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 76 : 3
+    );
+
     this.addIO("output", "geometry", this, "geometry", "");
 
     this.setValues(values);
@@ -111,6 +141,10 @@ export default class CutLayout extends Atom {
       this.processing = true;
       var inputID = this.findIOValue("geometry");
       var materialThickness = this.findIOValue("Material Thickness");
+      var sheetWidth = this.findIOValue("Sheet Width");
+      var sheetHeight = this.findIOValue("Sheet Height");
+      var sheetPadding = this.findIOValue("Sheet Padding");
+      var partPadding = this.findIOValue("Part Padding");
       var tag = "cutLayout";
 
       if (!inputID) {
@@ -118,8 +152,20 @@ export default class CutLayout extends Atom {
         return;
       }
 
+      GlobalVariables.topLevelMolecule.unitsKey
+
       GlobalVariables.cad
-        .layout(this.uniqueID, inputID, tag, materialThickness)
+        .layout(
+          this.uniqueID,
+          inputID,
+          tag,
+          {
+            thickness: materialThickness,
+            width: sheetWidth,
+            height: sheetHeight,
+            sheetPadding: sheetPadding,
+            partPadding: partPadding
+          })
         .then(() => {
           this.basicThreadValueProcessing();
         })
