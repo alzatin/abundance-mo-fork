@@ -423,6 +423,7 @@ function output(targetID, inputID) {
     return true;
   });
 }
+
 function molecule(targetID, inputID) {
   return started.then(() => {
     if (library[inputID] != undefined) {
@@ -611,13 +612,13 @@ function extractTags(inputGeometry, TAG) {
 /**
  * 
  * @param {*} layoutConfig - dictionary with keys:
- *    - thickness thickness of the stock material
+ *    - thickness - thickness of the stock material
  *    - width
- *    - height together with width specifies the demensions of the stock material
- *    - sheetPadding space from the edge of the material where no parts will be placed
- *    - partPadding space between parts in the resulting placement
+ *    - height - together with width specifies the demensions of the stock material
+ *    - sheetPadding - space from the edge of the material where no parts will be placed
+ *    - partPadding - space between parts in the resulting placement
  */
-function layout(targetID, inputID, TAG, layoutConfig) {
+function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
   console.log(layoutConfig);
   return started.then(() => {
     var THICKNESS_TOLLERANCE = 0.001;
@@ -730,15 +731,28 @@ function layout(targetID, inputID, TAG, layoutConfig) {
 
       return newLeaf;
     });
-    let positionsPromise = computePositions(shapesForLayout, layoutConfig);
+
+    progressCallback(0.1); // approximation of how much time is taked to perform the rotation logic.
+
+    let positionsPromise = computePositions(shapesForLayout, progressCallback, layoutConfig);
     return positionsPromise.then((positions) => {
       console.log("positions future has resolved... " + JSON.stringify(positions));
+
+      let warning;
+      if (positions.length == 0) {
+        warning = "Failed to place any parts. Are sheet dimensions right?"
+      } else {
+        let unplacedParts = shapesForLayout.length - positions.flat().length;
+        if (unplacedParts > 0) {
+          warning = unplacedParts + " parts are too big to fit on this sheet size. Failed layout for " + unplacedParts + " part(s)";
+        }
+      }
 
       library[targetID] = actOnLeafs(extractTags(library[targetID], TAG), (leaf) => {
         let transform = positions.flat().filter((transform) => transform.id == leaf.id);
         if (transform.length == 0) {
-          console.log("didn't find transform...");
-          return leaf;
+          console.log("didn't find transform for id: " + leaf.id);
+          return undefined;
         } else if (transform.length > 1) {
           console.warn("Found more than one transformation for same id");
         }
@@ -758,7 +772,8 @@ function layout(targetID, inputID, TAG, layoutConfig) {
           bom: leaf.bom,
         };
       });
-      return true;
+      console.log("returning warning: " + warning)
+      return warning;
     });
   });
 }
@@ -766,7 +781,7 @@ function layout(targetID, inputID, TAG, layoutConfig) {
 /**
  * Use the packing engine, note this is potentially time consuming step.
  */
-function computePositions(shapesForLayout, layoutConfig) {
+function computePositions(shapesForLayout, progressCallback, layoutConfig) {
   const populationSize = 10;
   const nestingEngine = new AnyNest();
   const tolerance = 0.1;
@@ -801,6 +816,7 @@ function computePositions(shapesForLayout, layoutConfig) {
       nestingEngine.start((num) => {
         const fraction = 1 / (targetGenerations * populationSize);
         console.log("computed progress: " + (num + callbackCounter) * fraction);
+        progressCallback(0.1 + 0.9 * (num + callbackCounter) * fraction);
       },
       (placement, utilization) => {
         console.log("display result called with data: ");
@@ -1012,6 +1028,7 @@ function fusion(targetID, inputIDs) {
 }
 
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
+// The action may return 'undefined' to cause the leaf to be removed from the result.
 function actOnLeafs(assembly, action, plane) {
   plane = plane || assembly.plane;
   //This is a leaf
@@ -1025,7 +1042,10 @@ function actOnLeafs(assembly, action, plane) {
   else {
     let transformedAssembly = [];
     assembly.geometry.forEach((subAssembly) => {
-      transformedAssembly.push(actOnLeafs(subAssembly, action));
+      const result = actOnLeafs(subAssembly, action);
+      if (result != undefined) {
+        transformedAssembly.push(result);
+      }
     });
     return {
       geometry: transformedAssembly,

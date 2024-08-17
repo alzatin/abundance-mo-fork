@@ -1,6 +1,8 @@
 import Atom from "../prototypes/atom.js";
 import GlobalVariables from "../js/globalvariables.js";
 //import GlobalVariables from '../js/globalvariables.js'
+import { proxy } from "comlink";
+
 
 /**
  * The Cut Layout atom extracts a copy of each shape on the cutlist and places them optimally on a cut sheet.
@@ -34,6 +36,8 @@ export default class CutLayout extends Atom {
      */
     this.description =
       "Extracts all parts tagged for cutting and lays them out on a sheet to cut.";
+
+    this.progress = 0.0;
 
     this.addIO("input", "geometry", this, "geometry", null);
 
@@ -130,6 +134,27 @@ export default class CutLayout extends Atom {
     GlobalVariables.c.stroke();
     GlobalVariables.c.setLineDash([]);
     GlobalVariables.c.closePath();
+
+
+    //draw progress circle in the middle
+    if (this.progress < 1.0) {
+      GlobalVariables.c.beginPath();
+      GlobalVariables.c.fillStyle = this.centerColor;
+      GlobalVariables.c.moveTo(
+        GlobalVariables.widthToPixels(this.x),
+        GlobalVariables.heightToPixels(this.y)
+      );
+      GlobalVariables.c.arc(
+        GlobalVariables.widthToPixels(this.x),
+        GlobalVariables.heightToPixels(this.y),
+        GlobalVariables.widthToPixels(this.radius) / 1.5,
+        0,
+        this.progress * Math.PI * 2,
+        false
+      );
+      GlobalVariables.c.closePath();
+      GlobalVariables.c.fill();
+    }
   }
   /**
    * Pass the input geometry to a worker function to compute the translation.
@@ -159,6 +184,9 @@ export default class CutLayout extends Atom {
           this.uniqueID,
           inputID,
           tag,
+          proxy((progress) => {
+            this.progress = progress;
+          }),
           {
             thickness: materialThickness,
             width: sheetWidth,
@@ -166,8 +194,12 @@ export default class CutLayout extends Atom {
             sheetPadding: sheetPadding,
             partPadding: partPadding
           })
-        .then(() => {
+        .then((warning) => {
           this.basicThreadValueProcessing();
+          if (warning != undefined) {
+            this.setAlert(warning);
+          }
+          this.progress = 1.0; // This should happen automatically, but just in case of some floating point error explicitly set to finished
         })
         .catch(this.alertingErrorHandler());
     }
