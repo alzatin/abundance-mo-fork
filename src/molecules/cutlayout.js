@@ -39,6 +39,8 @@ export default class CutLayout extends Atom {
 
     this.progress = 0.0;
 
+    this.cancelationHandle = undefined;
+
     this.addIO("input", "geometry", this, "geometry", null);
 
     this.addIO(
@@ -163,6 +165,11 @@ export default class CutLayout extends Atom {
     super.updateValue();
 
     if (this.inputs.every((x) => x.ready)) {
+      if (this.cancelationHandle) {
+        // There's an in-progress nesting worker. Cancel it and start another nesting
+        // computation with the new inputs.
+        this.cancelationHandle();
+      }
       this.processing = true;
       var inputID = this.findIOValue("geometry");
       var materialThickness = this.findIOValue("Material Thickness");
@@ -184,8 +191,9 @@ export default class CutLayout extends Atom {
           this.uniqueID,
           inputID,
           tag,
-          proxy((progress) => {
+          proxy((progress, cancelationHandle) => {
             this.progress = progress;
+            this.cancelationHandle = cancelationHandle;
           }),
           {
             thickness: materialThickness,
@@ -199,7 +207,8 @@ export default class CutLayout extends Atom {
           if (warning != undefined) {
             this.setAlert(warning);
           }
-          this.progress = 1.0; // This should happen automatically, but just in case of some floating point error explicitly set to finished
+          this.progress = 1.0;
+          this.cancelationHandle = undefined;
         })
         .catch(this.alertingErrorHandler());
     }

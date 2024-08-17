@@ -1,7 +1,7 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC, loadFont } from "replicad";
-import { expose } from "comlink";
+import { expose, proxy } from "comlink";
 import {
   drawCircle,
   drawRectangle,
@@ -610,7 +610,9 @@ function extractTags(inputGeometry, TAG) {
 
 
 /**
- * 
+ * @param progressCallback - a function which takes two parameters:
+ *    - progress - 0 to 1 inclusive
+ *    - cancelationHandle - a callable which cancels this task.
  * @param {*} layoutConfig - dictionary with keys:
  *    - thickness - thickness of the stock material
  *    - width
@@ -732,8 +734,6 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
       return newLeaf;
     });
 
-    progressCallback(0.1); // approximation of how much time is taked to perform the rotation logic.
-
     let positionsPromise = computePositions(shapesForLayout, progressCallback, layoutConfig);
     return positionsPromise.then((positions) => {
       console.log("positions future has resolved... " + JSON.stringify(positions));
@@ -816,7 +816,10 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
       nestingEngine.start((num) => {
         const fraction = 1 / (targetGenerations * populationSize);
         console.log("computed progress: " + (num + callbackCounter) * fraction);
-        progressCallback(0.1 + 0.9 * (num + callbackCounter) * fraction);
+        // start at 0.1 to acknowledge the rotation computations which happed above.
+        progressCallback(
+          0.1 + 0.9 * (num + callbackCounter) * fraction,
+          proxy(() => {nestingEngine.stop()}));
       },
       (placement, utilization) => {
         console.log("display result called with data: ");
@@ -833,7 +836,7 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
       nestingEngine.stop();
       reject(err);
     }
-  });
+  })
 }
 
 // from the mesh format of [x1, y1, z1, x2, y2, z2, ...] to FloatPolygon friendly format of
