@@ -782,7 +782,7 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
  * Use the packing engine, note this is potentially time consuming step.
  */
 function computePositions(shapesForLayout, progressCallback, layoutConfig) {
-  const populationSize = 10;
+  const populationSize = 5;
   const nestingEngine = new AnyNest();
   const tolerance = 0.1;
   
@@ -790,7 +790,9 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
   nestingEngine.config({
     spacing: layoutConfig.partPadding + (tolerance * 2), 
     binSpacing: layoutConfig.sheetPadding,
-    populationSize: populationSize});
+    populationSize: populationSize,
+    exploreConcave: false // we eventually want this to be true, but it's unsupported right now
+  });
   nestingEngine.setBin(FloatPolygon.fromPoints(
     [
       {x: 0, y: 0},
