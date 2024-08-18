@@ -621,7 +621,6 @@ function extractTags(inputGeometry, TAG) {
  *    - partPadding - space between parts in the resulting placement
  */
 function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
-  console.log(layoutConfig);
   return started.then(() => {
     var THICKNESS_TOLLERANCE = 0.001;
 
@@ -736,8 +735,6 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
 
     let positionsPromise = computePositions(shapesForLayout, progressCallback, layoutConfig);
     return positionsPromise.then((positions) => {
-      console.log("positions future has resolved... " + JSON.stringify(positions));
-
       let warning;
       if (positions.length == 0) {
         warning = "Failed to place any parts. Are sheet dimensions right?"
@@ -759,7 +756,6 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
 
         transform = transform[0];
         // apply rotation first. All rotations are around (0, 0, 0)
-        console.log("applying transform: " + JSON.stringify(transform));
         let newGeom = leaf.geometry[0].clone()
           .rotate(transform.rotate, new Vector([0,0,0]), new Vector([0,0,1]))
           .translate(transform.translate.x, transform.translate.y, 0);
@@ -772,7 +768,6 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
           bom: leaf.bom,
         };
       });
-      console.log("returning warning: " + warning)
       return warning;
     });
   });
@@ -805,10 +800,9 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
 
   shapesForLayout.forEach((shape) => {
     let face = shape.shape;
-    let temp = face.clone().outerWire().meshEdges();
-    temp = face.clone().outerWire().meshEdges({tolerance: tolerance, angularTolerance: 1});
-    console.log("mesh approximation for layout, e-1 and 1.0: " + temp.lines.length);
-    parts.push(FloatPolygon.fromPoints(preparePoints(temp.lines), shape.id));
+    const mesh = face.clone().outerWire().meshEdges({tolerance: tolerance, angularTolerance: 1});
+    const points = preparePoints(mesh, tolerance); // TOOD: it's not actually clear that this tolerance should be the same..
+    parts.push(FloatPolygon.fromPoints(points, shape.id));
   });
   nestingEngine.setParts(parts);
   let callbackCounter = 0;
@@ -817,18 +811,15 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
     try {
       nestingEngine.start((num) => {
         const fraction = 1 / (targetGenerations * populationSize);
-        console.log("computed progress: " + (num + callbackCounter) * fraction);
         // start at 0.1 to acknowledge the rotation computations which happed above.
         progressCallback(
           0.1 + 0.9 * (num + callbackCounter) * fraction,
           proxy(() => {nestingEngine.stop()}));
       },
       (placement, utilization) => {
-        console.log("display result called with data: ");
-        console.log(placement);
         callbackCounter++;
         if (callbackCounter >= targetGenerations * populationSize) {
-          console.log("completed " + targetGenerations + " generations in " + callbackCounter + " callbacks");
+          console.log("nesting search completed " + targetGenerations + " generations. Final result: " + JSON.stringify(placement));
           nestingEngine.stop();
           resolve(placement);
         }
@@ -843,10 +834,70 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
 
 // from the mesh format of [x1, y1, z1, x2, y2, z2, ...] to FloatPolygon friendly format of
 // [{x: x1, y: y1}, {x: x2, y: y2}...]
-function preparePoints(meshArray) {
+function preparePoints(mesh, tolerance) {
+  // Unfortunately the "edges" of this mesh aren't always in sequential order. Here we re-sort them so we can
+  // pass the points into FloatPolygon in a looping order, ie, starting at one point and looping around the
+  // perimiter of the shape.
+
+  // create structure for lookup of line segments by start point or end point
+  let edgeStarts = [];
+  mesh.edgeGroups.forEach((edge) => {
+    edgeStarts.push(
+      {
+        startPoint: {x: mesh.lines[edge.start * 3], y: mesh.lines[edge.start * 3 + 1]},
+        start: edge.start * 3,
+        len: edge.count,
+        edgeId: edge.edgeId
+      }
+    );
+    const endIndex = (edge.start + edge.count - 1) * 3
+    edgeStarts.push(
+      {
+        startPoint: {x: mesh.lines[endIndex], y: mesh.lines[endIndex + 1]},
+        start: endIndex,
+        len: -1 * edge.count,
+        edgeId: edge.edgeId
+      }
+    );
+  });
+
+  const almostEqual = (p1, p2) => {
+    const x = Math.abs(p1.x - p2.x) < tolerance;
+    const y = Math.abs(p1.y - p2.y) < tolerance;
+    return x && y;
+  }
+
   const result = [];
-  for (var i = 0; i < meshArray.length; i += 3) {
-    result.push({x: meshArray[i], y: meshArray[i + 1]});
+  let currentEdge = edgeStarts[0];
+  while (edgeStarts.length > 0) {
+    // add currentEdge to result. Remember, it could be reverse direction if we matched
+    // an endpoint.
+    for (var i = 1; i < Math.abs(currentEdge.len); i ++) { // skip start point
+      let offset = i * 3;
+      if (currentEdge.len < 0) {
+        offset = -1 * offset;
+      }
+      const index = currentEdge.start + offset;
+      result.push({x: mesh.lines[index], y: mesh.lines[index + 1]});
+    }
+
+    // Remove this edge and it's inverse from the lookup table.
+    edgeStarts = edgeStarts.filter((edge) => {
+      return edge.edgeId != currentEdge.edgeId;
+    })
+
+    // else find next edge which starts where current result ends.
+    const nextEgdes = edgeStarts.filter((edge) => {
+      return almostEqual(result[result.length - 1], edge.startPoint)
+    });
+
+    if (edgeStarts.length > 0 && nextEgdes.length != 1) {
+      console.log(result);
+      console.log(edgeStarts);
+      console.log(nextEgdes);
+      throw new Error("Geometry errow when preparing for cutlayout. Part perimiter has an edge with: " + nextEgdes.length + " continuations");
+    }
+    currentEdge = nextEgdes[0];
   }
   return result;
 }
