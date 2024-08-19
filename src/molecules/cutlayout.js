@@ -1,6 +1,8 @@
 import Atom from "../prototypes/atom.js";
 import GlobalVariables from "../js/globalvariables.js";
 //import GlobalVariables from '../js/globalvariables.js'
+import { proxy } from "comlink";
+
 
 /**
  * The Cut Layout atom extracts a copy of each shape on the cutlist and places them optimally on a cut sheet.
@@ -35,14 +37,48 @@ export default class CutLayout extends Atom {
     this.description =
       "Extracts all parts tagged for cutting and lays them out on a sheet to cut.";
 
+    this.progress = 0.0;
+
+    this.cancelationHandle = undefined;
+
     this.addIO("input", "geometry", this, "geometry", null);
+
     this.addIO(
       "input",
       "Material Thickness",
       this,
       "number",
-      GlobalVariables.topLevelMolecule.unitsIndex == "MM" ? 19 : 0.75
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 19 : 0.75
     );
+    this.addIO(
+      "input",
+      "Sheet Width",
+      this,
+      "number",
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 2438 : 96
+    );
+    this.addIO(
+      "input",
+      "Sheet Height",
+      this,
+      "number",
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 1219 : 48
+    );
+    this.addIO(
+      "input",
+      "Part Padding",
+      this,
+      "number",
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 6 : .25
+    );
+    this.addIO(
+      "input",
+      "Sheet Padding",
+      this,
+      "number",
+      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 76 : 3
+    );
+
     this.addIO("output", "geometry", this, "geometry", "");
 
     this.setValues(values);
@@ -100,6 +136,27 @@ export default class CutLayout extends Atom {
     GlobalVariables.c.stroke();
     GlobalVariables.c.setLineDash([]);
     GlobalVariables.c.closePath();
+
+
+    //draw progress circle in the middle
+    if (this.progress < 1.0) {
+      GlobalVariables.c.beginPath();
+      GlobalVariables.c.fillStyle = this.centerColor;
+      GlobalVariables.c.moveTo(
+        GlobalVariables.widthToPixels(this.x),
+        GlobalVariables.heightToPixels(this.y)
+      );
+      GlobalVariables.c.arc(
+        GlobalVariables.widthToPixels(this.x),
+        GlobalVariables.heightToPixels(this.y),
+        GlobalVariables.widthToPixels(this.radius) / 1.5,
+        0,
+        this.progress * Math.PI * 2,
+        false
+      );
+      GlobalVariables.c.closePath();
+      GlobalVariables.c.fill();
+    }
   }
   /**
    * Pass the input geometry to a worker function to compute the translation.
@@ -108,9 +165,18 @@ export default class CutLayout extends Atom {
     super.updateValue();
 
     if (this.inputs.every((x) => x.ready)) {
+      if (this.cancelationHandle) {
+        // There's an in-progress nesting worker. Cancel it and start another nesting
+        // computation with the new inputs.
+        this.cancelationHandle();
+      }
       this.processing = true;
       var inputID = this.findIOValue("geometry");
       var materialThickness = this.findIOValue("Material Thickness");
+      var sheetWidth = this.findIOValue("Sheet Width");
+      var sheetHeight = this.findIOValue("Sheet Height");
+      var sheetPadding = this.findIOValue("Sheet Padding");
+      var partPadding = this.findIOValue("Part Padding");
       var tag = "cutLayout";
 
       if (!inputID) {
@@ -118,10 +184,32 @@ export default class CutLayout extends Atom {
         return;
       }
 
+      GlobalVariables.topLevelMolecule.unitsKey
+
       GlobalVariables.cad
-        .layout(this.uniqueID, inputID, tag, materialThickness)
-        .then(() => {
+        .layout(
+          this.uniqueID,
+          inputID,
+          tag,
+          proxy((progress, cancelationHandle) => {
+            this.progress = progress;
+            this.cancelationHandle = cancelationHandle;
+          }),
+          {
+            thickness: materialThickness,
+            width: sheetWidth,
+            height: sheetHeight,
+            sheetPadding: sheetPadding,
+            partPadding: partPadding
+          })
+        .then((warning) => {
           this.basicThreadValueProcessing();
+          if (warning != undefined) {
+            this.setAlert(warning);
+          }
+          this.progress = 1.0;
+          this.cancelationHandle = undefined;
+          this.processing = false;
         })
         .catch(this.alertingErrorHandler());
     }

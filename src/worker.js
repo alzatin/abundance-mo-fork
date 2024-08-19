@@ -1,7 +1,7 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import { setOC, loadFont } from "replicad";
-import { expose } from "comlink";
+import { expose, proxy } from "comlink";
 import {
   drawCircle,
   drawRectangle,
@@ -16,6 +16,7 @@ import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 import { addSVG, drawSVG } from "replicad-decorate";
 import Fonts from "./js/fonts.js";
+import {AnyNest, FloatPolygon} from "any-nest";
 
 var library = {};
 
@@ -422,6 +423,7 @@ function output(targetID, inputID) {
     return true;
   });
 }
+
 function molecule(targetID, inputID) {
   return started.then(() => {
     if (library[inputID] != undefined) {
@@ -606,7 +608,19 @@ function extractTags(inputGeometry, TAG) {
   }
 }
 
-function layout(targetID, inputID, TAG, materialThickness) {
+
+/**
+ * @param progressCallback - a function which takes two parameters:
+ *    - progress - 0 to 1 inclusive
+ *    - cancelationHandle - a callable which cancels this task.
+ * @param {*} layoutConfig - dictionary with keys:
+ *    - thickness - thickness of the stock material
+ *    - width
+ *    - height - together with width specifies the demensions of the stock material
+ *    - sheetPadding - space from the edge of the material where no parts will be placed
+ *    - partPadding - space between parts in the resulting placement
+ */
+function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
   return started.then(() => {
     var THICKNESS_TOLLERANCE = 0.001;
 
@@ -614,10 +628,8 @@ function layout(targetID, inputID, TAG, materialThickness) {
     if (!taggedGeometry) {
       throw new Error("No Upstream Geometries Tagged for Cut");
     }
-
-    // a temporary solution to ensure shapes don't overlap. This is not an
-    // efficient packing algorithm.
-    let lateralOffset = 0;
+    let localId = 0;
+    let shapesForLayout = [];
 
     // Rotate all shapes to be most cuttable.
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
@@ -629,12 +641,13 @@ function layout(targetID, inputID, TAG, materialThickness) {
       //  3) there must be no parts of the shape which protrude "below" this face
       let candidates = [];
       let hasFlatFace = false;
+      let faceIndex = 0;
       leaf.geometry[0].faces.forEach((face) => {
         if (face.geomType == "PLANE") {
           hasFlatFace = true;
           let prospectiveGoem = moveFaceToCuttingPlane(leaf.geometry[0], face);
           let thickness = prospectiveGoem.boundingBox.depth;
-          if (thickness < materialThickness + THICKNESS_TOLLERANCE) {
+          if (thickness < layoutConfig.thickness + THICKNESS_TOLLERANCE) {
             // Check for protrusions "below" the bottom of the raw material.
             if (
               prospectiveGoem.boundingBox.bounds[0][2] >
@@ -643,10 +656,12 @@ function layout(targetID, inputID, TAG, materialThickness) {
               candidates.push({
                 face: face,
                 geom: prospectiveGoem,
+                faceIndex: faceIndex
               });
             }
           }
         }
+        faceIndex++;
       });
 
       let selected;
@@ -685,7 +700,7 @@ function layout(targetID, inputID, TAG, materialThickness) {
         // prefer candidates whose thickness is equal to material thickness, if any.
         let temp = candidates.filter((c) => {
           return (
-            Math.abs(c.geom.boundingBox.depth - materialThickness) <
+            Math.abs(c.geom.boundingBox.depth - layoutConfig.thickness) <
             THICKNESS_TOLLERANCE
           );
         });
@@ -703,20 +718,201 @@ function layout(targetID, inputID, TAG, materialThickness) {
           }
         });
       }
-
-      let newGeom = selected.geom.clone().translate(lateralOffset, 0, 0);
-      lateralOffset += newGeom.boundingBox.width;
-
-      return {
-        geometry: [newGeom],
+      let newLeaf = {
+        geometry: [selected.geom],
+        id: localId,
+        referencePoint: selected.face.center,
         tags: leaf.tags,
         color: leaf.color,
         plane: leaf.plane,
         bom: leaf.bom,
       };
+      // Retrieve face from the re-positioned shape so that we get the shape of the face after
+      // it's been moved to the xy cutting plane. Otherwise we can get weird skewed projections
+      // of the face shape.
+      shapesForLayout.push({id: localId, shape: newLeaf.geometry[0].faces[selected.faceIndex]});
+      localId++;
+
+      return newLeaf;
     });
-    return true;
+
+    let positionsPromise = computePositions(shapesForLayout, progressCallback, layoutConfig);
+    return positionsPromise.then((positions) => {
+      let warning;
+      if (positions.length == 0) {
+        warning = "Failed to place any parts. Are sheet dimensions right?"
+      } else {
+        let unplacedParts = shapesForLayout.length - positions.flat().length;
+        if (unplacedParts > 0) {
+          warning = unplacedParts + " parts are too big to fit on this sheet size. Failed layout for " + unplacedParts + " part(s)";
+        }
+      }
+
+      library[targetID] = actOnLeafs(extractTags(library[targetID], TAG), (leaf) => {
+        let transform,index;
+        for (var i = 0; i < positions.length; i++) {
+          let candidates = positions[i].filter((transform) => transform.id == leaf.id);
+          if (candidates.length == 1) {
+            transform = candidates[0];
+            index = i;
+            break;
+          } else if (candidates.length > 1) {
+            console.warn("Found more than one transformation for same id");
+          }
+        }
+        if (transform == undefined) {
+          console.log("didn't find transform for id: " + leaf.id);
+          return undefined;
+        }
+        // apply rotation first. All rotations are around (0, 0, 0)
+        // Additionally, shift by sheet-index * sheet height so that multiple
+        // sheet layouts are spaced out from one another.
+        let newGeom = leaf.geometry[0].clone()
+          .rotate(transform.rotate, new Vector([0,0,0]), new Vector([0,0,1]))
+          .translate(transform.translate.x, transform.translate.y + i * layoutConfig.height, 0);
+  
+        return {
+          geometry: [newGeom],
+          tags: leaf.tags,
+          color: leaf.color,
+          plane: leaf.plane,
+          bom: leaf.bom,
+        };
+      });
+      return warning;
+    });
   });
+}
+
+/**
+ * Use the packing engine, note this is potentially time consuming step.
+ */
+function computePositions(shapesForLayout, progressCallback, layoutConfig) {
+  const populationSize = 5;
+  const nestingEngine = new AnyNest();
+  const tolerance = 0.1;
+  
+  // include tolerance * 2 to ensure padding is the minimum spacing between parts.
+  const configWithDefaults = nestingEngine.config({
+    spacing: layoutConfig.partPadding + (tolerance * 2), 
+    binSpacing: layoutConfig.sheetPadding,
+    populationSize: populationSize,
+    exploreConcave: false // we eventually want this to be true, but it's unsupported right now
+  });
+  nestingEngine.setBin(FloatPolygon.fromPoints(
+    [
+      {x: 0, y: 0},
+      {x: layoutConfig.width, y: 0},
+      {x: layoutConfig.width, y: layoutConfig.height},
+      {x: 0, y: layoutConfig.height}
+    ], "bin"));
+
+  let parts = [];
+
+  shapesForLayout.forEach((shape) => {
+    let face = shape.shape;
+    const mesh = face.clone().outerWire().meshEdges({tolerance: tolerance, angularTolerance: 1});
+    const points = preparePoints(mesh, tolerance); // TOOD: it's not actually clear that this tolerance should be the same..
+    parts.push(FloatPolygon.fromPoints(points, shape.id));
+  });
+  nestingEngine.setParts(parts);
+
+  console.log("Starting nesting task with configuration: " + JSON.stringify(configWithDefaults));
+  let callbackCounter = 0;
+  const targetGenerations = 5;
+  return new Promise((resolve, reject) => {
+    try {
+      nestingEngine.start((num) => {
+        const fraction = 1 / (targetGenerations * populationSize);
+        // start at 0.1 to acknowledge the rotation computations which happed above.
+        progressCallback(
+          0.1 + 0.9 * (num + callbackCounter) * fraction,
+          proxy(() => {nestingEngine.stop()}));
+      },
+      (placement, utilization) => {
+        callbackCounter++;
+        if (callbackCounter >= targetGenerations * populationSize) {
+          console.log("nesting search completed " + targetGenerations + " generations. Final result: " + JSON.stringify(placement));
+          nestingEngine.stop();
+          resolve(placement);
+        }
+      });
+    } catch (err) {
+      console.log("error in nesting engine: " + err);
+      nestingEngine.stop();
+      reject(err);
+    }
+  })
+}
+
+// from the mesh format of [x1, y1, z1, x2, y2, z2, ...] to FloatPolygon friendly format of
+// [{x: x1, y: y1}, {x: x2, y: y2}...]
+function preparePoints(mesh, tolerance) {
+  // Unfortunately the "edges" of this mesh aren't always in sequential order. Here we re-sort them so we can
+  // pass the points into FloatPolygon in a looping order, ie, starting at one point and looping around the
+  // perimiter of the shape.
+
+  // create structure for lookup of line segments by start point or end point
+  let edgeStarts = [];
+  mesh.edgeGroups.forEach((edge) => {
+    edgeStarts.push(
+      {
+        startPoint: {x: mesh.lines[edge.start * 3], y: mesh.lines[edge.start * 3 + 1]},
+        start: edge.start * 3,
+        len: edge.count,
+        edgeId: edge.edgeId
+      }
+    );
+    const endIndex = (edge.start + edge.count - 1) * 3
+    edgeStarts.push(
+      {
+        startPoint: {x: mesh.lines[endIndex], y: mesh.lines[endIndex + 1]},
+        start: endIndex,
+        len: -1 * edge.count,
+        edgeId: edge.edgeId
+      }
+    );
+  });
+
+  const almostEqual = (p1, p2) => {
+    const x = Math.abs(p1.x - p2.x) < tolerance;
+    const y = Math.abs(p1.y - p2.y) < tolerance;
+    return x && y;
+  }
+
+  const result = [];
+  let currentEdge = edgeStarts[0];
+  while (edgeStarts.length > 0) {
+    // add currentEdge to result. Remember, it could be reverse direction if we matched
+    // an endpoint.
+    for (var i = 1; i < Math.abs(currentEdge.len); i ++) { // skip start point
+      let offset = i * 3;
+      if (currentEdge.len < 0) {
+        offset = -1 * offset;
+      }
+      const index = currentEdge.start + offset;
+      result.push({x: mesh.lines[index], y: mesh.lines[index + 1]});
+    }
+
+    // Remove this edge and it's inverse from the lookup table.
+    edgeStarts = edgeStarts.filter((edge) => {
+      return edge.edgeId != currentEdge.edgeId;
+    })
+
+    // else find next edge which starts where current result ends.
+    const nextEgdes = edgeStarts.filter((edge) => {
+      return almostEqual(result[result.length - 1], edge.startPoint)
+    });
+
+    if (edgeStarts.length > 0 && nextEgdes.length != 1) {
+      console.log(result);
+      console.log(edgeStarts);
+      console.log(nextEgdes);
+      throw new Error("Geometry errow when preparing for cutlayout. Part perimiter has an edge with: " + nextEgdes.length + " continuations");
+    }
+    currentEdge = nextEgdes[0];
+  }
+  return result;
 }
 
 function moveFaceToCuttingPlane(geom, face) {
@@ -901,6 +1097,7 @@ function fusion(targetID, inputIDs) {
 }
 
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
+// The action may return 'undefined' to cause the leaf to be removed from the result.
 function actOnLeafs(assembly, action, plane) {
   plane = plane || assembly.plane;
   //This is a leaf
@@ -914,7 +1111,10 @@ function actOnLeafs(assembly, action, plane) {
   else {
     let transformedAssembly = [];
     assembly.geometry.forEach((subAssembly) => {
-      transformedAssembly.push(actOnLeafs(subAssembly, action));
+      const result = actOnLeafs(subAssembly, action);
+      if (result != undefined) {
+        transformedAssembly.push(result);
+      }
     });
     return {
       geometry: transformedAssembly,

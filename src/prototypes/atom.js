@@ -118,10 +118,6 @@ export default class Atom {
      * @type {boolean}
      */
     this.processing = false;
-    /**
-     * A function which can be called to cancel the processing being done for this atom.
-     * @type {function}
-     */
 
     for (var key in values) {
       /**
