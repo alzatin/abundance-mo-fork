@@ -727,6 +727,9 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
         plane: leaf.plane,
         bom: leaf.bom,
       };
+      // Retrieve face from the re-positioned shape so that we get the shape of the face after
+      // it's been moved to the xy cutting plane. Otherwise we can get weird skewed projections
+      // of the face shape.
       shapesForLayout.push({id: localId, shape: newLeaf.geometry[0].faces[selected.faceIndex]});
       localId++;
 
@@ -746,19 +749,27 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
       }
 
       library[targetID] = actOnLeafs(extractTags(library[targetID], TAG), (leaf) => {
-        let transform = positions.flat().filter((transform) => transform.id == leaf.id);
-        if (transform.length == 0) {
+        let transform,index;
+        for (var i = 0; i < positions.length; i++) {
+          let candidates = positions[i].filter((transform) => transform.id == leaf.id);
+          if (candidates.length == 1) {
+            transform = candidates[0];
+            index = i;
+            break;
+          } else if (candidates.length > 1) {
+            console.warn("Found more than one transformation for same id");
+          }
+        }
+        if (transform == undefined) {
           console.log("didn't find transform for id: " + leaf.id);
           return undefined;
-        } else if (transform.length > 1) {
-          console.warn("Found more than one transformation for same id");
         }
-
-        transform = transform[0];
         // apply rotation first. All rotations are around (0, 0, 0)
+        // Additionally, shift by sheet-index * sheet height so that multiple
+        // sheet layouts are spaced out from one another.
         let newGeom = leaf.geometry[0].clone()
           .rotate(transform.rotate, new Vector([0,0,0]), new Vector([0,0,1]))
-          .translate(transform.translate.x, transform.translate.y, 0);
+          .translate(transform.translate.x, transform.translate.y + i * layoutConfig.height, 0);
   
         return {
           geometry: [newGeom],
@@ -782,7 +793,7 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
   const tolerance = 0.1;
   
   // include tolerance * 2 to ensure padding is the minimum spacing between parts.
-  nestingEngine.config({
+  const configWithDefaults = nestingEngine.config({
     spacing: layoutConfig.partPadding + (tolerance * 2), 
     binSpacing: layoutConfig.sheetPadding,
     populationSize: populationSize,
@@ -805,6 +816,8 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
     parts.push(FloatPolygon.fromPoints(points, shape.id));
   });
   nestingEngine.setParts(parts);
+
+  console.log("Starting nesting task with configuration: " + JSON.stringify(configWithDefaults));
   let callbackCounter = 0;
   const targetGenerations = 5;
   return new Promise((resolve, reject) => {

@@ -13,7 +13,6 @@
     "@react-three/drei": "^9.97.0",
     "@react-three/fiber": "8.15.16",
     "@uiw/react-codemirror": "^4.22.0",
-    "any-nest": "1.0.2",
     "circular-menu": "^1.0.6",
     "codemirror": "^6.0.1",
     "comlink": "^4.4.1",
