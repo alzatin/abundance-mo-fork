@@ -217,11 +217,7 @@ const ProjectDiv = (props) => {
         </p>
         <img
           className="project_image"
-          src={
-            "https://raw.githubusercontent.com/" +
-            node.repoName +
-            "/master/project.svg?sanitize=true"
-          }
+          src={node.svgURL}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
             currentTarget.src = "/imgs/defaultThumbnail.svg";

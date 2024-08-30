@@ -121,6 +121,7 @@ export default function ReplicadApp() {
         repo: project.repoName,
       })
       .then((response) => {
+        console.log(response);
         //content will be base64 encoded
         let rawFile = JSON.parse(atob(response.data.content));
 
