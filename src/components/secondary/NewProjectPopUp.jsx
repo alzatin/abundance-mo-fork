@@ -344,7 +344,7 @@ const NewProjectPopUp = (props) => {
             />
             <label htmlFor="project-topics">Project Topics</label>
             <CreatableSelect
-              defaultValue={[topics[0], topics[1]]}
+              defaultValue={[]}
               isMulti
               name="Project Topics"
               options={topics}
