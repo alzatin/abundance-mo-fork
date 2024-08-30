@@ -130,7 +130,7 @@ const NewProjectPopUp = (props) => {
             forks: result.data.forks_count,
             topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
             topics: topics,
-            url: result.data.html_url,
+            html_url: result.data.html_url,
             readme:
               "https://raw.githubusercontent.com/" +
               result.data.full_name +
