@@ -373,6 +373,9 @@ const ProjectDiv = (props) => {
 /* to add: if current user is null show this next part */
 const ShowProjects = (props) => {
   const [projectsLoaded, setStateLoaded] = useState([]);
+  const [lastKey, setLastKey] = useState("");
+  let pageDict = props.pageDict;
+  const [pageNumber, setPageNumber] = useState(0);
 
   const [searchBarValue, setSearchBarValue] = useState("");
   const exportPopUp = props.exportPopUp;
@@ -382,16 +385,7 @@ const ShowProjects = (props) => {
   useEffect(() => {
     octokit = new Octokit();
     var query;
-    /*if (props.user == "" || props.userBrowsing) {
-      query = searchBarValue + " topic:abundance-project" + " fork:true";
-    } else {
-      query =
-        searchBarValue +
-        " user:" +
-        props.user +
-        " topic:abundance-project" +
-        " fork:true";
-    }*/
+
     const forkDummyProject = async function (authorizedUserOcto) {
       var owner = "alzatin";
       var repo = "My-first-Abundance-project";
@@ -428,6 +422,12 @@ const ShowProjects = (props) => {
         });
     };
     const repoSearchRequest = async () => {
+      console.log(lastKey);
+      pageDict[pageNumber] = lastKey;
+      console.log(pageDict);
+      let lastKeyQuery = lastKey
+        ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
+        : "&lastKey";
       let searchQuery;
       if (searchBarValue != "") {
         searchQuery = "&query=" + searchBarValue;
@@ -435,11 +435,16 @@ const ShowProjects = (props) => {
         searchQuery = "&query";
       }
       if (props.user == "" || props.userBrowsing) {
-        query = "attribute=repoName" + searchQuery + "&user";
+        query = "attribute=repoName" + searchQuery + "&user" + lastKeyQuery;
       } else {
-        query = "attribute=repoName" + searchQuery + "&user=" + props.user;
+        query =
+          "attribute=repoName" +
+          searchQuery +
+          "&user=" +
+          props.user +
+          lastKeyQuery;
       }
-      console.log(query);
+
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
@@ -451,118 +456,10 @@ const ShowProjects = (props) => {
 
       return awsRepos.json();
     };
-    /*initialize the AWS database with the projects from the search- don't need anymore but will leave for ref*/
-    const populateAWS = async () => {
-      const repos = await octokit.paginate(
-        "GET /search/repositories",
-        {
-          q: query,
-          per_page: 50,
-        },
-        (response, done) => {
-          repoCount += response.data.length;
-          if (repoCount >= 250) {
-            done();
-          }
-          return response;
-        }
-      );
-      let repoArray = [];
-
-      // getReadMeContent
-      //let readMeContent
-
-      repos.forEach((result) => {
-        repoArray.push({
-          owner: result.owner.login,
-          repoName: result.name,
-          ranking: result.stargazers_count,
-          forks: result.forks_count,
-          topMoleculeID: result.id,
-          topics: result.topics,
-          readme:
-            "https://raw.githubusercontent.com/" +
-            result.full_name +
-            "/master/README.md?sanitize=true",
-          contentURL:
-            "https://raw.githubusercontent.com/" +
-            result.full_name +
-            "/master/project.abundance?sanitize=true",
-          githubMoleculesUsed: [],
-          svgURL:
-            "https://raw.githubusercontent.com/" +
-            result.full_name +
-            "/master/project.svg?sanitize=true",
-          dateCreated: result.created_at,
-        });
-      });
-      const apiUrl =
-        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//populate-table";
-      fetch(apiUrl, {
-        method: "POST",
-        body: JSON.stringify({ repos: repoArray }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      }).then((response) => {
-        console.log(response);
-      });
-    };
-    const populateUserAWS = async () => {
-      let repoCount = 0;
-      const repos = await octokit.paginate(
-        "GET /search/repositories",
-        {
-          q: " topic:abundance-project" + " fork:true",
-          per_page: 100,
-        },
-        (response, done) => {
-          repoCount += response.data.length;
-          if (repoCount >= 250) {
-            done();
-          }
-          return response;
-        }
-      );
-
-      let userArray = [];
-
-      // getReadMeContent
-      //let readMeContent
-
-      repos[0].data.forEach((result) => {
-        const found = userArray.some(
-          (user) => user["user"] == result.owner.login
-        );
-        if (found) {
-          let obj = userArray.find(
-            (item) => item["user"] === result.owner.login
-          );
-          obj["numProjectsOwned"] += 1;
-        } else {
-          userArray.push({
-            user: result.owner.login,
-            likedProjects: [],
-            numProjectsOwned: 1,
-          });
-        }
-      });
-      console.log(userArray);
-      const apiUserUrl =
-        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/populate-user-table";
-      fetch(apiUserUrl, {
-        method: "POST",
-        body: JSON.stringify({ users: userArray }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      }).then((response) => {
-        console.log(response);
-      });
-    };
 
     repoSearchRequest()
       .then((result) => {
+        console.log(result);
         if (result["repos"].length == 0 && props.user !== "") {
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
@@ -572,6 +469,7 @@ const ShowProjects = (props) => {
           });
         } else {
           setStateLoaded(result["repos"]);
+          setLastKey(result["lastKey"]);
         }
       })
       .catch((err) => {
@@ -579,7 +477,7 @@ const ShowProjects = (props) => {
           "Error loading projects. Please wait a few minutes then try again."
         );
       });
-  }, [props.user, searchBarValue]);
+  }, [props.user, searchBarValue, pageNumber]);
 
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
@@ -630,17 +528,24 @@ const ShowProjects = (props) => {
           exporting={false}
         />
       ) : (
-        <ClassicBrowse
-          projectsLoaded={projectsLoaded}
-          authorizedUserOcto={authorizedUserOcto}
-          setSearchBarValue={setSearchBarValue}
-          searchBarValue={searchBarValue}
-          setExportPopUp={setExportPopUp}
-          user={props.user}
-          userBrowsing={props.userBrowsing}
-          setBrowsing={props.setBrowsing}
-          isloggedIn={props.isloggedIn}
-        />
+        <>
+          <ClassicBrowse
+            projectsLoaded={projectsLoaded}
+            setStateLoaded={setStateLoaded}
+            setPageNumber={setPageNumber}
+            pageNumber={pageNumber}
+            authorizedUserOcto={authorizedUserOcto}
+            lastKey={lastKey}
+            setSearchBarValue={setSearchBarValue}
+            searchBarValue={searchBarValue}
+            setExportPopUp={setExportPopUp}
+            user={props.user}
+            pageDict={pageDict}
+            userBrowsing={props.userBrowsing}
+            setBrowsing={props.setBrowsing}
+            isloggedIn={props.isloggedIn}
+          />
+        </>
       )}
     </>
   );
@@ -649,12 +554,16 @@ const ShowProjects = (props) => {
 // Browse display
 const ClassicBrowse = (props) => {
   let nodes = [];
-  const [pageNumber, setPageNumber] = useState(0);
-  let projectsLoaded = props.projectsLoaded;
-  let searchBarValue = props.searchBarValue;
-  let setSearchBarValue = props.setSearchBarValue;
-  let setExportPopUp = props.setExportPopUp;
-  let authorizedUserOcto = props.authorizedUserOcto;
+  const setPageNumber = props.setPageNumber;
+  const pageNumber = props.pageNumber;
+  const projectsLoaded = props.projectsLoaded;
+  const setStateLoaded = props.setProjectsLoaded;
+  let pageDict = props.pageDict;
+  const searchBarValue = props.searchBarValue;
+  const setSearchBarValue = props.setSearchBarValue;
+  const setExportPopUp = props.setExportPopUp;
+  const authorizedUserOcto = props.authorizedUserOcto;
+  const lastKey = props.lastKey;
 
   if (projectsLoaded.length > 0) {
     var userRepos = [];
@@ -717,7 +626,7 @@ const ClassicBrowse = (props) => {
           >
             <button
               onClick={() => {
-                if (pageNumber + 1 > 1) {
+                if (pageDict[pageNumber - 1] != "") {
                   setPageNumber(pageNumber - 1);
                 }
               }}
@@ -728,12 +637,12 @@ const ClassicBrowse = (props) => {
             <p
               style={{ alignSelf: "center", fontSize: ".7em", padding: "3px" }}
             >
-              Page {pageNumber + 1} of {projectsLoaded.length}
+              Page {pageNumber}
             </p>
             <button
               className="page_forward_button"
               onClick={() => {
-                if (projectsLoaded.length > pageNumber + 1) {
+                if (lastKey != "") {
                   setPageNumber(pageNumber + 1);
                 }
               }}
@@ -792,6 +701,7 @@ function LoginMode(props) {
   const exportPopUp = props.exportPopUp;
   const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
+  const pageDict = { 0: null };
 
   var currentUser = GlobalVariables.currentUser;
 
@@ -806,6 +716,7 @@ function LoginMode(props) {
         isloggedIn={props.isloggedIn}
         exportPopUp={exportPopUp}
         setExportPopUp={setExportPopUp}
+        pageDict={pageDict}
       />
     );
   } else if (userBrowsing) {
@@ -819,6 +730,7 @@ function LoginMode(props) {
         tryLogin={props.tryLogin}
         exportPopUp={exportPopUp}
         setExportPopUp={setExportPopUp}
+        pageDict={pageDict}
       />
     );
   } else {
