@@ -194,8 +194,7 @@ function CreateMode(props) {
                           /*aws dynamo update-item lambda, also updates dateModified on aws side*/
                           const apiUpdateUrl =
                             "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
-                          console.log("trying to update aws");
-                          console.log(owner, repo);
+
                           fetch(apiUpdateUrl, {
                             method: "POST",
                             body: JSON.stringify({

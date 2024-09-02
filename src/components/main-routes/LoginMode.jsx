@@ -422,9 +422,7 @@ const ShowProjects = (props) => {
         });
     };
     const repoSearchRequest = async () => {
-      console.log(lastKey);
       pageDict[pageNumber] = lastKey;
-      console.log(pageDict);
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
         : "&lastKey";
@@ -626,7 +624,7 @@ const ClassicBrowse = (props) => {
           >
             <button
               onClick={() => {
-                if (pageDict[pageNumber - 1] != "") {
+                if (pageNumber > 0) {
                   setPageNumber(pageNumber - 1);
                 }
               }}
@@ -636,9 +634,7 @@ const ClassicBrowse = (props) => {
             </button>
             <p
               style={{ alignSelf: "center", fontSize: ".7em", padding: "3px" }}
-            >
-              Page {pageNumber}
-            </p>
+            ></p>
             <button
               className="page_forward_button"
               onClick={() => {
