@@ -42,4 +42,4 @@ def lambda_handler(event:any, context:any):
     returnObject['headers']['Access-Control-Allow-Methods'] = '*'
     returnObject['headers']['Access-Control-Allow-Origin'] = '*'
     
-    return returnObjecte
+    return returnObject
