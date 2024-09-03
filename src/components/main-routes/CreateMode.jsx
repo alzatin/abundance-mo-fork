@@ -128,6 +128,7 @@ function CreateMode(props) {
           repo: repo,
         })
         .then((response) => {
+          let htmlURL = response.data.html_url;
           setState(40);
 
           base = response.data.default_branch;
@@ -190,14 +191,19 @@ function CreateMode(props) {
                         .then((response) => {
                           setState(80);
 
-                          /*aws dynamo update-item lambda*/
+                          /*aws dynamo update-item lambda, also updates dateModified on aws side*/
                           const apiUpdateUrl =
                             "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
+
                           fetch(apiUpdateUrl, {
                             method: "POST",
                             body: JSON.stringify({
                               owner: owner,
                               repoName: repo,
+                              attributeUpdates: {
+                                ranking: 0,
+                                html_url: htmlURL,
+                              },
                             }),
                             headers: {
                               "Content-type": "application/json; charset=UTF-8",

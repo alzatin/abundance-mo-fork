@@ -22,6 +22,8 @@ function TopMenu(props) {
     {
       id: "GitHub",
       buttonFunc: () => {
+        console.log("open github");
+        console.log(GlobalVariables.currentRepo);
         window.open(GlobalVariables.currentRepo.html_url);
       },
     },

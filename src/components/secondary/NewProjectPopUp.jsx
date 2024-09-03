@@ -130,6 +130,7 @@ const NewProjectPopUp = (props) => {
             forks: result.data.forks_count,
             topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
             topics: topics,
+            html_url: result.data.html_url,
             readme:
               "https://raw.githubusercontent.com/" +
               result.data.full_name +
@@ -243,7 +244,7 @@ const NewProjectPopUp = (props) => {
                                       .then(() => {
                                         setExportPopUp(false);
                                         navigate(
-                                          `/${GlobalVariables.currentRepo.id}`
+                                          `/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
                                         );
                                       });
                                   });
@@ -344,7 +345,7 @@ const NewProjectPopUp = (props) => {
             />
             <label htmlFor="project-topics">Project Topics</label>
             <CreatableSelect
-              defaultValue={[topics[0], topics[1]]}
+              defaultValue={[]}
               isMulti
               name="Project Topics"
               options={topics}
