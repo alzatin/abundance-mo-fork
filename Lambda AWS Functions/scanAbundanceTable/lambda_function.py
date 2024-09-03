@@ -28,7 +28,7 @@ def lambda_handler(event:any, context:any):
             'body': json.dumps(body, cls=DecimalEncoder)
         }
     
-    def lookForLast():
+    def lookForLastEvaluatedKey():
         if lastKey: 
             lastKeyList = lastKey.split("~")
             lastKeyObj = {"repoName": lastKeyList[0],"owner":lastKeyList[1]}
@@ -69,13 +69,12 @@ def lambda_handler(event:any, context:any):
             response = table.scan(**scan_args)
             item_array.extend(response.get('Items', []))
         else:
-            exclusiveKey = lookForLast()
+            exclusiveKey = lookForLastEvaluatedKey()
             query_args = {
                 'IndexName':'yyyy-dateCreated-index',
                 'KeyConditionExpression': Key('yyyy').eq(2024)
             }
             if exclusiveKey: 
-                print (exclusiveKey)
                 query_args['ExclusiveStartKey'] = exclusiveKey
             #response = table.scan(**scan_args)
             response = table.query(**query_args)
@@ -89,7 +88,7 @@ def lambda_handler(event:any, context:any):
         return build_response(200, {'repos': item_array , "lastKey": lastKeyForward})
     except:
         print('Error')
-        return build_response(400, e.response['Error']['Message'])
+        return build_response(400, response['Error']['Message'])
     
     
   
