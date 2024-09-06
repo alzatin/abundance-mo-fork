@@ -369,6 +369,10 @@ function code(targetID, code, argumentsArray) {
 function color(targetID, inputID, color) {
   return started.then(() => {
     library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+      // keep out color add tag
+      if (color == "#D9544D") {
+        leaf.tags.push("keepout");
+      }
       return {
         geometry: leaf.geometry,
         tags: [...leaf.tags],
@@ -449,7 +453,8 @@ function extractBomList(inputID) {
 /** Visualize STL or STEP*/
 function visExport(targetID, inputID, fileType) {
   return started.then(() => {
-    let fusedGeometry = digFuse(library[inputID]);
+    let geometryToExport = extractKeepOut(library[inputID]);
+    let fusedGeometry = digFuse(geometryToExport);
     let displayColor =
       fileType == "STL"
         ? "#91C8D5"
@@ -606,6 +611,35 @@ function extractTags(inputGeometry, TAG) {
     }
   } else {
     return false;
+  }
+}
+
+function extractKeepOut(inputGeometry) {
+  console.log(inputGeometry);
+  if (inputGeometry.tags.includes("keepout")) {
+    return false;
+  } else if (isAssembly(inputGeometry)) {
+    let geometryNoKeepOut = [];
+    inputGeometry.geometry.forEach((subAssembly) => {
+      let extractedGeometry = extractKeepOut(subAssembly, "keepout");
+
+      if (extractedGeometry != false) {
+        geometryNoKeepOut.push(extractedGeometry);
+      }
+    });
+    if (geometryNoKeepOut.length > 0) {
+      let thethingtoreturn = {
+        geometry: geometryNoKeepOut,
+        tags: inputGeometry.tags,
+        color: inputGeometry.color,
+        bom: inputGeometry.bom,
+      };
+      return thethingtoreturn;
+    } else {
+      return false;
+    }
+  } else {
+    return inputGeometry;
   }
 }
 

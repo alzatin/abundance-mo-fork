@@ -61,7 +61,7 @@ export default class Color extends Atom {
       Grey: "#BABABA",
       Black: "#3C3C3C",
       White: "#FFFCF7",
-      "Keep Out": "#E0E0E0",
+      "Keep Out": "#D9544D",
     };
 
     this.addIO("input", "geometry", this, "geometry", null, false, true);
