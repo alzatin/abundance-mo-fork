@@ -90,7 +90,7 @@ const AddProject = (props) => {
           flexDirection: "row",
           height: "30px",
           widht: "50%",
-          margin: "-25px 0 10px 20px",
+          margin: "25px 0 10px 20px",
           display: "flex",
         }}
       >
@@ -440,10 +440,6 @@ const ShowProjects = (props) => {
         query;
 
       let awsRepos = await fetch(scanApiUrl);
-
-      //populateUserAWS();
-      //populateAWS(repos[0].data); // can only handle 20 items at a time
-
       return awsRepos.json();
     };
 
@@ -700,6 +696,7 @@ function LoginMode(props) {
       <div className="login-content-div">
         <div className="left-login-div">
           <div
+            className="login-nav-item"
             onClick={() => {
               setExportPopUp(true);
             }}
@@ -707,6 +704,7 @@ function LoginMode(props) {
             <p>New project</p>
           </div>
           <div
+            className="login-nav-item"
             onClick={() => {
               setProjectsToShow("owned");
             }}
@@ -714,6 +712,7 @@ function LoginMode(props) {
             <p>My Projects</p>
           </div>
           <div
+            className="login-nav-item"
             onClick={() => {
               setProjectsToShow("liked");
             }}
@@ -721,6 +720,7 @@ function LoginMode(props) {
             <p> Liked Projects</p>
           </div>
           <div
+            className="login-nav-item"
             onClick={() => {
               setProjectsToShow("featured");
             }}
@@ -728,6 +728,7 @@ function LoginMode(props) {
             <p> Browse Featured Projects</p>
           </div>
           <div
+            className="login-nav-item"
             onClick={() => {
               setProjectsToShow("all");
             }}
@@ -737,6 +738,7 @@ function LoginMode(props) {
         </div>
         <div className="right-login-div">
           <h4>Welcome to Abundance {GlobalVariables.currentUser}</h4>
+          <hr width="100%" color="#D3D3D3" />
           {popUpContent}
         </div>
       </div>
