@@ -465,60 +465,7 @@ const ShowProjects = (props) => {
       });
   }, [props.user, searchBarValue, pageNumber, projectToShow]);
 
-  const openInNewTab = (url) => {
-    window.open(url, "_blank", "noreferrer");
-  };
-
-  return (
-    <>
-      {false ? (
-        <>
-          <button
-            className="form browseButton githubSign"
-            id="loginButton2"
-            onClick={props.tryLogin}
-            style={{ width: "90px", fontSize: ".7rem", marginLeft: "auto" }}
-          >
-            Login
-          </button>
-          <button
-            className="form browseButton githubSign"
-            onClick={() => openInNewTab("https://github.com/join")}
-            style={{ width: "130px", fontSize: ".7rem", marginLeft: "5px" }}
-          >
-            Create an Account
-          </button>
-        </>
-      ) : null}
-
-      <>
-        <ClassicBrowse
-          projectsLoaded={projectsLoaded}
-          setStateLoaded={setStateLoaded}
-          setPageNumber={setPageNumber}
-          pageNumber={pageNumber}
-          authorizedUserOcto={authorizedUserOcto}
-          lastKey={lastKey}
-          setSearchBarValue={setSearchBarValue}
-          searchBarValue={searchBarValue}
-          user={props.user}
-          pageDict={pageDict}
-        />
-      </>
-    </>
-  );
-};
-
-// Browse display
-const ClassicBrowse = (props) => {
   let nodes = [];
-  const setPageNumber = props.setPageNumber;
-  const pageNumber = props.pageNumber;
-  const projectsLoaded = props.projectsLoaded;
-  const searchBarValue = props.searchBarValue;
-  const setSearchBarValue = props.setSearchBarValue;
-  const authorizedUserOcto = props.authorizedUserOcto;
-  const lastKey = props.lastKey;
 
   if (projectsLoaded.length > 0) {
     var userRepos = [];
@@ -614,7 +561,6 @@ function LoginMode(props) {
    * @prop {setState} setIsLoggedIn - setState function for isloggedIn
    * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
    * */
-  const [userBrowsing, setBrowsing] = useState(false);
   const exportPopUp = props.exportPopUp;
   const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
@@ -638,11 +584,6 @@ function LoginMode(props) {
         projectToShow={projectToShow}
         user={currentUser}
         authorizedUserOcto={authorizedUserOcto}
-        userBrowsing={userBrowsing}
-        setBrowsing={setBrowsing}
-        isloggedIn={props.isloggedIn}
-        exportPopUp={exportPopUp}
-        setExportPopUp={setExportPopUp}
         pageDict={pageDict}
       />
     );
@@ -678,7 +619,7 @@ function LoginMode(props) {
       <div className="middleBrowse" style={{ marginTop: "35px" }}>
         <div
           id="welcome-logo"
-          style={{ display: "flex", margin: "10px", alignItems: "center" }}
+          style={{ display: "flex", margin: "20px 10px", alignItems: "center" }}
         >
           <img
             src="/imgs/abundance_logo.png"
