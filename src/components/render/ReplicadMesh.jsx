@@ -20,6 +20,7 @@ export default React.memo(function ShapeMeshes({
 
   useLayoutEffect(() => {
     let meshArray = [];
+    let keepOutMesh = [];
     mesh.map((m) => {
       const body = new BufferGeometry();
       const lines = new BufferGeometry();
@@ -34,7 +35,22 @@ export default React.memo(function ShapeMeshes({
       const thisBody = body;
       const thisLines = lines;
       const thisColor = m.color;
-      meshArray.push({ body: thisBody, lines: thisLines, color: thisColor });
+      // If the color is keep out make it transparent
+      if (thisColor == "#D9544D") {
+        meshArray.push({
+          body: thisBody,
+          lines: thisLines,
+          color: thisColor,
+          solid: false,
+        });
+      } else {
+        meshArray.push({
+          body: thisBody,
+          lines: thisLines,
+          color: thisColor,
+          solid: isSolid,
+        });
+      }
     });
     setFullMesh(meshArray);
     // We have configured the canvas to only refresh when there is a change,
@@ -60,14 +76,26 @@ export default React.memo(function ShapeMeshes({
             {!isSolid ? (
               <mesh geometry={m.body} key={"mesh" + m.color}>
                 {/*the offsets are here to avoid z fighting between the mesh and the lines*/}
-                <meshMatcapMaterial
-                  color={m.color}
-                  key={"material" + m.color}
-                  opacity={0.5}
-                  polygonOffset
-                  polygonOffsetFactor={2.0}
-                  polygonOffsetUnits={1.0}
-                />
+                {m.color != "#D9544D" ? (
+                  <meshMatcapMaterial
+                    color={m.color}
+                    key={"material" + m.color}
+                    polygonOffset
+                    polygonOffsetFactor={2.0}
+                    polygonOffsetUnits={1.0}
+                  />
+                ) : (
+                  <Wireframe
+                    geometry={m.body}
+                    stroke={m.color}
+                    squeeze={true}
+                    dash={false}
+                    simplify={true}
+                    fill={m.color}
+                    fillOpacity={0.2}
+                    strokeOpacity={0.5}
+                  />
+                )}
               </mesh>
             ) : (
               <Wireframe
