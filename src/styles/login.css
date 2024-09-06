@@ -7,6 +7,26 @@
   font-family: Helvetica;
   width: 100%;
 }
+.login-content-div {
+  display: flex;
+  flex-direction: row;
+}
+.left-login-div {
+  padding: 1%;
+  margin: 0 0 0 5%;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  height: 100%;
+}
+.right-login-div {
+  padding: 1%;
+  margin: 0 5% 0 0;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  height: 100%;
+}
 .curiousBrowse {
   display: flex;
   flex-wrap: wrap;
@@ -444,7 +464,7 @@
   box-sizing: border-box;
 }
 #project_search {
-  width: 50%;
+  width: 30%;
   margin-right: 10px;
   border: 3px solid #353232;
   border-radius: 5px 5px;
@@ -501,8 +521,8 @@
 }
 
 .search-bar-div {
-  width: 50%;
-  height: 30px;
+  width: 100%;
+  height: 20px;
   align-self: flex-end;
   display: flex;
   flex-direction: row;

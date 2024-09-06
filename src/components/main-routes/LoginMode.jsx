@@ -4,7 +4,6 @@ import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { Link } from "react-router-dom";
 import globalvariables from "../../js/globalvariables.js";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
-import { re } from "mathjs";
 
 /**
  * The octokit instance which allows interaction with GitHub.
@@ -81,14 +80,8 @@ const AddProject = (props) => {
   const authorizedUserOcto = props.authorizedUserOcto;
   const [browseType, setBrowseType] = useState("thumb");
   const [orderType, setOrderType] = useState("byDateCreated");
-  let searchBarValue = props.searchBarValue;
+
   let nodes = props.nodes;
-  //filter nodes by search bar value
-  /* if (searchBarValue != "") {
-    nodes = nodes.filter((node) => {
-      return node.name.toLowerCase().includes(searchBarValue.toLowerCase());
-    });
-  }*/
 
   return (
     <>
@@ -372,14 +365,13 @@ const ProjectDiv = (props) => {
 
 /* to add: if current user is null show this next part */
 const ShowProjects = (props) => {
+  const projectToShow = props.projectToShow;
   const [projectsLoaded, setStateLoaded] = useState([]);
   const [lastKey, setLastKey] = useState("");
   let pageDict = props.pageDict;
   const [pageNumber, setPageNumber] = useState(0);
 
   const [searchBarValue, setSearchBarValue] = useState("");
-  const exportPopUp = props.exportPopUp;
-  const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
 
   useEffect(() => {
@@ -432,7 +424,7 @@ const ShowProjects = (props) => {
       } else {
         searchQuery = "&query";
       }
-      if (props.user == "" || props.userBrowsing) {
+      if (props.user == "" || projectToShow == "all") {
         query = "attribute=repoName" + searchQuery + "&user" + lastKeyQuery;
       } else {
         query =
@@ -475,7 +467,7 @@ const ShowProjects = (props) => {
           "Error loading projects. Please wait a few minutes then try again."
         );
       });
-  }, [props.user, searchBarValue, pageNumber]);
+  }, [props.user, searchBarValue, pageNumber, projectToShow]);
 
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
@@ -483,68 +475,40 @@ const ShowProjects = (props) => {
 
   return (
     <>
-      <div className="middleBrowse" style={{ marginTop: "35px" }}>
-        <div
-          id="welcome"
-          style={{ display: "flex", margin: "10px", alignItems: "center" }}
-        >
-          <img
-            src="/imgs/abundance_logo.png"
-            alt="logo"
-            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-          />
-          <img
-            src="/imgs/abundance_lettering.png"
-            alt="logo"
-            style={{ height: "20px", padding: "10px" }}
-          />
-          {!props.isloggedIn ? (
-            <>
-              <button
-                className="form browseButton githubSign"
-                id="loginButton2"
-                onClick={props.tryLogin}
-                style={{ width: "90px", fontSize: ".7rem", marginLeft: "auto" }}
-              >
-                Login
-              </button>
-              <button
-                className="form browseButton githubSign"
-                onClick={() => openInNewTab("https://github.com/join")}
-                style={{ width: "130px", fontSize: ".7rem", marginLeft: "5px" }}
-              >
-                Create an Account
-              </button>
-            </>
-          ) : null}
-        </div>
-      </div>
-      {exportPopUp ? (
-        <NewProjectPopUp
-          setExportPopUp={setExportPopUp}
-          authorizedUserOcto={authorizedUserOcto}
-          exporting={false}
-        />
-      ) : (
+      {false ? (
         <>
-          <ClassicBrowse
-            projectsLoaded={projectsLoaded}
-            setStateLoaded={setStateLoaded}
-            setPageNumber={setPageNumber}
-            pageNumber={pageNumber}
-            authorizedUserOcto={authorizedUserOcto}
-            lastKey={lastKey}
-            setSearchBarValue={setSearchBarValue}
-            searchBarValue={searchBarValue}
-            setExportPopUp={setExportPopUp}
-            user={props.user}
-            pageDict={pageDict}
-            userBrowsing={props.userBrowsing}
-            setBrowsing={props.setBrowsing}
-            isloggedIn={props.isloggedIn}
-          />
+          <button
+            className="form browseButton githubSign"
+            id="loginButton2"
+            onClick={props.tryLogin}
+            style={{ width: "90px", fontSize: ".7rem", marginLeft: "auto" }}
+          >
+            Login
+          </button>
+          <button
+            className="form browseButton githubSign"
+            onClick={() => openInNewTab("https://github.com/join")}
+            style={{ width: "130px", fontSize: ".7rem", marginLeft: "5px" }}
+          >
+            Create an Account
+          </button>
         </>
-      )}
+      ) : null}
+
+      <>
+        <ClassicBrowse
+          projectsLoaded={projectsLoaded}
+          setStateLoaded={setStateLoaded}
+          setPageNumber={setPageNumber}
+          pageNumber={pageNumber}
+          authorizedUserOcto={authorizedUserOcto}
+          lastKey={lastKey}
+          setSearchBarValue={setSearchBarValue}
+          searchBarValue={searchBarValue}
+          user={props.user}
+          pageDict={pageDict}
+        />
+      </>
     </>
   );
 };
@@ -555,11 +519,8 @@ const ClassicBrowse = (props) => {
   const setPageNumber = props.setPageNumber;
   const pageNumber = props.pageNumber;
   const projectsLoaded = props.projectsLoaded;
-  const setStateLoaded = props.setProjectsLoaded;
-  let pageDict = props.pageDict;
   const searchBarValue = props.searchBarValue;
   const setSearchBarValue = props.setSearchBarValue;
-  const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
   const lastKey = props.lastKey;
 
@@ -571,48 +532,14 @@ const ClassicBrowse = (props) => {
       });
     nodes = [...userRepos];
   }
-
-  const loadBrowse = () => {
-    props.setBrowsing(!props.userBrowsing);
-    setPageNumber(0);
-  };
   const handleSearchChange = (e) => {
     if (e.code == "Enter") {
       setSearchBarValue(e.target.value);
       setPageNumber(0);
     }
   };
-
   return (
     <>
-      {props.isloggedIn ? (
-        <div className="top_browse_menu">
-          <div
-            onClick={() => {
-              setExportPopUp(true);
-            }}
-            className="newProjectDiv"
-          >
-            <span style={{ alignSelf: "center" }}>Start a new project</span>
-            <img
-              src="/imgs/defaultThumbnail.svg"
-              style={{ height: "80%", float: "left" }}
-            ></img>
-          </div>
-          <div className="newProjectDiv" onClick={() => loadBrowse()}>
-            <span style={{ alignSelf: "center" }}>
-              {!props.userBrowsing
-                ? "Browse Other Projects"
-                : "Return to my Projects"}
-            </span>
-            <img
-              src="/imgs/defaultThumbnail.svg"
-              style={{ height: "80%", float: "right" }}
-            ></img>
-          </div>
-        </div>
-      ) : null}
-
       <div className="search-bar-div">
         {projectsLoaded.length > 1 ? (
           <div
@@ -632,9 +559,7 @@ const ClassicBrowse = (props) => {
             >
               {"\u2190"}
             </button>
-            <p
-              style={{ alignSelf: "center", fontSize: ".7em", padding: "3px" }}
-            ></p>
+
             <button
               className="page_forward_button"
               onClick={() => {
@@ -698,32 +623,28 @@ function LoginMode(props) {
   const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
   const pageDict = { 0: null };
+  const [projectToShow, setProjectsToShow] = useState("owned");
 
   var currentUser = GlobalVariables.currentUser;
 
   let popUpContent;
-  if (props.authorizedUserOcto && !userBrowsing) {
+  if (exportPopUp && props.authorizedUserOcto) {
+    popUpContent = (
+      <NewProjectPopUp
+        setExportPopUp={setExportPopUp}
+        authorizedUserOcto={authorizedUserOcto}
+        exporting={true}
+      />
+    );
+  } else if (props.authorizedUserOcto) {
     popUpContent = (
       <ShowProjects
+        projectToShow={projectToShow}
         user={currentUser}
         authorizedUserOcto={authorizedUserOcto}
         userBrowsing={userBrowsing}
         setBrowsing={setBrowsing}
         isloggedIn={props.isloggedIn}
-        exportPopUp={exportPopUp}
-        setExportPopUp={setExportPopUp}
-        pageDict={pageDict}
-      />
-    );
-  } else if (userBrowsing) {
-    popUpContent = (
-      <ShowProjects
-        user={""}
-        userBrowsing={userBrowsing}
-        authorizedUserOcto={authorizedUserOcto}
-        setBrowsing={setBrowsing}
-        isloggedIn={props.isloggedIn}
-        tryLogin={props.tryLogin}
         exportPopUp={exportPopUp}
         setExportPopUp={setExportPopUp}
         pageDict={pageDict}
@@ -758,7 +679,67 @@ function LoginMode(props) {
           </Link>
         ) : null}
       </div>
-      {popUpContent}
+      <div className="middleBrowse" style={{ marginTop: "35px" }}>
+        <div
+          id="welcome-logo"
+          style={{ display: "flex", margin: "10px", alignItems: "center" }}
+        >
+          <img
+            src="/imgs/abundance_logo.png"
+            alt="logo"
+            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+          />
+          <img
+            src="/imgs/abundance_lettering.png"
+            alt="logo"
+            style={{ height: "20px", padding: "10px" }}
+          />
+        </div>
+      </div>
+
+      <div className="login-content-div">
+        <div className="left-login-div">
+          <div
+            onClick={() => {
+              setExportPopUp(true);
+            }}
+          >
+            <p>New project</p>
+          </div>
+          <div
+            onClick={() => {
+              setProjectsToShow("owned");
+            }}
+          >
+            <p>My Projects</p>
+          </div>
+          <div
+            onClick={() => {
+              setProjectsToShow("liked");
+            }}
+          >
+            <p> Liked Projects</p>
+          </div>
+          <div
+            onClick={() => {
+              setProjectsToShow("featured");
+            }}
+          >
+            <p> Browse Featured Projects</p>
+          </div>
+          <div
+            onClick={() => {
+              setProjectsToShow("all");
+            }}
+          >
+            <p> Browse All Other Projects</p>
+          </div>
+        </div>
+        <div className="right-login-div">
+          <h4>Welcome to Abundance {GlobalVariables.currentUser}</h4>
+          {popUpContent}
+        </div>
+      </div>
     </div>
   );
 }
