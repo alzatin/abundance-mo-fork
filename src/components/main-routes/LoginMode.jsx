@@ -61,7 +61,7 @@ const InitialLog = (props) => {
           <button
             type="button"
             onClick={() => {
-              props.setBrowsing(true);
+              //props.setBrowsing(true);
             }}
             className="submit-btn"
             id="browseNonGit"
@@ -367,10 +367,11 @@ const ProjectDiv = (props) => {
 const ShowProjects = (props) => {
   const projectToShow = props.projectToShow;
   const [projectsLoaded, setStateLoaded] = useState([]);
+  const setExportPopUp = props.setExportPopUp;
+  const setProjectsToShow = props.setProjectsToShow;
   const [lastKey, setLastKey] = useState("");
   let pageDict = props.pageDict;
   const [pageNumber, setPageNumber] = useState(0);
-
   const [searchBarValue, setSearchBarValue] = useState("");
   const authorizedUserOcto = props.authorizedUserOcto;
 
@@ -418,38 +419,49 @@ const ShowProjects = (props) => {
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
         : "&lastKey";
+
       let searchQuery;
       if (searchBarValue != "") {
         searchQuery = "&query=" + searchBarValue;
       } else {
         searchQuery = "&query";
       }
-      if (props.user == "" || projectToShow == "all") {
+
+      if (projectToShow == "all") {
         query = "attribute=repoName" + searchQuery + "&user" + lastKeyQuery;
-      } else {
+      } else if (projectToShow == "owned") {
         query =
           "attribute=repoName" +
           searchQuery +
           "&user=" +
           props.user +
           lastKeyQuery;
+      } else if (projectToShow == "featured") {
+        // placeholder for featured projects
+      } else if (projectToShow == "liked") {
+        // placeholder for liked projects
+        //API URL for the scan-search-abundance endpoint and abundance-projects table
       }
+      const scanUserApiUrl =
+        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=alzatin";
 
+      //API URL for the scan-search-abundance endpoint and abundance-projects table
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
 
-      let awsRepos = await fetch(scanApiUrl);
+      let awsRepos = await fetch(scanApiUrl); //< return result.json();[repos]
+      //let awsRepos = await fetch(scanUserApiUrl);
       return awsRepos.json();
     };
 
-    repoSearchRequest()
+    repoSearchRequest(projectToShow)
       .then((result) => {
         console.log(result);
         if (result["repos"].length == 0 && props.user !== "") {
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
-              props.setBrowsing(true);
+              //props.setBrowsing(true);
               setStateLoaded(result["repos"]);
             });
           });
@@ -463,7 +475,7 @@ const ShowProjects = (props) => {
           "Error loading projects. Please wait a few minutes then try again."
         );
       });
-  }, [props.user, searchBarValue, pageNumber, projectToShow]);
+  }, [searchBarValue, pageNumber, projectToShow]);
 
   let nodes = [];
 
@@ -483,157 +495,6 @@ const ShowProjects = (props) => {
   };
   return (
     <>
-      <div className="search-bar-div">
-        {projectsLoaded.length > 1 ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              margin: "0px 10px 0px 10px",
-            }}
-          >
-            <button
-              onClick={() => {
-                if (pageNumber > 0) {
-                  setPageNumber(pageNumber - 1);
-                }
-              }}
-              className="page_back_button"
-            >
-              {"\u2190"}
-            </button>
-
-            <button
-              className="page_forward_button"
-              onClick={() => {
-                if (lastKey != "") {
-                  setPageNumber(pageNumber + 1);
-                }
-              }}
-            >
-              {"\u2192"}
-            </button>
-          </div>
-        ) : null}
-        <input
-          type="text"
-          key="project-search-bar"
-          placeholder={searchBarValue}
-          //value={target.value}
-          //onChange={(e) => setSearchBarType(e.target.value)}
-          onKeyDown={(e) => {
-            handleSearchChange(e);
-          }}
-          className="menu_search searchButton"
-          id="project_search"
-        />
-        <button className="list_thumb_button">
-          <img
-            src="/imgs/search_icon.svg"
-            alt="search"
-            style={{
-              width: "20px",
-              color: "white",
-              marginRight: "5px",
-              opacity: "0.5",
-            }}
-          />
-        </button>
-      </div>
-      {projectsLoaded.length > 0 ? (
-        <AddProject
-          searchBarValue={searchBarValue}
-          authorizedUserOcto={authorizedUserOcto}
-          user={props.user}
-          userBrowsing={props.userBrowsing}
-          nodes={nodes}
-        />
-      ) : (
-        <p> Loading...</p>
-      )}
-    </>
-  );
-};
-
-function LoginMode(props) {
-  /*
-   * @prop {object} authorizedUserOcto - authorized octokit instance
-   * @prop {setState} setIsLoggedIn - setState function for isloggedIn
-   * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
-   * */
-  const exportPopUp = props.exportPopUp;
-  const setExportPopUp = props.setExportPopUp;
-  const authorizedUserOcto = props.authorizedUserOcto;
-  const pageDict = { 0: null };
-  const [projectToShow, setProjectsToShow] = useState("owned");
-
-  var currentUser = GlobalVariables.currentUser;
-
-  let popUpContent;
-  if (exportPopUp && props.authorizedUserOcto) {
-    popUpContent = (
-      <NewProjectPopUp
-        setExportPopUp={setExportPopUp}
-        authorizedUserOcto={authorizedUserOcto}
-        exporting={true}
-      />
-    );
-  } else if (props.authorizedUserOcto) {
-    popUpContent = (
-      <ShowProjects
-        projectToShow={projectToShow}
-        user={currentUser}
-        authorizedUserOcto={authorizedUserOcto}
-        pageDict={pageDict}
-      />
-    );
-  } else {
-    popUpContent = (
-      <InitialLog tryLogin={props.tryLogin} setBrowsing={setBrowsing} />
-    );
-  }
-  return (
-    <div
-      className="login-popup"
-      id="projects-popup"
-      style={{
-        padding: "0",
-        border: "10px solid #3e3d3d",
-      }}
-    >
-      <div>
-        {" "}
-        {GlobalVariables.currentRepo ? (
-          <Link to={`/${GlobalVariables.currentRepo.id}`}>
-            <button
-              className="closeButton"
-              onClick={() => {
-                setExportPopUp(false);
-              }}
-            >
-              <img></img>
-            </button>
-          </Link>
-        ) : null}
-      </div>
-      <div className="middleBrowse" style={{ marginTop: "35px" }}>
-        <div
-          id="welcome-logo"
-          style={{ display: "flex", margin: "20px 10px", alignItems: "center" }}
-        >
-          <img
-            src="/imgs/abundance_logo.png"
-            alt="logo"
-            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-          />
-          <img
-            src="/imgs/abundance_lettering.png"
-            alt="logo"
-            style={{ height: "20px", padding: "10px" }}
-          />
-        </div>
-      </div>
-
       <div className="login-content-div">
         <div className="left-login-div">
           <div
@@ -680,9 +541,159 @@ function LoginMode(props) {
         <div className="right-login-div">
           <h4>Welcome to Abundance {GlobalVariables.currentUser}</h4>
           <hr width="100%" color="#D3D3D3" />
-          {popUpContent}
+          <div className="search-bar-div">
+            {projectsLoaded.length > 1 ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  margin: "0px 10px 0px 10px",
+                }}
+              >
+                <button
+                  onClick={() => {
+                    if (pageNumber > 0) {
+                      setPageNumber(pageNumber - 1);
+                    }
+                  }}
+                  className="page_back_button"
+                >
+                  {"\u2190"}
+                </button>
+
+                <button
+                  className="page_forward_button"
+                  onClick={() => {
+                    if (lastKey != "") {
+                      setPageNumber(pageNumber + 1);
+                    }
+                  }}
+                >
+                  {"\u2192"}
+                </button>
+              </div>
+            ) : null}
+            <input
+              type="text"
+              key="project-search-bar"
+              placeholder={searchBarValue}
+              //value={target.value}
+              //onChange={(e) => setSearchBarType(e.target.value)}
+              onKeyDown={(e) => {
+                handleSearchChange(e);
+              }}
+              className="menu_search searchButton"
+              id="project_search"
+            />
+            <button className="list_thumb_button">
+              <img
+                src="/imgs/search_icon.svg"
+                alt="search"
+                style={{
+                  width: "20px",
+                  color: "white",
+                  marginRight: "5px",
+                  opacity: "0.5",
+                }}
+              />
+            </button>
+          </div>
+          {projectsLoaded.length > 0 ? (
+            <AddProject
+              searchBarValue={searchBarValue}
+              authorizedUserOcto={authorizedUserOcto}
+              user={props.user}
+              userBrowsing={props.userBrowsing}
+              nodes={nodes}
+            />
+          ) : (
+            <p> Loading...</p>
+          )}
         </div>
       </div>
+    </>
+  );
+};
+
+function LoginMode(props) {
+  /*
+   * @prop {object} authorizedUserOcto - authorized octokit instance
+   * @prop {setState} setIsLoggedIn - setState function for isloggedIn
+   * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
+   * */
+  const exportPopUp = props.exportPopUp;
+  const setExportPopUp = props.setExportPopUp;
+  const authorizedUserOcto = props.authorizedUserOcto;
+  const pageDict = { 0: null };
+  const [projectToShow, setProjectsToShow] = useState("owned");
+
+  var currentUser = GlobalVariables.currentUser;
+
+  let popUpContent;
+  if (exportPopUp && props.authorizedUserOcto) {
+    popUpContent = (
+      <NewProjectPopUp
+        setExportPopUp={setExportPopUp}
+        authorizedUserOcto={authorizedUserOcto}
+        exporting={true}
+      />
+    );
+  } else if (props.authorizedUserOcto) {
+    popUpContent = (
+      <ShowProjects
+        projectToShow={projectToShow}
+        setExportPopUp={setExportPopUp}
+        setProjectsToShow={setProjectsToShow}
+        user={currentUser}
+        authorizedUserOcto={authorizedUserOcto}
+        pageDict={pageDict}
+      />
+    );
+  } else {
+    popUpContent = <InitialLog tryLogin={props.tryLogin} />;
+  }
+  return (
+    <div
+      className="login-popup"
+      id="projects-popup"
+      style={{
+        padding: "0",
+        border: "10px solid #3e3d3d",
+      }}
+    >
+      <div>
+        {" "}
+        {GlobalVariables.currentRepo ? (
+          <Link to={`/${GlobalVariables.currentRepo.id}`}>
+            <button
+              className="closeButton"
+              onClick={() => {
+                setExportPopUp(false);
+              }}
+            >
+              <img></img>
+            </button>
+          </Link>
+        ) : null}
+      </div>
+      <div className="top-banner" style={{ margin: "35px 0 0 30px" }}>
+        <div
+          id="welcome-logo"
+          style={{ display: "flex", margin: "10px 10px", alignItems: "center" }}
+        >
+          <img
+            src="/imgs/abundance_logo.png"
+            alt="logo"
+            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+          />
+          <img
+            src="/imgs/abundance_lettering.png"
+            alt="logo"
+            style={{ height: "20px", padding: "10px" }}
+          />
+        </div>
+      </div>
+      {popUpContent}
     </div>
   );
 }
