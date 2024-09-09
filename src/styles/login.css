@@ -13,7 +13,7 @@
 }
 .left-login-div {
   padding: 1%;
-  margin: 0 0 0 5%;
+  margin: 5% 0 0 5%;
   align-items: center;
   justify-content: center;
   width: 15%;
@@ -29,6 +29,9 @@
 }
 .login-nav-item {
   padding: 3px;
+}
+.login-nav-item p {
+  font-family: "Roboto", sans-serif;
 }
 .login-nav-item:hover {
   background-color: #bfbdbf5f;

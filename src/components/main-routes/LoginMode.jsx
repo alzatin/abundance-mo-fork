@@ -441,10 +441,21 @@ const ShowProjects = (props) => {
       } else if (projectToShow == "liked") {
         // placeholder for liked projects
         //API URL for the scan-search-abundance endpoint and abundance-projects table
+        const scanUserApiUrl =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=alzatin";
+        let awsLikeRepos = await fetch(scanUserApiUrl);
+        let json = await awsLikeRepos.json();
+        query = "";
+        json[0]["likedProjects"].forEach((project) => {
+          query += "likedProjects=" + project + "&";
+        });
+        console.log(query);
+        const queryLikedApi =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryLikedProjects?" +
+          query;
+        let awsRepos = await fetch(queryLikedApi);
+        return awsRepos.json();
       }
-      const scanUserApiUrl =
-        "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=alzatin";
-
       //API URL for the scan-search-abundance endpoint and abundance-projects table
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
@@ -539,7 +550,9 @@ const ShowProjects = (props) => {
           </div>
         </div>
         <div className="right-login-div">
-          <h4>Welcome to Abundance {GlobalVariables.currentUser}</h4>
+          <span style={{ fontFamily: "Roboto" }}>
+            Welcome to Abundance {GlobalVariables.currentUser}
+          </span>
           <hr width="100%" color="#D3D3D3" />
           <div className="search-bar-div">
             {projectsLoaded.length > 1 ? (
