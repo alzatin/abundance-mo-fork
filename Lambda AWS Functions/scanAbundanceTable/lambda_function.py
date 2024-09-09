@@ -28,7 +28,7 @@ def lambda_handler(event:any, context:any):
             'body': json.dumps(body, cls=DecimalEncoder)
         }
     
-    def lookForLastEvaluatedKey():
+    def lookForLast():
         if lastKey: 
             lastKeyList = lastKey.split("~")
             lastKeyObj = {"repoName": lastKeyList[0],"owner":lastKeyList[1]}
@@ -55,13 +55,20 @@ def lambda_handler(event:any, context:any):
     try: 
         if (user):
             if (query):
+                print(query)
                 # Define the key condition expression
-                key_condition_expression = Key('owner').eq(user) & Key('repoName').contains(query)
+                scan_args = {
+                    'FilterExpression': Attr('repoName').contains(query) & Attr('owner').eq(user),
+                }
+                response = table.scan(**scan_args)
+            
             else:
                 key_condition_expression = Key('owner').eq(user)
-            
-            response = table.query(KeyConditionExpression=key_condition_expression)
+                
+                response = table.query(KeyConditionExpression=key_condition_expression)
+           
             item_array.extend(response.get('Items', []))
+            
         elif (searchAttribute and query):
             scan_args = {
                 'FilterExpression': Attr('repoName').contains(query),
@@ -69,12 +76,13 @@ def lambda_handler(event:any, context:any):
             response = table.scan(**scan_args)
             item_array.extend(response.get('Items', []))
         else:
-            exclusiveKey = lookForLastEvaluatedKey()
+            exclusiveKey = lookForLast()
             query_args = {
                 'IndexName':'yyyy-dateCreated-index',
                 'KeyConditionExpression': Key('yyyy').eq(2024)
             }
             if exclusiveKey: 
+                print (exclusiveKey)
                 query_args['ExclusiveStartKey'] = exclusiveKey
             #response = table.scan(**scan_args)
             response = table.query(**query_args)
@@ -88,7 +96,7 @@ def lambda_handler(event:any, context:any):
         return build_response(200, {'repos': item_array , "lastKey": lastKeyForward})
     except:
         print('Error')
-        return build_response(400, response['Error']['Message'])
+        return build_response(400, e.response['Error']['Message'])
     
     
   

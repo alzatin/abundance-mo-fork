@@ -436,6 +436,7 @@ const ShowProjects = (props) => {
           "&user=" +
           props.user +
           lastKeyQuery;
+        console.log(query);
       } else if (projectToShow == "featured") {
         // placeholder for featured projects
       } else if (projectToShow == "liked") {
