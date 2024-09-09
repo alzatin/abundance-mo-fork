@@ -439,6 +439,11 @@ const ShowProjects = (props) => {
         console.log(query);
       } else if (projectToShow == "featured") {
         // placeholder for featured projects
+        const scanFeaturedApi =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryFeaturedProjects";
+        let awsRepos = await fetch(scanFeaturedApi);
+        console.log(awsRepos);
+        return awsRepos.json();
       } else if (projectToShow == "liked") {
         // placeholder for liked projects
         //API URL for the scan-search-abundance endpoint and abundance-projects table
