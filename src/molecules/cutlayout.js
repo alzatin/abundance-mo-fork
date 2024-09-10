@@ -2,6 +2,7 @@ import Atom from "../prototypes/atom.js";
 import GlobalVariables from "../js/globalvariables.js";
 //import GlobalVariables from '../js/globalvariables.js'
 import { proxy } from "comlink";
+import { button, LevaInputs } from "leva";
 
 
 /**
@@ -159,9 +160,16 @@ export default class CutLayout extends Atom {
     }
   }
   /**
-   * Pass the input geometry to a worker function to compute the translation.
+   * We only want the layout to update when the button is pressed not when the inputs update so we block the regular update value behavior
    */
   updateValue() {
+
+  }
+
+  /**
+   * Pass the input geometry to a worker function to compute the translation.
+   */
+  updateValueButton() {
     super.updateValue();
 
     if (this.inputs.every((x) => x.ready)) {
@@ -213,5 +221,18 @@ export default class CutLayout extends Atom {
         })
         .catch(this.alertingErrorHandler());
     }
+  }
+
+  /**
+   * Add the "Compute Layout" button to the leva inputs.
+   */
+  createLevaInputs() {
+      let inputParams = super.createLevaInputs();
+  
+      inputParams["Compute Layout"] = button(() => {
+          this.updateValueButton();
+      });
+  
+      return inputParams;
   }
 }
