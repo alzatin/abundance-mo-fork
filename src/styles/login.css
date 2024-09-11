@@ -34,7 +34,10 @@
   font-family: "Roboto", sans-serif;
 }
 .login-nav-item:hover {
-  background-color: #bfbdbf5f;
+  background-color: rgba(233, 221, 242, 0.58);
+}
+.login-nav-item-clicked {
+  background-color: rgba(233, 221, 242, 0.58);
 }
 .home-section {
   float: right;

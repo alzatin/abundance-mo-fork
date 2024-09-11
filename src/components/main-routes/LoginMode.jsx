@@ -508,6 +508,9 @@ const ShowProjects = (props) => {
       setPageNumber(0);
     }
   };
+
+  console.log(projectToShow);
+
   return (
     <>
       <div className="login-content-div">
@@ -521,15 +524,21 @@ const ShowProjects = (props) => {
             <p>New project</p>
           </div>
           <div
-            className="login-nav-item"
-            onClick={() => {
+            className={
+              "login-nav-item" +
+              (projectToShow == "owned" ? " login-nav-item-clicked" : "")
+            }
+            onClick={(e) => {
               setProjectsToShow("owned");
             }}
           >
             <p>My Projects</p>
           </div>
           <div
-            className="login-nav-item"
+            className={
+              "login-nav-item" +
+              (projectToShow == "liked" ? " login-nav-item-clicked" : "")
+            }
             onClick={() => {
               setProjectsToShow("liked");
             }}
@@ -537,7 +546,10 @@ const ShowProjects = (props) => {
             <p> Liked Projects</p>
           </div>
           <div
-            className="login-nav-item"
+            className={
+              "login-nav-item" +
+              (projectToShow == "featured" ? " login-nav-item-clicked" : "")
+            }
             onClick={() => {
               setProjectsToShow("featured");
             }}
@@ -545,7 +557,10 @@ const ShowProjects = (props) => {
             <p> Browse Featured Projects</p>
           </div>
           <div
-            className="login-nav-item"
+            className={
+              "login-nav-item" +
+              (projectToShow == "all" ? " login-nav-item-clicked" : "")
+            }
             onClick={() => {
               setProjectsToShow("all");
             }}
