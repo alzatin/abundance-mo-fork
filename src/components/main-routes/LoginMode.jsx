@@ -436,13 +436,12 @@ const ShowProjects = (props) => {
           "&user=" +
           props.user +
           lastKeyQuery;
-        console.log(query);
       } else if (projectToShow == "featured") {
         // placeholder for featured projects
         const scanFeaturedApi =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryFeaturedProjects";
         let awsRepos = await fetch(scanFeaturedApi);
-        console.log(awsRepos);
+
         return awsRepos.json();
       } else if (projectToShow == "liked") {
         // placeholder for liked projects
@@ -455,7 +454,6 @@ const ShowProjects = (props) => {
         json[0]["likedProjects"].forEach((project) => {
           query += "likedProjects=" + project + "&";
         });
-        console.log(query);
         const queryLikedApi =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryLikedProjects?" +
           query;
@@ -654,7 +652,7 @@ function LoginMode(props) {
       <NewProjectPopUp
         setExportPopUp={setExportPopUp}
         authorizedUserOcto={authorizedUserOcto}
-        exporting={true}
+        exporting={false}
       />
     );
   } else if (props.authorizedUserOcto) {
