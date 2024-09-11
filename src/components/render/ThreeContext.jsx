@@ -40,8 +40,8 @@ export default function ext({ children, ...props }) {
           left: -2000,
           bottom: -2000,
           far: 2000,
-          position: [500, 500, 500],
-          zoom: 7,
+          position: [600, 600, 600],
+          zoom: 1,
         }}
         shadows={true}
       >
