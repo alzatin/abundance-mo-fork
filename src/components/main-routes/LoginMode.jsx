@@ -4,7 +4,6 @@ import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { Link } from "react-router-dom";
 import globalvariables from "../../js/globalvariables.js";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
-import { re } from "mathjs";
 
 /**
  * The octokit instance which allows interaction with GitHub.
@@ -62,7 +61,7 @@ const InitialLog = (props) => {
           <button
             type="button"
             onClick={() => {
-              props.setBrowsing(true);
+              //props.setBrowsing(true);
             }}
             className="submit-btn"
             id="browseNonGit"
@@ -81,14 +80,8 @@ const AddProject = (props) => {
   const authorizedUserOcto = props.authorizedUserOcto;
   const [browseType, setBrowseType] = useState("thumb");
   const [orderType, setOrderType] = useState("byDateCreated");
-  let searchBarValue = props.searchBarValue;
+
   let nodes = props.nodes;
-  //filter nodes by search bar value
-  /* if (searchBarValue != "") {
-    nodes = nodes.filter((node) => {
-      return node.name.toLowerCase().includes(searchBarValue.toLowerCase());
-    });
-  }*/
 
   return (
     <>
@@ -97,7 +90,7 @@ const AddProject = (props) => {
           flexDirection: "row",
           height: "30px",
           widht: "50%",
-          margin: "-25px 0 10px 20px",
+          margin: "25px 0 10px 20px",
           display: "flex",
         }}
       >
@@ -372,14 +365,14 @@ const ProjectDiv = (props) => {
 
 /* to add: if current user is null show this next part */
 const ShowProjects = (props) => {
+  const projectToShow = props.projectToShow;
   const [projectsLoaded, setStateLoaded] = useState([]);
+  const setExportPopUp = props.setExportPopUp;
+  const setProjectsToShow = props.setProjectsToShow;
   const [lastKey, setLastKey] = useState("");
   let pageDict = props.pageDict;
   const [pageNumber, setPageNumber] = useState(0);
-
   const [searchBarValue, setSearchBarValue] = useState("");
-  const exportPopUp = props.exportPopUp;
-  const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
 
   useEffect(() => {
@@ -426,42 +419,64 @@ const ShowProjects = (props) => {
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
         : "&lastKey";
+
       let searchQuery;
       if (searchBarValue != "") {
         searchQuery = "&query=" + searchBarValue;
       } else {
         searchQuery = "&query";
       }
-      if (props.user == "" || props.userBrowsing) {
+
+      if (projectToShow == "all") {
         query = "attribute=repoName" + searchQuery + "&user" + lastKeyQuery;
-      } else {
+      } else if (projectToShow == "owned") {
         query =
           "attribute=repoName" +
           searchQuery +
           "&user=" +
           props.user +
           lastKeyQuery;
-      }
+      } else if (projectToShow == "featured") {
+        // placeholder for featured projects
+        const scanFeaturedApi =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryFeaturedProjects";
+        let awsRepos = await fetch(scanFeaturedApi);
 
+        return awsRepos.json();
+      } else if (projectToShow == "liked") {
+        // placeholder for liked projects
+        //API URL for the scan-search-abundance endpoint and abundance-projects table
+        const scanUserApiUrl =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=alzatin";
+        let awsLikeRepos = await fetch(scanUserApiUrl);
+        let json = await awsLikeRepos.json();
+        query = "";
+        json[0]["likedProjects"].forEach((project) => {
+          query += "likedProjects=" + project + "&";
+        });
+        const queryLikedApi =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryLikedProjects?" +
+          query;
+        let awsRepos = await fetch(queryLikedApi);
+        return awsRepos.json();
+      }
+      //API URL for the scan-search-abundance endpoint and abundance-projects table
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
 
-      let awsRepos = await fetch(scanApiUrl);
-
-      //populateUserAWS();
-      //populateAWS(repos[0].data); // can only handle 20 items at a time
-
+      let awsRepos = await fetch(scanApiUrl); //< return result.json();[repos]
+      //let awsRepos = await fetch(scanUserApiUrl);
       return awsRepos.json();
     };
 
-    repoSearchRequest()
+    repoSearchRequest(projectToShow)
       .then((result) => {
         console.log(result);
         if (result["repos"].length == 0 && props.user !== "") {
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
-              props.setBrowsing(true);
+              //props.setBrowsing(true);
               setStateLoaded(result["repos"]);
             });
           });
@@ -475,93 +490,9 @@ const ShowProjects = (props) => {
           "Error loading projects. Please wait a few minutes then try again."
         );
       });
-  }, [props.user, searchBarValue, pageNumber]);
+  }, [searchBarValue, pageNumber, projectToShow]);
 
-  const openInNewTab = (url) => {
-    window.open(url, "_blank", "noreferrer");
-  };
-
-  return (
-    <>
-      <div className="middleBrowse" style={{ marginTop: "35px" }}>
-        <div
-          id="welcome"
-          style={{ display: "flex", margin: "10px", alignItems: "center" }}
-        >
-          <img
-            src="/imgs/abundance_logo.png"
-            alt="logo"
-            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-          />
-          <img
-            src="/imgs/abundance_lettering.png"
-            alt="logo"
-            style={{ height: "20px", padding: "10px" }}
-          />
-          {!props.isloggedIn ? (
-            <>
-              <button
-                className="form browseButton githubSign"
-                id="loginButton2"
-                onClick={props.tryLogin}
-                style={{ width: "90px", fontSize: ".7rem", marginLeft: "auto" }}
-              >
-                Login
-              </button>
-              <button
-                className="form browseButton githubSign"
-                onClick={() => openInNewTab("https://github.com/join")}
-                style={{ width: "130px", fontSize: ".7rem", marginLeft: "5px" }}
-              >
-                Create an Account
-              </button>
-            </>
-          ) : null}
-        </div>
-      </div>
-      {exportPopUp ? (
-        <NewProjectPopUp
-          setExportPopUp={setExportPopUp}
-          authorizedUserOcto={authorizedUserOcto}
-          exporting={false}
-        />
-      ) : (
-        <>
-          <ClassicBrowse
-            projectsLoaded={projectsLoaded}
-            setStateLoaded={setStateLoaded}
-            setPageNumber={setPageNumber}
-            pageNumber={pageNumber}
-            authorizedUserOcto={authorizedUserOcto}
-            lastKey={lastKey}
-            setSearchBarValue={setSearchBarValue}
-            searchBarValue={searchBarValue}
-            setExportPopUp={setExportPopUp}
-            user={props.user}
-            pageDict={pageDict}
-            userBrowsing={props.userBrowsing}
-            setBrowsing={props.setBrowsing}
-            isloggedIn={props.isloggedIn}
-          />
-        </>
-      )}
-    </>
-  );
-};
-
-// Browse display
-const ClassicBrowse = (props) => {
   let nodes = [];
-  const setPageNumber = props.setPageNumber;
-  const pageNumber = props.pageNumber;
-  const projectsLoaded = props.projectsLoaded;
-  const setStateLoaded = props.setProjectsLoaded;
-  let pageDict = props.pageDict;
-  const searchBarValue = props.searchBarValue;
-  const setSearchBarValue = props.setSearchBarValue;
-  const setExportPopUp = props.setExportPopUp;
-  const authorizedUserOcto = props.authorizedUserOcto;
-  const lastKey = props.lastKey;
 
   if (projectsLoaded.length > 0) {
     var userRepos = [];
@@ -571,11 +502,6 @@ const ClassicBrowse = (props) => {
       });
     nodes = [...userRepos];
   }
-
-  const loadBrowse = () => {
-    props.setBrowsing(!props.userBrowsing);
-    setPageNumber(0);
-  };
   const handleSearchChange = (e) => {
     if (e.code == "Enter") {
       setSearchBarValue(e.target.value);
@@ -583,106 +509,153 @@ const ClassicBrowse = (props) => {
     }
   };
 
+  console.log(projectToShow);
+
   return (
     <>
-      {props.isloggedIn ? (
-        <div className="top_browse_menu">
+      <div className="login-content-div">
+        <div className="left-login-div">
           <div
+            className="login-nav-item"
             onClick={() => {
               setExportPopUp(true);
             }}
-            className="newProjectDiv"
           >
-            <span style={{ alignSelf: "center" }}>Start a new project</span>
-            <img
-              src="/imgs/defaultThumbnail.svg"
-              style={{ height: "80%", float: "left" }}
-            ></img>
+            <p>New project</p>
           </div>
-          <div className="newProjectDiv" onClick={() => loadBrowse()}>
-            <span style={{ alignSelf: "center" }}>
-              {!props.userBrowsing
-                ? "Browse Other Projects"
-                : "Return to my Projects"}
-            </span>
-            <img
-              src="/imgs/defaultThumbnail.svg"
-              style={{ height: "80%", float: "right" }}
-            ></img>
+          <div
+            className={
+              "login-nav-item" +
+              (projectToShow == "owned" ? " login-nav-item-clicked" : "")
+            }
+            onClick={(e) => {
+              setProjectsToShow("owned");
+            }}
+          >
+            <p>My Projects</p>
+          </div>
+          <div
+            className={
+              "login-nav-item" +
+              (projectToShow == "liked" ? " login-nav-item-clicked" : "")
+            }
+            onClick={() => {
+              setProjectsToShow("liked");
+            }}
+          >
+            <p> Liked Projects</p>
+          </div>
+          <div
+            className={
+              "login-nav-item" +
+              (projectToShow == "featured" ? " login-nav-item-clicked" : "")
+            }
+            onClick={() => {
+              setProjectsToShow("featured");
+            }}
+          >
+            <p> Browse Featured Projects</p>
+          </div>
+          <div
+            className={
+              "login-nav-item" +
+              (projectToShow == "all" ? " login-nav-item-clicked" : "")
+            }
+            onClick={() => {
+              setProjectsToShow("all");
+            }}
+          >
+            <p> Browse All Other Projects</p>
           </div>
         </div>
-      ) : null}
+        <div className="right-login-div">
+          <span style={{ fontFamily: "Roboto" }}>
+            Welcome to Abundance {GlobalVariables.currentUser}
+          </span>
+          <div className="home-section">
+            {projectToShow == "owned"
+              ? "My Projects"
+              : projectToShow == "liked"
+              ? "My Liked Projects"
+              : projectToShow == "all"
+              ? "Browsing Projects"
+              : projectToShow == "featured"
+              ? "Featured Projects"
+              : null}
+          </div>
+          <hr width="100%" color="#D3D3D3" />
 
-      <div className="search-bar-div">
-        {projectsLoaded.length > 1 ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              margin: "0px 10px 0px 10px",
-            }}
-          >
-            <button
-              onClick={() => {
-                if (pageNumber > 0) {
-                  setPageNumber(pageNumber - 1);
-                }
+          <div className="search-bar-div">
+            {projectsLoaded.length > 1 ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  margin: "0px 10px 0px 10px",
+                }}
+              >
+                <button
+                  onClick={() => {
+                    if (pageNumber > 0) {
+                      setPageNumber(pageNumber - 1);
+                    }
+                  }}
+                  className="page_back_button"
+                >
+                  {"\u2190"}
+                </button>
+
+                <button
+                  className="page_forward_button"
+                  onClick={() => {
+                    if (lastKey != "") {
+                      setPageNumber(pageNumber + 1);
+                    }
+                  }}
+                >
+                  {"\u2192"}
+                </button>
+              </div>
+            ) : null}
+
+            <input
+              type="text"
+              key="project-search-bar"
+              placeholder={searchBarValue}
+              //value={target.value}
+              //onChange={(e) => setSearchBarType(e.target.value)}
+              onKeyDown={(e) => {
+                handleSearchChange(e);
               }}
-              className="page_back_button"
-            >
-              {"\u2190"}
-            </button>
-            <p
-              style={{ alignSelf: "center", fontSize: ".7em", padding: "3px" }}
-            ></p>
-            <button
-              className="page_forward_button"
-              onClick={() => {
-                if (lastKey != "") {
-                  setPageNumber(pageNumber + 1);
-                }
-              }}
-            >
-              {"\u2192"}
+              className="menu_search searchButton"
+              id="project_search"
+            />
+            <button className="list_thumb_button">
+              <img
+                src="/imgs/search_icon.svg"
+                alt="search"
+                style={{
+                  width: "20px",
+                  color: "white",
+                  marginRight: "5px",
+                  opacity: "0.5",
+                }}
+              />
             </button>
           </div>
-        ) : null}
-        <input
-          type="text"
-          key="project-search-bar"
-          placeholder={searchBarValue}
-          //value={target.value}
-          //onChange={(e) => setSearchBarType(e.target.value)}
-          onKeyDown={(e) => {
-            handleSearchChange(e);
-          }}
-          className="menu_search searchButton"
-          id="project_search"
-        />
-        <button className="list_thumb_button">
-          <img
-            src="/imgs/search_icon.svg"
-            alt="search"
-            style={{
-              width: "20px",
-              color: "white",
-              marginRight: "5px",
-              opacity: "0.5",
-            }}
-          />
-        </button>
+          {projectsLoaded.length > 0 ? (
+            <AddProject
+              searchBarValue={searchBarValue}
+              authorizedUserOcto={authorizedUserOcto}
+              user={props.user}
+              userBrowsing={props.userBrowsing}
+              nodes={nodes}
+            />
+          ) : (
+            <p> Loading...</p>
+          )}
+        </div>
       </div>
-      {projectsLoaded.length > 0 ? (
-        <AddProject
-          searchBarValue={searchBarValue}
-          authorizedUserOcto={authorizedUserOcto}
-          user={props.user}
-          userBrowsing={props.userBrowsing}
-          nodes={nodes}
-        />
-      ) : (
-        <p> Loading...</p>
-      )}
     </>
   );
 };
@@ -693,46 +666,36 @@ function LoginMode(props) {
    * @prop {setState} setIsLoggedIn - setState function for isloggedIn
    * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
    * */
-  const [userBrowsing, setBrowsing] = useState(false);
   const exportPopUp = props.exportPopUp;
   const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
   const pageDict = { 0: null };
+  const [projectToShow, setProjectsToShow] = useState("owned");
 
   var currentUser = GlobalVariables.currentUser;
 
   let popUpContent;
-  if (props.authorizedUserOcto && !userBrowsing) {
+  if (exportPopUp && props.authorizedUserOcto) {
     popUpContent = (
-      <ShowProjects
-        user={currentUser}
-        authorizedUserOcto={authorizedUserOcto}
-        userBrowsing={userBrowsing}
-        setBrowsing={setBrowsing}
-        isloggedIn={props.isloggedIn}
-        exportPopUp={exportPopUp}
+      <NewProjectPopUp
         setExportPopUp={setExportPopUp}
-        pageDict={pageDict}
+        authorizedUserOcto={authorizedUserOcto}
+        exporting={false}
       />
     );
-  } else if (userBrowsing) {
+  } else if (props.authorizedUserOcto) {
     popUpContent = (
       <ShowProjects
-        user={""}
-        userBrowsing={userBrowsing}
-        authorizedUserOcto={authorizedUserOcto}
-        setBrowsing={setBrowsing}
-        isloggedIn={props.isloggedIn}
-        tryLogin={props.tryLogin}
-        exportPopUp={exportPopUp}
+        projectToShow={projectToShow}
         setExportPopUp={setExportPopUp}
+        setProjectsToShow={setProjectsToShow}
+        user={currentUser}
+        authorizedUserOcto={authorizedUserOcto}
         pageDict={pageDict}
       />
     );
   } else {
-    popUpContent = (
-      <InitialLog tryLogin={props.tryLogin} setBrowsing={setBrowsing} />
-    );
+    popUpContent = <InitialLog tryLogin={props.tryLogin} />;
   }
   return (
     <div
@@ -757,6 +720,23 @@ function LoginMode(props) {
             </button>
           </Link>
         ) : null}
+      </div>
+      <div className="top-banner" style={{ margin: "35px 0 0 30px" }}>
+        <div
+          id="welcome-logo"
+          style={{ display: "flex", margin: "10px 10px", alignItems: "center" }}
+        >
+          <img
+            src="/imgs/abundance_logo.png"
+            alt="logo"
+            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+          />
+          <img
+            src="/imgs/abundance_lettering.png"
+            alt="logo"
+            style={{ height: "20px", padding: "10px" }}
+          />
+        </div>
       </div>
       {popUpContent}
     </div>

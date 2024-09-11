@@ -3,6 +3,36 @@
     {
       "type": "aws-sam",
       "request": "direct-invoke",
+      "name": "queryReturnLikedProjects:lambda_function.lambda_handler (python3.12)",
+      "invokeTarget": {
+        "target": "code",
+        "projectRoot": "${workspaceFolder}/Lambda AWS Functions/queryReturnLikedProjects",
+        "lambdaHandler": "lambda_function.lambda_handler"
+      },
+      "lambda": {
+        "runtime": "python3.12",
+        "payload": {},
+        "environmentVariables": {}
+      }
+    },
+    {
+      "type": "aws-sam",
+      "request": "direct-invoke",
+      "name": "scanReturnFeatured:lambda_function.lambda_handler (python3.12)",
+      "invokeTarget": {
+        "target": "code",
+        "projectRoot": "${workspaceFolder}/Lambda AWS Functions/scanReturnFeatured",
+        "lambdaHandler": "lambda_function.lambda_handler"
+      },
+      "lambda": {
+        "runtime": "python3.12",
+        "payload": {},
+        "environmentVariables": {}
+      }
+    },
+    {
+      "type": "aws-sam",
+      "request": "direct-invoke",
       "name": "Test_lambda:HelloWorldFunction (python3.12)",
       "invokeTarget": {
         "target": "template",
