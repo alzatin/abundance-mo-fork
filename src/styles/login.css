@@ -36,6 +36,10 @@
 .login-nav-item:hover {
   background-color: #bfbdbf5f;
 }
+.home-section {
+  float: right;
+  font-family: "Roboto", sans-serif;
+}
 
 .logo {
   width: 100px;

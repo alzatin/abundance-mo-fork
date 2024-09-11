@@ -557,7 +557,19 @@ const ShowProjects = (props) => {
           <span style={{ fontFamily: "Roboto" }}>
             Welcome to Abundance {GlobalVariables.currentUser}
           </span>
+          <div className="home-section">
+            {projectToShow == "owned"
+              ? "My Projects"
+              : projectToShow == "liked"
+              ? "My Liked Projects"
+              : projectToShow == "all"
+              ? "Browsing Projects"
+              : projectToShow == "featured"
+              ? "Featured Projects"
+              : null}
+          </div>
           <hr width="100%" color="#D3D3D3" />
+
           <div className="search-bar-div">
             {projectsLoaded.length > 1 ? (
               <div
@@ -590,6 +602,7 @@ const ShowProjects = (props) => {
                 </button>
               </div>
             ) : null}
+
             <input
               type="text"
               key="project-search-bar"
