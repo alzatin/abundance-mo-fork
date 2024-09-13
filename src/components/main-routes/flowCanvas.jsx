@@ -299,7 +299,7 @@ export default memo(function FlowCanvas(props) {
                 }
               }}
             >
-              {item} /
+              &nbsp; {item} /
             </a>
           );
         })}
