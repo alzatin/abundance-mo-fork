@@ -70,6 +70,25 @@ export default class Constant extends Atom {
    */
   draw() {
     super.draw("rect");
+    let pixelsX = GlobalVariables.widthToPixels(this.x);
+    let pixelsY = GlobalVariables.heightToPixels(this.y);
+    let pixelsRadius = GlobalVariables.widthToPixels(this.radius);
+    /**
+     * Relates height to radius
+     * @type {number}
+     */
+    this.height = pixelsRadius;
+
+    GlobalVariables.c.beginPath();
+    GlobalVariables.c.fillStyle = "#484848";
+    GlobalVariables.c.font = `${pixelsRadius}px Work Sans Bold`;
+    GlobalVariables.c.fillText(
+      String.fromCharCode(0x039b),
+      pixelsX - pixelsRadius / 3,
+      pixelsY + this.height / 1.5
+    );
+    GlobalVariables.c.fill();
+    GlobalVariables.c.closePath();
   }
   /**
    * Create Leva Menu Input - returns to ParameterEditor

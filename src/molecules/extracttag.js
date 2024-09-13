@@ -71,9 +71,9 @@ export default class ExtractTag extends Atom {
     GlobalVariables.c.fillStyle = "#484848";
     GlobalVariables.c.font = `${pixelsRadius}px Work Sans Bold`;
     GlobalVariables.c.fillText(
-      String.fromCharCode(0x2191, 0x0023, 0x2191),
-      pixelsX - pixelsRadius / 1.2,
-      pixelsY + this.height / 3
+      String.fromCharCode(0x2191, 0x0040, 0x2191),
+      pixelsX - pixelsRadius / 1,
+      pixelsY + this.height / 2
     );
     GlobalVariables.c.fill();
     GlobalVariables.c.closePath();

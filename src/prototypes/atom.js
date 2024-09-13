@@ -183,10 +183,10 @@ export default class Atom {
     GlobalVariables.c.beginPath();
     if (drawType == "rect") {
       GlobalVariables.c.rect(
-        xInPixels - radiusInPixels,
-        yInPixels - this.height / 2,
-        2 * radiusInPixels,
-        this.height
+        xInPixels - radiusInPixels * 1.25,
+        yInPixels - this.height / 1.5,
+        2.5 * radiusInPixels,
+        this.height * 1.5
       );
     } else {
       GlobalVariables.c.arc(
