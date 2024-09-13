@@ -206,8 +206,8 @@ export default class Equation extends Atom {
   /**
    * Add the equation choice to the object which is saved for this molecule
    */
-  serialize() {
-    var superSerialObject = super.serialize();
+  serialize(offset = { x: 0, y: 0 }) {
+    var superSerialObject = super.serialize(offset);
 
     //Write the current equation to the serialized object
     superSerialObject.currentEquation = this.currentEquation;

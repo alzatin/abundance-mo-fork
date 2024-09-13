@@ -356,7 +356,7 @@ export default class Molecule extends Atom {
     this.nodesOnTheScreen.forEach((atom) => {
       if (atom.selected) {
         GlobalVariables.atomsSelected.push(
-          atom.serialize({ x: 0.03, y: 0.03 })
+          atom.serialize({ x: 0.05, y: 0.05 })
         );
       }
     });

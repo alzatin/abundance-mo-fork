@@ -234,8 +234,8 @@ export default class Import extends Atom {
   /**
    * Add the file name to the object which is saved for this molecule
    */
-  serialize() {
-    var superSerialObject = super.serialize();
+  serialize(offset = { x: 0, y: 0 }) {
+    var superSerialObject = super.serialize(offset);
 
     //Write the current equation to the serialized object
     superSerialObject.fileName = this.fileName; // might delete, maybe we just save as library object
