@@ -21,6 +21,7 @@ window.addEventListener(
 export default memo(function FlowCanvas(props) {
   //Todo this is not very clean
   let loadProject = props.props.loadProject;
+  let activeAtom = props.props.activeAtom;
   let setActiveAtom = props.props.setActiveAtom;
   let shortCuts = props.props.shortCuts;
 
@@ -249,6 +250,18 @@ export default memo(function FlowCanvas(props) {
     createCMenu(circleMenu, setSearchingGitHub);
   }, []);
 
+  let parentLinkPath = [];
+  if (GlobalVariables.currentMolecule) {
+    parentLinkPath.unshift(GlobalVariables.currentMolecule.name);
+    let currentParent = GlobalVariables.currentMolecule.parent;
+    while (currentParent) {
+      let parentName = currentParent.name;
+      let parentLink = parentName;
+      parentLinkPath.unshift(parentLink);
+      currentParent = currentParent.parent ? currentParent.parent : null;
+    }
+  }
+
   return (
     <>
       <canvas
@@ -262,19 +275,34 @@ export default memo(function FlowCanvas(props) {
         onKeyUp={keyUp}
         onKeyDown={keyDown}
       ></canvas>
-      <div>
-        <p
-          className="repo-name"
-          style={{
-            position: "absolute",
-            zIndex: "5",
-            top: "2px",
-            left: "55px",
-            color: "rgb(255 255 255 / 34%)",
-          }}
-        >
-          {GlobalVariables.currentRepo.repoName}
-        </p>
+      <div
+        style={{
+          position: "absolute",
+          display: "inline",
+          zIndex: "5",
+          top: "20px",
+          left: "55px",
+          color: "rgb(255 255 255 / 34%)",
+        }}
+      >
+        {parentLinkPath.map((item, index) => {
+          return (
+            <a
+              className="repo-name-path"
+              onClick={() => {
+                while (
+                  GlobalVariables.currentMolecule &&
+                  GlobalVariables.currentMolecule.name !== item
+                ) {
+                  GlobalVariables.currentMolecule.goToParentMolecule(item);
+                  setActiveAtom(GlobalVariables.currentMolecule);
+                }
+              }}
+            >
+              &nbsp; {item} /
+            </a>
+          );
+        })}
       </div>
       <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>

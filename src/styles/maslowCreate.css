@@ -69,6 +69,13 @@ body {
   padding: 1px;
 }
 
+.repo-name-path {
+  color: rgb(255 255 255 / 34%);
+  text-decoration: none;
+}
+.repo-name-path:hover {
+  color: rgb(255 255 255 / 80%);
+}
 .disabled {
   opacity: 0.2;
 }
