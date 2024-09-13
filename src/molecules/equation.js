@@ -69,12 +69,12 @@ export default class Equation extends Atom {
 
     GlobalVariables.c.beginPath();
     GlobalVariables.c.fillStyle = "#484848";
-    GlobalVariables.c.font = `${pixelsRadius / 1.5}px Work Sans Bold`;
+    GlobalVariables.c.font = `${pixelsRadius / 1}px Work Sans Bold`;
 
     GlobalVariables.c.fillText(
-      "X + Y",
-      pixelsX - pixelsRadius / 1.2,
-      pixelsY + this.height / 3
+      "\u221A" + "(+)",
+      pixelsX - pixelsRadius / 1,
+      pixelsY + this.height / 2
     );
     GlobalVariables.c.fill();
     GlobalVariables.c.closePath();

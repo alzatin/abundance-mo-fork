@@ -21,7 +21,7 @@ export default class Tag extends Atom {
      * This atom's name
      * @type {string}
      */
-    this.name = "Add Tag";
+    this.name = "Tag";
     /**
      * This atom's type
      * @type {string}
@@ -61,11 +61,11 @@ export default class Tag extends Atom {
 
     GlobalVariables.c.beginPath();
     GlobalVariables.c.fillStyle = "#484848";
-    GlobalVariables.c.font = `${pixelsRadius}px Work Sans Bold`;
+    GlobalVariables.c.font = `${pixelsRadius * 1.3}px Work Sans Bold`;
     GlobalVariables.c.fillText(
-      String.fromCharCode(0x0023),
-      GlobalVariables.widthToPixels(this.x - this.radius / 3),
-      GlobalVariables.heightToPixels(this.y) + this.height / 3
+      "@",
+      GlobalVariables.widthToPixels(this.x - this.radius / 1.5),
+      GlobalVariables.heightToPixels(this.y) + this.height / 1.5
     );
     GlobalVariables.c.fill();
     GlobalVariables.c.closePath();
