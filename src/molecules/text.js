@@ -125,8 +125,8 @@ export default class Text extends Atom {
       .catch(this.alertingErrorHandler());
   }
 
-  serialize() {
-    var thisAsObject = super.serialize();
+  serialize(offset = { x: 0, y: 0 }) {
+    var thisAsObject = super.serialize(offset);
 
     var ioValues = [];
     this.inputs.forEach((io) => {

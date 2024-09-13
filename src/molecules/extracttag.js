@@ -122,8 +122,8 @@ export default class ExtractTag extends Atom {
   /**
    * Keeps track of tag to be extracted
    */
-  serialize() {
-    var superSerialObject = super.serialize();
+  serialize(offset = { x: 0, y: 0 }) {
+    var superSerialObject = super.serialize(offset);
     superSerialObject.tag = this.tag;
     superSerialObject.tagIndex = this.tagIndex;
 

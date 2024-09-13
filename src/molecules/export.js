@@ -182,8 +182,8 @@ export default class Export extends Atom {
   /**
    * Add the file name to the object which is saved for this molecule
    */
-  serialize() {
-    var superSerialObject = super.serialize();
+  serialize(offset = { x: 0, y: 0 }) {
+    var superSerialObject = super.serialize(offset);
     superSerialObject.type = this.type;
     superSerialObject.resolution = this.resolution;
     superSerialObject.importIndex = this.importIndex;

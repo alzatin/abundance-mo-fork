@@ -150,8 +150,8 @@ export default class Tag extends Atom {
   /**
    * Add the file name to the object which is saved for this molecule
    */
-  serialize() {
-    var superSerialObject = super.serialize();
+  serialize(offset = { x: 0, y: 0 }) {
+    var superSerialObject = super.serialize(offset);
     superSerialObject.tags = this.tags;
     superSerialObject.cutTag = this.cutTag;
 
