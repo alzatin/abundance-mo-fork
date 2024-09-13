@@ -740,17 +740,15 @@ body {
 .tooltip {
   display: block;
   pointer-events: none;
-  background-color: #c3c3cd;
+  background-color: #474747f7;
   margin: auto;
-  font-size: 0.7em;
+  font-size: 0.9em;
+  font-family: "Roboto", sans-serif;
   color: white;
   z-index: 1041;
   position: absolute;
   top: 100;
   right: 100;
-  -moz-box-shadow: 1px 1px 3px 2px #c3c3cd;
-  -webkit-box-shadow: 1px 1px 3px 2px #c3c3cd;
-  box-shadow: 1px 1px 3px 2px #c3c3cd;
 }
 
 /* styles for top nav menu */

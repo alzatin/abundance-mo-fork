@@ -95,13 +95,15 @@ export default function (parent, data, index) {
     div.textContent = data.icon;
     div.classList.add("tooltip");
     div.id = data.icon + "text";
-    const length = div.textContent.length * 2.7; //Correct for text length centering
+    const length = div.textContent.length * 3; //Correct for text length centering
     document.querySelector("body").appendChild(div);
+
     style(
       div,
       "top",
       self._container.offsetTop + self._calc.radius - 10 + "px"
     );
+
     style(
       div,
       "left",
@@ -133,7 +135,7 @@ export default function (parent, data, index) {
             })
             .show();
         }
-      }, 400);
+      }, 100);
     });
 
     on(a, "mouseleave", function (e) {
@@ -148,10 +150,25 @@ export default function (parent, data, index) {
     on(subMenu._container, "mouseenter", function () {
       clearTimeout(delayShow);
       clearTimeout(delayHide);
+      var div = document.createElement("div");
+      div.textContent = data.icon;
+      div.classList.add("tooltip");
+      div.id = data.icon + "text2";
+      const length = div.textContent.length * 3; //Correct for text length centering
+      document.querySelector("body").appendChild(div);
+      style(div, "top", 50 + "px");
+      style(
+        div,
+        "left",
+        self._container.offsetLeft + self._calc.radius - length + 100 + "px"
+      );
+      style(div, "color", "#D7D5D560");
     });
 
     on(subMenu._container, "mouseleave", function (e) {
       hovered = false;
+
+      document.getElementById(data.icon + "text2").remove();
       if (!a.contains(e.toElement) || e.toElement.children[0] === a) {
         subMenu.hide();
       }
