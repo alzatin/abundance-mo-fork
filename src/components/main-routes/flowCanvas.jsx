@@ -21,6 +21,7 @@ window.addEventListener(
 export default memo(function FlowCanvas(props) {
   //Todo this is not very clean
   let loadProject = props.props.loadProject;
+  let activeAtom = props.props.activeAtom;
   let setActiveAtom = props.props.setActiveAtom;
   let shortCuts = props.props.shortCuts;
 
@@ -254,7 +255,6 @@ export default memo(function FlowCanvas(props) {
     parentLinkPath.unshift(GlobalVariables.currentMolecule.name);
     let currentParent = GlobalVariables.currentMolecule.parent;
     while (currentParent) {
-      console.log(currentParent);
       let parentName = currentParent.name;
       let parentLink = parentName;
       parentLinkPath.unshift(parentLink);
@@ -295,7 +295,7 @@ export default memo(function FlowCanvas(props) {
                   GlobalVariables.currentMolecule.name !== item
                 ) {
                   GlobalVariables.currentMolecule.goToParentMolecule(item);
-                  //props.setActiveAtom(GlobalVariables.currentMolecule);
+                  setActiveAtom(GlobalVariables.currentMolecule);
                 }
               }}
             >
