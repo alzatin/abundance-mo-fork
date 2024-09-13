@@ -69,6 +69,11 @@ body {
   padding: 1px;
 }
 
+.repo-name-path {
+  color: rgb(255 255 255 / 34%);
+  text-decoration: none;
+}
+
 .disabled {
   opacity: 0.2;
 }

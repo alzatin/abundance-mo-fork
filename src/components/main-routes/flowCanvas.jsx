@@ -249,6 +249,22 @@ export default memo(function FlowCanvas(props) {
     createCMenu(circleMenu, setSearchingGitHub);
   }, []);
 
+  let parentLinkPath = [];
+  if (GlobalVariables.currentMolecule) {
+    parentLinkPath.unshift(GlobalVariables.currentMolecule.name);
+    let currentParent = GlobalVariables.currentMolecule.parent;
+    while (currentParent !== null) {
+      let parentName = currentParent.name;
+      let parentLink = parentName;
+      parentLinkPath.unshift(parentLink);
+      currentParent = currentParent.parent ? currentParent.parent : null;
+    }
+    console.log(parentLinkPath);
+    parentLinkPath.map((item, index) => {
+      console.log(item);
+    });
+  }
+
   return (
     <>
       <canvas
@@ -262,19 +278,23 @@ export default memo(function FlowCanvas(props) {
         onKeyUp={keyUp}
         onKeyDown={keyDown}
       ></canvas>
-      <div>
-        <p
-          className="repo-name"
-          style={{
-            position: "absolute",
-            zIndex: "5",
-            top: "2px",
-            left: "55px",
-            color: "rgb(255 255 255 / 34%)",
-          }}
-        >
-          {GlobalVariables.currentRepo.repoName}
-        </p>
+      <div
+        style={{
+          position: "absolute",
+          display: "inline",
+          zIndex: "5",
+          top: "20px",
+          left: "55px",
+          color: "rgb(255 255 255 / 34%)",
+        }}
+      >
+        {parentLinkPath.map((item, index) => {
+          return (
+            <a className="repo-name-path" href="${item}">
+              {item} /
+            </a>
+          );
+        })}
       </div>
       <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>
