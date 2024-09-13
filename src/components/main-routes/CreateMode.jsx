@@ -92,7 +92,7 @@ function CreateMode(props) {
     const myInterval = setInterval(() => {
       setSavePopUp(true);
       saveProject(setSaveState);
-    }, 120000);
+    }, 300000);
 
     //Clearing the interval
     return () => clearInterval(myInterval);
