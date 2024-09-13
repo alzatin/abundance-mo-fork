@@ -253,16 +253,13 @@ export default memo(function FlowCanvas(props) {
   if (GlobalVariables.currentMolecule) {
     parentLinkPath.unshift(GlobalVariables.currentMolecule.name);
     let currentParent = GlobalVariables.currentMolecule.parent;
-    while (currentParent !== null) {
+    while (currentParent) {
+      console.log(currentParent);
       let parentName = currentParent.name;
       let parentLink = parentName;
       parentLinkPath.unshift(parentLink);
       currentParent = currentParent.parent ? currentParent.parent : null;
     }
-    console.log(parentLinkPath);
-    parentLinkPath.map((item, index) => {
-      console.log(item);
-    });
   }
 
   return (
@@ -290,7 +287,18 @@ export default memo(function FlowCanvas(props) {
       >
         {parentLinkPath.map((item, index) => {
           return (
-            <a className="repo-name-path" href="${item}">
+            <a
+              className="repo-name-path"
+              onClick={() => {
+                while (
+                  GlobalVariables.currentMolecule &&
+                  GlobalVariables.currentMolecule.name !== item
+                ) {
+                  GlobalVariables.currentMolecule.goToParentMolecule(item);
+                  //props.setActiveAtom(GlobalVariables.currentMolecule);
+                }
+              }}
+            >
               {item} /
             </a>
           );
