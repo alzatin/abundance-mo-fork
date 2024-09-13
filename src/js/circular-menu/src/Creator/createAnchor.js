@@ -95,7 +95,7 @@ export default function (parent, data, index) {
     div.textContent = data.icon;
     div.classList.add("tooltip");
     div.id = data.icon + "text";
-    const length = div.textContent.length * 2.7; //Correct for text length centering
+    const length = div.textContent.length * 3; //Correct for text length centering
     document.querySelector("body").appendChild(div);
     style(
       div,

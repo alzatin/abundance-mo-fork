@@ -741,7 +741,7 @@ body {
   display: block;
   pointer-events: none;
   background-color: #474747f7;
-  margin: 0 0 0 -0.4%;
+  margin: auto;
   font-size: 0.9em;
   font-family: "Roboto", sans-serif;
   color: white;
