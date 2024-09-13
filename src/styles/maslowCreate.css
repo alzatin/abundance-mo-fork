@@ -81,25 +81,23 @@ body {
 }
 /* Shrotcut button */
 #shortcutDiv {
-  width: 150px;
+  width: 120px;
   position: absolute;
-  left: calc(100% - 210px);
-  top: 5px;
-  visibility: hidden;
-  opacity: 0;
-  color: rgb(255, 255, 255);
-  background-color: #e2ccf491;
-  transition: visibility 0s, opacity 0.5s linear;
+  left: calc(100% - 200px);
+  top: 25px;
+  color: rgba(255, 255, 255, 0.289);
   z-index: 1000;
   padding: 10px;
+  display: none;
 }
 #shortcutDiv li {
-  font-size: 10px;
+  font-size: 14px;
   list-style: none;
-  padding: 2px;
-  border-bottom: 1px solid #fff;
+  letter-spacing: 2px;
+  padding: 0px;
 }
 .shortcut-button {
+  z-index: 1000;
   padding: 0 2px;
   position: absolute;
   top: 44%;
@@ -108,16 +106,11 @@ body {
   background-color: #ffffffd7;
   border: none;
 }
-.shortcut-button:hover + #shortcutDiv {
-  visibility: visible;
-  opacity: 1;
-}
 
 .hidden {
   display: none;
 }
-
-.shortcut-button:hover + .hidden {
+.shortcut-button:checked + #shortcutDiv {
   display: block;
 }
 /* Hide default HTML checkbox */
