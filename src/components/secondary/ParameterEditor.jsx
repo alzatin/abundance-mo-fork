@@ -114,6 +114,13 @@ export default (function ParamsEditor({
     { store: store2 }
   );
 
+  useEffect(
+    () => () => {
+      store1.dispose();
+    },
+    [activeAtom]
+  );
+
   // color theme for Leva
   const abundanceTheme = {
     colors: {
