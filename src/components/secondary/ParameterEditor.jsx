@@ -25,6 +25,7 @@ export default (function ParamsEditor({
   /*Work around Leva collapse issue */
   /**https://github.com/pmndrs/leva/issues/456#issuecomment-1537510948 */
   const [collapsed, setCollapsed] = useState(true);
+  const [inputChanged, setInputChanged] = useState("");
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -35,11 +36,12 @@ export default (function ParamsEditor({
 
   if (activeAtom !== null) {
     /** Creates Leva inputs inside each atom */
-    inputParams = activeAtom.createLevaInputs();
+    inputParams = activeAtom.createLevaInputs(inputChanged, setInputChanged);
     if (run) {
       exportParams = activeAtom.createLevaExport();
     }
   }
+  console.log("inputChanged", inputChanged);
   if (activeAtom.atomType == "Molecule") {
     /** Creates Leva inputs inside each atom */
     compiledBom = activeAtom.createLevaBom();
@@ -68,10 +70,14 @@ export default (function ParamsEditor({
     { store: store1 },
     [activeAtom]
   );
+  console.log("activeAtom", activeAtom);
 
   useControls(() => exportParamsConfig, { store: store4 }, [activeAtom]);
   useControls(() => bomParamsConfig, { store: store3 }, [activeAtom]);
-  useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
+  useControls(() => inputParamsConfig, { store: store1 }, [
+    activeAtom,
+    inputChanged,
+  ]);
   /** Creates Leva panel with grid settings */
   useControls(
     "Grid",

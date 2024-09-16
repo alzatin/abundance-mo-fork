@@ -136,7 +136,8 @@ export default class Equation extends Atom {
   /**
    * Create Leva Menu Inputs - returns to ParameterEditor
    */
-  createLevaInputs() {
+  createLevaInputs(inputChanged, setInputChanged) {
+    console.log("createLevaInputs");
     // recreate inputs
     let inputParams = {};
     /** Runs through active atom inputs and adds IO parameters to default param*/
@@ -152,8 +153,12 @@ export default class Equation extends Atom {
           label: "Current Equation",
           disabled: false,
           onChange: (value) => {
-            //set({ equation: value });
-            this.setEquation(value);
+            if (this.currentEquation !== value) {
+              this.setEquation(value);
+              setInputChanged(this.currentEquation);
+            }
+
+            //;
           },
           order: -3,
         };
