@@ -1,5 +1,7 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
+import { button } from "leva";
+import { or } from "mathjs";
 
 /**
  * This class creates the Equation atom.
@@ -134,7 +136,7 @@ export default class Equation extends Atom {
   /**
    * Create Leva Menu Inputs - returns to ParameterEditor
    */
-  createLevaInputs() {
+  createLevaInputs(setInputChanged) {
     // recreate inputs
     let inputParams = {};
     /** Runs through active atom inputs and adds IO parameters to default param*/
@@ -152,8 +154,12 @@ export default class Equation extends Atom {
           onChange: (value) => {
             if (this.currentEquation !== value) {
               this.setEquation(value);
+              setInputChanged(this.currentEquation);
             }
+
+            //;
           },
+          order: -3,
         };
 
         /* Make an input for the equation itself */
@@ -173,8 +179,15 @@ export default class Equation extends Atom {
 
               //this.sendToRender();
             },
+            order: -2,
           };
         }
+        inputParams["Save Equation"] = button(
+          (get) => {
+            this.setEquation(get("equation"));
+          },
+          { order: -1 }
+        );
       });
       return inputParams;
     }
