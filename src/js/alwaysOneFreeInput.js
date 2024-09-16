@@ -53,7 +53,7 @@ export const addOrDeletePorts = (target) => {
     findHighestInput(target);
     target.addIO(
       "input",
-      "3D shape " + (findHighestInput(target) + 1),
+      "Shape " + (findHighestInput(target) + 1),
       target,
       "geometry",
       "",
