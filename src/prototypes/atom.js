@@ -556,6 +556,7 @@ export default class Atom {
       y: this.y - offset.y,
       uniqueID: this.uniqueID,
       ioValues: ioValues,
+      description: this.description,
     };
     return object;
   }
