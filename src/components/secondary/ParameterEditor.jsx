@@ -25,6 +25,7 @@ export default (function ParamsEditor({
   /*Work around Leva collapse issue */
   /**https://github.com/pmndrs/leva/issues/456#issuecomment-1537510948 */
   const [collapsed, setCollapsed] = useState(true);
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setCollapsed(false);
@@ -39,12 +40,10 @@ export default (function ParamsEditor({
       exportParams = activeAtom.createLevaExport();
     }
   }
-
   if (activeAtom.atomType == "Molecule") {
     /** Creates Leva inputs inside each atom */
     compiledBom = activeAtom.createLevaBom();
   }
-
   const bomParamsConfig = useMemo(() => {
     return { ...compiledBom };
   }, [compiledBom]);
@@ -73,7 +72,6 @@ export default (function ParamsEditor({
   useControls(() => exportParamsConfig, { store: store4 }, [activeAtom]);
   useControls(() => bomParamsConfig, { store: store3 }, [activeAtom]);
   useControls(() => inputParamsConfig, { store: store1 }, [activeAtom]);
-
   /** Creates Leva panel with grid settings */
   useControls(
     "Grid",
@@ -110,12 +108,6 @@ export default (function ParamsEditor({
     { store: store2 }
   );
 
-  useEffect(
-    () => () => {
-      store1.dispose();
-    },
-    [activeAtom]
-  );
   // color theme for Leva
   const abundanceTheme = {
     colors: {
