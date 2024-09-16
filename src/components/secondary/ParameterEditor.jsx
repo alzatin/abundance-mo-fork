@@ -25,6 +25,7 @@ export default (function ParamsEditor({
   /*Work around Leva collapse issue */
   /**https://github.com/pmndrs/leva/issues/456#issuecomment-1537510948 */
   const [collapsed, setCollapsed] = useState(true);
+  /** State to keep track of increased inputs in atoms (a.e. equation) */
   const [inputChanged, setInputChanged] = useState("");
 
   useEffect(() => {
@@ -41,7 +42,6 @@ export default (function ParamsEditor({
       exportParams = activeAtom.createLevaExport();
     }
   }
-  console.log("inputChanged", inputChanged);
   if (activeAtom.atomType == "Molecule") {
     /** Creates Leva inputs inside each atom */
     compiledBom = activeAtom.createLevaBom();
@@ -70,7 +70,6 @@ export default (function ParamsEditor({
     { store: store1 },
     [activeAtom]
   );
-  console.log("activeAtom", activeAtom);
 
   useControls(() => exportParamsConfig, { store: store4 }, [activeAtom]);
   useControls(() => bomParamsConfig, { store: store3 }, [activeAtom]);
