@@ -45,6 +45,8 @@ export default class Input extends Atom {
      */
     this.oldName = this.name;
 
+    this.radius = this.radius * 1.3;
+
     this.addIO(
       "output",
       "number or geometry",
@@ -67,6 +69,23 @@ export default class Input extends Atom {
     this.setValues(values);
   }
 
+  /** Solution to canvas overflow https://stackoverflow.com/questions/10508988/html-canvas-text-overflow-ellipsis*/
+  fittingString(c, str, maxWidth) {
+    var width = c.measureText(str).width;
+    var ellipsis = "…";
+    var ellipsisWidth = c.measureText(ellipsis).width;
+    if (width <= maxWidth || width <= ellipsisWidth) {
+      return str;
+    } else {
+      var len = str.length;
+      while (width >= maxWidth - ellipsisWidth && len-- > 0) {
+        str = str.substring(0, len);
+        width = c.measureText(str).width;
+      }
+      return str + ellipsis;
+    }
+  }
+
   /**
    * Draws the atom on the screen.
    */
@@ -76,7 +95,7 @@ export default class Input extends Atom {
      * The x position of the atom
      * @type {number}
      */
-    this.x = this.radius;
+    this.x = 0.04;
 
     let xInPixels = GlobalVariables.widthToPixels(this.x);
     let yInPixels = GlobalVariables.heightToPixels(this.y);
@@ -85,7 +104,7 @@ export default class Input extends Atom {
      * Relates height to radius
      * @type {number}
      */
-    this.height = radiusInPixels * 1.3;
+    this.height = radiusInPixels;
     //Check if the name has been updated
     if (this.name != this.oldName) {
       this.updateParentName();
@@ -120,30 +139,27 @@ export default class Input extends Atom {
     if (this.output) {
       this.output.draw();
     }
-
-    GlobalVariables.c.font = "10px Work Sans";
-    GlobalVariables.c.textAlign = "start";
-    GlobalVariables.c.fillText(
-      this.name,
-      xInPixels + radiusInPixels,
-      yInPixels - radiusInPixels
-    );
     GlobalVariables.c.beginPath();
-    GlobalVariables.c.moveTo(
-      xInPixels - radiusInPixels,
-      yInPixels + this.height / 2
-    );
-    GlobalVariables.c.lineTo(xInPixels, yInPixels + this.height / 2);
+    GlobalVariables.c.moveTo(0, yInPixels + this.height / 2);
+    GlobalVariables.c.lineTo(55, yInPixels + this.height / 2);
     GlobalVariables.c.lineTo(xInPixels + radiusInPixels, yInPixels);
-    GlobalVariables.c.lineTo(xInPixels, yInPixels - this.height / 2);
-    GlobalVariables.c.lineTo(
-      xInPixels - radiusInPixels,
-      yInPixels - this.height / 2
-    );
+    GlobalVariables.c.lineTo(55, yInPixels - this.height / 2);
+    GlobalVariables.c.lineTo(0, yInPixels - this.height / 2);
     GlobalVariables.c.lineWidth = 1;
     GlobalVariables.c.fill();
     GlobalVariables.c.closePath();
     GlobalVariables.c.stroke();
+    GlobalVariables.c.font = "11px Work Sans";
+    GlobalVariables.c.textAlign = "start";
+    GlobalVariables.c.fillStyle = "black";
+    GlobalVariables.c.width = 20;
+    GlobalVariables.c.textOverflow = "ellipsis";
+
+    GlobalVariables.c.fillText(
+      this.fittingString(GlobalVariables.c, this.name, 50),
+      5,
+      yInPixels + 3
+    );
   }
 
   /**
