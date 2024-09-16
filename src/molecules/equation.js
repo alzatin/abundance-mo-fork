@@ -1,6 +1,6 @@
 import Atom from "../prototypes/atom";
 import GlobalVariables from "../js/globalvariables.js";
-
+import { button } from "leva";
 /**
  * This class creates the Equation atom.
  */
@@ -150,9 +150,7 @@ export default class Equation extends Atom {
           label: "Current Equation",
           disabled: false,
           onChange: (value) => {
-            if (this.currentEquation !== value) {
-              this.setEquation(value);
-            }
+            this.setEquation(value);
           },
         };
 
@@ -175,6 +173,9 @@ export default class Equation extends Atom {
             },
           };
         }
+        inputParams["Save Equation"] = button((get) =>
+          this.setEquation(get("equation"))
+        );
       });
       return inputParams;
     }
