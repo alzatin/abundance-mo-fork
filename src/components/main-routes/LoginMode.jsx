@@ -709,7 +709,9 @@ function LoginMode(props) {
       <div>
         {" "}
         {GlobalVariables.currentRepo ? (
-          <Link to={`/${GlobalVariables.currentRepo.id}`}>
+          <Link
+            to={`/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`}
+          >
             <button
               className="closeButton"
               onClick={() => {
