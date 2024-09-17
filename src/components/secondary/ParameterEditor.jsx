@@ -37,7 +37,7 @@ export default (function ParamsEditor({
 
   if (activeAtom !== null) {
     /** Creates Leva inputs inside each atom */
-    inputParams = activeAtom.createLevaInputs(inputChanged, setInputChanged);
+    inputParams = activeAtom.createLevaInputs(setInputChanged);
     if (run) {
       exportParams = activeAtom.createLevaExport();
     }
