@@ -877,7 +877,7 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
     const mesh = face
       .clone()
       .outerWire()
-      .meshEdges({ tolerance: tolerance, angularTolerance: 1 });
+      .meshEdges({ tolerance: .5, angularTolerance: 5 }); //The tolerance here is described in the conversation here https://github.com/BarbourSmith/Abundance/pull/173
     const points = preparePoints(mesh, tolerance); // TOOD: it's not actually clear that this tolerance should be the same..
     parts.push(FloatPolygon.fromPoints(points, shape.id));
   });
