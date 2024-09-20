@@ -257,9 +257,11 @@ function RunNavigation(props) {
             /*aws dynamo post*/
             const apiUrl =
               "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
+            let searchName = result.data.name.toLowerCase();
             let forkedNodeBody = {
               owner: GlobalVariables.currentUser,
               ranking: result.data.stargazers_count,
+              searchField: searchName,
               repoName: result.data.name,
               forks: 0,
               topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
