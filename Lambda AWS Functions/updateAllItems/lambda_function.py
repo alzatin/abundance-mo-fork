@@ -28,11 +28,12 @@ def lambda_handler(event: any, context: any):
         owner = item['owner']
         repoName = item['repoName']
         repoNameLower = repoName.lower()
+        ownerLower = owner.lower()
 
         expressionAttributeValues = {
             ':dateModified': newDate,
             ':yyyy': yearNow,
-            ':searchField': repoNameLower,
+            ':searchField': repoNameLower + " " + ownerLower,
 
         }
 
