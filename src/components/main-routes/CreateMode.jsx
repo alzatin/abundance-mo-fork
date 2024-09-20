@@ -194,7 +194,7 @@ function CreateMode(props) {
                           /*aws dynamo update-item lambda, also updates dateModified on aws side*/
                           const apiUpdateUrl =
                             "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
-
+                          const searchField = repo.toLowerCase();
                           fetch(apiUpdateUrl, {
                             method: "POST",
                             body: JSON.stringify({
@@ -203,6 +203,7 @@ function CreateMode(props) {
                               attributeUpdates: {
                                 ranking: 0,
                                 html_url: htmlURL,
+                                searchField: searchField,
                               },
                             }),
                             headers: {
