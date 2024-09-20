@@ -472,7 +472,6 @@ const ShowProjects = (props) => {
 
     repoSearchRequest(projectToShow)
       .then((result) => {
-        console.log(result);
         if (result["repos"].length == 0 && props.user !== "") {
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
@@ -508,8 +507,6 @@ const ShowProjects = (props) => {
       setPageNumber(0);
     }
   };
-
-  console.log(projectToShow);
 
   return (
     <>
