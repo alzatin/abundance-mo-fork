@@ -460,6 +460,18 @@ const ShowProjects = (props) => {
           query;
         let awsRepos = await fetch(queryLikedApi);
         return awsRepos.json();
+      } else if (projectToShow == "recents") {
+        query =
+          "attribute=searchField" +
+          searchQuery +
+          "&user=" +
+          props.user +
+          lastKeyQuery;
+        const scanRecentApi =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryRecentProjects?" +
+          query;
+        let awsRepos = await fetch(scanRecentApi);
+        return awsRepos.json();
       }
       //API URL for the scan-search-abundance endpoint and abundance-projects table
       const scanApiUrl =
@@ -535,6 +547,17 @@ const ShowProjects = (props) => {
           <div
             className={
               "login-nav-item" +
+              (projectToShow == "recents" ? " login-nav-item-clicked" : "")
+            }
+            onClick={() => {
+              setProjectsToShow("recents");
+            }}
+          >
+            <p> Recent Projects</p>
+          </div>
+          <div
+            className={
+              "login-nav-item" +
               (projectToShow == "liked" ? " login-nav-item-clicked" : "")
             }
             onClick={() => {
@@ -579,6 +602,8 @@ const ShowProjects = (props) => {
               ? "Browsing Projects"
               : projectToShow == "featured"
               ? "Featured Projects"
+              : projectToShow == "recents"
+              ? "Recent Projects"
               : null}
           </div>
           <hr width="100%" color="#D3D3D3" />
