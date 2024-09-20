@@ -20,6 +20,7 @@ def lambda_handler(event: any, context: any):
         owner = event["owner"]
         repoName = event["repoName"]
         ranking = event["ranking"]
+        searchField = event["searchField"]
         forks = event["forks"]
         topMoleculeID = event["topMoleculeID"]
         topics = event["topics"]
@@ -36,6 +37,7 @@ def lambda_handler(event: any, context: any):
         itemToPut = {"owner": owner,
                      "repoName": repoName,
                      "ranking": ranking,
+                     "searchField": searchField,
                      "forks": forks,
                      "topMoleculeID": topMoleculeID,
                      "svgURL": svgURL,

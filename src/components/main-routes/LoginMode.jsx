@@ -428,10 +428,10 @@ const ShowProjects = (props) => {
       }
 
       if (projectToShow == "all") {
-        query = "attribute=repoName" + searchQuery + "&user" + lastKeyQuery;
+        query = "attribute=searchField" + searchQuery + "&user" + lastKeyQuery;
       } else if (projectToShow == "owned") {
         query =
-          "attribute=repoName" +
+          "attribute=searchField" +
           searchQuery +
           "&user=" +
           props.user +
@@ -447,7 +447,8 @@ const ShowProjects = (props) => {
         // placeholder for liked projects
         //API URL for the scan-search-abundance endpoint and abundance-projects table
         const scanUserApiUrl =
-          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=alzatin";
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=" +
+          props.user;
         let awsLikeRepos = await fetch(scanUserApiUrl);
         let json = await awsLikeRepos.json();
         query = "";
