@@ -116,39 +116,40 @@ const NewProjectPopUp = (props) => {
         );
 
         /*aws dynamo post*/
+        let newProjectBody = {
+          owner: result.data.owner.login,
+          ranking: result.data.stargazers_count,
+          repoName: result.data.name,
+          forks: result.data.forks_count,
+          topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
+          topics: topics,
+          html_url: result.data.html_url,
+          readme:
+            "https://raw.githubusercontent.com/" +
+            result.data.full_name +
+            "/master/README.md?sanitize=true",
+          contentURL:
+            "https://raw.githubusercontent.com/" +
+            result.data.full_name +
+            "/master/project.abundance?sanitize=true",
+          githubMoleculesUsed: [],
+          svgURL:
+            "https://raw.githubusercontent.com/" +
+            result.data.full_name +
+            "/master/project.svg?sanitize=true",
+          dateCreated: result.data.created_at,
+        };
 
         const apiUrl =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
         fetch(apiUrl, {
           method: "POST",
-          body: JSON.stringify({
-            owner: result.data.owner.login,
-            ranking: result.data.stargazers_count,
-            repoName: result.data.name,
-            forks: result.data.forks_count,
-            topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
-            topics: topics,
-            html_url: result.data.html_url,
-            readme:
-              "https://raw.githubusercontent.com/" +
-              result.data.full_name +
-              "/master/README.md?sanitize=true",
-            contentURL:
-              "https://raw.githubusercontent.com/" +
-              result.data.full_name +
-              "/master/project.abundance?sanitize=true",
-            githubMoleculesUsed: [],
-            svgURL:
-              "https://raw.githubusercontent.com/" +
-              result.data.full_name +
-              "/master/project.svg?sanitize=true",
-            dateCreated: result.data.created_at,
-          }),
+          body: JSON.stringify(newProjectBody),
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },
         }).then((response) => {
-          console.log(response);
+          GlobalVariables.currentRepo = newProjectBody;
         });
 
         //Create the project file
@@ -240,31 +241,10 @@ const NewProjectPopUp = (props) => {
                                         names: topics,
                                       })
                                       .then(() => {
-                                        //GET the new repo from aws and set it as the current repo
-                                        let query =
-                                          "attribute=repoName" +
-                                          "&query=" +
-                                          currentRepoName +
-                                          "&user=" +
-                                          currentUser;
-
-                                        const scanApiUrl =
-                                          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
-                                          query +
-                                          "&lastKey";
-
-                                        fetch(scanApiUrl).then((awsRepos) => {
-                                          let newRepo;
-                                          awsRepos.json().then((data) => {
-                                            newRepo = data["repos"][0];
-                                            GlobalVariables.currentRepo =
-                                              newRepo;
-                                            setExportPopUp(false);
-                                            navigate(
-                                              `/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
-                                            );
-                                          });
-                                        });
+                                        setExportPopUp(false);
+                                        navigate(
+                                          `/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
+                                        );
                                       });
                                   });
                               });
