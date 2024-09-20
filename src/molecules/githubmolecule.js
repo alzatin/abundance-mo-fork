@@ -87,10 +87,10 @@ export default class GitHubMolecule extends Molecule {
             },
           };
         }
-        inputParams["Reload From Github"] = button(() =>
-          this.reloadMoleculeFromGithub()
-        );
       });
+      inputParams["Reload From Github"] = button(() =>
+        this.reloadMoleculeFromGithub()
+      );
       return inputParams;
     }
   }
