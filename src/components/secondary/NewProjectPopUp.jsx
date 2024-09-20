@@ -114,13 +114,18 @@ const NewProjectPopUp = (props) => {
         const projectContent = window.btoa(
           JSON.stringify(jsonRepOfProject, null, 4)
         );
-        let searchName = result.data.name.toLowerCase();
-        console.log(result.data);
+        let searchField = (
+          result.data.name +
+          " " +
+          result.data.owner.login +
+          " " +
+          description
+        ).toLowerCase();
         /*aws dynamo post*/
         let newProjectBody = {
           owner: result.data.owner.login,
           ranking: result.data.stargazers_count,
-          searchField: searchName,
+          searchField: searchField,
           repoName: result.data.name,
           forks: result.data.forks_count,
           topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
