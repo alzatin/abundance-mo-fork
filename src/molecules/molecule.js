@@ -664,7 +664,7 @@ export default class Molecule extends Atom {
     thisAsObject.topLevel = this.topLevel;
     thisAsObject.allAtoms = allAtoms;
     thisAsObject.allConnectors = allConnectors;
-    thisAsObject.gitHubUniqueID = this.gitHubUniqueID;
+    thisAsObject.parentRepo = this.parentRepo;
     thisAsObject.unitsKey = this.unitsKey;
     thisAsObject.fileTypeVersion = 1;
     thisAsObject.compiledBom = this.compiledBom;
@@ -757,14 +757,14 @@ export default class Molecule extends Atom {
             uniqueID: newMoleculeUniqueID,
             x: this.x,
             y: this.y,
-            gitHubUniqueID: item.id,
+            parentRepo: item,
             topLevel: false,
             ioValues: oldObject.ioValues,
           };
         } else {
           valuesToOverwriteInLoadedVersion = {
             uniqueID: newMoleculeUniqueID,
-            gitHubUniqueID: item.id,
+            parentRepo: item,
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
             topLevel: false,
