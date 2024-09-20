@@ -87,10 +87,10 @@ export default class GitHubMolecule extends Molecule {
             },
           };
         }
-        inputParams["Reload From Github"] = button(() =>
-          this.reloadMoleculeFromGithub()
-        );
       });
+      inputParams["Reload From Github"] = button(() =>
+        this.reloadMoleculeFromGithub()
+      );
       return inputParams;
     }
   }
@@ -105,6 +105,8 @@ export default class GitHubMolecule extends Molecule {
 
     const copyOfNodeToBeDeleted = this;
     copyOfNodeToBeDeleted.deleteNode(false, false, true);
+
+    let item = this.parentRepo;
 
     this.loadGithubMoleculeByName(
       /*old way > keeping until i fix reload -- this.gitHubUniqueID*/
