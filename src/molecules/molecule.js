@@ -731,14 +731,17 @@ export default class Molecule extends Atom {
    * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
    * @param {number} id - The GitHub project ID for the project to be loaded.
    */
-  async loadGithubMoleculeByID(
-    id,
+  async loadGithubMoleculeByName(
+    item,
     oldObject = {},
     oldParentObjectConnectors = {}
   ) {
     let octokit = new Octokit();
     await octokit
-      .request("GET /repositories/:id/contents/project.abundance", { id })
+      .request("GET /repos/{owner}/{repo}/contents/project.abundance", {
+        owner: item.owner,
+        repo: item.repoName,
+      })
       .then((response) => {
         let rawFile = JSON.parse(atob(response.data.content));
         let rawFileWithNewIds = this.remapIDs(rawFile);
@@ -754,14 +757,14 @@ export default class Molecule extends Atom {
             uniqueID: newMoleculeUniqueID,
             x: this.x,
             y: this.y,
-            gitHubUniqueID: id,
+            gitHubUniqueID: item.id,
             topLevel: false,
             ioValues: oldObject.ioValues,
           };
         } else {
           valuesToOverwriteInLoadedVersion = {
             uniqueID: newMoleculeUniqueID,
-            gitHubUniqueID: id,
+            gitHubUniqueID: item.id,
             x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
             y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
             topLevel: false,

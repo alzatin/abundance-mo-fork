@@ -14,7 +14,7 @@ function GitSearch(props) {
    * @param {object} ev - The event triggered by clicking on a menu item.
    */
   function placeGitHubMolecule(e, item) {
-    GlobalVariables.currentMolecule.loadGithubMoleculeByID(item.id);
+    GlobalVariables.currentMolecule.loadGithubMoleculeByName(item);
     props.setSearchingGitHub(false);
     setGitRepos([]);
   }
@@ -27,7 +27,8 @@ function GitSearch(props) {
       } else {
         searchQuery = "&query";
       }
-      let query = "attribute=repoName" + searchQuery + "&user";
+      // gitsearch searches by repoName and does not specify user, we could specify last key if we wanted to paginate
+      let query = "attribute=repoName" + searchQuery + "&user" + "&lastKey";
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
@@ -69,7 +70,6 @@ function GitSearch(props) {
   };
 
   const GitList = function () {
-    console.log("gitRepos", gitRepos);
     return gitRepos.map((item, key) => {
       return (
         <li
