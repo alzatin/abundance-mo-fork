@@ -28,7 +28,7 @@ function GitSearch(props) {
         searchQuery = "&query";
       }
       // gitsearch searches by repoName and does not specify user, we could specify last key if we wanted to paginate
-      let query = "attribute=repoName" + searchQuery + "&user" + "&lastKey";
+      let query = "attribute=searchField" + searchQuery + "&user" + "&lastKey";
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
