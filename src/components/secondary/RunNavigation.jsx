@@ -261,7 +261,7 @@ function RunNavigation(props) {
               owner: GlobalVariables.currentUser,
               ranking: result.data.stargazers_count,
               repoName: result.data.name,
-              forks: result.data.forks_count,
+              forks: 0,
               topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
               topics: [],
               readme:
@@ -277,6 +277,7 @@ function RunNavigation(props) {
                 result.data.name +
                 "/master/project.abundance?sanitize=true",
               githubMoleculesUsed: [],
+              parentRepo: owner + "/" + repo,
               svgURL:
                 "https://raw.githubusercontent.com/" +
                 GlobalVariables.currentUser +

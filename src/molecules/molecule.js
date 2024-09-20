@@ -209,7 +209,7 @@ export default class Molecule extends Atom {
       });
     }
 
-    if (GlobalVariables.currentRepo.fork) {
+    if (GlobalVariables.currentRepo.parentRepo != null) {
       inputParams["Reload from Github"] = button(() => {
         //Future compare to main branch
         this.reloadFork();
@@ -269,18 +269,19 @@ export default class Molecule extends Atom {
 
   async reloadFork() {
     const octokit = new Octokit();
-    var owner = GlobalVariables.currentRepo.owner.login;
-    var repo = GlobalVariables.currentRepo.repoName;
+    let parent = GlobalVariables.currentRepo.parentRepo.split("/");
+    let parentOwner = parent[0];
+    let parentRepo = parent[1];
     octokit
       .request("GET /repos/{owner}/{repo}", {
-        owner: owner,
-        repo: repo,
+        owner: parentOwner,
+        repo: parentRepo,
       })
       .then((response) => {
         octokit.rest.repos
           .getContent({
-            owner: response.data.source.owner.login,
-            repo: response.data.source.name,
+            owner: response.data.owner.login,
+            repo: response.data.name,
             path: "project.abundance",
           })
           .then((response) => {

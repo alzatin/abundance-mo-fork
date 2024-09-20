@@ -124,6 +124,7 @@ const NewProjectPopUp = (props) => {
           topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
           topics: topics,
           html_url: result.data.html_url,
+          parentRepo: null,
           readme:
             "https://raw.githubusercontent.com/" +
             result.data.full_name +
