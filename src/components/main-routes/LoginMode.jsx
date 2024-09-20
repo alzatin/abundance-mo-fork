@@ -693,7 +693,7 @@ function LoginMode(props) {
   const setExportPopUp = props.setExportPopUp;
   const authorizedUserOcto = props.authorizedUserOcto;
   const pageDict = { 0: null };
-  const [projectToShow, setProjectsToShow] = useState("owned");
+  const [projectToShow, setProjectsToShow] = useState("recents");
 
   var currentUser = GlobalVariables.currentUser;
 
