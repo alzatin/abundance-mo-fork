@@ -103,15 +103,13 @@ const NewProjectPopUp = (props) => {
         setPending(false);
       })
       .then((result) => {
-        console.log(result);
         setNewProjectBar(10);
         //Once we have created the new repo we need to create a file within it to store the project in
         currentRepoName = result.data.name;
         currentUser = GlobalVariables.currentUser;
-        GlobalVariables.currentRepo = result.data;
 
         var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
-        console.log(jsonRepOfProject);
+
         jsonRepOfProject.filetypeVersion = 1;
         const projectContent = window.btoa(
           JSON.stringify(jsonRepOfProject, null, 4)
@@ -242,10 +240,31 @@ const NewProjectPopUp = (props) => {
                                         names: topics,
                                       })
                                       .then(() => {
-                                        setExportPopUp(false);
-                                        navigate(
-                                          `/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
-                                        );
+                                        //GET the new repo from aws and set it as the current repo
+                                        let query =
+                                          "attribute=repoName" +
+                                          "&query=" +
+                                          currentRepoName +
+                                          "&user=" +
+                                          currentUser;
+
+                                        const scanApiUrl =
+                                          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
+                                          query +
+                                          "&lastKey";
+
+                                        fetch(scanApiUrl).then((awsRepos) => {
+                                          let newRepo;
+                                          awsRepos.json().then((data) => {
+                                            newRepo = data["repos"][0];
+                                            GlobalVariables.currentRepo =
+                                              newRepo;
+                                            setExportPopUp(false);
+                                            navigate(
+                                              `/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
+                                            );
+                                          });
+                                        });
                                       });
                                   });
                               });
