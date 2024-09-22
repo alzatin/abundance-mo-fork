@@ -434,7 +434,6 @@ function molecule(targetID, inputID) {
   return started.then(() => {
     if (library[inputID] != undefined) {
       library[targetID] = library[inputID];
-      console.log("setting molecule library id");
     } else {
       throw new Error("output ID is undefined");
     }
