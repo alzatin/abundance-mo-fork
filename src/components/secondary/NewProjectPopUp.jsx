@@ -321,6 +321,7 @@ const NewProjectPopUp = (props) => {
             </h2>
             <label htmlFor="project-name">Project Name</label>
             <input
+              id="project-name"
               name="Project Name"
               placeholder="Project Name"
               ref={projectRef}

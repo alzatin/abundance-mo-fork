@@ -83,6 +83,15 @@
   cursor: pointer;
 }
 
+/*Settings div styling*/
+.settingsDiv {
+  z-index: 10;
+  width: 60%;
+  position: fixed;
+  top: 20%;
+  left: 20%;
+}
+
 /*Code window instance scrollers*/
 .cm-scroller {
   -ms-overflow-style: none; /* for Internet Explorer, Edge */

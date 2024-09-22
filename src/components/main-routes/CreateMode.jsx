@@ -382,13 +382,6 @@ function CreateMode(props) {
             </div>
           ) : null}
           <ToggleRunCreate run={false} />
-
-          <input
-            type="checkbox"
-            className="checkbox shortcut-button"
-            name={"shortcut-button"}
-            id={"shortcut-button"}
-          />
           <div id="shortcutDiv" className="hidden">
             <li style={{ fontSize: "14px" }}>(Cmmd +)</li>
             {Object.entries(shortCuts).map(([key, value]) => {
