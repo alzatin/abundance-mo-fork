@@ -5,35 +5,33 @@ import topics from "../../js/maslowTopics.js";
 
 const SettingsPopUp = (props) => {
   const { setSettingsPopUp } = props;
-  console.log("SettingsPopUp");
-  console.log(Globalvariables.currentRepo);
-  console.log(Globalvariables.topLevelMolecule);
+
   let repoTopics = [];
   Globalvariables.currentRepo.topics.forEach((topic) => {
     repoTopics.push({ value: topic, label: topic });
   });
 
-  const projectRef = useRef(Globalvariables.currentRepo.repoName);
+  //const projectRef = useRef(Globalvariables.currentRepo.repoName);
   const projectTopicRef = useRef(repoTopics);
   const projectDescriptionRef = useRef(Globalvariables.currentRepo.description);
-  const projectLicenseRef = useRef();
+  //const projectLicenseRef = useRef();
   const projectUnitsRef = useRef(Globalvariables.topLevelMolecule.unitsKey);
 
   /* Handles form submission for create new/ export project form */
   const handleSubmit = async (e) => {
     e.preventDefault();
     //setPending(true);
-    //const projectName = projectRef.current.value;
+    setSettingsPopUp(false);
+    //const projectName = projectRef.current.value; add tooltip directing user to github to change project name
     const projectTopicArray = projectTopicRef.current.getValue();
-    const projectDescription = projectDescriptionRef.current.value;
     const projectTopic = [];
     //const projectLicense = projectLicenseRef.current.value;
-    const projectUnits = projectUnitsRef.current.value;
-
     projectTopicArray.forEach((topic) => {
       projectTopic.push(topic[`value`]);
     });
-    console.log(projectTopic);
+    Globalvariables.topLevelMolecule.unitsKey = projectUnitsRef.current.value;
+    Globalvariables.currentRepo.description =
+      projectDescriptionRef.current.value;
     Globalvariables.currentRepo.topics = projectTopic;
     console.log(Globalvariables.currentRepo);
   };
@@ -71,7 +69,7 @@ const SettingsPopUp = (props) => {
           {/*Project name change?? */}
           <label htmlFor="project-description">Project Description</label>
           <input
-            placeholder="Project Description"
+            defaultValue={Globalvariables.currentRepo.description}
             ref={projectDescriptionRef}
           />
           <label htmlFor="project-topics">Project Tags</label>
