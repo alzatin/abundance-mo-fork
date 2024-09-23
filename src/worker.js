@@ -17,6 +17,7 @@ import shrinkWrap from "replicad-shrink-wrap";
 import { addSVG, drawSVG } from "replicad-decorate";
 import Fonts from "./js/fonts.js";
 import { AnyNest, FloatPolygon } from "any-nest";
+import { re } from "mathjs";
 
 var library = {};
 
@@ -436,7 +437,6 @@ function molecule(targetID, inputID) {
     } else {
       throw new Error("output ID is undefined");
     }
-
     return true;
   });
 }
@@ -877,7 +877,7 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
     const mesh = face
       .clone()
       .outerWire()
-      .meshEdges({ tolerance: .5, angularTolerance: 5 }); //The tolerance here is described in the conversation here https://github.com/BarbourSmith/Abundance/pull/173
+      .meshEdges({ tolerance: 0.5, angularTolerance: 5 }); //The tolerance here is described in the conversation here https://github.com/BarbourSmith/Abundance/pull/173
     const points = preparePoints(mesh, tolerance); // TOOD: it's not actually clear that this tolerance should be the same..
     parts.push(FloatPolygon.fromPoints(points, shape.id));
   });
@@ -1283,11 +1283,18 @@ let colorOptions = {
   White: "#FFFCF7",
   "Keep Out": "#E0E0E0",
 };
+async function generateDefaultMesh(id) {
+  let defaultMesh = await text(id, "No output to display", 28, "ROBOTO");
+  return defaultMesh;
+}
 
 function generateDisplayMesh(id) {
   return started.then(() => {
     if (library[id] == undefined) {
-      throw new Error("ID not found in library");
+      generateDefaultMesh(id).then((result) => {
+        console.log(result);
+      });
+      //throw new Error("ID not found in library");
     }
     let meshArray = [];
 
