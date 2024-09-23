@@ -204,6 +204,7 @@ function CreateMode(props) {
                                 ranking: 0,
                                 html_url: htmlURL,
                                 searchField: searchField,
+                                topics: GlobalVariables.currentRepo.topics,
                               },
                             }),
                             headers: {
