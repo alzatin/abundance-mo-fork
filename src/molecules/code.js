@@ -173,11 +173,35 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
 
       GlobalVariables.cad
         .code(this.uniqueID, this.code, argumentsArray)
-        .then(() => {
+        .then((result) => {
+
+          if(result === true){ //Code atom returned geometry
+            console.log("Code Atom returned geometry");
+            this.basicThreadValueProcessing();
+          }
+          else{ //Code atom returned a number
+            console.log("Code Atom returned a number: " + result);
+            this.customThreadValueProcessing(result);
+          }
           this.basicThreadValueProcessing();
         })
         .catch(this.alertingErrorHandler());
     }
+  }
+
+  /**
+   * Override the standard basic thread processing function to allow passing of numbers or geometry depending on what we have
+  */
+  customThreadValueProcessing(returnedNumber) {
+    this.decreaseToProcessCountByOne();
+    this.clearAlert();
+    if (this.output) {
+      console.log("Code Atom returned a number inner: " + returnedNumber);
+      this.value = returnedNumber;
+      this.output.setValue(returnedNumber);
+      this.output.ready = true;
+    }
+    this.processing = false;
   }
 
   /**

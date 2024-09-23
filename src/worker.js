@@ -346,6 +346,7 @@ function tag(targetID, inputID, TAG) {
   });
 }
 
+//Runs the user entered code in the worker thread and returns the result.
 function code(targetID, code, argumentsArray) {
   return started.then(() => {
     let keys1 = [];
@@ -359,11 +360,15 @@ function code(targetID, code, argumentsArray) {
     var result = eval(
       "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
     );
-    const newPlane = new Plane().pivot(0, "Y");
 
     library[targetID] = result;
 
-    return true;
+    //If the type of the result is a number return the number so it can be passed to the next atom
+    if (typeof result === "number") {
+      return result;
+    } else {
+      return true;
+    }
   });
 }
 
