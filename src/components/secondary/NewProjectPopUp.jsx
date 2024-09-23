@@ -310,6 +310,7 @@ const NewProjectPopUp = (props) => {
             <img></img>
           </button>
           <form
+            className="new-project-form"
             onSubmit={(e) => {
               handleSubmit(e);
             }}

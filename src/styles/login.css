@@ -88,7 +88,7 @@
   z-index: 10;
   width: 60%;
   position: fixed;
-  top: 20%;
+  top: 10%;
   left: 20%;
 }
 
@@ -257,16 +257,35 @@
   animation-name: fadeInUp;
 }
 
+.new-project-form input {
+  width: 100%;
+}
+#project-info div {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: left;
+  gap: 20px;
+  color: #dedbdb;
+  margin: -20px 0 10px 0;
+}
 .form input {
+  width: 100%;
   font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
-  width: 100%;
   border: 0;
   margin: 0 0 10px;
   padding: 10px;
   box-sizing: border-box;
   font-size: 14px;
+}
+.form label {
+  color: #dedbdb;
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
 }
 
 .form select {

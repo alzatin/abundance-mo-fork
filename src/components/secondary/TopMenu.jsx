@@ -71,7 +71,7 @@ function TopMenu(props) {
       id: "Settings",
       buttonFunc: () => {
         //placeholder for settings menu in progress
-        //setSettingsPopUp(true);
+        setSettingsPopUp(true);
       },
     },
     {

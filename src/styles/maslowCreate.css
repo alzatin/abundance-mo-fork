@@ -80,29 +80,9 @@ body {
   opacity: 0.2;
 }
 /* Shrotcut button */
-#shortcutDiv {
-  width: 120px;
-  position: absolute;
-  left: calc(100% - 200px);
-  top: 25px;
-  color: rgba(255, 255, 255, 0.289);
-  z-index: 1000;
-  padding: 10px;
-  display: none;
-}
-#shortcutDiv li {
-  font-size: 14px;
-  list-style: none;
-  letter-spacing: 2px;
-  padding: 0px;
-}
+
 .shortcut-button {
-  z-index: 1000;
   padding: 0 2px;
-  position: absolute;
-  top: 44%;
-  right: 0%;
-  transform: translate(-20%, -60%);
   background-color: #ffffffd7;
   border: none;
 }
