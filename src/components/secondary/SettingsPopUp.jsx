@@ -4,7 +4,7 @@ import CreatableSelect from "react-select/creatable";
 import topics from "../../js/maslowTopics.js";
 
 const SettingsPopUp = (props) => {
-  const { setSettingsPopUp } = props;
+  const { setSettingsPopUp, setShortCuts } = props;
 
   let repoTopics = [];
   Globalvariables.currentRepo.topics.forEach((topic) => {
@@ -16,6 +16,7 @@ const SettingsPopUp = (props) => {
   const projectDescriptionRef = useRef(Globalvariables.currentRepo.description);
   //const projectLicenseRef = useRef();
   const projectUnitsRef = useRef(Globalvariables.topLevelMolecule.unitsKey);
+  const shortcutsRef = useRef(Globalvariables.displayShortcuts);
 
   /* Handles form submission for create new/ export project form */
   const handleSubmit = async (e) => {
@@ -33,6 +34,9 @@ const SettingsPopUp = (props) => {
     Globalvariables.currentRepo.description =
       projectDescriptionRef.current.value;
     Globalvariables.currentRepo.topics = projectTopic;
+    console.log(shortcutsRef.current.checked);
+    Globalvariables.displayShortcuts = shortcutsRef.current.checked;
+    setShortCuts(shortcutsRef.current.checked);
     console.log(Globalvariables.currentRepo);
     console.log(Globalvariables.topLevelMolecule.unitsKey);
   };
@@ -106,6 +110,8 @@ const SettingsPopUp = (props) => {
               className="checkbox shortcut-button"
               name={"shortcut-button"}
               id={"shortcut-button"}
+              defaultChecked={Globalvariables.displayShortcuts}
+              ref={shortcutsRef}
             />
           </div>
           <label htmlFor="theme-toggle">Display Theme</label>

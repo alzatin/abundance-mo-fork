@@ -30,6 +30,8 @@ function CreateMode(props) {
   let authorizedUserOcto = props.props.authorizedUserOcto;
   let activeAtom = props.props.activeAtom;
   let setActiveAtom = props.props.setActiveAtom;
+  let setShortCuts = props.props.setShortCuts;
+  let shortCutsOn = props.props.shortCutsOn;
 
   // new project form pop up state
   const exportPopUp = props.props.exportPopUp;
@@ -105,6 +107,7 @@ function CreateMode(props) {
       saveProject(setSaveState);
     }
   };
+  console.log(shortCutsOn);
 
   /** Display props for replicad renderer  */
   let cad = props.displayProps.cad;
@@ -384,16 +387,18 @@ function CreateMode(props) {
             </div>
           ) : null}
           <ToggleRunCreate run={false} />
-          <div id="shortcutDiv" className="hidden">
-            <li style={{ fontSize: "14px" }}>(Cmmd +)</li>
-            {Object.entries(shortCuts).map(([key, value]) => {
-              return (
-                <li key={key} className="shortcut">
-                  {key} : {value}
-                </li>
-              );
-            })}
-          </div>
+          {shortCutsOn ? (
+            <div id="shortcutDiv">
+              <li style={{ fontSize: "14px" }}>(Cmmd +)</li>
+              {Object.entries(shortCuts).map(([key, value]) => {
+                return (
+                  <li key={key} className="shortcut">
+                    {key} : {value}
+                  </li>
+                );
+              })}
+            </div>
+          ) : null}
           <TopMenu
             authorizedUserOcto={authorizedUserOcto}
             savePopUp={savePopUp}
@@ -405,6 +410,7 @@ function CreateMode(props) {
             currentMoleculeTop={currentMoleculeTop}
             activeAtom={activeAtom}
             setActiveAtom={setActiveAtom}
+            setShortCuts={setShortCuts}
           />
           <CodeWindow activeAtom={activeAtom} />
           <input

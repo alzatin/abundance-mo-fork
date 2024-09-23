@@ -6,10 +6,10 @@ import SettingsPopUp from "./SettingsPopUp.jsx";
 
 function TopMenu(props) {
   let currentMoleculeTop = props.currentMoleculeTop;
-  let activeAtom = props.activeAtom;
   let [shareDialog, setShareDialog] = useState(false);
   let [dialogContent, setDialog] = useState("");
   let [settingsPopUp, setSettingsPopUp] = useState(false);
+  let setShortCuts = props.setShortCuts;
 
   const navigate = useNavigate();
 
@@ -233,7 +233,10 @@ function TopMenu(props) {
         />
       ) : null}
       {settingsPopUp ? (
-        <SettingsPopUp setSettingsPopUp={setSettingsPopUp} />
+        <SettingsPopUp
+          setSettingsPopUp={setSettingsPopUp}
+          setShortCuts={setShortCuts}
+        />
       ) : null}
       {shareDialog ? (
         <ShareDialog

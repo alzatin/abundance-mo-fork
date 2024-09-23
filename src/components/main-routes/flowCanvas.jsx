@@ -23,7 +23,6 @@ export default memo(function FlowCanvas(props) {
   let loadProject = props.props.loadProject;
   let activeAtom = props.props.activeAtom;
   let setActiveAtom = props.props.setActiveAtom;
-  let shortCuts = props.props.shortCuts;
 
   /** State for github molecule search input */
   const [searchingGitHub, setSearchingGitHub] = useState(false);
