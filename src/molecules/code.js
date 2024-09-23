@@ -183,7 +183,6 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
             console.log("Code Atom returned a number: " + result);
             this.customThreadValueProcessing(result);
           }
-          this.basicThreadValueProcessing();
         })
         .catch(this.alertingErrorHandler());
     }
