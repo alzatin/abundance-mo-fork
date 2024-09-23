@@ -356,7 +356,7 @@ const NewProjectPopUp = (props) => {
               placeholder="Project Description"
               ref={projectDescriptionRef}
             />
-            <label htmlFor="project-topics">Project Topics</label>
+            <label htmlFor="project-topics">Project Tags</label>
             <CreatableSelect
               defaultValue={[]}
               isMulti
