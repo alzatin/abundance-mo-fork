@@ -34,6 +34,7 @@ const SettingsPopUp = (props) => {
       projectDescriptionRef.current.value;
     Globalvariables.currentRepo.topics = projectTopic;
     console.log(Globalvariables.currentRepo);
+    console.log(Globalvariables.topLevelMolecule.unitsKey);
   };
 
   return (
@@ -52,7 +53,9 @@ const SettingsPopUp = (props) => {
         <div id="project-info">
           <div id="project-info-name">
             <label>Project Name</label>
-            <p>{Globalvariables.currentRepo.repoName}</p>
+            <p title="To change the Project Name go to your Github repository">
+              {Globalvariables.currentRepo.repoName}
+            </p>
           </div>
           <div id="project-info-date">
             <label>Date Created</label>
@@ -83,7 +86,11 @@ const SettingsPopUp = (props) => {
             ref={projectTopicRef}
           />
           <label htmlFor="measure-units">Units</label>
-          <select id="measure-units" ref={projectUnitsRef}>
+          <select
+            id="measure-units"
+            defaultValue={Globalvariables.topLevelMolecule.unitsKey}
+            ref={projectUnitsRef}
+          >
             <option key={"inchesop"} value={"Inches"}>
               Inches
             </option>
