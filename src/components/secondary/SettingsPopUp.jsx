@@ -7,9 +7,11 @@ const SettingsPopUp = (props) => {
   const { setSettingsPopUp, setShortCuts } = props;
 
   let repoTopics = [];
-  Globalvariables.currentRepo.topics.forEach((topic) => {
-    repoTopics.push({ value: topic, label: topic });
-  });
+  if (Globalvariables.currentRepo.topics.length > 0) {
+    Globalvariables.currentRepo.topics.forEach((topic) => {
+      repoTopics.push({ value: topic, label: topic });
+    });
+  }
   //const projectRef = useRef(Globalvariables.currentRepo.repoName);
   const projectTopicRef = useRef(repoTopics);
   const projectDescriptionRef = useRef(Globalvariables.currentRepo.description);
@@ -113,13 +115,14 @@ const SettingsPopUp = (props) => {
               ref={shortcutsRef}
             />
           </div>
-          <label htmlFor="theme-toggle">Display Theme</label>
+          <label htmlFor="theme-toggle">Display Theme (placeholder)</label>
           <input
             type="checkbox"
             className="checkbox "
             name={"theme-toggle"}
-            id={"theme-toggle"}
+            id={"theme-toggle-light"}
           />
+
           <button className="submit-button" type="submit">
             Save Changes
           </button>
