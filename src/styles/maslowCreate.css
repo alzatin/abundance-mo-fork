@@ -88,7 +88,6 @@ body {
   color: rgba(255, 255, 255, 0.289);
   z-index: 1000;
   padding: 10px;
-  display: none;
 }
 #shortcutDiv li {
   font-size: 14px;
@@ -97,12 +96,7 @@ body {
   padding: 0px;
 }
 .shortcut-button {
-  z-index: 1000;
   padding: 0 2px;
-  position: absolute;
-  top: 44%;
-  right: 0%;
-  transform: translate(-20%, -60%);
   background-color: #ffffffd7;
   border: none;
 }
@@ -784,9 +778,9 @@ Sidebar navigation
   list-style: none;
   width: 0;
   overflow: hidden;
-  max-width: 415px;
+  max-width: 450px;
   z-index: 9;
-  transform: translateX(150px);
+  transform: translateX(170px);
   transition: transform ease-in-out 0.1s;
   /* transition: width ease 0.2s; */
 }

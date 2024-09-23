@@ -18,6 +18,7 @@ def lambda_handler(event: any, context: any):
 
     try:
         owner = event["owner"]
+        description = event["description"]
         repoName = event["repoName"]
         ranking = event["ranking"]
         searchField = event["searchField"]
@@ -35,6 +36,7 @@ def lambda_handler(event: any, context: any):
         print(newYear)
 
         itemToPut = {"owner": owner,
+                     "description": description,
                      "repoName": repoName,
                      "ranking": ranking,
                      "searchField": searchField,

@@ -263,6 +263,11 @@ class GlobalVariables {
      */
     this.displayTriangles = true;
     /**
+     * A flag to indicate if shortcuts should be displayed.
+     * @type {boolean}
+     */
+    this.displayShortcuts = false;
+    /**
      * A flag to indicate if the faces of the shape should be displayed.
      * @type {boolean}
      */

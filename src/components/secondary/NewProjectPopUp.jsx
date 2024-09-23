@@ -114,16 +114,20 @@ const NewProjectPopUp = (props) => {
         const projectContent = window.btoa(
           JSON.stringify(jsonRepOfProject, null, 4)
         );
+        let topicString = GlobalVariables.currentRepo.topics.join(" ");
         let searchField = (
           result.data.name +
           " " +
           result.data.owner.login +
           " " +
-          description
+          description +
+          " " +
+          topicString
         ).toLowerCase();
         /*aws dynamo post*/
         let newProjectBody = {
           owner: result.data.owner.login,
+          description: description,
           ranking: result.data.stargazers_count,
           searchField: searchField,
           repoName: result.data.name,
@@ -310,6 +314,7 @@ const NewProjectPopUp = (props) => {
             <img></img>
           </button>
           <form
+            className="new-project-form"
             onSubmit={(e) => {
               handleSubmit(e);
             }}
@@ -321,6 +326,7 @@ const NewProjectPopUp = (props) => {
             </h2>
             <label htmlFor="project-name">Project Name</label>
             <input
+              id="project-name"
               name="Project Name"
               placeholder="Project Name"
               ref={projectRef}
@@ -350,7 +356,7 @@ const NewProjectPopUp = (props) => {
               placeholder="Project Description"
               ref={projectDescriptionRef}
             />
-            <label htmlFor="project-topics">Project Topics</label>
+            <label htmlFor="project-topics">Project Tags</label>
             <CreatableSelect
               defaultValue={[]}
               isMulti

@@ -289,6 +289,7 @@ export default memo(function FlowCanvas(props) {
           return (
             <a
               className="repo-name-path"
+              key={"repo-name-path" + index}
               onClick={() => {
                 while (
                   GlobalVariables.currentMolecule &&

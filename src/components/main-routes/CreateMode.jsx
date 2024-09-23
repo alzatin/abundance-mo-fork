@@ -30,6 +30,8 @@ function CreateMode(props) {
   let authorizedUserOcto = props.props.authorizedUserOcto;
   let activeAtom = props.props.activeAtom;
   let setActiveAtom = props.props.setActiveAtom;
+  let setShortCuts = props.props.setShortCuts;
+  let shortCutsOn = props.props.shortCutsOn;
 
   // new project form pop up state
   const exportPopUp = props.props.exportPopUp;
@@ -105,7 +107,6 @@ function CreateMode(props) {
       saveProject(setSaveState);
     }
   };
-
   /** Display props for replicad renderer  */
   let cad = props.displayProps.cad;
   let setMesh = props.displayProps.setMesh;
@@ -194,7 +195,18 @@ function CreateMode(props) {
                           /*aws dynamo update-item lambda, also updates dateModified on aws side*/
                           const apiUpdateUrl =
                             "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
-                          const searchField = repo.toLowerCase();
+                          let topicString =
+                            GlobalVariables.currentRepo.topics.join(" ");
+                          let searchField = (
+                            repo +
+                            " " +
+                            owner +
+                            " " +
+                            GlobalVariables.currentRepo.description +
+                            " " +
+                            topicString
+                          ).toLowerCase();
+
                           fetch(apiUpdateUrl, {
                             method: "POST",
                             body: JSON.stringify({
@@ -204,6 +216,9 @@ function CreateMode(props) {
                                 ranking: 0,
                                 html_url: htmlURL,
                                 searchField: searchField,
+                                description:
+                                  GlobalVariables.currentRepo.description,
+                                topics: GlobalVariables.currentRepo.topics,
                               },
                             }),
                             headers: {
@@ -382,23 +397,18 @@ function CreateMode(props) {
             </div>
           ) : null}
           <ToggleRunCreate run={false} />
-
-          <input
-            type="checkbox"
-            className="checkbox shortcut-button"
-            name={"shortcut-button"}
-            id={"shortcut-button"}
-          />
-          <div id="shortcutDiv" className="hidden">
-            <li style={{ fontSize: "14px" }}>(Cmmd +)</li>
-            {Object.entries(shortCuts).map(([key, value]) => {
-              return (
-                <li key={key} className="shortcut">
-                  {key} : {value}
-                </li>
-              );
-            })}
-          </div>
+          {shortCutsOn ? (
+            <div id="shortcutDiv">
+              <li style={{ fontSize: "14px" }}>(Cmmd +)</li>
+              {Object.entries(shortCuts).map(([key, value]) => {
+                return (
+                  <li key={key} className="shortcut">
+                    {key} : {value}
+                  </li>
+                );
+              })}
+            </div>
+          ) : null}
           <TopMenu
             authorizedUserOcto={authorizedUserOcto}
             savePopUp={savePopUp}
@@ -410,6 +420,7 @@ function CreateMode(props) {
             currentMoleculeTop={currentMoleculeTop}
             activeAtom={activeAtom}
             setActiveAtom={setActiveAtom}
+            setShortCuts={setShortCuts}
           />
           <CodeWindow activeAtom={activeAtom} />
           <input

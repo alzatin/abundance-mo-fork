@@ -43,6 +43,9 @@ export default function ReplicadApp() {
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
   const [exportPopUp, setExportPopUp] = useState(false);
+  const [shortCutsOn, setShortCuts] = useState(
+    GlobalVariables.displayShortcuts
+  );
 
   useEffect(() => {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
@@ -169,6 +172,8 @@ export default function ReplicadApp() {
                   loadProject: loadProject,
                   exportPopUp: exportPopUp,
                   setExportPopUp: setExportPopUp,
+                  shortCutsOn: shortCutsOn,
+                  setShortCuts: setShortCuts,
                 }}
                 displayProps={{
                   mesh: mesh,

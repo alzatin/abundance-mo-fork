@@ -232,6 +232,10 @@ const ProjectDiv = (props) => {
     );
   };
   const ListItem = (node) => {
+    let dateCreated = new Date(node.node.dateCreated).toDateString(); //converts date to string
+    if (dateCreated == "Invalid Date") {
+      dateCreated = "Date Created";
+    }
     return (
       <div
         className="project_list"
@@ -291,7 +295,7 @@ const ProjectDiv = (props) => {
             width: "80%",
           }}
         >
-          {node.node.dateCreated}
+          {dateCreated}
         </p>
 
         <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>

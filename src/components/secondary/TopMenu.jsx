@@ -2,12 +2,14 @@ import React, { memo, useEffect, useState, useRef } from "react";
 import GlobalVariables from "../../js/globalvariables.js";
 import ShareDialog from "./ShareDialog.jsx";
 import { useNavigate } from "react-router-dom";
+import SettingsPopUp from "./SettingsPopUp.jsx";
 
 function TopMenu(props) {
   let currentMoleculeTop = props.currentMoleculeTop;
-  let activeAtom = props.activeAtom;
   let [shareDialog, setShareDialog] = useState(false);
   let [dialogContent, setDialog] = useState("");
+  let [settingsPopUp, setSettingsPopUp] = useState(false);
+  let setShortCuts = props.setShortCuts;
 
   const navigate = useNavigate();
 
@@ -22,8 +24,6 @@ function TopMenu(props) {
     {
       id: "GitHub",
       buttonFunc: () => {
-        console.log("open github");
-        console.log(GlobalVariables.currentRepo);
         window.open(GlobalVariables.currentRepo.html_url);
       },
     },
@@ -65,6 +65,13 @@ function TopMenu(props) {
       buttonFunc: () => {
         props.setSavePopUp(true);
         props.saveProject(props.setSaveState);
+      },
+    },
+    {
+      id: "Settings",
+      buttonFunc: () => {
+        //placeholder for settings menu in progress
+        setSettingsPopUp(true);
       },
     },
     {
@@ -223,6 +230,12 @@ function TopMenu(props) {
           saveState={props.saveState}
           savePopUp={props.savePopUp}
           setSavePopUp={props.setSavePopUp}
+        />
+      ) : null}
+      {settingsPopUp ? (
+        <SettingsPopUp
+          setSettingsPopUp={setSettingsPopUp}
+          setShortCuts={setShortCuts}
         />
       ) : null}
       {shareDialog ? (
