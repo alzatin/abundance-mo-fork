@@ -10,7 +10,6 @@ const SettingsPopUp = (props) => {
   Globalvariables.currentRepo.topics.forEach((topic) => {
     repoTopics.push({ value: topic, label: topic });
   });
-
   //const projectRef = useRef(Globalvariables.currentRepo.repoName);
   const projectTopicRef = useRef(repoTopics);
   const projectDescriptionRef = useRef(Globalvariables.currentRepo.description);
@@ -21,7 +20,6 @@ const SettingsPopUp = (props) => {
   /* Handles form submission for create new/ export project form */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //setPending(true);
     setSettingsPopUp(false);
     //const projectName = projectRef.current.value; add tooltip directing user to github to change project name
     const projectTopicArray = projectTopicRef.current.getValue();
@@ -34,11 +32,8 @@ const SettingsPopUp = (props) => {
     Globalvariables.currentRepo.description =
       projectDescriptionRef.current.value;
     Globalvariables.currentRepo.topics = projectTopic;
-    console.log(shortcutsRef.current.checked);
     Globalvariables.displayShortcuts = shortcutsRef.current.checked;
     setShortCuts(shortcutsRef.current.checked);
-    console.log(Globalvariables.currentRepo);
-    console.log(Globalvariables.topLevelMolecule.unitsKey);
   };
 
   return (

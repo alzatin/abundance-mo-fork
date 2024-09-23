@@ -107,8 +107,6 @@ function CreateMode(props) {
       saveProject(setSaveState);
     }
   };
-  console.log(shortCutsOn);
-
   /** Display props for replicad renderer  */
   let cad = props.displayProps.cad;
   let setMesh = props.displayProps.setMesh;
