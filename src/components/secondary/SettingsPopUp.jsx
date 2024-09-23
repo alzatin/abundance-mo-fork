@@ -55,11 +55,10 @@ const SettingsPopUp = (props) => {
         <div id="project-info">
           <div id="project-info-name">
             <label>Project Name</label>
-            <input
-              type="text"
-              value={Globalvariables.currentRepo.repoName}
-              disabled
-            />
+
+            <p title="To change the Project Name go to your Github repository">
+              {Globalvariables.currentRepo.repoName}
+            </p>
           </div>
           <div id="project-info-date">
             <label>Date Created</label>
