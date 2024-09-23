@@ -151,12 +151,14 @@ export default function ReplicadApp() {
             path="/"
             element={
               <LoginMode
-                authorizedUserOcto={authorizedUserOcto}
-                tryLogin={tryLogin}
-                setIsLoggedIn={setIsLoggedIn}
-                isloggedIn={isloggedIn}
-                exportPopUp={exportPopUp}
-                setExportPopUp={setExportPopUp}
+                {...{
+                  tryLogin,
+                  setIsLoggedIn,
+                  isloggedIn,
+                  authorizedUserOcto,
+                  exportPopUp,
+                  setExportPopUp,
+                }}
               />
             }
           />
@@ -165,25 +167,29 @@ export default function ReplicadApp() {
             element={
               <CreateMode
                 props={{
-                  activeAtom: activeAtom,
-                  setActiveAtom: setActiveAtom,
-                  authorizedUserOcto: authorizedUserOcto,
-                  tryLogin: tryLogin,
-                  loadProject: loadProject,
-                  exportPopUp: exportPopUp,
-                  setExportPopUp: setExportPopUp,
-                  shortCutsOn: shortCutsOn,
-                  setShortCuts: setShortCuts,
+                  ...{
+                    activeAtom,
+                    setActiveAtom,
+                    authorizedUserOcto,
+                    tryLogin,
+                    loadProject,
+                    exportPopUp,
+                    setExportPopUp,
+                    shortCutsOn,
+                    setShortCuts,
+                  },
                 }}
                 displayProps={{
-                  mesh: mesh,
-                  setMesh: setMesh,
-                  size: size,
-                  cad: cad,
-                  wireMesh: wireMesh,
-                  setWireMesh: setWireMesh,
-                  outdatedMesh: outdatedMesh,
-                  setOutdatedMesh: setOutdatedMesh,
+                  ...{
+                    mesh,
+                    setMesh,
+                    size,
+                    cad,
+                    wireMesh,
+                    setWireMesh,
+                    outdatedMesh,
+                    setOutdatedMesh,
+                  },
                 }}
               />
             }
@@ -193,18 +199,23 @@ export default function ReplicadApp() {
             element={
               <RunMode
                 props={{
-                  isloggedIn: isloggedIn,
-                  setActiveAtom: setActiveAtom,
-                  activeAtom: GlobalVariables.currentMolecule,
-                  authorizedUserOcto: authorizedUserOcto,
-                  tryLogin: tryLogin,
-                  loadProject: loadProject,
+                  ...{
+                    isloggedIn,
+                    setActiveAtom,
+                    activeAtom: GlobalVariables.currentMolecule,
+                    authorizedUserOcto,
+                    tryLogin,
+                    loadProject,
+                  },
                 }}
                 displayProps={{
-                  mesh: mesh,
-                  wireMesh: wireMesh,
-                  outdatedMesh: outdatedMesh,
-                  setOutdatedMesh: setOutdatedMesh,
+                  ...{
+                    mesh,
+                    wireMesh,
+                    setWireMesh,
+                    outdatedMesh,
+                    setOutdatedMesh,
+                  },
                 }}
               />
             }

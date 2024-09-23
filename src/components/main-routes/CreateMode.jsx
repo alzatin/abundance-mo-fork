@@ -32,6 +32,9 @@ function CreateMode(props) {
   let setActiveAtom = props.props.setActiveAtom;
   let setShortCuts = props.props.setShortCuts;
   let shortCutsOn = props.props.shortCutsOn;
+  let outdatedMesh = props.props.outdatedMesh;
+  let setOutdatedMesh = props.props.setOutdatedMesh;
+  let loadProject = props.props.loadProject;
 
   // new project form pop up state
   const exportPopUp = props.props.exportPopUp;
@@ -390,9 +393,7 @@ function CreateMode(props) {
               </div>
 
               <NewProjectPopUp
-                setExportPopUp={setExportPopUp}
-                exporting={true}
-                authorizedUserOcto={authorizedUserOcto}
+                {...{ setExportPopUp, exporting: true, authorizedUserOcto }}
               />
             </div>
           ) : null}
@@ -410,19 +411,22 @@ function CreateMode(props) {
             </div>
           ) : null}
           <TopMenu
-            authorizedUserOcto={authorizedUserOcto}
-            savePopUp={savePopUp}
-            setSavePopUp={setSavePopUp}
-            saveProject={saveProject}
-            setExportPopUp={setExportPopUp}
-            saveState={saveState}
-            setSaveState={setSaveState}
-            currentMoleculeTop={currentMoleculeTop}
-            activeAtom={activeAtom}
-            setActiveAtom={setActiveAtom}
-            setShortCuts={setShortCuts}
+            {...{
+              authorizedUserOcto,
+              savePopUp,
+              setSavePopUp,
+              saveProject,
+              setExportPopUp,
+              saveState,
+              setSaveState,
+              currentMoleculeTop,
+              activeAtom,
+              setActiveAtom,
+              setShortCuts,
+            }}
           />
-          <CodeWindow activeAtom={activeAtom} />
+
+          <CodeWindow {...{ activeAtom }} />
           <input
             type="file"
             id="fileLoaderInput"
@@ -442,48 +446,55 @@ function CreateMode(props) {
           />
           <FlowCanvas
             props={{
-              activeAtom: activeAtom,
-              loadProject: props.props.loadProject,
-              setActiveAtom: setActiveAtom,
-              setSavePopUp: setSavePopUp,
-              setSaveState: setSaveState,
-              setTop: setTop,
-              shortCuts: shortCuts,
-              currentRepo: props.currentRepo,
-              setCurrentRepo: props.setCurrentRepo,
+              ...{
+                activeAtom,
+                loadProject,
+                setActiveAtom,
+                setSavePopUp,
+                setSaveState,
+                setTop,
+                shortCuts,
+              },
             }}
             displayProps={{
-              setMesh: setMesh,
-              cad: cad,
-              setWireMesh: setWireMesh,
+              ...{
+                setMesh,
+                cad,
+                setWireMesh,
+              },
             }}
           />
           <div className="parent flex-parent" id="lowerHalf">
             {activeAtom ? (
               <ParamsEditor
-                activeAtom={activeAtom}
-                setActiveAtom={setActiveAtom}
-                setGrid={setGrid}
-                setAxes={setAxes}
-                setWire={setWire}
-                setSolid={setSolid}
+                {...{
+                  activeAtom,
+                  setActiveAtom,
+                  setGrid,
+                  setAxes,
+                  setWire,
+                  setSolid,
+                }}
               />
             ) : null}
 
             <LowerHalf
               props={{
-                gridParam: gridParam,
-                axesParam: axesParam,
-                wireParam: wireParam,
-                solidParam: solidParam,
-                setSaveState: setSaveState,
-                setSaveState: setSaveState,
+                ...{
+                  gridParam,
+                  axesParam,
+                  wireParam,
+                  solidParam,
+                  setSaveState,
+                },
               }}
               displayProps={{
-                mesh: mesh,
-                wireMesh: wireMesh,
-                outdatedMesh: props.displayProps.outdatedMesh,
-                setOutdatedMesh: props.displayProps.setOutdatedMesh,
+                ...{
+                  mesh,
+                  wireMesh,
+                  outdatedMesh,
+                  setOutdatedMesh,
+                },
               }}
             />
           </div>
