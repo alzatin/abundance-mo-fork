@@ -17,6 +17,9 @@ const SettingsPopUp = (props) => {
   const projectUnitsRef = useRef(Globalvariables.topLevelMolecule.unitsKey);
   const shortcutsRef = useRef(Globalvariables.displayShortcuts);
 
+  const dateString = Globalvariables.currentRepo.dateCreated;
+  const dateCreated = new Date(dateString);
+
   /* Handles form submission for create new/ export project form */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,13 +55,15 @@ const SettingsPopUp = (props) => {
         <div id="project-info">
           <div id="project-info-name">
             <label>Project Name</label>
-            <p title="To change the Project Name go to your Github repository">
-              {Globalvariables.currentRepo.repoName}
-            </p>
+            <input
+              type="text"
+              value={Globalvariables.currentRepo.repoName}
+              disabled
+            />
           </div>
           <div id="project-info-date">
             <label>Date Created</label>
-            <p>{Globalvariables.currentRepo.dateCreated}</p>
+            <p>{dateCreated.toDateString()}</p>
           </div>
         </div>
 
