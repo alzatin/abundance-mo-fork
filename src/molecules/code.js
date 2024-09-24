@@ -176,11 +176,9 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
         .then((result) => {
 
           if(result === true){ //Code atom returned geometry
-            console.log("Code Atom returned geometry");
             this.basicThreadValueProcessing();
           }
           else{ //Code atom returned a number
-            console.log("Code Atom returned a number: " + result);
             this.customThreadValueProcessing(result);
           }
         })
@@ -195,7 +193,6 @@ const newPlane = new Plane().pivot(0, 'Y');\n\
     this.decreaseToProcessCountByOne();
     this.clearAlert();
     if (this.output) {
-      console.log("Code Atom returned a number inner: " + returnedNumber);
       this.value = returnedNumber;
       this.output.setValue(returnedNumber);
       this.output.ready = true;
