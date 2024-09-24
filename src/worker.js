@@ -346,11 +346,16 @@ function tag(targetID, inputID, TAG) {
   });
 }
 
+function testFunction(aGeometry){
+  console.log("Test function ran");
+  console.log(aGeometry);
+}
+
 //Runs the user entered code in the worker thread and returns the result.
 function code(targetID, code, argumentsArray) {
   return started.then(() => {
-    let keys1 = [];
-    let inputValues = [];
+    let keys1 = ['testFunction'];
+    let inputValues = [testFunction];
     for (const [key, value] of Object.entries(argumentsArray)) {
       keys1.push(`${key}`);
       inputValues.push(value);
@@ -358,7 +363,7 @@ function code(targetID, code, argumentsArray) {
 
     // revisit this eval/ Is this the right/safest way to do this?
     var result = eval(
-      "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
+      "(function(" + keys1.join(',') + ") {" + code + "}(" + inputValues.join(',') + "))"
     );
 
     library[targetID] = result;
