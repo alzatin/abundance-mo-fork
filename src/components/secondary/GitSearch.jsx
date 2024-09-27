@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import GlobalVariables from "../../js/globalvariables.js";
-import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import topics from "../../js/maslowTopics.js";
 
 function GitSearch({ searchingGitHub, setSearchingGitHub }) {

@@ -679,18 +679,10 @@ const ShowProjects = ({
 
 function LoginMode({
   tryLogin,
-  setIsLoggedIn,
-  isloggedIn,
   authorizedUserOcto,
   exportPopUp,
   setExportPopUp,
 }) {
-  /*
-   * @prop {object} authorizedUserOcto - authorized octokit instance
-   * @prop {setState} setIsLoggedIn - setState function for isloggedIn
-   * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
-   * */
-
   const pageDict = { 0: null };
   const [projectToShow, setProjectsToShow] = useState("recents");
 

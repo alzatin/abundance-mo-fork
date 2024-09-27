@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { licenses } from "../../js/licenseOptions.js";
 import GlobalVariables from "../../js/globalvariables.js";
 import Molecule from "../../molecules/molecule.js";

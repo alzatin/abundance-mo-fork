@@ -44,7 +44,6 @@ function useWindowSize() {
 }
 
 function runMode({
-  isloggedIn,
   setActiveAtom,
   activeAtom,
   authorizedUserOcto,
@@ -52,7 +51,6 @@ function runMode({
   loadProject,
   mesh,
   wireMesh,
-  setWireMesh,
   outdatedMesh,
   setOutdatedMesh,
 }) {
