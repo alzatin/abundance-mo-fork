@@ -444,23 +444,17 @@ function CreateMode({
             }}
           />
           <FlowCanvas
-            props={{
-              ...{
-                activeAtom,
-                loadProject,
-                setActiveAtom,
-                setSavePopUp,
-                setSaveState,
-                setTop,
-                shortCuts,
-              },
-            }}
-            displayProps={{
-              ...{
-                setMesh,
-                cad,
-                setWireMesh,
-              },
+            {...{
+              activeAtom,
+              loadProject,
+              setActiveAtom,
+              setSavePopUp,
+              setSaveState,
+              setTop,
+              shortCuts,
+              setMesh,
+              cad,
+              setWireMesh,
             }}
           />
           <div className="parent flex-parent" id="lowerHalf">
@@ -478,22 +472,16 @@ function CreateMode({
             ) : null}
 
             <LowerHalf
-              props={{
-                ...{
-                  gridParam,
-                  axesParam,
-                  wireParam,
-                  solidParam,
-                  setSaveState,
-                },
-              }}
-              displayProps={{
-                ...{
-                  mesh,
-                  wireMesh,
-                  outdatedMesh,
-                  setOutdatedMesh,
-                },
+              {...{
+                gridParam,
+                axesParam,
+                wireParam,
+                solidParam,
+                setSaveState,
+                mesh,
+                wireMesh,
+                outdatedMesh,
+                setOutdatedMesh,
               }}
             />
           </div>

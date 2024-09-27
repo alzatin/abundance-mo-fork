@@ -30,17 +30,17 @@ function useWindowSize() {
   return windowSize;
 }
 
-export default memo(function LowerHalf(props) {
-  let mesh = props.displayProps.mesh;
-  let wireMesh = props.displayProps.wireMesh;
-  let outdatedMesh = props.displayProps.outdatedMesh;
-  let setOutdatedMesh = props.displayProps.setOutdatedMesh;
-  let gridParam = props.props.gridParam;
-  let axesParam = props.props.axesParam;
-  let isSolid = props.props.isSolid;
-  let wireParam = props.props.wireParam;
-  let solidParam = props.props.solidParam;
-
+export default memo(function LowerHalf({
+  gridParam,
+  axesParam,
+  wireParam,
+  solidParam,
+  setSaveState,
+  mesh,
+  wireMesh,
+  outdatedMesh,
+  setOutdatedMesh,
+}) {
   const windowSize = useWindowSize();
 
   return (
