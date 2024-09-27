@@ -166,30 +166,24 @@ export default function ReplicadApp() {
             path="/:owner/:repoName"
             element={
               <CreateMode
-                props={{
-                  ...{
-                    activeAtom,
-                    setActiveAtom,
-                    authorizedUserOcto,
-                    tryLogin,
-                    loadProject,
-                    exportPopUp,
-                    setExportPopUp,
-                    shortCutsOn,
-                    setShortCuts,
-                  },
-                }}
-                displayProps={{
-                  ...{
-                    mesh,
-                    setMesh,
-                    size,
-                    cad,
-                    wireMesh,
-                    setWireMesh,
-                    outdatedMesh,
-                    setOutdatedMesh,
-                  },
+                {...{
+                  activeAtom,
+                  setActiveAtom,
+                  authorizedUserOcto,
+                  tryLogin,
+                  loadProject,
+                  exportPopUp,
+                  setExportPopUp,
+                  shortCutsOn,
+                  setShortCuts,
+                  mesh,
+                  setMesh,
+                  size,
+                  cad,
+                  wireMesh,
+                  setWireMesh,
+                  outdatedMesh,
+                  setOutdatedMesh,
                 }}
               />
             }
@@ -198,24 +192,18 @@ export default function ReplicadApp() {
             path="/run/:owner/:repoName"
             element={
               <RunMode
-                props={{
-                  ...{
-                    isloggedIn,
-                    setActiveAtom,
-                    activeAtom: GlobalVariables.currentMolecule,
-                    authorizedUserOcto,
-                    tryLogin,
-                    loadProject,
-                  },
-                }}
-                displayProps={{
-                  ...{
-                    mesh,
-                    wireMesh,
-                    setWireMesh,
-                    outdatedMesh,
-                    setOutdatedMesh,
-                  },
+                {...{
+                  isloggedIn,
+                  setActiveAtom,
+                  activeAtom: GlobalVariables.currentMolecule,
+                  authorizedUserOcto,
+                  tryLogin,
+                  loadProject,
+                  mesh,
+                  wireMesh,
+                  setWireMesh,
+                  outdatedMesh,
+                  setOutdatedMesh,
                 }}
               />
             }

@@ -43,7 +43,19 @@ function useWindowSize() {
   return windowSize;
 }
 
-function runMode(props) {
+function runMode({
+  isloggedIn,
+  setActiveAtom,
+  activeAtom,
+  authorizedUserOcto,
+  tryLogin,
+  loadProject,
+  mesh,
+  wireMesh,
+  setWireMesh,
+  outdatedMesh,
+  setOutdatedMesh,
+}) {
   // canvas to hide
   const canvasRef = useRef(500);
 
@@ -52,16 +64,6 @@ function runMode(props) {
   const [isItOwned, setOwned] = useState(false);
   const [wireParam, setWire] = useState(true);
   const [solidParam, setSolid] = useState(true);
-
-  let mesh = props.displayProps.mesh;
-  let wireMesh = props.displayProps.wireMesh;
-  const authorizedUserOcto = props.props.authorizedUserOcto;
-  const setActiveAtom = props.props.setActiveAtom;
-  const activeAtom = props.props.activeAtom;
-  const tryLogin = props.props.tryLogin;
-  const outdatedMesh = props.displayProps.outdatedMesh;
-  const setOutdatedMesh = props.displayProps.setOutdatedMesh;
-  const loadProject = props.props.loadProject;
 
   const windowSize = useWindowSize();
 

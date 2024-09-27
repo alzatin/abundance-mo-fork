@@ -24,20 +24,26 @@ import { Link } from "react-router-dom";
  * @prop {setstate} setRunMode - setState function for runMode
  * @prop {boolean} RunMode - Determines if Run mode is on or off
  */
-function CreateMode(props) {
+function CreateMode({
+  activeAtom,
+  setActiveAtom,
+  authorizedUserOcto,
+  tryLogin,
+  loadProject,
+  exportPopUp,
+  setExportPopUp,
+  shortCutsOn,
+  setShortCuts,
+  mesh,
+  setMesh,
+  size,
+  cad,
+  wireMesh,
+  setWireMesh,
+  outdatedMesh,
+  setOutdatedMesh,
+}) {
   const navigate = useNavigate();
-
-  let authorizedUserOcto = props.props.authorizedUserOcto;
-  let activeAtom = props.props.activeAtom;
-  let setActiveAtom = props.props.setActiveAtom;
-  let setShortCuts = props.props.setShortCuts;
-  let shortCutsOn = props.props.shortCutsOn;
-
-  let loadProject = props.props.loadProject;
-
-  // new project form pop up state
-  const exportPopUp = props.props.exportPopUp;
-  const setExportPopUp = props.props.setExportPopUp;
 
   /** State for grid and axes parameters */
   const [gridParam, setGrid] = useState(true);
@@ -109,14 +115,6 @@ function CreateMode(props) {
       saveProject(setSaveState);
     }
   };
-  /** Display props for replicad renderer  */
-  let cad = props.displayProps.cad;
-  let setMesh = props.displayProps.setMesh;
-  let mesh = props.displayProps.mesh;
-  let setWireMesh = props.displayProps.setWireMesh;
-  let wireMesh = props.displayProps.wireMesh;
-  let outdatedMesh = props.displayProps.outdatedMesh;
-  let setOutdatedMesh = props.displayProps.setOutdatedMesh;
   /**
    * Create a commit as part of the saving process.
    */
@@ -520,8 +518,8 @@ function CreateMode(props) {
         GlobalVariables.currentRepoName = result.data.name;
         GlobalVariables.currentRepo = result.data;
         //auto login - turned off for development
-        /*props.props
-        .tryLogin()
+        /*
+        tryLogin()
         .then((result) => {
           navigate(`/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
         })
