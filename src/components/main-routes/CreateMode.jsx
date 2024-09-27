@@ -32,8 +32,7 @@ function CreateMode(props) {
   let setActiveAtom = props.props.setActiveAtom;
   let setShortCuts = props.props.setShortCuts;
   let shortCutsOn = props.props.shortCutsOn;
-  let outdatedMesh = props.props.outdatedMesh;
-  let setOutdatedMesh = props.props.setOutdatedMesh;
+
   let loadProject = props.props.loadProject;
 
   // new project form pop up state
@@ -116,6 +115,8 @@ function CreateMode(props) {
   let mesh = props.displayProps.mesh;
   let setWireMesh = props.displayProps.setWireMesh;
   let wireMesh = props.displayProps.wireMesh;
+  let outdatedMesh = props.displayProps.outdatedMesh;
+  let setOutdatedMesh = props.displayProps.setOutdatedMesh;
   /**
    * Create a commit as part of the saving process.
    */

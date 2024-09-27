@@ -307,10 +307,7 @@ export default memo(function FlowCanvas(props) {
       </div>
       <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>
-        <GitSearch
-          searchingGitHub={searchingGitHub}
-          setSearchingGitHub={setSearchingGitHub}
-        />
+        <GitSearch {...{ searchingGitHub, setSearchingGitHub }} />
       </div>
     </>
   );
