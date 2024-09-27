@@ -129,11 +129,10 @@ let exportSvg = (
   </svg>
 );
 
-function RunNavigation(props) {
+function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
   let [shareDialog, setShareDialog] = useState(false);
   let [starred, setStarred] = useState(false);
   let [dialogContent, setDialog] = useState("");
-  let authorizedUserOcto = props.authorizedUserOcto;
 
   var navigate = useNavigate();
 
@@ -312,14 +311,14 @@ function RunNavigation(props) {
 
   /** Runs if star is clicked but there's no logged in user */
   const loginLike = function () {
-    props.tryLogin().then((result) => {
+    tryLogin().then((result) => {
       likeProject(result);
     });
   };
 
   /** Runs if fork is clicked but there's no logged in user */
   const loginFork = function () {
-    props.tryLogin().then((result) => {
+    tryLogin().then((result) => {
       forkProject(result);
     });
   };
@@ -328,9 +327,7 @@ function RunNavigation(props) {
     <>
       {shareDialog ? (
         <ShareDialog
-          setShareDialog={setShareDialog}
-          dialogContent={dialogContent}
-          activeAtom={props.activeAtom}
+          {...{ shareDialog, setShareDialog, dialogContent, activeAtom }}
         />
       ) : null}
       <div className="run-navigation">

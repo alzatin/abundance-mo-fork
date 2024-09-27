@@ -3,7 +3,7 @@ import GlobalVariables from "../../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import topics from "../../js/maslowTopics.js";
 
-function GitSearch(props) {
+function GitSearch({ searchingGitHub, setSearchingGitHub }) {
   let searchBarValue = "";
   var [gitRepos, setGitRepos] = useState([]);
   var [loadingGit, setLoadingGit] = useState(false);
@@ -15,7 +15,7 @@ function GitSearch(props) {
    */
   function placeGitHubMolecule(e, item) {
     GlobalVariables.currentMolecule.loadGithubMoleculeByName(item);
-    props.setSearchingGitHub(false);
+    setSearchingGitHub(false);
     setGitRepos([]);
   }
   // conditional query for maslow projects
@@ -86,7 +86,7 @@ function GitSearch(props) {
 
   return (
     <>
-      {props.searchingGitHub ? (
+      {searchingGitHub ? (
         <div className="search-container">
           <div
             id="git_search"

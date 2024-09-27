@@ -156,7 +156,7 @@ const AddProject = ({ nodes, authorizedUserOcto }) => {
   );
 };
 
-const ProjectDiv = ({ nodes, browseType, orderType, authorizedUserOcto }) => {
+const ProjectDiv = ({ nodes, browseType, orderType }) => {
   const ThumbItem = ({ node }) => {
     return (
       <div
@@ -344,9 +344,9 @@ const ProjectDiv = ({ nodes, browseType, orderType, authorizedUserOcto }) => {
             }
           >
             {browseType == "list" ? (
-              <ListItem node={node} />
+              <ListItem {...{ node }} />
             ) : (
-              <ThumbItem node={node} />
+              <ThumbItem {...{ node }} />
             )}
           </Link>
         ))}

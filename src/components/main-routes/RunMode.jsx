@@ -121,7 +121,7 @@ function runMode({
         id="flow-canvas"
         tabIndex={0}
       ></canvas>
-      <ToggleRunCreate {...{ run: true, authorizedUserOcto, isItOwned }} />
+      <ToggleRunCreate {...{ run: true, isItOwned }} />
 
       {activeAtom ? (
         <ParamsEditor
