@@ -71,7 +71,11 @@ function ToggleRunCreate({ run, isItOwned }) {
         <>
           <Link
             key={GlobalVariables.currentRepo.id}
-            to={isItOwned ? `/${GlobalVariables.currentRepo.id}` : `/`}
+            to={
+              isItOwned
+                ? `/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
+                : `/`
+            }
             onClick={handleChange}
           >
             <label title="Create/Run Mode" className="switch_run">
