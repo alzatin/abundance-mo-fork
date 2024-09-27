@@ -47,21 +47,21 @@ function runMode(props) {
   // canvas to hide
   const canvasRef = useRef(500);
 
-  let mesh = props.displayProps.mesh;
-  let wireMesh = props.displayProps.wireMesh;
-
   const [gridParam, setGrid] = useState(true);
   const [axesParam, setAxes] = useState(true);
   const [isItOwned, setOwned] = useState(false);
   const [wireParam, setWire] = useState(true);
   const [solidParam, setSolid] = useState(true);
 
+  let mesh = props.displayProps.mesh;
+  let wireMesh = props.displayProps.wireMesh;
   const authorizedUserOcto = props.props.authorizedUserOcto;
   const setActiveAtom = props.props.setActiveAtom;
   const activeAtom = props.props.activeAtom;
   const tryLogin = props.props.tryLogin;
   const outdatedMesh = props.displayProps.outdatedMesh;
   const setOutdatedMesh = props.displayProps.setOutdatedMesh;
+  const loadProject = props.props.loadProject;
 
   const windowSize = useWindowSize();
 
@@ -99,7 +99,7 @@ function runMode(props) {
             atomType: "Molecule",
           });
           GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-          props.props.loadProject(GlobalVariables.currentRepo);
+          loadProject(GlobalVariables.currentRepo);
         }
       });
 
