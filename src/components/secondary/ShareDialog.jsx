@@ -1,17 +1,18 @@
 import GlobalVariables from "../../js/globalvariables.js";
 import { saveAs } from "file-saver";
 
-function ShareDialog(props) {
+function ShareDialog({
+  shareDialog,
+  setShareDialog,
+  dialogContent,
+  activeAtom,
+}) {
   const handleExport = (exportType) => {
     GlobalVariables.cad
-      .visExport(
-        props.activeAtom.uniqueID,
-        props.activeAtom.uniqueID,
-        exportType
-      )
+      .visExport(activeAtom.uniqueID, activeAtom.uniqueID, exportType)
       .then((result) => {
         GlobalVariables.cad
-          .downExport(props.activeAtom.uniqueID, exportType)
+          .downExport(activeAtom.uniqueID, exportType)
           .then((result) => {
             saveAs(
               result,
@@ -25,11 +26,10 @@ function ShareDialog(props) {
       .catch("Error creating export geometry");
   };
 
-  const dialogContent = props.dialogContent;
   return (
     <>
       <dialog
-        open={props.shareDialog}
+        open={shareDialog}
         style={{ display: "flex" }}
         className="share-dialog"
       >
@@ -68,10 +68,7 @@ function ShareDialog(props) {
           </div>
         ) : null}
 
-        <a
-          className="closeButton"
-          onClick={() => props.setShareDialog(false)}
-        ></a>
+        <a className="closeButton" onClick={() => setShareDialog(false)}></a>
       </dialog>
     </>
   );
