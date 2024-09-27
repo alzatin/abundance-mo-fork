@@ -3,9 +3,7 @@ import Globalvariables from "../../js/globalvariables.js";
 import CreatableSelect from "react-select/creatable";
 import topics from "../../js/maslowTopics.js";
 
-const SettingsPopUp = (props) => {
-  const { setSettingsPopUp, setShortCuts } = props;
-
+const SettingsPopUp = ({ setSettingsPopUp, setShortCuts }) => {
   let repoTopics = [];
   if (Globalvariables.currentRepo.topics.length > 0) {
     Globalvariables.currentRepo.topics.forEach((topic) => {

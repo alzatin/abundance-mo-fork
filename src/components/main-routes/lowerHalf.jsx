@@ -30,10 +30,17 @@ function useWindowSize() {
   return windowSize;
 }
 
-export default memo(function LowerHalf(props) {
-  let mesh = props.displayProps.mesh;
-  let wireMesh = props.displayProps.wireMesh;
-
+export default memo(function LowerHalf({
+  gridParam,
+  axesParam,
+  wireParam,
+  solidParam,
+  setSaveState,
+  mesh,
+  wireMesh,
+  outdatedMesh,
+  setOutdatedMesh,
+}) {
   const windowSize = useWindowSize();
 
   return (
@@ -53,16 +60,10 @@ export default memo(function LowerHalf(props) {
           }}
         >
           {wireMesh ? (
-            <ThreeContext
-              gridParam={props.props.gridParam}
-              axesParam={props.props.axesParam}
-              outdatedMesh={props.displayProps.outdatedMesh}
-            >
-              {props.props.wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
+            <ThreeContext {...{ gridParam, axesParam, outdatedMesh }}>
+              {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
               <ReplicadMesh
-                mesh={mesh}
-                isSolid={props.props.solidParam}
-                setOutdatedMesh={props.displayProps.setOutdatedMesh}
+                {...{ mesh, isSolid: solidParam, setOutdatedMesh }}
               />
             </ThreeContext>
           ) : (
