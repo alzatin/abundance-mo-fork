@@ -37,7 +37,7 @@ export default class Readme extends Atom {
      * This atom's radius...probably inherited and can be deleted
      * @type {number}
      */
-    this.radius = 1 / 72;
+    this.radius = 1 / 100;
     /**
      * A description of this atom
      * @type {string}
@@ -64,22 +64,22 @@ export default class Readme extends Atom {
    * Draw the readme atom with // icon.
    */
   draw() {
-    super.draw("rect");
+    super.draw("square");
 
     let pixelsRadius = GlobalVariables.widthToPixels(this.radius);
-    this.height = pixelsRadius * 1.5;
+    this.height = pixelsRadius;
 
     GlobalVariables.c.beginPath();
     GlobalVariables.c.fillStyle = "#484848";
-    GlobalVariables.c.font = `${pixelsRadius * 1.5}px Work Sans Bold`;
+    GlobalVariables.c.font = `${pixelsRadius * 2.5}px Work Sans Bold`;
     GlobalVariables.c.fillText(
-      "//",
-      GlobalVariables.widthToPixels(this.x - this.radius / 2),
-      GlobalVariables.heightToPixels(this.y) + this.height / 3
+      "\u2263",
+      GlobalVariables.widthToPixels(this.x - this.radius / 1.5),
+      GlobalVariables.heightToPixels(this.y) + this.height / 1.5
     );
     GlobalVariables.c.fill();
     GlobalVariables.c.closePath();
-  }
+  } // 8801
   /**
    * Update the readme text. Called when the readme text has been edited.
    */
