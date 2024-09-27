@@ -11,6 +11,8 @@ import {
   Vector,
   importSTEP,
   importSTL,
+  iterTopo,
+  Solid,
 } from "replicad";
 import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
@@ -700,8 +702,14 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
     let localId = 0;
     let shapesForLayout = [];
 
+    //Split apart disjoint geometry into assemblies so they can be placed seperately
+    let splitGeometry = actOnLeafs(taggedGeometry, disjointGeometryToAssembly);
+
+    console.log(splitGeometry);
+
+
     // Rotate all shapes to be most cuttable.
-    library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
+    library[targetID] = actOnLeafs(splitGeometry, (leaf) => {
       // For each face, consider it as the underside of the shape on the CNC bed.
       // In order to be considered, a face must be...
       //  1) a flat PLANE, not a cylander, or sphere or other curved face type.
@@ -879,7 +887,7 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
 }
 
 /**
- * Use the packing engine, note this is potentially time consuming step.
+ * Use the packing engine, note this is potentially time consuming step. FIXME: Can this be moved into a different worker?
  */
 function computePositions(shapesForLayout, progressCallback, layoutConfig) {
   const populationSize = 5;
@@ -1023,7 +1031,7 @@ function preparePoints(mesh, tolerance) {
       console.log(edgeStarts);
       console.log(nextEgdes);
       throw new Error(
-        "Geometry errow when preparing for cutlayout. Part perimiter has an edge with: " +
+        "Geometry error when preparing for cutlayout. Part perimiter has an edge with: " +
           nextEgdes.length +
           " continuations"
       );
@@ -1212,6 +1220,39 @@ function fusion(targetID, inputIDs) {
     };
     return true;
   });
+}
+
+/**
+  * Function which takes in a geometry and returns the same geometry if it is cohesive or an assembly if the geometry is disjoint
+*/
+function disjointGeometryToAssembly(inputID) {
+  
+  let input = toGeometry(inputID).geometry[0]; //This does not accept assemblies
+  let solidsArray = Array.from(iterTopo(input.wrapped, "solid"), (s) => new Solid(s));
+  console.log("solidsArray", solidsArray);
+  //If there is more than one solid in the geometry, return an assembly
+  if (solidsArray.length > 1) {
+    let assemblyArray = [];
+    solidsArray.forEach((solid) => {
+      assemblyArray.push({
+        geometry: [solid],
+        tags: input.tags,
+        bom: input.bom,
+        color: input.color,
+        plane: input.plane,
+      });
+    });
+    return {
+      geometry: assemblyArray,
+      tags: input.tags,
+      bom: input.bom,
+      color: input.color,
+      plane: input.plane,
+    };
+  //If there is only one solid in the geometry, return the input
+  } else {
+    return toGeometry(inputID);
+  }
 }
 
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
