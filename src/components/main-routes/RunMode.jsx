@@ -105,7 +105,7 @@ function runMode({
 
     if (
       GlobalVariables.currentRepo &&
-      GlobalVariables.currentRepo.owner.login == globalvariables.currentUser
+      GlobalVariables.currentRepo.owner == globalvariables.currentUser
     ) {
       setOwned(true);
     }
