@@ -38,6 +38,29 @@ const init = async () => {
 const started = init();
 
 /**
+ * A function which converts any input into geometry
+ */
+function toGeometry(input) {
+  //If the input is a library ID we look it up
+  if (typeof(input) === "number"){
+    return library[input];
+  }
+  //If the input is already an abundance object we return it
+  else if(input.geometry){
+    return input;
+  }
+  //Else we build an abundance object from the input
+  else{
+    return {
+      geometry: [input],
+      tags: [],
+      color: "#FF9065",
+      bom: [],
+    };
+  }
+}
+
+/**
  * A function to generate a unique ID value.
  */
 function generateUniqueID() {
@@ -345,6 +368,8 @@ function tag(targetID, inputID, TAG) {
     return true;
   });
 }
+
+//---------------------Functions for the code atom---------------------
 
 function testFunction(aGeometry){
   console.log("Test function ran");
