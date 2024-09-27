@@ -186,7 +186,14 @@ export default class Atom {
         xInPixels - radiusInPixels * 1.25,
         yInPixels - this.height / 1.5,
         2.5 * radiusInPixels,
-        this.height * 1.5
+        this.height * 1.25
+      );
+    } else if (drawType == "square") {
+      GlobalVariables.c.rect(
+        xInPixels - radiusInPixels,
+        yInPixels - radiusInPixels,
+        2 * radiusInPixels,
+        2 * radiusInPixels
       );
     } else {
       GlobalVariables.c.arc(

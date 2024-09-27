@@ -67,6 +67,8 @@ export default class Color extends Atom {
     this.addIO("input", "geometry", this, "geometry", null, false, true);
     this.addIO("output", "geometry", this, "geometry", null);
 
+    this.selectedValueColor;
+
     this.setValues(values);
   }
 
@@ -77,37 +79,12 @@ export default class Color extends Atom {
     super.draw(); //Super call to draw the rest
 
     GlobalVariables.c.beginPath();
-    GlobalVariables.c.fillStyle = "#0000FF";
-    GlobalVariables.c.arc(
-      GlobalVariables.widthToPixels(this.x - this.radius / 4),
-      GlobalVariables.heightToPixels(this.y + this.radius / 2),
-      GlobalVariables.widthToPixels(this.radius / 3),
-      0,
-      Math.PI * 2,
-      false
-    );
-    GlobalVariables.c.fill();
-    GlobalVariables.c.closePath();
+    GlobalVariables.c.fillStyle = this.selectedValueColor;
 
-    GlobalVariables.c.beginPath();
-    GlobalVariables.c.fillStyle = "#FF0000";
-    GlobalVariables.c.arc(
-      GlobalVariables.widthToPixels(this.x + this.radius / 4),
-      GlobalVariables.heightToPixels(this.y + this.radius / 2),
-      GlobalVariables.widthToPixels(this.radius / 3),
-      0,
-      Math.PI * 2,
-      false
-    );
-    GlobalVariables.c.fill();
-    GlobalVariables.c.closePath();
-
-    GlobalVariables.c.beginPath();
-    GlobalVariables.c.fillStyle = "#FFFF00";
     GlobalVariables.c.arc(
       GlobalVariables.widthToPixels(this.x),
-      GlobalVariables.heightToPixels(this.y - this.radius),
-      GlobalVariables.widthToPixels(this.radius / 3),
+      GlobalVariables.heightToPixels(this.y),
+      GlobalVariables.widthToPixels(this.radius / 1.5),
       0,
       Math.PI * 2,
       false
@@ -126,6 +103,9 @@ export default class Color extends Atom {
       this.processing = true;
       var inputID = this.findIOValue("geometry");
       var color = Object.values(this.colorOptions)[this.selectedColorIndex];
+      this.selectedValueColor = Object.keys(this.colorOptions)[
+        this.selectedColorIndex
+      ];
       GlobalVariables.cad
         .color(this.uniqueID, inputID, color)
         .then(() => {
