@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@octokit/plugin-paginate-rest": "^11.3.3",
+    "@octokit/rest": "^21.0.2",
     "@react-three/drei": "^9.97.0",
     "@react-three/fiber": "8.15.16",
     "@uiw/react-codemirror": "^4.22.0",
