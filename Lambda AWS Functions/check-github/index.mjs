@@ -1,10 +1,14 @@
 import { Octokit } from "@octokit/rest";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBClient,
+  UpdateItemCommand,
+} from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
   ScanCommand,
   DeleteCommand,
-  UpdateCommand,
+  PutCommand,
+  UpdateCommand
 } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({});
@@ -57,8 +61,9 @@ export const handler = async (event, context) => {
         TableName: "abundance-projects",
         UpdateExpression: "SET #forks = :forks",
         Key: {
-          owner: owner,
+          owner:  owner,
           repoName: repoName,
+         
         },
       };
       const command = new UpdateCommand(input);
@@ -85,7 +90,7 @@ export const handler = async (event, context) => {
         //console.log(repoName);
         checkUpdate(owner, repoName, forks, response.data.forks_count).then(
           (response) => {
-            console.log(response);
+            console.log(response)
             return response;
           }
         );
