@@ -4,6 +4,7 @@ import {
   DynamoDBDocumentClient,
   ScanCommand,
   DeleteCommand,
+  UpdateItemCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({});
@@ -16,15 +17,19 @@ export const handler = async (event, context) => {
   const octokit = new Octokit();
 
   const command = new ScanCommand({
-    ProjectionExpression: "#ow, #repoName",
-    ExpressionAttributeNames: { "#ow": "owner", "#repoName": "repoName" },
+    ProjectionExpression: "#ow, #repoName, #forks",
+    ExpressionAttributeNames: {
+      "#ow": "owner",
+      "#repoName": "repoName",
+      "#forks": "forks",
+    },
     TableName: tableName,
   });
 
   const tableItems = await dynamo.send(command);
 
   let promises = tableItems.Items.map((repo) => {
-    return checkGithub(repo.owner, repo.repoName); // Added return statement
+    return checkGithub(repo.owner, repo.repoName, repo.forks); // Added return statement
   });
   await Promise.all(promises).then((results) => {
     const response = {
@@ -34,20 +39,26 @@ export const handler = async (event, context) => {
     return response;
   });
 
-  function updateTable() {
-    const params = {
-      TableName: tableName,
-      Key: {
-        owner: "alzatin",
-      },
-      UpdateExpression: "SET status = :status",
-      ExpressionAttributeValues: {
-        ":status": "FALSE",
-      },
-    };
+  async function checkUpdate(owner, repoName, forks, githubForks) {
+    if (forks !== githubForks) {
+      const params = {
+        TableName: tableName,
+        Key: {
+          owner: owner,
+          repoName: repoName,
+        },
+        UpdateExpression: "SET forks = :forks",
+        ExpressionAttributeValues: {
+          ":forks": githubForks,
+        },
+      };
+      const command = new UpdateItemCommand(params);
+      const responseUpdate = await client.send(command);
+      return responseUpdate;
+    }
   }
 
-  async function checkGithub(owner, repoName) {
+  async function checkGithub(owner, repoName, forks) {
     await octokit.rest.repos
       .get({
         owner: owner,
@@ -55,6 +66,7 @@ export const handler = async (event, context) => {
       })
       .then((response) => {
         console.log(response.status);
+        checkUpdate(owner, repoName, forks, response.data.forks_count);
         return response.status;
       })
       .catch((error) => {
