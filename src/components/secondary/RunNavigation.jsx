@@ -131,7 +131,7 @@ let exportSvg = (
 
 function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
   let [shareDialog, setShareDialog] = useState(false);
-  let [starred, setStarred] = useState(false);
+  let starred = false;
   let [dialogContent, setDialog] = useState("");
 
   var navigate = useNavigate();
@@ -159,12 +159,15 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
         );
 
         if (isLiked) {
-          setStarred(true);
+          starred = true;
           document.getElementById("Star-button").style.backgroundColor = "gray";
 
           //should disable instead of just graying out
         } else {
-          setStarred(false);
+          console.log("not starred");
+          document.getElementById("Star-button").style.backgroundColor =
+            "white";
+          starred = false;
         }
       });
       if (GlobalVariables.currentRepo.owner === GlobalVariables.currentUser) {
@@ -179,7 +182,7 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
     var owner = GlobalVariables.currentRepo.owner;
     var repoName = GlobalVariables.currentRepo.repoName;
     //disable button before api call so user can't click multiple times
-    setStarred(true);
+    starred = true;
     document.getElementById("Star-button").disabled = true;
     document.getElementById("Star-button").style.backgroundColor = "gray";
     /*aws dynamo update-item lambda */
@@ -214,6 +217,7 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
       }).then((response) => {
         console.log(response);
         //reenable button after api call so user can unlike
+        console.log("added to liked projects");
         document.getElementById("Star-button").disabled = false;
       });
     });
@@ -246,7 +250,7 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
     var owner = GlobalVariables.currentRepo.owner;
     var repoName = GlobalVariables.currentRepo.repoName;
     //disable button before api call so user can't click multiple times
-    setStarred(true);
+    starred = false;
     document.getElementById("Star-button").disabled = true;
     document.getElementById("Star-button").style.backgroundColor = "white";
 
@@ -264,7 +268,8 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
         "Content-type": "application/json; charset=UTF-8",
       },
     }).then((response) => {
-      console.log(response);
+      console.log(response.json());
+      console.log("unliked");
       //reenable button after api call so user can unlike
       document.getElementById("Star-button").disabled = false;
     });
@@ -389,9 +394,9 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
           className=" run-navigation-button"
           id="Star-button"
           onClick={() => {
-            authorizedUserOcto && !setStarred
+            authorizedUserOcto && !starred
               ? likeProject(authorizedUserOcto)
-              : authorizedUserOcto && setStarred
+              : authorizedUserOcto && starred
               ? unlikeProject(authorizedUserOcto)
               : loginLike();
           }}
