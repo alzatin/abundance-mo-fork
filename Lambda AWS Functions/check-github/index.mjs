@@ -1,14 +1,11 @@
 import { Octokit } from "@octokit/rest";
-import {
-  DynamoDBClient,
-  UpdateItemCommand,
-} from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
   ScanCommand,
   DeleteCommand,
   PutCommand,
-  UpdateCommand
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({});
@@ -32,8 +29,26 @@ export const handler = async (event, context) => {
 
   const tableItems = await dynamo.send(command);
 
-  let promises = tableItems.Items.map((repo) => {
-    return checkGithub(repo.owner, repo.repoName, repo.forks); // Added return statement
+  var items = [];
+
+  const scanExecute = async () => {
+    try {
+      let result;
+      do {
+        result = await dynamo.send(command);
+        items = items.concat(result.Items);
+        command.ExclusiveStartKey = result.LastEvaluatedKey;
+      } while (result.LastEvaluatedKey);
+      return items;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  items = await scanExecute();
+
+  let promises = items.map((repo) => {
+    return checkGithub(repo.owner, repo.repoName, repo.forks);
   });
 
   await Promise.all(promises).then((results) => {
@@ -45,7 +60,6 @@ export const handler = async (event, context) => {
   });
 
   async function checkUpdate(owner, repoName, forks, githubForks) {
-    console.log(owner, repoName, forks, githubForks);
     if (forks !== githubForks) {
       console.log("updating forks");
       const input = {
@@ -61,16 +75,15 @@ export const handler = async (event, context) => {
         TableName: "abundance-projects",
         UpdateExpression: "SET #forks = :forks",
         Key: {
-          owner:  owner,
+          owner: owner,
           repoName: repoName,
-         
         },
       };
       const command = new UpdateCommand(input);
       dynamo
         .send(command)
         .then((response) => {
-          console.log(response);
+          console.log("Updated item " + owner + "/" + repoName);
           return response;
         })
         .catch((error) => {
@@ -90,7 +103,7 @@ export const handler = async (event, context) => {
         //console.log(repoName);
         checkUpdate(owner, repoName, forks, response.data.forks_count).then(
           (response) => {
-            console.log(response)
+            console.log("Check update ran");
             return response;
           }
         );
@@ -114,7 +127,6 @@ export const handler = async (event, context) => {
     const command = new DeleteCommand(params);
 
     const response1 = await dynamo.send(command);
-    console.log("deleting item");
-    console.log(repoName);
+    console.log("deleting item" + owner + "/" + repoName);
   }
 };
