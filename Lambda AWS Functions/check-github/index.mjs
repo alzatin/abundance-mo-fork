@@ -67,9 +67,7 @@ export const handler = async (event, context) => {
           "#forks": "forks",
         },
         ExpressionAttributeValues: {
-          ":forks": {
-            N: githubForks,
-          },
+          ":forks": githubForks,
         },
         ReturnValues: "ALL_NEW",
         TableName: "abundance-projects",
