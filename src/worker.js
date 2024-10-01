@@ -389,35 +389,44 @@ function tag(targetID, inputID, TAG) {
 
 //---------------------Functions for the code atom---------------------
 
-function testFunction(aGeometry){
-  console.log("Test function ran");
-  console.log(aGeometry);
+/**
+ * A wrapper for the rotate function to allow it to be Rotate
+ */
+async function Rotate(input, x, y, z, targetID = null) {
+  try {
+    const rotatedGeometry = await rotate(input, x, y, z, targetID);
+    console.log("In worker");
+    console.log(rotatedGeometry);
+    return rotatedGeometry;
+  } catch (error) {
+    console.error("Error rotating geometry:", error);
+    throw error;
+  }
 }
 
-//Runs the user entered code in the worker thread and returns the result.
-function code(targetID, code, argumentsArray) {
-  return started.then(() => {
-    let keys1 = ['testFunction'];
-    let inputValues = [testFunction];
-    for (const [key, value] of Object.entries(argumentsArray)) {
-      keys1.push(`${key}`);
-      inputValues.push(value);
-    }
+// Runs the user entered code in the worker thread and returns the result.
+async function code(targetID, code, argumentsArray) {
+  await started;
+  let keys1 = ['rotate', 'Rotate'];
+  let inputValues = [rotate, Rotate];
+  for (const [key, value] of Object.entries(argumentsArray)) {
+    keys1.push(`${key}`);
+    inputValues.push(value);
+  }
 
-    // revisit this eval/ Is this the right/safest way to do this?
-    var result = eval(
-      "(function(" + keys1.join(',') + ") {" + code + "}(" + inputValues.join(',') + "))"
-    );
+  // revisit this eval/ Is this the right/safest way to do this?
+  var result = await eval(
+    "(async (" + keys1.join(',') + ") => {" + code + "})(" + inputValues.join(',') + ")"
+  );
 
-    library[targetID] = result;
+  library[targetID] = result;
 
-    //If the type of the result is a number return the number so it can be passed to the next atom
-    if (typeof result === "number") {
-      return result;
-    } else {
-      return true;
-    }
-  });
+  // If the type of the result is a number return the number so it can be passed to the next atom
+  if (typeof result === "number") {
+    return result;
+  } else {
+    return true;
+  }
 }
 
 function color(targetID, inputID, color) {
