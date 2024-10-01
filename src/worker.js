@@ -40,7 +40,8 @@ const init = async () => {
 const started = init();
 
 /**
- * A function which converts any input into geometry
+ * A function which converts any input into Abundance style geometry. Input can be a library ID, an abundance object, or a single geometry object.
+ * This is useful for allowing our functions to work within the Code atom or within the flow canvas.
  */
 function toGeometry(input) {
   //If the input is a library ID we look it up
@@ -247,9 +248,6 @@ function move(targetID, inputID, x, y, z) {
 
 function rotate(inputGeometry, x, y, z, targetID = null) {
   let input = toGeometry(inputGeometry);
-  console.log("Inputs");
-  console.log(library[inputGeometry]);
-  console.log(input);
   return started.then(() => {
     if (is3D(input)) {
       let result = actOnLeafs(input, (leaf) => {
@@ -269,31 +267,28 @@ function rotate(inputGeometry, x, y, z, targetID = null) {
       });
       if (targetID) {
         library[targetID] = result;
-        console.log("After rotation");
-        console.log(library[targetID]);
-      }
-      else{
+      } else {
         return result;
       }
     } else {
-      library[targetID] = actOnLeafs(
-        library[inputID],
-        (leaf) => {
-          return {
-            geometry: [
-              leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
-            ],
-            tags: leaf.tags,
-            plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
-            color: leaf.color,
-            bom: leaf.bom,
-          };
-        },
-        library[inputID].plane.pivot(x, "X").pivot(y, "Y")
-      );
+      let result = actOnLeafs(toGeometry(inputGeometry), (leaf) => {
+        return {
+          geometry: [
+            leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
+          ],
+          tags: leaf.tags,
+          plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+          color: leaf.color,
+          bom: leaf.bom,
+        };
+      });
+      if (targetID) {
+        library[targetID] = result;
+        //library[inputID].plane.pivot(x, "X").pivot(y, "Y"); //@Alzatin what is this line for?
+      } else {
+        return result;
+      }
     }
-
-    return true;
   });
 }
 
