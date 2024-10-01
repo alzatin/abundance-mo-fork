@@ -246,6 +246,15 @@ function move(targetID, inputID, x, y, z) {
   });
 }
 
+/**
+ * Function to rotate a geometry around the x, y, and z axis
+ * @param {string} inputGeometry - The geometry to rotate. Can be any type
+ * @param {number} x - The angle to rotate around the x axis
+ * @param {number} y - The angle to rotate around the y axis
+ * @param {number} z - The angle to rotate around the z axis
+ * @param {string} targetID - The ID to store the result in. If it undefined the result will be returned instead
+ * @returns {object} - The rotated geometry
+ **/
 function rotate(inputGeometry, x, y, z, targetID = null) {
   let input = toGeometry(inputGeometry);
   return started.then(() => {
