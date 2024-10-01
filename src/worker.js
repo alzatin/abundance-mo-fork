@@ -740,13 +740,13 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
     let shapesForLayout = [];
 
     //Split apart disjoint geometry into assemblies so they can be placed seperately
-    let splitGeometry = actOnLeafs(taggedGeometry, disjointGeometryToAssembly);
+    // let splitGeometry = actOnLeafs(taggedGeometry, disjointGeometryToAssembly);
 
-    console.log(splitGeometry);
+    // console.log(splitGeometry);
 
 
     // Rotate all shapes to be most cuttable.
-    library[targetID] = actOnLeafs(splitGeometry, (leaf) => {
+    library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
       // For each face, consider it as the underside of the shape on the CNC bed.
       // In order to be considered, a face must be...
       //  1) a flat PLANE, not a cylander, or sphere or other curved face type.
