@@ -1176,36 +1176,45 @@ function recursiveCut(partToCut, cuttingPart) {
   }
 }
 
-function assembly(targetID, inputIDs) {
-  return started.then(() => {
-    let assembly = [];
-    let bomAssembly = [];
+/**
+ * A function which takes in an array of target geometries and forms them into an assembly
+ * Geometries will cut all geometries below them in the list to make sure that no parts intersect
+ * If the targetID is defined, the assembly will be stored in the library under that ID, otherwise it will be returned
+ */
+async function assembly(inputIDs, targetID = null) {
+  if (!Array.isArray(inputIDs) || inputIDs.length === 0) {
+    throw new Error("inputIDs must be a non-empty array");
+  }
 
-    if (inputIDs.length > 1) {
-      /** Check if all inputs are solid or sketches */
-      if (
-        inputIDs.every((inputID) => is3D(library[inputID])) ||
-        inputIDs.every((inputID) => !is3D(library[inputID]))
-      ) {
-        for (let i = 0; i < inputIDs.length; i++) {
-          assembly.push(
-            cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID)
-          );
-          if (library[inputIDs[i]].bom.length > 0) {
-            bomAssembly.push(...library[inputIDs[i]].bom);
-          }
+  await started;
+
+  let assembly = [];
+  let bomAssembly = [];
+
+  if (inputIDs.length > 1) {
+    const all3D = inputIDs.every((inputID) => is3D(toGeometry(inputID)));
+    const all2D = inputIDs.every((inputID) => !is3D(toGeometry(inputID)));
+
+    if (all3D || all2D) {
+      for (let i = 0; i < inputIDs.length; i++) {
+        const geometry = toGeometry(inputIDs[i]);
+        assembly.push(cutAssembly(geometry, inputIDs.slice(i + 1), targetID));
+        if (geometry.bom.length > 0) {
+          bomAssembly.push(...geometry.bom);
         }
-      } else {
-        throw new Error(
-          "Assemblies must be composed from only sketches OR only solids"
-        );
       }
     } else {
-      assembly.push(library[inputIDs[0]]);
-      if (library[inputIDs[0]].bom.length > 0) {
-        bomAssembly.push(...library[inputIDs[0]].bom);
-      }
+      throw new Error("Assemblies must be composed from only sketches OR only solids");
     }
+  } else {
+    const geometry = toGeometry(inputIDs[0]);
+    assembly.push(geometry);
+    if (geometry.bom.length > 0) {
+      bomAssembly.push(...geometry.bom);
+    }
+  }
+
+  if (targetID != null) {
     const newPlane = new Plane().pivot(0, "Y");
     library[targetID] = {
       geometry: assembly,
@@ -1213,8 +1222,9 @@ function assembly(targetID, inputIDs) {
       tags: [],
       bom: bomAssembly,
     };
-    return true;
-  });
+  }
+
+  return true;
 }
 
 function fusion(targetID, inputIDs) {
