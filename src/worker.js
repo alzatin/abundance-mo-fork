@@ -390,16 +390,28 @@ function tag(targetID, inputID, TAG) {
 //---------------------Functions for the code atom---------------------
 
 /**
- * A wrapper for the rotate function to allow it to be Rotate
+ * A wrapper for the rotate function to allow it to be Rotate and used in the Code atom
  */
-async function Rotate(input, x, y, z, targetID = null) {
+async function Rotate(input, x, y, z) {
   try {
-    const rotatedGeometry = await rotate(input, x, y, z, targetID);
-    console.log("In worker");
-    console.log(rotatedGeometry);
+    const rotatedGeometry = await rotate(input, x, y, z);
     return rotatedGeometry;
   } catch (error) {
     console.error("Error rotating geometry:", error);
+    throw error;
+  }
+}
+
+/**
+ * A wrapper for the assembly function to allow it to be Assembly and used in the Code atom
+ */
+async function Assembly(inputs) {
+  try {
+    const assembledGeometry = await assembly(inputs);
+    return assembledGeometry;
+  }
+  catch (error) {
+    console.error("Error assembling geometry:", error);
     throw error;
   }
 }
@@ -1125,8 +1137,8 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
       });
 
       let subID = generateUniqueID();
-      //returns new assembly that has been cut
-      library[subID] = {
+      //returns new assembly that has been cut 
+      library[subID] = { //This feels like a hack, we shouldn't be using the library internally like this
         geometry: assemblyCut,
         tags: partToCut.tags,
         bom: partToCut.bom,
@@ -1137,7 +1149,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
       var partCutCopy = partToCut.geometry[0];
       cuttingParts.forEach((cuttingPart) => {
         // for each cutting part cut the part
-        partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
+        partCutCopy = recursiveCut(partCutCopy, toGeometry(cuttingPart));
       });
       // return new cut part
       let newID = generateUniqueID();
@@ -1214,14 +1226,19 @@ async function assembly(inputIDs, targetID = null) {
     }
   }
 
+  const newPlane = new Plane().pivot(0, "Y");
+  let generatedAssembly = {
+    geometry: assembly,
+    plane: newPlane,
+    tags: [],
+    bom: bomAssembly,
+  };
+
   if (targetID != null) {
-    const newPlane = new Plane().pivot(0, "Y");
-    library[targetID] = {
-      geometry: assembly,
-      plane: newPlane,
-      tags: [],
-      bom: bomAssembly,
-    };
+    library[targetID] = generatedAssembly
+  }
+  else{
+    return generatedAssembly;
   }
 
   return true;
