@@ -419,8 +419,8 @@ async function Assembly(inputs) {
 // Runs the user entered code in the worker thread and returns the result.
 async function code(targetID, code, argumentsArray) {
   await started;
-  let keys1 = ['rotate', 'Rotate'];
-  let inputValues = [rotate, Rotate];
+  let keys1 = ['Rotate', 'Assembly'];
+  let inputValues = [Rotate, Assembly];
   for (const [key, value] of Object.entries(argumentsArray)) {
     keys1.push(`${key}`);
     inputValues.push(value);
