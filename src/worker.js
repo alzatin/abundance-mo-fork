@@ -245,10 +245,14 @@ function move(targetID, inputID, x, y, z) {
   });
 }
 
-function rotate(targetID, inputID, x, y, z) {
+function rotate(inputGeometry, x, y, z, targetID = null) {
+  let input = toGeometry(inputGeometry);
+  console.log("Inputs");
+  console.log(library[inputGeometry]);
+  console.log(input);
   return started.then(() => {
-    if (is3D(library[inputID])) {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+    if (is3D(input)) {
+      let result = actOnLeafs(input, (leaf) => {
         return {
           geometry: [
             leaf.geometry[0]
@@ -263,6 +267,14 @@ function rotate(targetID, inputID, x, y, z) {
           bom: leaf.bom,
         };
       });
+      if (targetID) {
+        library[targetID] = result;
+        console.log("After rotation");
+        console.log(library[targetID]);
+      }
+      else{
+        return result;
+      }
     } else {
       library[targetID] = actOnLeafs(
         library[inputID],
