@@ -105,7 +105,7 @@ export default class Rotate extends Atom {
       var y = this.findIOValue("y-axis degrees");
       var z = this.findIOValue("z-axis degrees");
       GlobalVariables.cad
-        .rotate(this.uniqueID, inputID, x, y, z)
+        .rotate(inputID, x, y, z, this.uniqueID)
         .then(() => {
           this.basicThreadValueProcessing();
         })
