@@ -11,6 +11,8 @@ import {
   Vector,
   importSTEP,
   importSTL,
+  iterTopo,
+  Solid,
 } from "replicad";
 import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
@@ -36,6 +38,30 @@ const init = async () => {
   return true;
 };
 const started = init();
+
+/**
+ * A function which converts any input into Abundance style geometry. Input can be a library ID, an abundance object, or a single geometry object.
+ * This is useful for allowing our functions to work within the Code atom or within the flow canvas.
+ */
+function toGeometry(input) {
+  //If the input is a library ID we look it up
+  if (typeof(input) === "number"){
+    return library[input];
+  }
+  //If the input is already an abundance object we return it
+  else if(input.geometry){
+    return input;
+  }
+  //Else we build an abundance object from the input
+  else{
+    return {
+      geometry: [input],
+      tags: [],
+      color: "#FF9065",
+      bom: [],
+    };
+  }
+}
 
 /**
  * A function to generate a unique ID value.
@@ -220,10 +246,20 @@ function move(targetID, inputID, x, y, z) {
   });
 }
 
-function rotate(targetID, inputID, x, y, z) {
+/**
+ * Function to rotate a geometry around the x, y, and z axis
+ * @param {string} inputGeometry - The geometry to rotate. Can be any type
+ * @param {number} x - The angle to rotate around the x axis
+ * @param {number} y - The angle to rotate around the y axis
+ * @param {number} z - The angle to rotate around the z axis
+ * @param {string} targetID - The ID to store the result in. If it undefined the result will be returned instead
+ * @returns {object} - The rotated geometry
+ **/
+function rotate(inputGeometry, x, y, z, targetID = null) {
+  let input = toGeometry(inputGeometry);
   return started.then(() => {
-    if (is3D(library[inputID])) {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+    if (is3D(input)) {
+      let result = actOnLeafs(input, (leaf) => {
         return {
           geometry: [
             leaf.geometry[0]
@@ -238,25 +274,30 @@ function rotate(targetID, inputID, x, y, z) {
           bom: leaf.bom,
         };
       });
+      if (targetID) {
+        library[targetID] = result;
+      } else {
+        return result;
+      }
     } else {
-      library[targetID] = actOnLeafs(
-        library[inputID],
-        (leaf) => {
-          return {
-            geometry: [
-              leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
-            ],
-            tags: leaf.tags,
-            plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
-            color: leaf.color,
-            bom: leaf.bom,
-          };
-        },
-        library[inputID].plane.pivot(x, "X").pivot(y, "Y")
-      );
+      let result = actOnLeafs(toGeometry(inputGeometry), (leaf) => {
+        return {
+          geometry: [
+            leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
+          ],
+          tags: leaf.tags,
+          plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
+          color: leaf.color,
+          bom: leaf.bom,
+        };
+      });
+      if (targetID) {
+        library[targetID] = result;
+        //library[inputID].plane.pivot(x, "X").pivot(y, "Y"); //@Alzatin what is this line for?
+      } else {
+        return result;
+      }
     }
-
-    return true;
   });
 }
 
@@ -346,30 +387,58 @@ function tag(targetID, inputID, TAG) {
   });
 }
 
-//Runs the user entered code in the worker thread and returns the result.
-function code(targetID, code, argumentsArray) {
-  return started.then(() => {
-    let keys1 = [];
-    let inputValues = [];
-    for (const [key, value] of Object.entries(argumentsArray)) {
-      keys1.push(`${key}`);
-      inputValues.push(value);
-    }
+//---------------------Functions for the code atom---------------------
 
-    // revisit this eval/ Is this the right/safest way to do this?
-    var result = eval(
-      "(function(" + keys1 + ") {" + code + "}(" + inputValues + "))"
-    );
+/**
+ * A wrapper for the rotate function to allow it to be Rotate and used in the Code atom
+ */
+async function Rotate(input, x, y, z) {
+  try {
+    const rotatedGeometry = await rotate(input, x, y, z);
+    return rotatedGeometry;
+  } catch (error) {
+    console.error("Error rotating geometry:", error);
+    throw error;
+  }
+}
 
-    library[targetID] = result;
+/**
+ * A wrapper for the assembly function to allow it to be Assembly and used in the Code atom
+ */
+async function Assembly(inputs) {
+  try {
+    const assembledGeometry = await assembly(inputs);
+    return assembledGeometry;
+  }
+  catch (error) {
+    console.error("Error assembling geometry:", error);
+    throw error;
+  }
+}
 
-    //If the type of the result is a number return the number so it can be passed to the next atom
-    if (typeof result === "number") {
-      return result;
-    } else {
-      return true;
-    }
-  });
+// Runs the user entered code in the worker thread and returns the result.
+async function code(targetID, code, argumentsArray) {
+  await started;
+  let keys1 = ['Rotate', 'Assembly'];
+  let inputValues = [Rotate, Assembly];
+  for (const [key, value] of Object.entries(argumentsArray)) {
+    keys1.push(`${key}`);
+    inputValues.push(value);
+  }
+
+  // revisit this eval/ Is this the right/safest way to do this?
+  var result = await eval(
+    "(async (" + keys1.join(',') + ") => {" + code + "})(" + inputValues.join(',') + ")"
+  );
+
+  library[targetID] = result;
+
+  // If the type of the result is a number return the number so it can be passed to the next atom
+  if (typeof result === "number") {
+    return result;
+  } else {
+    return true;
+  }
 }
 
 function color(targetID, inputID, color) {
@@ -670,6 +739,12 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
     let localId = 0;
     let shapesForLayout = [];
 
+    //Split apart disjoint geometry into assemblies so they can be placed seperately
+    // let splitGeometry = actOnLeafs(taggedGeometry, disjointGeometryToAssembly);
+
+    // console.log(splitGeometry);
+
+
     // Rotate all shapes to be most cuttable.
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
       // For each face, consider it as the underside of the shape on the CNC bed.
@@ -849,7 +924,7 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
 }
 
 /**
- * Use the packing engine, note this is potentially time consuming step.
+ * Use the packing engine, note this is potentially time consuming step. FIXME: Can this be moved into a different worker?
  */
 function computePositions(shapesForLayout, progressCallback, layoutConfig) {
   const populationSize = 5;
@@ -993,7 +1068,7 @@ function preparePoints(mesh, tolerance) {
       console.log(edgeStarts);
       console.log(nextEgdes);
       throw new Error(
-        "Geometry errow when preparing for cutlayout. Part perimiter has an edge with: " +
+        "Geometry error when preparing for cutlayout. Part perimiter has an edge with: " +
           nextEgdes.length +
           " continuations"
       );
@@ -1062,8 +1137,8 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
       });
 
       let subID = generateUniqueID();
-      //returns new assembly that has been cut
-      library[subID] = {
+      //returns new assembly that has been cut 
+      library[subID] = { //This feels like a hack, we shouldn't be using the library internally like this
         geometry: assemblyCut,
         tags: partToCut.tags,
         bom: partToCut.bom,
@@ -1074,7 +1149,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
       var partCutCopy = partToCut.geometry[0];
       cuttingParts.forEach((cuttingPart) => {
         // for each cutting part cut the part
-        partCutCopy = recursiveCut(partCutCopy, library[cuttingPart]);
+        partCutCopy = recursiveCut(partCutCopy, toGeometry(cuttingPart));
       });
       // return new cut part
       let newID = generateUniqueID();
@@ -1113,45 +1188,60 @@ function recursiveCut(partToCut, cuttingPart) {
   }
 }
 
-function assembly(targetID, inputIDs) {
-  return started.then(() => {
-    let assembly = [];
-    let bomAssembly = [];
+/**
+ * A function which takes in an array of target geometries and forms them into an assembly
+ * Geometries will cut all geometries below them in the list to make sure that no parts intersect
+ * If the targetID is defined, the assembly will be stored in the library under that ID, otherwise it will be returned
+ */
+async function assembly(inputIDs, targetID = null) {
+  if (!Array.isArray(inputIDs) || inputIDs.length === 0) {
+    throw new Error("inputIDs must be a non-empty array");
+  }
 
-    if (inputIDs.length > 1) {
-      /** Check if all inputs are solid or sketches */
-      if (
-        inputIDs.every((inputID) => is3D(library[inputID])) ||
-        inputIDs.every((inputID) => !is3D(library[inputID]))
-      ) {
-        for (let i = 0; i < inputIDs.length; i++) {
-          assembly.push(
-            cutAssembly(library[inputIDs[i]], inputIDs.slice(i + 1), targetID)
-          );
-          if (library[inputIDs[i]].bom.length > 0) {
-            bomAssembly.push(...library[inputIDs[i]].bom);
-          }
+  await started;
+
+  let assembly = [];
+  let bomAssembly = [];
+
+  if (inputIDs.length > 1) {
+    const all3D = inputIDs.every((inputID) => is3D(toGeometry(inputID)));
+    const all2D = inputIDs.every((inputID) => !is3D(toGeometry(inputID)));
+
+    if (all3D || all2D) {
+      for (let i = 0; i < inputIDs.length; i++) {
+        const geometry = toGeometry(inputIDs[i]);
+        assembly.push(cutAssembly(geometry, inputIDs.slice(i + 1), targetID));
+        if (geometry.bom.length > 0) {
+          bomAssembly.push(...geometry.bom);
         }
-      } else {
-        throw new Error(
-          "Assemblies must be composed from only sketches OR only solids"
-        );
       }
     } else {
-      assembly.push(library[inputIDs[0]]);
-      if (library[inputIDs[0]].bom.length > 0) {
-        bomAssembly.push(...library[inputIDs[0]].bom);
-      }
+      throw new Error("Assemblies must be composed from only sketches OR only solids");
     }
-    const newPlane = new Plane().pivot(0, "Y");
-    library[targetID] = {
-      geometry: assembly,
-      plane: newPlane,
-      tags: [],
-      bom: bomAssembly,
-    };
-    return true;
-  });
+  } else {
+    const geometry = toGeometry(inputIDs[0]);
+    assembly.push(geometry);
+    if (geometry.bom.length > 0) {
+      bomAssembly.push(...geometry.bom);
+    }
+  }
+
+  const newPlane = new Plane().pivot(0, "Y");
+  let generatedAssembly = {
+    geometry: assembly,
+    plane: newPlane,
+    tags: [],
+    bom: bomAssembly,
+  };
+
+  if (targetID != null) {
+    library[targetID] = generatedAssembly
+  }
+  else{
+    return generatedAssembly;
+  }
+
+  return true;
 }
 
 function fusion(targetID, inputIDs) {
@@ -1182,6 +1272,39 @@ function fusion(targetID, inputIDs) {
     };
     return true;
   });
+}
+
+/**
+  * Function which takes in a geometry and returns the same geometry if it is cohesive or an assembly if the geometry is disjoint
+*/
+function disjointGeometryToAssembly(inputID) {
+  
+  let input = toGeometry(inputID).geometry[0]; //This does not accept assemblies
+  let solidsArray = Array.from(iterTopo(input.wrapped, "solid"), (s) => new Solid(s));
+  console.log("solidsArray", solidsArray);
+  //If there is more than one solid in the geometry, return an assembly
+  if (solidsArray.length > 1) {
+    let assemblyArray = [];
+    solidsArray.forEach((solid) => {
+      assemblyArray.push({
+        geometry: [solid],
+        tags: input.tags,
+        bom: input.bom,
+        color: input.color,
+        plane: input.plane,
+      });
+    });
+    return {
+      geometry: assemblyArray,
+      tags: input.tags,
+      bom: input.bom,
+      color: input.color,
+      plane: input.plane,
+    };
+  //If there is only one solid in the geometry, return the input
+  } else {
+    return toGeometry(inputID);
+  }
 }
 
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it

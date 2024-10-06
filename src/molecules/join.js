@@ -140,7 +140,7 @@ export default class Join extends Atom {
           .catch(this.alertingErrorHandler());
       } else if (this.unionType === "Assembly") {
         GlobalVariables.cad
-          .assembly(this.uniqueID, inputValues)
+          .assembly(inputValues, this.uniqueID)
           .then(() => {
             this.basicThreadValueProcessing();
           })
