@@ -11,7 +11,7 @@ import {
 const client = new DynamoDBClient({});
 const dynamo = DynamoDBDocumentClient.from(client);
 const date = new Date();
-const today = "today"; //date.toISOString();
+const today = date.toISOString();
 
 console.log(today);
 
