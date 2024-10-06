@@ -611,7 +611,7 @@ export default class Atom {
       this.output.waitOnComingInformation();
     }
     if (this.processing) {
-      console.log("information sent to something processing");
+      //console.log("information sent to something processing");
       // this.processing = false;
     }
   }
