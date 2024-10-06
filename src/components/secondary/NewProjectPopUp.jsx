@@ -111,7 +111,8 @@ const NewProjectPopUp = ({ setExportPopUp, authorizedUserOcto, exporting }) => {
         const projectContent = window.btoa(
           JSON.stringify(jsonRepOfProject, null, 4)
         );
-        let topicString = GlobalVariables.currentRepo.topics.join(" ");
+        let topicString = topics.join(" ");
+
         let searchField = (
           result.data.name +
           " " +
