@@ -24,18 +24,26 @@ import { Link } from "react-router-dom";
  * @prop {setstate} setRunMode - setState function for runMode
  * @prop {boolean} RunMode - Determines if Run mode is on or off
  */
-function CreateMode(props) {
+function CreateMode({
+  activeAtom,
+  setActiveAtom,
+  authorizedUserOcto,
+  tryLogin,
+  loadProject,
+  exportPopUp,
+  setExportPopUp,
+  shortCutsOn,
+  setShortCuts,
+  mesh,
+  setMesh,
+  size,
+  cad,
+  wireMesh,
+  setWireMesh,
+  outdatedMesh,
+  setOutdatedMesh,
+}) {
   const navigate = useNavigate();
-
-  let authorizedUserOcto = props.props.authorizedUserOcto;
-  let activeAtom = props.props.activeAtom;
-  let setActiveAtom = props.props.setActiveAtom;
-  let setShortCuts = props.props.setShortCuts;
-  let shortCutsOn = props.props.shortCutsOn;
-
-  // new project form pop up state
-  const exportPopUp = props.props.exportPopUp;
-  const setExportPopUp = props.props.setExportPopUp;
 
   /** State for grid and axes parameters */
   const [gridParam, setGrid] = useState(true);
@@ -107,12 +115,6 @@ function CreateMode(props) {
       saveProject(setSaveState);
     }
   };
-  /** Display props for replicad renderer  */
-  let cad = props.displayProps.cad;
-  let setMesh = props.displayProps.setMesh;
-  let mesh = props.displayProps.mesh;
-  let setWireMesh = props.displayProps.setWireMesh;
-  let wireMesh = props.displayProps.wireMesh;
   /**
    * Create a commit as part of the saving process.
    */
@@ -390,9 +392,7 @@ function CreateMode(props) {
               </div>
 
               <NewProjectPopUp
-                setExportPopUp={setExportPopUp}
-                exporting={true}
-                authorizedUserOcto={authorizedUserOcto}
+                {...{ setExportPopUp, exporting: true, authorizedUserOcto }}
               />
             </div>
           ) : null}
@@ -410,19 +410,22 @@ function CreateMode(props) {
             </div>
           ) : null}
           <TopMenu
-            authorizedUserOcto={authorizedUserOcto}
-            savePopUp={savePopUp}
-            setSavePopUp={setSavePopUp}
-            saveProject={saveProject}
-            setExportPopUp={setExportPopUp}
-            saveState={saveState}
-            setSaveState={setSaveState}
-            currentMoleculeTop={currentMoleculeTop}
-            activeAtom={activeAtom}
-            setActiveAtom={setActiveAtom}
-            setShortCuts={setShortCuts}
+            {...{
+              authorizedUserOcto,
+              savePopUp,
+              setSavePopUp,
+              saveProject,
+              setExportPopUp,
+              saveState,
+              setSaveState,
+              currentMoleculeTop,
+              activeAtom,
+              setActiveAtom,
+              setShortCuts,
+            }}
           />
-          <CodeWindow activeAtom={activeAtom} />
+
+          <CodeWindow {...{ activeAtom }} />
           <input
             type="file"
             id="fileLoaderInput"
@@ -441,49 +444,44 @@ function CreateMode(props) {
             }}
           />
           <FlowCanvas
-            props={{
-              activeAtom: activeAtom,
-              loadProject: props.props.loadProject,
-              setActiveAtom: setActiveAtom,
-              setSavePopUp: setSavePopUp,
-              setSaveState: setSaveState,
-              setTop: setTop,
-              shortCuts: shortCuts,
-              currentRepo: props.currentRepo,
-              setCurrentRepo: props.setCurrentRepo,
-            }}
-            displayProps={{
-              setMesh: setMesh,
-              cad: cad,
-              setWireMesh: setWireMesh,
+            {...{
+              activeAtom,
+              loadProject,
+              setActiveAtom,
+              setSavePopUp,
+              setSaveState,
+              setTop,
+              shortCuts,
+              setMesh,
+              cad,
+              setWireMesh,
             }}
           />
           <div className="parent flex-parent" id="lowerHalf">
             {activeAtom ? (
               <ParamsEditor
-                activeAtom={activeAtom}
-                setActiveAtom={setActiveAtom}
-                setGrid={setGrid}
-                setAxes={setAxes}
-                setWire={setWire}
-                setSolid={setSolid}
+                {...{
+                  activeAtom,
+                  setActiveAtom,
+                  setGrid,
+                  setAxes,
+                  setWire,
+                  setSolid,
+                }}
               />
             ) : null}
 
             <LowerHalf
-              props={{
-                gridParam: gridParam,
-                axesParam: axesParam,
-                wireParam: wireParam,
-                solidParam: solidParam,
-                setSaveState: setSaveState,
-                setSaveState: setSaveState,
-              }}
-              displayProps={{
-                mesh: mesh,
-                wireMesh: wireMesh,
-                outdatedMesh: props.displayProps.outdatedMesh,
-                setOutdatedMesh: props.displayProps.setOutdatedMesh,
+              {...{
+                gridParam,
+                axesParam,
+                wireParam,
+                solidParam,
+                setSaveState,
+                mesh,
+                wireMesh,
+                outdatedMesh,
+                setOutdatedMesh,
               }}
             />
           </div>
@@ -508,8 +506,8 @@ function CreateMode(props) {
         GlobalVariables.currentRepoName = result.data.name;
         GlobalVariables.currentRepo = result.data;
         //auto login - turned off for development
-        /*props.props
-        .tryLogin()
+        /*
+        tryLogin()
         .then((result) => {
           navigate(`/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
         })

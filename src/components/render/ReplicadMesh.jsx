@@ -7,6 +7,7 @@ import {
   syncLinesFromFaces,
 } from "replicad-threejs-helper";
 import { Wireframe } from "@react-three/drei";
+
 export default React.memo(function ShapeMeshes({
   mesh,
   isSolid,

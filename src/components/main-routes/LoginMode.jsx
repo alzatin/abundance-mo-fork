@@ -15,7 +15,7 @@ var octokit = null;
  * Initial log component displays pop Up to either attempt Github login/browse projects
  *
  */
-const InitialLog = (props) => {
+const InitialLog = ({ tryLogin }) => {
   return (
     <div className="login-page">
       <div className="form animate fadeInUp one">
@@ -37,7 +37,7 @@ const InitialLog = (props) => {
               type="button"
               id="loginButton"
               className="submit-btn"
-              onClick={props.tryLogin}
+              onClick={tryLogin}
               style={{ height: "40px" }}
             >
               Login With GitHub
@@ -61,7 +61,7 @@ const InitialLog = (props) => {
           <button
             type="button"
             onClick={() => {
-              //props.setBrowsing(true);
+              //setBrowsing(true);
             }}
             className="submit-btn"
             id="browseNonGit"
@@ -76,12 +76,9 @@ const InitialLog = (props) => {
 };
 
 // adds individual projects after API call
-const AddProject = (props) => {
-  const authorizedUserOcto = props.authorizedUserOcto;
+const AddProject = ({ nodes, authorizedUserOcto }) => {
   const [browseType, setBrowseType] = useState("thumb");
   const [orderType, setOrderType] = useState("byDateCreated");
-
-  let nodes = props.nodes;
 
   return (
     <>
@@ -151,12 +148,7 @@ const AddProject = (props) => {
         </label>
       </div>
       {nodes.length > 0 ? (
-        <ProjectDiv
-          browseType={browseType}
-          authorizedUserOcto={authorizedUserOcto}
-          nodes={nodes}
-          orderType={orderType}
-        />
+        <ProjectDiv {...{ nodes, browseType, orderType, authorizedUserOcto }} />
       ) : (
         <p>No projects match your search</p>
       )}
@@ -164,11 +156,7 @@ const AddProject = (props) => {
   );
 };
 
-const ProjectDiv = (props) => {
-  const nodes = props.nodes;
-  const browseType = props.browseType;
-  const orderType = props.orderType;
-
+const ProjectDiv = ({ nodes, browseType, orderType }) => {
   const ThumbItem = ({ node }) => {
     return (
       <div
@@ -356,9 +344,9 @@ const ProjectDiv = (props) => {
             }
           >
             {browseType == "list" ? (
-              <ListItem node={node} />
+              <ListItem {...{ node }} />
             ) : (
-              <ThumbItem node={node} />
+              <ThumbItem {...{ node }} />
             )}
           </Link>
         ))}
@@ -368,16 +356,18 @@ const ProjectDiv = (props) => {
 };
 
 /* to add: if current user is null show this next part */
-const ShowProjects = (props) => {
-  const projectToShow = props.projectToShow;
+const ShowProjects = ({
+  projectToShow,
+  setExportPopUp,
+  setProjectsToShow,
+  user,
+  authorizedUserOcto,
+  pageDict,
+}) => {
   const [projectsLoaded, setStateLoaded] = useState([]);
-  const setExportPopUp = props.setExportPopUp;
-  const setProjectsToShow = props.setProjectsToShow;
   const [lastKey, setLastKey] = useState("");
-  let pageDict = props.pageDict;
   const [pageNumber, setPageNumber] = useState(0);
   const [searchBarValue, setSearchBarValue] = useState("");
-  const authorizedUserOcto = props.authorizedUserOcto;
 
   useEffect(() => {
     octokit = new Octokit();
@@ -438,7 +428,7 @@ const ShowProjects = (props) => {
           "attribute=searchField" +
           searchQuery +
           "&user=" +
-          props.user +
+          user +
           lastKeyQuery;
       } else if (projectToShow == "featured") {
         // placeholder for featured projects
@@ -452,7 +442,7 @@ const ShowProjects = (props) => {
         //API URL for the scan-search-abundance endpoint and abundance-projects table
         const scanUserApiUrl =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=" +
-          props.user;
+          user;
         let awsLikeRepos = await fetch(scanUserApiUrl);
         let json = await awsLikeRepos.json();
         query = "";
@@ -469,7 +459,7 @@ const ShowProjects = (props) => {
           "attribute=searchField" +
           searchQuery +
           "&user=" +
-          props.user +
+          user +
           lastKeyQuery;
         const scanRecentApi =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryRecentProjects?" +
@@ -489,10 +479,10 @@ const ShowProjects = (props) => {
 
     repoSearchRequest(projectToShow)
       .then((result) => {
-        if (result["repos"].length == 0 && props.user !== "") {
+        if (result["repos"].length == 0 && user !== "") {
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
-              //props.setBrowsing(true);
+              //setBrowsing(true);
               setStateLoaded(result["repos"]);
             });
           });
@@ -672,11 +662,11 @@ const ShowProjects = (props) => {
           </div>
           {projectsLoaded.length > 0 ? (
             <AddProject
-              searchBarValue={searchBarValue}
-              authorizedUserOcto={authorizedUserOcto}
-              user={props.user}
-              userBrowsing={props.userBrowsing}
-              nodes={nodes}
+              {...{
+                nodes,
+                authorizedUserOcto,
+                user,
+              }}
             />
           ) : (
             <p> Loading...</p>
@@ -687,42 +677,37 @@ const ShowProjects = (props) => {
   );
 };
 
-function LoginMode(props) {
-  /*
-   * @prop {object} authorizedUserOcto - authorized octokit instance
-   * @prop {setState} setIsLoggedIn - setState function for isloggedIn
-   * @prop {boolean} isloggedIn - Boolean that determines if user is logged in
-   * */
-  const exportPopUp = props.exportPopUp;
-  const setExportPopUp = props.setExportPopUp;
-  const authorizedUserOcto = props.authorizedUserOcto;
+function LoginMode({
+  tryLogin,
+  authorizedUserOcto,
+  exportPopUp,
+  setExportPopUp,
+}) {
   const pageDict = { 0: null };
   const [projectToShow, setProjectsToShow] = useState("recents");
 
-  var currentUser = GlobalVariables.currentUser;
-
   let popUpContent;
-  if (exportPopUp && props.authorizedUserOcto) {
+  if (exportPopUp && authorizedUserOcto) {
     popUpContent = (
       <NewProjectPopUp
-        setExportPopUp={setExportPopUp}
-        authorizedUserOcto={authorizedUserOcto}
-        exporting={false}
+        {...{ setExportPopUp, authorizedUserOcto, exporting: false }}
       />
     );
-  } else if (props.authorizedUserOcto) {
+  } else if (authorizedUserOcto) {
     popUpContent = (
       <ShowProjects
-        projectToShow={projectToShow}
-        setExportPopUp={setExportPopUp}
-        setProjectsToShow={setProjectsToShow}
-        user={currentUser}
-        authorizedUserOcto={authorizedUserOcto}
-        pageDict={pageDict}
+        {...{
+          projectToShow,
+          setExportPopUp,
+          setProjectsToShow,
+          user: GlobalVariables.currentUser,
+          authorizedUserOcto,
+          pageDict,
+        }}
       />
     );
   } else {
-    popUpContent = <InitialLog tryLogin={props.tryLogin} />;
+    popUpContent = <InitialLog {...{ tryLogin }} />;
   }
   return (
     <div

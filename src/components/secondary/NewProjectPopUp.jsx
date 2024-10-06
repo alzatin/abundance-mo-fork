@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { licenses } from "../../js/licenseOptions.js";
 import GlobalVariables from "../../js/globalvariables.js";
 import Molecule from "../../molecules/molecule.js";
@@ -7,7 +7,7 @@ import CreatableSelect from "react-select/creatable";
 import topics from "../../js/maslowTopics.js";
 import { re } from "mathjs";
 //Replaces the loaded projects if the user clicks on new project button
-const NewProjectPopUp = (props) => {
+const NewProjectPopUp = ({ setExportPopUp, authorizedUserOcto, exporting }) => {
   /**
    * The name of the current user.
    * @type {string}
@@ -35,9 +35,6 @@ const NewProjectPopUp = (props) => {
    * The authorized user octokit object.
    * @type {object}
    */
-  const authorizedUserOcto = props.authorizedUserOcto;
-  const setExportPopUp = props.setExportPopUp;
-  const exporting = props.exporting;
 
   const keys_ar = [];
   Object.keys(licenses).forEach((key) => {

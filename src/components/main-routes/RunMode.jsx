@@ -43,23 +43,25 @@ function useWindowSize() {
   return windowSize;
 }
 
-function runMode(props) {
+function runMode({
+  setActiveAtom,
+  activeAtom,
+  authorizedUserOcto,
+  tryLogin,
+  loadProject,
+  mesh,
+  wireMesh,
+  outdatedMesh,
+  setOutdatedMesh,
+}) {
   // canvas to hide
   const canvasRef = useRef(500);
 
-  let mesh = props.displayProps.mesh;
-  let wireMesh = props.displayProps.wireMesh;
-
-  const [gridParamRun, setGridRun] = useState(true);
-  const [axesParamRun, setAxesRun] = useState(true);
+  const [gridParam, setGrid] = useState(true);
+  const [axesParam, setAxes] = useState(true);
   const [isItOwned, setOwned] = useState(false);
   const [wireParam, setWire] = useState(true);
   const [solidParam, setSolid] = useState(true);
-
-  const authorizedUserOcto = props.props.authorizedUserOcto;
-  const setActiveAtom = props.props.setActiveAtom;
-  const activeAtom = props.props.activeAtom;
-  const tryLogin = props.props.tryLogin;
 
   const windowSize = useWindowSize();
 
@@ -97,13 +99,13 @@ function runMode(props) {
             atomType: "Molecule",
           });
           GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-          props.props.loadProject(GlobalVariables.currentRepo);
+          loadProject(GlobalVariables.currentRepo);
         }
       });
 
     if (
       GlobalVariables.currentRepo &&
-      GlobalVariables.currentRepo.owner.login == globalvariables.currentUser
+      GlobalVariables.currentRepo.owner == globalvariables.currentUser
     ) {
       setOwned(true);
     }
@@ -117,27 +119,22 @@ function runMode(props) {
         id="flow-canvas"
         tabIndex={0}
       ></canvas>
-      <ToggleRunCreate
-        run={true}
-        authorizedUserOcto={authorizedUserOcto}
-        isItOwned={isItOwned}
-      />
+      <ToggleRunCreate {...{ run: true, isItOwned }} />
+
       {activeAtom ? (
         <ParamsEditor
-          run={true}
-          setActiveAtom={setActiveAtom}
-          activeAtom={activeAtom}
-          setGrid={setGridRun}
-          setAxes={setAxesRun}
-          setWire={setWire}
-          setSolid={setSolid}
+          {...{
+            run: true,
+            activeAtom,
+            setActiveAtom,
+            setGrid,
+            setAxes,
+            setWire,
+            setSolid,
+          }}
         />
       ) : null}
-      <RunNavigation
-        authorizedUserOcto={authorizedUserOcto}
-        tryLogin={tryLogin}
-        activeAtom={activeAtom}
-      />
+      <RunNavigation {...{ authorizedUserOcto, tryLogin, activeAtom }} />
       {globalvariables.currentRepo ? (
         <div className="info_run_div">
           <p>{"Project Name: " + globalvariables.currentRepo.repoName}</p>
@@ -160,17 +157,11 @@ function runMode(props) {
             }}
           >
             {wireMesh ? (
-              <ThreeContext
-                gridParam={gridParamRun}
-                axesParam={axesParamRun}
-                outdatedMesh={props.displayProps.outdatedMesh}
-              >
+              <ThreeContext {...{ gridParam, axesParam, outdatedMesh }}>
                 {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
 
                 <ReplicadMesh
-                  mesh={mesh}
-                  isSolid={solidParam}
-                  setOutdatedMesh={props.displayProps.setOutdatedMesh}
+                  {...{ mesh, isSolid: solidParam, setOutdatedMesh }}
                 />
               </ThreeContext>
             ) : (

@@ -71,13 +71,15 @@ export default class Equation extends Atom {
 
     GlobalVariables.c.beginPath();
     GlobalVariables.c.fillStyle = "#484848";
-    GlobalVariables.c.font = `${pixelsRadius / 1}px Work Sans Bold`;
+    GlobalVariables.c.font = `${pixelsRadius / 1.3}px Work Sans Bold`;
 
-    GlobalVariables.c.fillText(
-      "\u221A" + "(+)",
-      pixelsX - pixelsRadius / 1,
-      pixelsY + this.height / 2
-    );
+    const text = "\u221A" + "(+)";
+    const textHeight = pixelsRadius / 1.5;
+    const textWidth = GlobalVariables.c.measureText(text).width;
+    const textX = pixelsX - textWidth / 2;
+    const textY = pixelsY + this.height / 2 - textHeight / 2;
+    GlobalVariables.c.fillText(text, textX, textY);
+
     GlobalVariables.c.fill();
     GlobalVariables.c.closePath();
   }

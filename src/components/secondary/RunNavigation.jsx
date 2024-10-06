@@ -129,11 +129,10 @@ let exportSvg = (
   </svg>
 );
 
-function RunNavigation(props) {
+function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
   let [shareDialog, setShareDialog] = useState(false);
-  let [starred, setStarred] = useState(false);
+  let starred = false;
   let [dialogContent, setDialog] = useState("");
-  let authorizedUserOcto = props.authorizedUserOcto;
 
   var navigate = useNavigate();
 
@@ -160,11 +159,15 @@ function RunNavigation(props) {
         );
 
         if (isLiked) {
-          setStarred(true);
+          starred = true;
           document.getElementById("Star-button").style.backgroundColor = "gray";
+
           //should disable instead of just graying out
         } else {
-          setStarred(false);
+          console.log("not starred");
+          document.getElementById("Star-button").style.backgroundColor =
+            "white";
+          starred = false;
         }
       });
       if (GlobalVariables.currentRepo.owner === GlobalVariables.currentUser) {
@@ -178,8 +181,13 @@ function RunNavigation(props) {
   const likeProject = function () {
     var owner = GlobalVariables.currentRepo.owner;
     var repoName = GlobalVariables.currentRepo.repoName;
+    //disable button before api call so user can't click multiple times
+    starred = true;
+    document.getElementById("Star-button").disabled = true;
+    document.getElementById("Star-button").style.backgroundColor = "gray";
+    /*aws dynamo update-item lambda */
 
-    /*aws dynamo update-item lambda*/
+    // this adds a ranking point to the project but i think we should implement a timed function to add ranking points once we decide what the system will be
     const apiUpdateUrl =
       "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
     fetch(apiUpdateUrl, {
@@ -187,7 +195,7 @@ function RunNavigation(props) {
       body: JSON.stringify({
         owner: owner,
         repoName: repoName,
-        attributeUpdates: { ranking: 1, topics: ["testing_Aws"] },
+        attributeUpdates: { ranking: 1 },
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -201,13 +209,16 @@ function RunNavigation(props) {
         body: JSON.stringify({
           user: GlobalVariables.currentUser,
           attributeUpdates: { likedProjects: [`${owner}/${repoName}`] },
+          updateType: "SET",
         }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
       }).then((response) => {
-        setStarred(true);
-        document.getElementById("Star-button").style.backgroundColor = "gray";
+        console.log(response);
+        //reenable button after api call so user can unlike
+        console.log("added to liked projects");
+        document.getElementById("Star-button").disabled = false;
       });
     });
 
@@ -234,6 +245,34 @@ function RunNavigation(props) {
           console.log("unstarred");
         });
     }*/
+  };
+  const unlikeProject = function () {
+    var owner = GlobalVariables.currentRepo.owner;
+    var repoName = GlobalVariables.currentRepo.repoName;
+    //disable button before api call so user can't click multiple times
+    starred = false;
+    document.getElementById("Star-button").disabled = true;
+    document.getElementById("Star-button").style.backgroundColor = "white";
+
+    /*add item to your liked projects on aws*/
+    const apiUpdateUserUrl =
+      "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE";
+    fetch(apiUpdateUserUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        user: GlobalVariables.currentUser,
+        attributeUpdates: { likedProjects: [`${owner}/${repoName}`] },
+        updateType: "REMOVE",
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then((response) => {
+      console.log(response.json());
+      console.log("unliked");
+      //reenable button after api call so user can unlike
+      document.getElementById("Star-button").disabled = false;
+    });
   };
 
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
@@ -312,14 +351,14 @@ function RunNavigation(props) {
 
   /** Runs if star is clicked but there's no logged in user */
   const loginLike = function () {
-    props.tryLogin().then((result) => {
+    tryLogin().then((result) => {
       likeProject(result);
     });
   };
 
   /** Runs if fork is clicked but there's no logged in user */
   const loginFork = function () {
-    props.tryLogin().then((result) => {
+    tryLogin().then((result) => {
       forkProject(result);
     });
   };
@@ -328,9 +367,7 @@ function RunNavigation(props) {
     <>
       {shareDialog ? (
         <ShareDialog
-          setShareDialog={setShareDialog}
-          dialogContent={dialogContent}
-          activeAtom={props.activeAtom}
+          {...{ shareDialog, setShareDialog, dialogContent, activeAtom }}
         />
       ) : null}
       <div className="run-navigation">
@@ -357,7 +394,11 @@ function RunNavigation(props) {
           className=" run-navigation-button"
           id="Star-button"
           onClick={() => {
-            authorizedUserOcto ? likeProject(authorizedUserOcto) : loginLike();
+            authorizedUserOcto && !starred
+              ? likeProject(authorizedUserOcto)
+              : authorizedUserOcto && starred
+              ? unlikeProject(authorizedUserOcto)
+              : loginLike();
           }}
         >
           {starSvg}

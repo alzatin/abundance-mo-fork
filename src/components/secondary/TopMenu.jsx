@@ -4,12 +4,22 @@ import ShareDialog from "./ShareDialog.jsx";
 import { useNavigate } from "react-router-dom";
 import SettingsPopUp from "./SettingsPopUp.jsx";
 
-function TopMenu(props) {
-  let currentMoleculeTop = props.currentMoleculeTop;
+function TopMenu({
+  authorizedUserOcto,
+  savePopUp,
+  setSavePopUp,
+  saveProject,
+  setExportPopUp,
+  saveState,
+  setSaveState,
+  currentMoleculeTop,
+  activeAtom,
+  setActiveAtom,
+  setShortCuts,
+}) {
   let [shareDialog, setShareDialog] = useState(false);
   let [dialogContent, setDialog] = useState("");
   let [settingsPopUp, setSettingsPopUp] = useState(false);
-  let setShortCuts = props.setShortCuts;
 
   const navigate = useNavigate();
 
@@ -63,8 +73,8 @@ function TopMenu(props) {
     {
       id: "Save Project",
       buttonFunc: () => {
-        props.setSavePopUp(true);
-        props.saveProject(props.setSaveState);
+        setSavePopUp(true);
+        saveProject(setSaveState);
       },
     },
     {
@@ -98,7 +108,7 @@ function TopMenu(props) {
        */
       id: "ExportGit",
       buttonFunc: () => {
-        props.setExportPopUp(true);
+        setExportPopUp(true);
       },
     },
     {
@@ -123,7 +133,7 @@ function TopMenu(props) {
           className="nav-bar go-up-button menu-nav-button"
           onClick={() => {
             GlobalVariables.currentMolecule.goToParentMolecule();
-            props.setActiveAtom(GlobalVariables.currentMolecule);
+            setActiveAtom(GlobalVariables.currentMolecule);
           }}
         >
           <img
@@ -137,12 +147,12 @@ function TopMenu(props) {
     );
   };
 
-  const SaveBar = (props) => {
-    if (props.saveState === 100) {
+  const SaveBar = ({ saveState, savePopUp, setSavePopUp }) => {
+    if (saveState === 100) {
       // delay and then set savepopupstate to false
       var delayInMilliseconds = 2000; //1 second
       setTimeout(function () {
-        props.setSavePopUp(false);
+        setSavePopUp(false);
       }, delayInMilliseconds);
     }
     return (
@@ -152,11 +162,9 @@ function TopMenu(props) {
             <div
               className="progress-done"
               data-done="70"
-              style={{ width: props.saveState + "%", opacity: "1" }}
+              style={{ width: saveState + "%", opacity: "1" }}
             >
-              {props.saveState !== 100
-                ? props.saveState + "%"
-                : "Project Saved!"}
+              {saveState !== 100 ? saveState + "%" : "Project Saved!"}
             </div>
           </div>
         </div>
@@ -165,7 +173,7 @@ function TopMenu(props) {
   };
 
   /*{nav bar toggle component}*/
-  const Navbar = (props) => {
+  const Navbar = ({ currentMoleculeTop }) => {
     const [navbarOpen, setNavbarOpen] = useState(false);
     const ref = useRef();
     useEffect(() => {
@@ -190,14 +198,14 @@ function TopMenu(props) {
             {navbarOpen ? (
               <img
                 className={`thumnail-logo nav-img ${
-                  !props.currentMoleculeTop ? " rotati-right" : ""
+                  !currentMoleculeTop ? " rotati-right" : ""
                 }`}
                 src={"/imgs/three-menu.svg"}
               />
             ) : (
               <img
                 className={`thumnail-logo nav-img  ${
-                  !props.currentMoleculeTop ? " rotati-plus " : "rotati"
+                  !currentMoleculeTop ? " rotati-plus " : "rotati"
                 }`}
                 src={"/imgs/three-menu.svg"}
               />
@@ -225,28 +233,19 @@ function TopMenu(props) {
 
   return (
     <>
-      {props.savePopUp ? (
-        <SaveBar
-          saveState={props.saveState}
-          savePopUp={props.savePopUp}
-          setSavePopUp={props.setSavePopUp}
-        />
+      {savePopUp ? (
+        <SaveBar {...{ saveState, savePopUp, setSavePopUp }} />
       ) : null}
       {settingsPopUp ? (
-        <SettingsPopUp
-          setSettingsPopUp={setSettingsPopUp}
-          setShortCuts={setShortCuts}
-        />
+        <SettingsPopUp {...{ settingsPopUp, setSettingsPopUp }} />
       ) : null}
       {shareDialog ? (
         <ShareDialog
-          setShareDialog={setShareDialog}
-          dialogContent={dialogContent}
-          activeAtom={props.activeAtom}
+          {...{ shareDialog, setShareDialog, dialogContent, activeAtom }}
         />
       ) : null}
       {currentMoleculeTop ? <TopLevel /> : null}
-      <Navbar currentMoleculeTop={currentMoleculeTop} />
+      <Navbar {...{ currentMoleculeTop }} />
     </>
   );
 }

@@ -18,13 +18,18 @@ window.addEventListener(
   false
 );
 
-export default memo(function FlowCanvas(props) {
-  //Todo this is not very clean
-  let loadProject = props.props.loadProject;
-  let activeAtom = props.props.activeAtom;
-  let setActiveAtom = props.props.setActiveAtom;
-  let shortCuts = props.props.shortCuts;
-
+export default memo(function FlowCanvas({
+  activeAtom,
+  loadProject,
+  setActiveAtom,
+  setSavePopUp,
+  setSaveState,
+  setTop,
+  shortCuts,
+  setMesh,
+  cad,
+  setWireMesh,
+}) {
   /** State for github molecule search input */
   const [searchingGitHub, setSearchingGitHub] = useState(false);
 
@@ -307,10 +312,7 @@ export default memo(function FlowCanvas(props) {
       </div>
       <div>
         <div id="circle-menu1" className="cn-menu1" ref={circleMenu}></div>
-        <GitSearch
-          searchingGitHub={searchingGitHub}
-          setSearchingGitHub={setSearchingGitHub}
-        />
+        <GitSearch {...{ searchingGitHub, setSearchingGitHub }} />
       </div>
     </>
   );
