@@ -172,7 +172,7 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           GlobalVariables.currentRepo = node;
         }}
       >
-        {node.topics.includes("abundance-tool") ? (
+        {node.topics && node.topics.includes("abundance-tool") ? (
           <h2
             style={{
               float: "right",
