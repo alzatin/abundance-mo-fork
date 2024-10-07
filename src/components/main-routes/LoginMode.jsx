@@ -172,7 +172,7 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           GlobalVariables.currentRepo = node;
         }}
       >
-        {node.topics.includes("abundance-tool") ? (
+        {node.topics && node.topics.includes("abundance-tool") ? (
           <h2
             style={{
               float: "right",
@@ -409,6 +409,7 @@ const ShowProjects = ({
         });
     };
     const repoSearchRequest = async () => {
+      setStateLoaded([]); /*sets loading while fetching*/
       pageDict[pageNumber] = lastKey;
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner

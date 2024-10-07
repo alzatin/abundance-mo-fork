@@ -5,6 +5,7 @@ import {
   ScanCommand,
   DeleteCommand,
   PutCommand,
+  GetCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
@@ -13,20 +14,20 @@ const dynamo = DynamoDBDocumentClient.from(client);
 const date = new Date();
 const today = date.toISOString();
 
-console.log(today);
-
 const tableName = "abundance-projects";
+const recentlyDeletedTable = "recently-deleted-abundance";
 
 export const handler = async (event, context) => {
   const octokit = new Octokit();
 
   /*Scans parameter to returns attributes owner, repoName, fork from all repositories in table*/
   const command = new ScanCommand({
-    ProjectionExpression: "#ow, #repoName, #forks",
+    ProjectionExpression: "#ow, #repoName, #forks, #lastFoundGit",
     ExpressionAttributeNames: {
       "#ow": "owner",
       "#repoName": "repoName",
       "#forks": "forks",
+      "#lastFoundGit": "lastFoundGit",
     },
     TableName: tableName,
   });
@@ -36,7 +37,6 @@ export const handler = async (event, context) => {
   var items = [];
 
   const scanExecute = async () => {
-    console.log("Scanning table");
     try {
       let result;
       do {
@@ -51,10 +51,14 @@ export const handler = async (event, context) => {
   };
 
   items = await scanExecute();
-  console.log(items.length);
 
   let promises = items.map((repo) => {
-    return checkGithub(repo.owner, repo.repoName, repo.forks);
+    return checkGithub(
+      repo.owner,
+      repo.repoName,
+      repo.forks,
+      repo.lastFoundGit
+    );
   });
 
   await Promise.all(promises).then((results) => {
@@ -66,7 +70,6 @@ export const handler = async (event, context) => {
   });
 
   async function checkUpdate(owner, repoName, forks, githubForks) {
-    console.log(repoName + "in check update");
     const input = {
       ExpressionAttributeValues: {
         ":forks": githubForks,
@@ -83,7 +86,6 @@ export const handler = async (event, context) => {
     const command = new UpdateCommand(input);
     try {
       const response = await dynamo.send(command);
-      console.log("Updated item " + owner + "/" + repoName);
       return response;
     } catch (error) {
       console.error(error);
@@ -92,42 +94,75 @@ export const handler = async (event, context) => {
   }
 
   /* Makes request to github to check if repo exists, if it doesn't deletes from table, it it does updates in table*/
-  async function checkGithub(owner, repoName, forks) {
+  async function checkGithub(owner, repoName, forks, lastFoundGit) {
     return octokit.rest.repos
       .get({
         owner: owner,
         repo: repoName,
       })
       .then((response) => {
-        console.log(repoName);
         return checkUpdate(
           owner,
           repoName,
           forks,
           response.data.forks_count
         ).then((response) => {
-          console.log("Check update ran");
           return response;
         });
       })
       .catch((error) => {
-        console.log(`${repoName} was not found in github, deleting disabled`);
-        //deleteFromTable(owner, repoName);
-        //remove from table
+        console.log(`${repoName} was not found in github`);
+        //when was the last time it was found, compare times
+
+        let currentTime = new Date();
+        let expireTime = new Date(lastFoundGit);
+
+        let minutes = (expireTime - currentTime) / (1000 * 60);
+        let days = minutes / 1440;
+        //remove from table if you haven't found in 3 days
+        if (days < -3.5) {
+          deleteFromTable(owner, repoName);
+        }
       });
   }
   /*Removes non existent repos from table */
   async function deleteFromTable(owner, repoName) {
-    const params = {
+    pushingToRecentlyDeletedTable(owner, repoName)
+      .then(async () => {
+        const params = {
+          TableName: tableName,
+          Key: {
+            owner: owner,
+            repoName: repoName,
+          },
+        };
+        const command = new DeleteCommand(params);
+        console.log("deleting item" + owner + "/" + repoName);
+        return await dynamo.send(command);
+      })
+      .catch((error) => {
+        console.error(error);
+        throw error; // re-throw the error
+      });
+  }
+  async function pushingToRecentlyDeletedTable(owner, repoName) {
+    // push to recently deleted table
+    const params2 = {
       TableName: tableName,
       Key: {
         owner: owner,
         repoName: repoName,
       },
     };
-    const command = new DeleteCommand(params);
+    const getCommand = new GetCommand(params2);
+    const responseGet = await dynamo.send(getCommand); //delete from abundance-projects table
+    responseGet.Item["deletedAt"] = today;
 
-    const response1 = await dynamo.send(command);
-    console.log("deleting item" + owner + "/" + repoName);
+    const commandPut = new PutCommand({
+      TableName: "recently-deleted-abundance",
+      Item: responseGet.Item,
+    });
+    const responsePut = await dynamo.send(commandPut);
+    return responsePut;
   }
 };
