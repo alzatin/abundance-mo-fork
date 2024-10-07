@@ -493,8 +493,8 @@ const ShowProjects = ({
         }
       })
       .catch((err) => {
-        window.alert(
-          "Error loading projects. Please wait a few minutes then try again."
+        alert(
+          "Error loading projects from database. Please try again later. " + err
         );
       });
   }, [searchBarValue, pageNumber, projectToShow]);
