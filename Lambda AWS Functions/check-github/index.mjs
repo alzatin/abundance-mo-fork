@@ -127,18 +127,23 @@ export const handler = async (event, context) => {
   }
   /*Removes non existent repos from table */
   async function deleteFromTable(owner, repoName) {
-    pushingToRecentlyDeletedTable(owner, repoName).then(async () => {
-      const params = {
-        TableName: tableName,
-        Key: {
-          owner: owner,
-          repoName: repoName,
-        },
-      };
-      const command = new DeleteCommand(params);
-      console.log("deleting item" + owner + "/" + repoName);
-      return await dynamo.send(command);
-    });
+    pushingToRecentlyDeletedTable(owner, repoName)
+      .then(async () => {
+        const params = {
+          TableName: tableName,
+          Key: {
+            owner: owner,
+            repoName: repoName,
+          },
+        };
+        const command = new DeleteCommand(params);
+        console.log("deleting item" + owner + "/" + repoName);
+        return await dynamo.send(command);
+      })
+      .catch((error) => {
+        console.error(error);
+        throw error; // re-throw the error
+      });
   }
   async function pushingToRecentlyDeletedTable(owner, repoName) {
     // push to recently deleted table
