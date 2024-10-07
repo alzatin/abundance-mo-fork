@@ -304,6 +304,7 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
             let forkedNodeBody = {
               owner: GlobalVariables.currentUser,
               ranking: result.data.stargazers_count,
+              description: result.data.description,
               searchField: searchField,
               repoName: result.data.name,
               forks: 0,
@@ -338,7 +339,7 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
                 "Content-type": "application/json; charset=UTF-8",
               },
             }).then((response) => {
-              console.log(response);
+              console.log(response.json());
               GlobalVariables.currentRepo = forkedNodeBody;
               navigate(
                 `/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
