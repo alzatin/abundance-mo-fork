@@ -48,6 +48,7 @@ export default function ReplicadApp() {
   );
 
   useEffect(() => {
+    console.log("useEffect  in top levelrunning");
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
       setOutdatedMesh(true);
@@ -71,7 +72,7 @@ export default function ReplicadApp() {
     };
 
     GlobalVariables.cad = cad;
-  });
+  }, [activeAtom]);
 
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
