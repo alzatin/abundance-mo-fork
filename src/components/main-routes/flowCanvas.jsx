@@ -3,6 +3,7 @@ import GlobalVariables from "../../js/globalvariables.js";
 import Molecule from "../../molecules/molecule.js";
 import { createCMenu, cmenu } from "../../js/NewMenu.js";
 import GitSearch from "../secondary/GitSearch.jsx";
+import { useNavigate } from "react-router-dom";
 
 function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
@@ -35,6 +36,7 @@ export default memo(function FlowCanvas({
 
   const canvasRef = useRef(null);
   const circleMenu = useRef(null);
+  const navigate = useNavigate();
 
   // On component mount create a new top level molecule before project load
   useEffect(() => {
@@ -55,7 +57,9 @@ export default memo(function FlowCanvas({
       });
       GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
 
-      loadProject(GlobalVariables.currentRepo);
+      loadProject(GlobalVariables.currentRepo).catch((error) => {
+        navigate("/");
+      });
     }
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
       atom.update();

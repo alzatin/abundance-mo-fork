@@ -6,6 +6,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useNavigate,
 } from "react-router-dom";
 
 import { wrap } from "comlink";
@@ -28,7 +29,6 @@ import "./styles//codemirror.css";
 var authorizedUserOcto = null;
 
 const cad = wrap(new cadWorker());
-
 export default function ReplicadApp() {
   const [size, setSize] = useState(5);
   const [mesh, setMesh] = useState({});
@@ -118,7 +118,7 @@ export default function ReplicadApp() {
 
     var octokit = new Octokit();
 
-    octokit
+    return octokit
       .request("GET /repos/{owner}/{repo}/contents/project.abundance", {
         owner: project.owner,
         repo: project.repoName,
@@ -137,6 +137,10 @@ export default function ReplicadApp() {
         }
         setActiveAtom(GlobalVariables.currentMolecule);
         GlobalVariables.currentMolecule.selected = true;
+      })
+      .catch((e) => {
+        alert("Can't load/find project " + e);
+        throw new Error("Can't load/find project " + e);
       });
   };
 

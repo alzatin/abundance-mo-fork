@@ -10,6 +10,10 @@ import {
 
 const client = new DynamoDBClient({});
 const dynamo = DynamoDBDocumentClient.from(client);
+const date = new Date();
+const today = date.toISOString();
+
+console.log(today);
 
 const tableName = "abundance-projects";
 
@@ -32,6 +36,7 @@ export const handler = async (event, context) => {
   var items = [];
 
   const scanExecute = async () => {
+    console.log("Scanning table");
     try {
       let result;
       do {
@@ -46,6 +51,7 @@ export const handler = async (event, context) => {
   };
 
   items = await scanExecute();
+  console.log(items.length);
 
   let promises = items.map((repo) => {
     return checkGithub(repo.owner, repo.repoName, repo.forks);
@@ -60,57 +66,54 @@ export const handler = async (event, context) => {
   });
 
   async function checkUpdate(owner, repoName, forks, githubForks) {
-    if (forks !== githubForks) {
-      console.log("updating forks");
-      const input = {
-        ExpressionAttributeNames: {
-          "#forks": "forks",
-        },
-        ExpressionAttributeValues: {
-          ":forks": githubForks,
-        },
-        ReturnValues: "ALL_NEW",
-        TableName: "abundance-projects",
-        UpdateExpression: "SET #forks = :forks",
-        Key: {
-          owner: owner,
-          repoName: repoName,
-        },
-      };
-      const command = new UpdateCommand(input);
-      dynamo
-        .send(command)
-        .then((response) => {
-          console.log("Updated item " + owner + "/" + repoName);
-          return response;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    console.log(repoName + "in check update");
+    const input = {
+      ExpressionAttributeValues: {
+        ":forks": githubForks,
+        ":lastFoundGit": today,
+      },
+      ReturnValues: "ALL_NEW",
+      TableName: "abundance-projects",
+      UpdateExpression: "SET lastFoundGit = :lastFoundGit,  forks = :forks",
+      Key: {
+        owner: owner,
+        repoName: repoName,
+      },
+    };
+    const command = new UpdateCommand(input);
+    try {
+      const response = await dynamo.send(command);
+      console.log("Updated item " + owner + "/" + repoName);
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error; // re-throw the error
     }
   }
 
   /* Makes request to github to check if repo exists, if it doesn't deletes from table, it it does updates in table*/
   async function checkGithub(owner, repoName, forks) {
-    await octokit.rest.repos
+    return octokit.rest.repos
       .get({
         owner: owner,
         repo: repoName,
       })
       .then((response) => {
-        //console.log(repoName);
-        checkUpdate(owner, repoName, forks, response.data.forks_count).then(
-          (response) => {
-            console.log("Check update ran");
-            return response;
-          }
-        );
+        console.log(repoName);
+        return checkUpdate(
+          owner,
+          repoName,
+          forks,
+          response.data.forks_count
+        ).then((response) => {
+          console.log("Check update ran");
+          return response;
+        });
       })
       .catch((error) => {
-        console.log(`${repoName} does not exist`);
-        deleteFromTable(owner, repoName);
+        console.log(`${repoName} was not found in github, deleting disabled`);
+        //deleteFromTable(owner, repoName);
         //remove from table
-        return;
       });
   }
   /*Removes non existent repos from table */

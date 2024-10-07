@@ -331,6 +331,7 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
                 result.data.name +
                 "/master/project.svg?sanitize=true",
               dateCreated: result.data.created_at,
+              html_url: result.data.html_url,
             };
             fetch(apiUrl, {
               method: "POST",
