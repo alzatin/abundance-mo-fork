@@ -409,6 +409,7 @@ const ShowProjects = ({
         });
     };
     const repoSearchRequest = async () => {
+      setStateLoaded([]); /*sets loading while fetching*/
       pageDict[pageNumber] = lastKey;
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
