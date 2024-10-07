@@ -1422,8 +1422,15 @@ async function generateDefaultMesh(id) {
   return defaultMesh;
 }
 
+function resetView() {
+  return started.then(() => {
+    return [];
+  });
+}
+
 function generateDisplayMesh(id) {
   return started.then(() => {
+    console.log("Generating display mesh for " + id);
     if (library[id] == undefined) {
       generateDefaultMesh(id).then((result) => {
         console.log(result);
@@ -1509,4 +1516,5 @@ expose({
   assembly,
   loftShapes,
   text,
+  resetView,
 });

@@ -41,6 +41,10 @@ export default memo(function FlowCanvas({
       GlobalVariables.currentRepo.repoName !==
         GlobalVariables.loadedRepo.repoName
     ) {
+      GlobalVariables.writeToDisplay(
+        GlobalVariables.currentRepo.topMoleculeID,
+        true
+      );
       //Load a blank project
       GlobalVariables.topLevelMolecule = new Molecule({
         x: 0,

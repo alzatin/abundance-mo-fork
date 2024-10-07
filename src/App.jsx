@@ -52,23 +52,35 @@ export default function ReplicadApp() {
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
       setOutdatedMesh(true);
-
-      cad
-        .generateDisplayMesh(id)
-        .then((m) => {
-          setMesh(m);
-          setOutdatedMesh(false);
-        })
-        .catch((e) => {
-          console.error("Can't display Mesh " + e);
-        });
-      // if something is connected to the output, set a wireframe mesh
-      cad
-        .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
-        .then((w) => setWireMesh(w))
-        .catch((e) => {
-          console.error("Can't comput Wireframe/No output " + e);
-        });
+      if (resetView) {
+        cad
+          .resetView()
+          .then((m) => {
+            setMesh(m);
+            setWireMesh(m);
+            setOutdatedMesh(false);
+          })
+          .catch((e) => {
+            console.error("reset view not working" + e);
+          });
+      } else {
+        cad
+          .generateDisplayMesh(id)
+          .then((m) => {
+            setMesh(m);
+            setOutdatedMesh(false);
+          })
+          .catch((e) => {
+            console.error("Can't display Mesh " + e);
+          });
+        // if something is connected to the output, set a wireframe mesh
+        cad
+          .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
+          .then((w) => setWireMesh(w))
+          .catch((e) => {
+            console.error("Can't comput Wireframe/No output " + e);
+          });
+      }
     };
 
     GlobalVariables.cad = cad;
