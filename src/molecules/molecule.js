@@ -209,7 +209,7 @@ export default class Molecule extends Atom {
       });
     }
 
-    if (GlobalVariables.currentRepo.parentRepo != null) {
+    if (GlobalVariables.currentRepo.parentRepo != null && this.topLevel) {
       inputParams["Reload from Github"] = button(() => {
         //Future compare to main branch
         this.reloadFork();

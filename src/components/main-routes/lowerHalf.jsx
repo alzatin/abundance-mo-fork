@@ -35,7 +35,6 @@ export default memo(function LowerHalf({
   axesParam,
   wireParam,
   solidParam,
-  setSaveState,
   mesh,
   wireMesh,
   outdatedMesh,

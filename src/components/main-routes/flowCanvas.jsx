@@ -20,16 +20,9 @@ window.addEventListener(
 );
 
 export default memo(function FlowCanvas({
-  activeAtom,
   loadProject,
   setActiveAtom,
-  setSavePopUp,
-  setSaveState,
-  setTop,
   shortCuts,
-  setMesh,
-  cad,
-  setWireMesh,
 }) {
   /** State for github molecule search input */
   const [searchingGitHub, setSearchingGitHub] = useState(false);
