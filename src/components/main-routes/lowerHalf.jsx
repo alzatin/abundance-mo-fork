@@ -41,7 +41,7 @@ export default memo(function LowerHalf({
   setOutdatedMesh,
 }) {
   const windowSize = useWindowSize();
-
+  console.log(mesh);
   return (
     <>
       <div
