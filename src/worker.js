@@ -1428,6 +1428,74 @@ function resetView() {
   });
 }
 
+function getLargestBoundingBox(meshArray) {
+  let overallMin = [Infinity, Infinity, Infinity];
+  let overallMax = [-Infinity, -Infinity, -Infinity];
+
+  meshArray.forEach((mesh) => {
+    let boundingBox = mesh.geometry.boundingBox.bounds;
+    let min = boundingBox[0];
+    let max = boundingBox[1];
+
+    // Update overall minimum coordinates
+    overallMin[0] = Math.min(overallMin[0], min[0]);
+    overallMin[1] = Math.min(overallMin[1], min[1]);
+    overallMin[2] = Math.min(overallMin[2], min[2]);
+
+    // Update overall maximum coordinates
+    overallMax[0] = Math.max(overallMax[0], max[0]);
+    overallMax[1] = Math.max(overallMax[1], max[1]);
+    overallMax[2] = Math.max(overallMax[2], max[2]);
+  });
+
+  // Create a new bounding box with the overall min and max coordinates
+  let newBoundingBox = [overallMin, overallMax];
+
+  // Calculate the width, height, and depth
+  let width = overallMax[0] - overallMin[0];
+  let height = overallMax[1] - overallMin[1];
+  let depth = overallMax[2] - overallMin[2];
+
+  // Return the dimensions as a 3-point vector
+  return { width, height, depth };
+
+  //return newBoundingBox;
+}
+
+function calculateZoom(boundingBox) {
+  // Given example bounding box and zoom level
+  const exampleBoundingBox = {
+    width: 312.0005000624958,
+    height: 312.00074999364347,
+    depth: 432.0009977339615,
+  };
+  const exampleZoom = 0.5;
+
+  // Calculate the diagonal length of the given example bounding box
+  const exampleDiagonal = Math.sqrt(
+    Math.pow(exampleBoundingBox.width, 2) +
+      Math.pow(exampleBoundingBox.height, 2) +
+      Math.pow(exampleBoundingBox.depth, 2)
+  );
+
+  // Calculate the diagonal length of the input bounding box
+  const diagonal = Math.sqrt(
+    Math.pow(boundingBox.width, 2) +
+      Math.pow(boundingBox.height, 2) +
+      Math.pow(boundingBox.depth, 2)
+  );
+
+  // Calculate the zoom level based on the proportional relationship
+  const zoom = (exampleZoom * exampleDiagonal) / diagonal;
+  return zoom;
+}
+
+function generateCameraPosition(meshArray) {
+  let largestBoundingBox = getLargestBoundingBox(meshArray);
+  let zoom = calculateZoom(largestBoundingBox);
+  return zoom;
+}
+
 function generateDisplayMesh(id) {
   return started.then(() => {
     console.log("Generating display mesh for " + id);
@@ -1457,6 +1525,7 @@ function generateDisplayMesh(id) {
       });
     });
 
+    let cameraZoom = generateCameraPosition(meshArray);
     let finalMeshes = [];
     //Iterate through the meshArray and create final meshes with faces, edges and color to pass to display
     meshArray.forEach((meshgeometry) => {
@@ -1472,6 +1541,7 @@ function generateDisplayMesh(id) {
         };
       } else {
         finalMeshes.push({
+          cameraZoom: cameraZoom,
           faces: meshgeometry.geometry.mesh(),
           edges: meshgeometry.geometry.meshEdges(),
           color: meshgeometry.color,

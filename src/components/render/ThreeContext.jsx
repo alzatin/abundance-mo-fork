@@ -22,19 +22,8 @@ export default function ext({ children, ...props }) {
   const dpr = Math.min(window.devicePixelRatio, 2);
 
   let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
-
-  const gridConfig = {
-    cellSize: { value: 1, min: 0, max: 10, step: 0.1 },
-    cellThickness: { value: 3, min: 0, max: 5, step: 0.1 },
-    cellColor: "#9d4b4b",
-    sectionSize: { value: 10, min: 0, max: 10, step: 0.1 },
-    sectionThickness: { value: 1.5, min: 0, max: 5, step: 0.1 },
-    sectionColor: "#9d4b4b",
-    fadeDistance: { value: 100, min: 0, max: 100, step: 1 },
-    fadeStrength: { value: 1, min: 0, max: 1, step: 0.1 },
-    followCamera: false,
-    infiniteGrid: true,
-  };
+  let cameraZoom = props.mesh[0] ? props.mesh[0].cameraZoom : 1;
+  console.log("zoom", cameraZoom);
 
   return (
     <Suspense fallback={null}>
@@ -44,22 +33,29 @@ export default function ext({ children, ...props }) {
           backgroundColor: backColor,
         }}
         dpr={dpr}
-        frameloop="always"
+        frameloop="demand"
         orthographic={true}
         camera={{
+          makeDefault: true,
           near: 0.1,
-          far: 5000,
-          position: [800, 800, 1000],
+          far: 9000,
+          zoom: cameraZoom,
+          position: [3000, 3000, 5000],
         }}
         shadows={true}
       >
         <PivotControls />
         {props.gridParam ? (
           <Grid
-            position={[0, -0.5, 0]}
-            args={[50, 50]}
-            cellColor="#BFA301"
-            sectionColor="#BFA301"
+            position={[0, 0, 0]}
+            args={[10000, 10000]}
+            cellColor={"#b6aebf"}
+            fadeFrom={0}
+            sectionColor={"#BFA301"}
+            fadeDistance={5000}
+            rotation={[Math.PI / 2, 0, 0]}
+            cellSize={10}
+            sectionSize={50}
           />
         ) : null}
         {/*props.gridParam ? <InfiniteGrid /> : null*/}

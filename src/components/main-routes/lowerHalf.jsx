@@ -41,7 +41,6 @@ export default memo(function LowerHalf({
   setOutdatedMesh,
 }) {
   const windowSize = useWindowSize();
-  console.log(mesh);
   return (
     <>
       <div
@@ -59,7 +58,7 @@ export default memo(function LowerHalf({
           }}
         >
           {wireMesh ? (
-            <ThreeContext {...{ gridParam, axesParam, outdatedMesh }}>
+            <ThreeContext {...{ mesh, gridParam, axesParam, outdatedMesh }}>
               {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
               <ReplicadMesh
                 {...{ mesh, isSolid: solidParam, setOutdatedMesh }}
