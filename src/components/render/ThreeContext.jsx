@@ -2,7 +2,6 @@ import React, { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Wireframe, Grid, PivotControls } from "@react-three/drei";
 import * as THREE from "three";
-import InfiniteGrid from "./InfiniteGrid.jsx";
 import Controls from "./ThreeControls.jsx";
 
 // We change the default orientation - threejs tends to use Y are the height,
@@ -10,14 +9,6 @@ import Controls from "./ThreeControls.jsx";
 
 THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
 
-// This is the basics to render a nice looking model user react-three-fiber
-//
-// The camera is positioned for the model we present (that cannot change size.
-// You might need to adjust this with something like the autoadjust from the
-// `Stage` component of `drei`
-//
-// Depending on your needs I would advice not using a light and relying on
-// a matcap material instead of the meshStandardMaterial used here.
 export default function ext({ children, ...props }) {
   const dpr = Math.min(window.devicePixelRatio, 2);
 
@@ -33,29 +24,31 @@ export default function ext({ children, ...props }) {
           backgroundColor: backColor,
         }}
         dpr={dpr}
-        frameloop="demand"
+        frameloop="always"
         orthographic={true}
         camera={{
           makeDefault: true,
           near: 0.1,
+          pov: 1000,
           far: 9000,
-          zoom: cameraZoom,
+          zoom: cameraZoom, // This is how we position the camera to be closer to the model. Right now it's not adjusting
           position: [3000, 3000, 5000],
         }}
         shadows={true}
       >
-        <PivotControls />
+        {/** Pivot should probably be scaled up when we figure out zoom */}
+        <PivotControls scale={3} />
         {props.gridParam ? (
           <Grid
             position={[0, 0, 0]}
+            cellSize={10} // The size of the grid cell, might also want to adjust this based on zoom
             args={[10000, 10000]}
             cellColor={"#b6aebf"}
             fadeFrom={0}
             sectionColor={"#BFA301"}
             fadeDistance={5000}
             rotation={[Math.PI / 2, 0, 0]}
-            cellSize={10}
-            sectionSize={50}
+            sectionSize={100}
           />
         ) : null}
         {/*props.gridParam ? <InfiniteGrid /> : null*/}

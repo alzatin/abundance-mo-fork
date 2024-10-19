@@ -110,7 +110,6 @@ export default React.memo(function ShapeMeshes({
                 strokeOpacity={0.5}
               />
             )}
-
             <lineSegments
               key={"lines" + m.color}
               geometry={m.lines}
