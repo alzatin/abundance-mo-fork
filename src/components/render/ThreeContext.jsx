@@ -21,6 +21,10 @@ export default function ext({ children, ...props }) {
   let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
   console.log("zoom", cameraZoom);
 
+  function PivotControl() {
+    let newScale = calculateInverseScale(cameraZoom);
+    return <PivotControls scale={newScale} />;
+  }
   function SceneCamera() {
     return (
       <OrthographicCamera
@@ -32,6 +36,11 @@ export default function ext({ children, ...props }) {
         position={[3000, 3000, 5000]}
       />
     );
+  }
+
+  function calculateInverseScale(zoom) {
+    const baseScale = 21; // The base scale value when zoom is 1
+    return baseScale / zoom;
   }
 
   return (
@@ -47,7 +56,7 @@ export default function ext({ children, ...props }) {
       >
         <SceneCamera />
         {/** Pivot should probably be scaled up when we figure out zoom */}
-        <PivotControls scale={3} />
+        <PivotControl />
         {props.gridParam ? (
           <Grid
             position={[0, 0, 0]}
