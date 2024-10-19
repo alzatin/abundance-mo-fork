@@ -1,6 +1,11 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Wireframe, Grid, PivotControls } from "@react-three/drei";
+import {
+  Wireframe,
+  Grid,
+  PivotControls,
+  OrthographicCamera,
+} from "@react-three/drei";
 import * as THREE from "three";
 import Controls from "./ThreeControls.jsx";
 
@@ -12,9 +17,22 @@ THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
 export default function ext({ children, ...props }) {
   const dpr = Math.min(window.devicePixelRatio, 2);
 
+  let cameraZoom = props.cameraZoom;
   let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
-  let cameraZoom = props.mesh[0] ? props.mesh[0].cameraZoom : 1;
   console.log("zoom", cameraZoom);
+
+  function SceneCamera() {
+    return (
+      <OrthographicCamera
+        makeDefault={true}
+        near={0.1}
+        pov={1000}
+        far={9000}
+        zoom={cameraZoom} // This is how we position the camera to be closer to the model. Right now it's not adjusting
+        position={[3000, 3000, 5000]}
+      />
+    );
+  }
 
   return (
     <Suspense fallback={null}>
@@ -25,17 +43,9 @@ export default function ext({ children, ...props }) {
         }}
         dpr={dpr}
         frameloop="always"
-        orthographic={true}
-        camera={{
-          makeDefault: true,
-          near: 0.1,
-          pov: 1000,
-          far: 9000,
-          zoom: cameraZoom, // This is how we position the camera to be closer to the model. Right now it's not adjusting
-          position: [3000, 3000, 5000],
-        }}
         shadows={true}
       >
+        <SceneCamera />
         {/** Pivot should probably be scaled up when we figure out zoom */}
         <PivotControls scale={3} />
         {props.gridParam ? (

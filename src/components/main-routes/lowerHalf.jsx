@@ -41,6 +41,12 @@ export default memo(function LowerHalf({
   setOutdatedMesh,
 }) {
   const windowSize = useWindowSize();
+  const [cameraZoom, setCameraZoom] = useState(1);
+
+  useEffect(() => {
+    setCameraZoom(mesh[0] ? mesh[0].cameraZoom : 1);
+  }, [mesh]);
+
   return (
     <>
       <div
@@ -58,7 +64,9 @@ export default memo(function LowerHalf({
           }}
         >
           {wireMesh ? (
-            <ThreeContext {...{ mesh, gridParam, axesParam, outdatedMesh }}>
+            <ThreeContext
+              {...{ cameraZoom, gridParam, axesParam, outdatedMesh }}
+            >
               {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
               <ReplicadMesh
                 {...{ mesh, isSolid: solidParam, setOutdatedMesh }}
