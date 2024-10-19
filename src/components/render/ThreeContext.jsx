@@ -19,7 +19,6 @@ export default function ext({ children, ...props }) {
 
   let cameraZoom = props.cameraZoom;
   let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
-  console.log("zoom", cameraZoom);
 
   function PivotControl() {
     let newScale = calculateInverseScale(cameraZoom);
