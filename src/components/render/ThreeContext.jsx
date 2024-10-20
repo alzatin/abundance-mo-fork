@@ -8,6 +8,8 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import Controls from "./ThreeControls.jsx";
+import globalvariables from "../../js/globalvariables.js";
+import { sec } from "mathjs";
 
 // We change the default orientation - threejs tends to use Y are the height,
 // while replicad uses Z. This is mostly a representation default.
@@ -41,6 +43,18 @@ export default function ext({ children, ...props }) {
     const baseScale = 21; // The base scale value when zoom is 1
     return baseScale / zoom;
   }
+  const projectUnit = globalvariables.topLevelMolecule
+    ? globalvariables.topLevelMolecule.unitsKey
+    : "MM";
+  let cellSize;
+  let sectionSize;
+  if (projectUnit == "MM") {
+    cellSize = 10;
+    sectionSize = 100;
+  } else if (projectUnit == "Inches") {
+    cellSize = 1;
+    sectionSize = 10;
+  }
 
   return (
     <Suspense fallback={null}>
@@ -59,14 +73,14 @@ export default function ext({ children, ...props }) {
         {props.gridParam ? (
           <Grid
             position={[0, 0, 0]}
-            cellSize={10} // The size of the grid cell, might also want to adjust this based on zoom
+            cellSize={cellSize} // The size of the grid cell, might also want to adjust this based on zoom
             args={[10000, 10000]}
             cellColor={"#b6aebf"}
             fadeFrom={0}
             sectionColor={"#BFA301"}
             fadeDistance={5000}
             rotation={[Math.PI / 2, 0, 0]}
-            sectionSize={100}
+            sectionSize={sectionSize}
           />
         ) : null}
         {/*props.gridParam ? <InfiniteGrid /> : null*/}
