@@ -68,12 +68,11 @@ export default function ext({ children, ...props }) {
         shadows={true}
       >
         <SceneCamera />
-        {/** Pivot should probably be scaled up when we figure out zoom */}
-        <PivotControl />
+        {props.axesParam ? <PivotControl /> : null}
         {props.gridParam ? (
           <Grid
             position={[0, 0, 0]}
-            cellSize={cellSize} // The size of the grid cell, might also want to adjust this based on zoom
+            cellSize={cellSize}
             args={[10000, 10000]}
             cellColor={"#b6aebf"}
             fadeFrom={0}
@@ -83,7 +82,6 @@ export default function ext({ children, ...props }) {
             sectionSize={sectionSize}
           />
         ) : null}
-        {/*props.gridParam ? <InfiniteGrid /> : null*/}
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
         {!props.outdatedMesh ? (
           <ambientLight intensity={0.9} />

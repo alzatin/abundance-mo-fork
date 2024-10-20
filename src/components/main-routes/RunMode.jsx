@@ -68,6 +68,12 @@ function runMode({
   const navigate = useNavigate();
   const { owner, repoName } = useParams();
 
+  const [cameraZoom, setCameraZoom] = useState(1);
+
+  useEffect(() => {
+    setCameraZoom(mesh[0] ? mesh[0].cameraZoom : 1);
+  }, [mesh]);
+
   useEffect(() => {
     GlobalVariables.canvas = canvasRef;
     GlobalVariables.c = canvasRef.current.getContext("2d");
@@ -157,7 +163,9 @@ function runMode({
             }}
           >
             {wireMesh ? (
-              <ThreeContext {...{ gridParam, axesParam, outdatedMesh }}>
+              <ThreeContext
+                {...{ cameraZoom, gridParam, axesParam, outdatedMesh }}
+              >
                 {wireParam ? <WireframeMesh mesh={wireMesh} /> : null}
 
                 <ReplicadMesh
