@@ -237,7 +237,7 @@ function TopMenu({
         <SaveBar {...{ saveState, savePopUp, setSavePopUp }} />
       ) : null}
       {settingsPopUp ? (
-        <SettingsPopUp {...{ settingsPopUp, setSettingsPopUp }} />
+        <SettingsPopUp {...{ setSettingsPopUp, setShortCuts }} />
       ) : null}
       {shareDialog ? (
         <ShareDialog
