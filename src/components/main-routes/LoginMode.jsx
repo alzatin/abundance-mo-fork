@@ -484,6 +484,7 @@ const ShowProjects = ({
     repoSearchRequest(projectToShow)
       .then((result) => {
         setStateLoaded([]);
+        setApiStatus(loadingMessages.loading);
         if (result["repos"].length == 0 && projectToShow == "owned") {
           setApiStatus(loadingMessages.noProjects);
           forkDummyProject(authorizedUserOcto).then(() => {
@@ -666,29 +667,31 @@ const ShowProjects = ({
                   opacity: "0.5",
                 }}
               />
-              <label htmlFor="year-by">
-                <img
-                  src="/imgs/sort.svg"
-                  alt="year-show"
-                  style={{ width: "15px" }}
-                />
-                <select
-                  className="order_dropdown"
-                  id="year-by"
-                  defaultValue={2024}
-                  onChange={(e) => setYearShow(e.target.value)}
-                >
-                  <option key={"2024_projects"} value={"2024"}>
-                    2024
-                  </option>
-                  <option key={"2023_projects"} value={"2023"}>
-                    2023
-                  </option>
-                  <option key={"2022_projects"} value={"2022"}>
-                    2022
-                  </option>
-                </select>
-              </label>
+              {projectToShow == "all" ? (
+                <label htmlFor="year-by">
+                  <img
+                    src="/imgs/sort.svg"
+                    alt="year-show"
+                    style={{ width: "15px" }}
+                  />
+                  <select
+                    className="order_dropdown"
+                    id="year-by"
+                    defaultValue={2024}
+                    onChange={(e) => setYearShow(e.target.value)}
+                  >
+                    <option key={"2024_projects"} value={"2024"}>
+                      2024
+                    </option>
+                    <option key={"2023_projects"} value={"2023"}>
+                      2023
+                    </option>
+                    <option key={"2022_projects"} value={"2022"}>
+                      2022
+                    </option>
+                  </select>
+                </label>
+              ) : null}
             </button>
           </div>
           {projectsLoaded.length > 0 ? (
