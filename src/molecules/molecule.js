@@ -366,10 +366,11 @@ export default class Molecule extends Atom {
    * Takes an array of recently deleted atoms
    */
   undo() {
-    let rawFile = JSON.parse(GlobalVariables.recentlyDeletedAtoms.shift());
+    let rawFile = JSON.parse(GlobalVariables.recentlyDeletedAtoms.pop());
 
     console.log(rawFile);
     // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
+    console.log(GlobalVariables.topLevelMolecule.nodesOnTheScreen);
     GlobalVariables.topLevelMolecule.nodesOnTheScreen.forEach((atom) => {
       console.log("deleting node", atom.name);
       atom.deleteNode();
