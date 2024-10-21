@@ -366,10 +366,22 @@ export default class Molecule extends Atom {
    * Takes an array of recently deleted atoms
    */
   undo() {
-    GlobalVariables.currentMolecule.placeAtom(
-      GlobalVariables.recentlyDeletedAtoms.pop(),
-      true
-    );
+    let rawFile = JSON.parse(GlobalVariables.recentlyDeletedAtoms.shift());
+
+    console.log(rawFile);
+    // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
+    GlobalVariables.topLevelMolecule.nodesOnTheScreen.forEach((atom) => {
+      console.log("deleting node", atom.name);
+      atom.deleteNode();
+    });
+    if (rawFile.fileTypeVersion == 1) {
+      console.log("deserializing");
+      GlobalVariables.topLevelMolecule.deserialize(rawFile);
+    }
+    GlobalVariables.currentMolecule.selected = true;
+    console.log("end of undo");
+    console.log(GlobalVariables.recentlyDeletedAtoms);
+    //GlobalVariables.currentMolecule.placeAtom(item, true);
   }
 
   /**
@@ -688,6 +700,8 @@ export default class Molecule extends Atom {
    * @param {object} values - An array of values to apply to this molecule before de-serializing it's contents. Used by githubmolecules to set top level correctly
    */
   deserialize(json, values = {}, forceBeginPropagation = false) {
+    console.log("deserializing molecule");
+    console.log(json);
     //Find the target molecule in the list
     let promiseArray = [];
 

@@ -92,6 +92,14 @@ export default memo(function FlowCanvas({
     // }
 
     if (e.key == "Backspace" || e.key == "Delete") {
+      /* Copy the top level molecule to the recently deleted atoms for undo */
+      const topLevelMoleculeCopy = JSON.stringify(
+        GlobalVariables.topLevelMolecule.serialize(),
+        null,
+        4
+      );
+      GlobalVariables.recentlyDeletedAtoms.push(topLevelMoleculeCopy);
+
       GlobalVariables.atomsSelected = [];
       //Adds items to the  array that we will use to delete
       GlobalVariables.currentMolecule.copy();
