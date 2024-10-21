@@ -272,6 +272,11 @@ class GlobalVariables {
      * @type {boolean}
      */
     this.displayEdges = true;
+    /**
+     * An array to keep track of most recenlty deleted atoms.
+     * @type {array}
+     */
+    this.recentlyDeletedAtoms = [];
 
     const math = create(all); //What does this do? I think it is used to evalue strings as math
     /**

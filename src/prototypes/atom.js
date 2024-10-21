@@ -502,6 +502,8 @@ export default class Atom {
   deleteNode(backgroundClickAfter = true, deletePath = true, silent = false) {
     //deletes this node and all of it's inputs
 
+    GlobalVariables.recentlyDeletedAtoms.push(this.serialize({ x: 0, y: 0 }));
+
     this.inputs.forEach((input) => {
       //disable the inputs before deleting
       input.ready = false;

@@ -113,6 +113,10 @@ export default memo(function FlowCanvas({
 
     if (GlobalVariables.ctrlDown && shortCuts.hasOwnProperty([e.key])) {
       e.preventDefault();
+      //Undo
+      if (e.key == "z") {
+        GlobalVariables.currentMolecule.undo();
+      }
       //Copy & Paste
       if (e.key == "c") {
         GlobalVariables.atomsSelected = [];

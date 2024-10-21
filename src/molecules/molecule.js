@@ -362,6 +362,15 @@ export default class Molecule extends Atom {
       }
     });
   }
+  /**
+   * Takes an array of recently deleted atoms
+   */
+  undo() {
+    GlobalVariables.currentMolecule.placeAtom(
+      GlobalVariables.recentlyDeletedAtoms.pop(),
+      true
+    );
+  }
 
   /**
    * Unselect this molecule
