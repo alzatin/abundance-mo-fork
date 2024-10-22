@@ -1,27 +1,60 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Wireframe } from "@react-three/drei";
+import {
+  Wireframe,
+  Grid,
+  PivotControls,
+  OrthographicCamera,
+} from "@react-three/drei";
 import * as THREE from "three";
-import InfiniteGrid from "./InfiniteGrid.jsx";
 import Controls from "./ThreeControls.jsx";
+import globalvariables from "../../js/globalvariables.js";
+import { sec } from "mathjs";
 
 // We change the default orientation - threejs tends to use Y are the height,
 // while replicad uses Z. This is mostly a representation default.
 
 THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
 
-// This is the basics to render a nice looking model user react-three-fiber
-//
-// The camera is positioned for the model we present (that cannot change size.
-// You might need to adjust this with something like the autoadjust from the
-// `Stage` component of `drei`
-//
-// Depending on your needs I would advice not using a light and relying on
-// a matcap material instead of the meshStandardMaterial used here.
 export default function ext({ children, ...props }) {
   const dpr = Math.min(window.devicePixelRatio, 2);
 
+  let cameraZoom = props.cameraZoom;
   let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
+
+  function PivotControl() {
+    let newScale = calculateInverseScale(cameraZoom);
+    return <PivotControls scale={newScale} />;
+  }
+  function SceneCamera() {
+    return (
+      <OrthographicCamera
+        makeDefault={true}
+        near={0.1}
+        pov={1000}
+        far={9000}
+        zoom={cameraZoom} // This is how we position the camera to be closer to the model. Right now it's not adjusting
+        position={[3000, 3000, 5000]}
+      />
+    );
+  }
+
+  function calculateInverseScale(zoom) {
+    const baseScale = 21; // The base scale value when zoom is 1
+    return baseScale / zoom;
+  }
+  const projectUnit = globalvariables.topLevelMolecule
+    ? globalvariables.topLevelMolecule.unitsKey
+    : "MM";
+  let cellSize;
+  let sectionSize;
+  if (projectUnit == "MM") {
+    cellSize = 10;
+    sectionSize = 100;
+  } else if (projectUnit == "Inches") {
+    cellSize = 1;
+    sectionSize = 10;
+  }
 
   return (
     <Suspense fallback={null}>
@@ -31,23 +64,25 @@ export default function ext({ children, ...props }) {
           backgroundColor: backColor,
         }}
         dpr={dpr}
-        frameloop="demand"
-        orthographic={true}
-        camera={{
-          fov: 75,
-          near: 0.1,
-          right: 2000,
-          left: -2000,
-          bottom: -2000,
-          far: 2000,
-          position: [600, 600, 600],
-          zoom: 1,
-        }}
+        frameloop="always"
         shadows={true}
       >
-        {props.gridParam ? <InfiniteGrid /> : null}
+        <SceneCamera />
+        {props.axesParam ? <PivotControl /> : null}
+        {props.gridParam ? (
+          <Grid
+            position={[0, 0, 0]}
+            cellSize={cellSize}
+            args={[10000, 10000]}
+            cellColor={"#b6aebf"}
+            fadeFrom={0}
+            sectionColor={"#BFA301"}
+            fadeDistance={5000}
+            rotation={[Math.PI / 2, 0, 0]}
+            sectionSize={sectionSize}
+          />
+        ) : null}
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
-
         {!props.outdatedMesh ? (
           <ambientLight intensity={0.9} />
         ) : (
