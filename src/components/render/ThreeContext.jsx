@@ -33,7 +33,7 @@ export default function ext({ children, ...props }) {
         near={0.1}
         pov={1000}
         far={9000}
-        zoom={cameraZoom} // This is how we position the camera to be closer to the model. Right now it's not adjusting
+        zoom={cameraZoom}
         position={[3000, 3000, 5000]}
       />
     );
