@@ -286,6 +286,7 @@ export default class Molecule extends Atom {
           })
           .then((response) => {
             // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
+
             GlobalVariables.topLevelMolecule.nodesOnTheScreen.forEach(
               (atom) => {
                 atom.deleteNode();
@@ -368,13 +369,15 @@ export default class Molecule extends Atom {
   undo() {
     let rawFile = JSON.parse(GlobalVariables.recentlyDeletedAtoms.pop());
 
-    console.log(rawFile);
+    // Create a shallow copy of nodesOnTheScreen using the spread operator
+    const nodesCopy = [...GlobalVariables.topLevelMolecule.nodesOnTheScreen];
+
     // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
-    console.log(GlobalVariables.topLevelMolecule.nodesOnTheScreen);
-    GlobalVariables.topLevelMolecule.nodesOnTheScreen.forEach((atom) => {
-      console.log("deleting node", atom.name);
+    nodesCopy.forEach((atom, index) => {
+      console.log(`Deleting node ${index + 1}/${nodesCopy.length}:`, atom.name);
       atom.deleteNode();
     });
+
     if (rawFile.fileTypeVersion == 1) {
       console.log("deserializing");
       GlobalVariables.topLevelMolecule.deserialize(rawFile);
