@@ -367,24 +367,23 @@ export default class Molecule extends Atom {
    * Takes an array of recently deleted atoms
    */
   undo() {
-    let rawFile = JSON.parse(GlobalVariables.recentlyDeletedAtoms.pop());
+    let rawFile = JSON.parse(
+      GlobalVariables.recentMoleculeRepresentation.pop()
+    );
 
     // Create a shallow copy of nodesOnTheScreen using the spread operator
     const nodesCopy = [...GlobalVariables.topLevelMolecule.nodesOnTheScreen];
 
     // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
     nodesCopy.forEach((atom, index) => {
-      console.log(`Deleting node ${index + 1}/${nodesCopy.length}:`, atom.name);
       atom.deleteNode();
     });
 
     if (rawFile.fileTypeVersion == 1) {
-      console.log("deserializing");
       GlobalVariables.topLevelMolecule.deserialize(rawFile);
     }
     GlobalVariables.currentMolecule.selected = true;
-    console.log("end of undo");
-    console.log(GlobalVariables.recentlyDeletedAtoms);
+    console.log(GlobalVariables.recentMoleculeRepresentation);
     //GlobalVariables.currentMolecule.placeAtom(item, true);
   }
 

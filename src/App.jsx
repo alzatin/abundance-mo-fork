@@ -122,7 +122,7 @@ export default function ReplicadApp() {
   // Loads project
   const loadProject = function (project) {
     console.log(project);
-    GlobalVariables.recentlyDeletedAtoms = [];
+    GlobalVariables.recentMoleculeRepresentation = [];
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.repoName;
     GlobalVariables.currentRepo = project;

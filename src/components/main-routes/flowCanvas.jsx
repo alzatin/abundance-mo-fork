@@ -98,7 +98,12 @@ export default memo(function FlowCanvas({
         null,
         4
       );
-      GlobalVariables.recentlyDeletedAtoms.push(topLevelMoleculeCopy);
+
+      GlobalVariables.recentMoleculeRepresentation.push(topLevelMoleculeCopy);
+      //max the number of backups at 5
+      if (GlobalVariables.recentMoleculeRepresentation.length > 5) {
+        GlobalVariables.recentMoleculeRepresentation.shift();
+      }
 
       GlobalVariables.atomsSelected = [];
       //Adds items to the  array that we will use to delete

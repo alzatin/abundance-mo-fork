@@ -273,10 +273,10 @@ class GlobalVariables {
      */
     this.displayEdges = true;
     /**
-     * An array to keep track of most recenlty deleted atoms.
+     * An array to keep track of recent molecule changes to allow undo to revert back recently deleted molecules.
      * @type {array}
      */
-    this.recentlyDeletedAtoms = [];
+    this.recentMoleculeRepresentation = [];
 
     const math = create(all); //What does this do? I think it is used to evalue strings as math
     /**
