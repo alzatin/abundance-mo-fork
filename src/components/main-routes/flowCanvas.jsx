@@ -218,6 +218,24 @@ export default memo(function FlowCanvas({
           clickHandledByMolecule = true;
         }
       });
+
+      //Draw the selection box
+      if (!clickHandledByMolecule) {
+        console.log("click not HandledByMolecule trying to add box?");
+        GlobalVariables.currentMolecule.placeAtom(
+          {
+            parentMolecule: GlobalVariables.currentMolecule,
+            x: GlobalVariables.pixelsToWidth(event.clientX),
+            y: GlobalVariables.pixelsToHeight(event.clientY),
+            parent: GlobalVariables.currentMolecule,
+            name: "Box",
+            atomType: "Box",
+          },
+          null,
+          GlobalVariables.availableTypes
+        );
+      }
+
       if (!clickHandledByMolecule) {
         /* Background click - molecule is active atom */
         setActiveAtom(GlobalVariables.currentMolecule);
