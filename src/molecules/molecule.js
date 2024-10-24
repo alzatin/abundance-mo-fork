@@ -286,6 +286,7 @@ export default class Molecule extends Atom {
           })
           .then((response) => {
             // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
+
             GlobalVariables.topLevelMolecule.nodesOnTheScreen.forEach(
               (atom) => {
                 atom.deleteNode();
@@ -361,6 +362,26 @@ export default class Molecule extends Atom {
         );
       }
     });
+  }
+  /**
+   * Takes an array of recently deleted atoms
+   */
+  undo() {
+    if (GlobalVariables.recentMoleculeRepresentation.length > 0) {
+      let rawFile = JSON.parse(
+        GlobalVariables.recentMoleculeRepresentation.pop()
+      );
+      const nodesCopy = [...GlobalVariables.topLevelMolecule.nodesOnTheScreen];
+      // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
+      nodesCopy.forEach((atom, index) => {
+        atom.deleteNode();
+      });
+
+      if (rawFile.fileTypeVersion == 1) {
+        GlobalVariables.topLevelMolecule.deserialize(rawFile);
+      }
+      GlobalVariables.currentMolecule.selected = true;
+    }
   }
 
   /**

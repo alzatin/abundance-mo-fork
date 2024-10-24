@@ -500,8 +500,6 @@ export default class Atom {
    * Delete this atom. Silent prevents it from telling its neighbors
    */
   deleteNode(backgroundClickAfter = true, deletePath = true, silent = false) {
-    //deletes this node and all of it's inputs
-
     this.inputs.forEach((input) => {
       //disable the inputs before deleting
       input.ready = false;

@@ -92,6 +92,19 @@ export default memo(function FlowCanvas({
     // }
 
     if (e.key == "Backspace" || e.key == "Delete") {
+      /* Copy the top level molecule to the recently deleted atoms for undo */
+      const topLevelMoleculeCopy = JSON.stringify(
+        GlobalVariables.topLevelMolecule.serialize(),
+        null,
+        4
+      );
+
+      GlobalVariables.recentMoleculeRepresentation.push(topLevelMoleculeCopy);
+      //max the number of backups at 5
+      if (GlobalVariables.recentMoleculeRepresentation.length > 5) {
+        GlobalVariables.recentMoleculeRepresentation.shift();
+      }
+
       GlobalVariables.atomsSelected = [];
       //Adds items to the  array that we will use to delete
       GlobalVariables.currentMolecule.copy();
@@ -113,6 +126,10 @@ export default memo(function FlowCanvas({
 
     if (GlobalVariables.ctrlDown && shortCuts.hasOwnProperty([e.key])) {
       e.preventDefault();
+      //Undo
+      if (e.key == "z") {
+        GlobalVariables.currentMolecule.undo();
+      }
       //Copy & Paste
       if (e.key == "c") {
         GlobalVariables.atomsSelected = [];
