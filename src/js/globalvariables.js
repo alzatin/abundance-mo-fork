@@ -30,6 +30,7 @@ import Group from "../molecules/group.js";
 import Import from "../molecules/import.js";
 import Export from "../molecules/export.js";
 import Text from "../molecules/text.js";
+import Box from "../molecules/box.js";
 
 /**
  * This class defines things which are made available to all objects which import it. It is a singlton which means that each time it is imported the same instance is made available so if it is written to in one place, it can be read somewhere else.
@@ -54,6 +55,7 @@ class GlobalVariables {
      * @type {array}
      */
     this.availableTypes = {
+      box: { creator: Box, atomType: "Box" },
       intersection: {
         creator: Intersection,
         atomType: "Intersection",

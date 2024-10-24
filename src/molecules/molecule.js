@@ -323,6 +323,24 @@ export default class Molecule extends Atom {
   }
 
   /**
+   * Delineates bounds for selection box.
+   */
+  selectBox(x, y, xEnd, yEnd) {
+    let xIn = Math.min(x, xEnd);
+    let xOut = Math.max(x, xEnd);
+    let yIn = Math.min(y, yEnd);
+    let yOut = Math.max(y, yEnd);
+    let xInPixels = GlobalVariables.widthToPixels(this.x);
+    let yInPixels = GlobalVariables.heightToPixels(this.y);
+    if (xInPixels >= xIn && xInPixels <= xOut) {
+      if (yInPixels >= yIn && yInPixels <= yOut) {
+        //this.isMoving = true
+        this.selected = true;
+      }
+    }
+  }
+
+  /**
    * Handle double clicks by replacing the molecule currently on the screen with this one, esentially diving into it.
    * @param {number} x - The x coordinate of the click
    * @param {number} y - The y coordinate of the click
