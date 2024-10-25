@@ -45,15 +45,15 @@ const started = init();
  */
 function toGeometry(input) {
   //If the input is a library ID we look it up
-  if (typeof(input) === "number"){
+  if (typeof input === "number") {
     return library[input];
   }
   //If the input is already an abundance object we return it
-  else if(input.geometry){
+  else if (input.geometry) {
     return input;
   }
   //Else we build an abundance object from the input
-  else{
+  else {
     return {
       geometry: [input],
       tags: [],
@@ -282,9 +282,7 @@ function rotate(inputGeometry, x, y, z, targetID = null) {
     } else {
       let result = actOnLeafs(toGeometry(inputGeometry), (leaf) => {
         return {
-          geometry: [
-            leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1]),
-          ],
+          geometry: [leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1])],
           tags: leaf.tags,
           plane: leaf.plane.pivot(x, "X").pivot(y, "Y"),
           color: leaf.color,
@@ -409,8 +407,7 @@ async function Assembly(inputs) {
   try {
     const assembledGeometry = await assembly(inputs);
     return assembledGeometry;
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error assembling geometry:", error);
     throw error;
   }
@@ -419,7 +416,7 @@ async function Assembly(inputs) {
 // Runs the user entered code in the worker thread and returns the result.
 async function code(targetID, code, argumentsArray) {
   await started;
-  let keys1 = ['Rotate', 'Assembly'];
+  let keys1 = ["Rotate", "Assembly"];
   let inputValues = [Rotate, Assembly];
   for (const [key, value] of Object.entries(argumentsArray)) {
     keys1.push(`${key}`);
@@ -428,7 +425,13 @@ async function code(targetID, code, argumentsArray) {
 
   // revisit this eval/ Is this the right/safest way to do this?
   var result = await eval(
-    "(async (" + keys1.join(',') + ") => {" + code + "})(" + inputValues.join(',') + ")"
+    "(async (" +
+      keys1.join(",") +
+      ") => {" +
+      code +
+      "})(" +
+      inputValues.join(",") +
+      ")"
   );
 
   library[targetID] = result;
@@ -743,7 +746,6 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
     // let splitGeometry = actOnLeafs(taggedGeometry, disjointGeometryToAssembly);
 
     // console.log(splitGeometry);
-
 
     // Rotate all shapes to be most cuttable.
     library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
@@ -1137,8 +1139,9 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
       });
 
       let subID = generateUniqueID();
-      //returns new assembly that has been cut 
-      library[subID] = { //This feels like a hack, we shouldn't be using the library internally like this
+      //returns new assembly that has been cut
+      library[subID] = {
+        //This feels like a hack, we shouldn't be using the library internally like this
         geometry: assemblyCut,
         tags: partToCut.tags,
         bom: partToCut.bom,
@@ -1216,7 +1219,9 @@ async function assembly(inputIDs, targetID = null) {
         }
       }
     } else {
-      throw new Error("Assemblies must be composed from only sketches OR only solids");
+      throw new Error(
+        "Assemblies must be composed from only sketches OR only solids"
+      );
     }
   } else {
     const geometry = toGeometry(inputIDs[0]);
@@ -1235,9 +1240,8 @@ async function assembly(inputIDs, targetID = null) {
   };
 
   if (targetID != null) {
-    library[targetID] = generatedAssembly
-  }
-  else{
+    library[targetID] = generatedAssembly;
+  } else {
     return generatedAssembly;
   }
 
@@ -1275,12 +1279,14 @@ function fusion(targetID, inputIDs) {
 }
 
 /**
-  * Function which takes in a geometry and returns the same geometry if it is cohesive or an assembly if the geometry is disjoint
-*/
+ * Function which takes in a geometry and returns the same geometry if it is cohesive or an assembly if the geometry is disjoint
+ */
 function disjointGeometryToAssembly(inputID) {
-  
   let input = toGeometry(inputID).geometry[0]; //This does not accept assemblies
-  let solidsArray = Array.from(iterTopo(input.wrapped, "solid"), (s) => new Solid(s));
+  let solidsArray = Array.from(
+    iterTopo(input.wrapped, "solid"),
+    (s) => new Solid(s)
+  );
   console.log("solidsArray", solidsArray);
   //If there is more than one solid in the geometry, return an assembly
   if (solidsArray.length > 1) {
@@ -1301,7 +1307,7 @@ function disjointGeometryToAssembly(inputID) {
       color: input.color,
       plane: input.plane,
     };
-  //If there is only one solid in the geometry, return the input
+    //If there is only one solid in the geometry, return the input
   } else {
     return toGeometry(inputID);
   }
@@ -1416,8 +1422,83 @@ async function generateDefaultMesh(id) {
   return defaultMesh;
 }
 
+function resetView() {
+  return started.then(() => {
+    return [];
+  });
+}
+
+function getLargestBoundingBox(meshArray) {
+  let overallMin = [Infinity, Infinity, Infinity];
+  let overallMax = [-Infinity, -Infinity, -Infinity];
+
+  meshArray.forEach((mesh) => {
+    let boundingBox = mesh.geometry.boundingBox.bounds;
+    let min = boundingBox[0];
+    let max = boundingBox[1];
+
+    // Update overall minimum coordinates
+    overallMin[0] = Math.min(overallMin[0], min[0]);
+    overallMin[1] = Math.min(overallMin[1], min[1]);
+    overallMin[2] = Math.min(overallMin[2], min[2]);
+
+    // Update overall maximum coordinates
+    overallMax[0] = Math.max(overallMax[0], max[0]);
+    overallMax[1] = Math.max(overallMax[1], max[1]);
+    overallMax[2] = Math.max(overallMax[2], max[2]);
+  });
+
+  // Create a new bounding box with the overall min and max coordinates
+  let newBoundingBox = [overallMin, overallMax];
+
+  // Calculate the width, height, and depth
+  let width = overallMax[0] - overallMin[0];
+  let height = overallMax[1] - overallMin[1];
+  let depth = overallMax[2] - overallMin[2];
+
+  // Return the dimensions as a 3-point vector
+  return { width, height, depth };
+
+  //return newBoundingBox;
+}
+
+function calculateZoom(boundingBox) {
+  // Given example bounding box and zoom level
+  const exampleBoundingBox = {
+    width: 312.0005000624958,
+    height: 312.00074999364347,
+    depth: 432.0009977339615,
+  };
+  const exampleZoom = 0.5;
+
+  // Calculate the diagonal length of the given example bounding box
+  const exampleDiagonal = Math.sqrt(
+    Math.pow(exampleBoundingBox.width, 2) +
+      Math.pow(exampleBoundingBox.height, 2) +
+      Math.pow(exampleBoundingBox.depth, 2)
+  );
+
+  // Calculate the diagonal length of the input bounding box
+  const diagonal = Math.sqrt(
+    Math.pow(boundingBox.width, 2) +
+      Math.pow(boundingBox.height, 2) +
+      Math.pow(boundingBox.depth, 2)
+  );
+
+  // Calculate the zoom level based on the proportional relationship
+  const zoom = (exampleZoom * exampleDiagonal) / diagonal;
+  return zoom;
+}
+
+function generateCameraPosition(meshArray) {
+  let largestBoundingBox = getLargestBoundingBox(meshArray);
+  let zoom = calculateZoom(largestBoundingBox);
+  return zoom;
+}
+
 function generateDisplayMesh(id) {
   return started.then(() => {
+    console.log("Generating display mesh for " + id);
     if (library[id] == undefined) {
       generateDefaultMesh(id).then((result) => {
         console.log(result);
@@ -1444,6 +1525,7 @@ function generateDisplayMesh(id) {
       });
     });
 
+    let cameraZoom = generateCameraPosition(meshArray);
     let finalMeshes = [];
     //Iterate through the meshArray and create final meshes with faces, edges and color to pass to display
     meshArray.forEach((meshgeometry) => {
@@ -1459,6 +1541,7 @@ function generateDisplayMesh(id) {
         };
       } else {
         finalMeshes.push({
+          cameraZoom: cameraZoom,
           faces: meshgeometry.geometry.mesh(),
           edges: meshgeometry.geometry.meshEdges(),
           color: meshgeometry.color,
@@ -1503,4 +1586,5 @@ expose({
   assembly,
   loftShapes,
   text,
+  resetView,
 });

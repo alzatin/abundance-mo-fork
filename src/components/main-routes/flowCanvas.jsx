@@ -3,6 +3,7 @@ import GlobalVariables from "../../js/globalvariables.js";
 import Molecule from "../../molecules/molecule.js";
 import { createCMenu, cmenu } from "../../js/NewMenu.js";
 import GitSearch from "../secondary/GitSearch.jsx";
+import { useNavigate } from "react-router-dom";
 
 function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
@@ -19,22 +20,16 @@ window.addEventListener(
 );
 
 export default memo(function FlowCanvas({
-  activeAtom,
   loadProject,
   setActiveAtom,
-  setSavePopUp,
-  setSaveState,
-  setTop,
   shortCuts,
-  setMesh,
-  cad,
-  setWireMesh,
 }) {
   /** State for github molecule search input */
   const [searchingGitHub, setSearchingGitHub] = useState(false);
 
   const canvasRef = useRef(null);
   const circleMenu = useRef(null);
+  const navigate = useNavigate();
 
   // On component mount create a new top level molecule before project load
   useEffect(() => {
@@ -46,6 +41,10 @@ export default memo(function FlowCanvas({
       GlobalVariables.currentRepo.repoName !==
         GlobalVariables.loadedRepo.repoName
     ) {
+      GlobalVariables.writeToDisplay(
+        GlobalVariables.currentRepo.topMoleculeID,
+        true
+      );
       //Load a blank project
       GlobalVariables.topLevelMolecule = new Molecule({
         x: 0,
@@ -55,7 +54,9 @@ export default memo(function FlowCanvas({
       });
       GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
 
-      loadProject(GlobalVariables.currentRepo);
+      loadProject(GlobalVariables.currentRepo).catch((error) => {
+        navigate("/");
+      });
     }
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
       atom.update();
@@ -91,6 +92,19 @@ export default memo(function FlowCanvas({
     // }
 
     if (e.key == "Backspace" || e.key == "Delete") {
+      /* Copy the top level molecule to the recently deleted atoms for undo */
+      const topLevelMoleculeCopy = JSON.stringify(
+        GlobalVariables.topLevelMolecule.serialize(),
+        null,
+        4
+      );
+
+      GlobalVariables.recentMoleculeRepresentation.push(topLevelMoleculeCopy);
+      //max the number of backups at 5
+      if (GlobalVariables.recentMoleculeRepresentation.length > 5) {
+        GlobalVariables.recentMoleculeRepresentation.shift();
+      }
+
       GlobalVariables.atomsSelected = [];
       //Adds items to the  array that we will use to delete
       GlobalVariables.currentMolecule.copy();
@@ -112,6 +126,10 @@ export default memo(function FlowCanvas({
 
     if (GlobalVariables.ctrlDown && shortCuts.hasOwnProperty([e.key])) {
       e.preventDefault();
+      //Undo
+      if (e.key == "z") {
+        GlobalVariables.currentMolecule.undo();
+      }
       //Copy & Paste
       if (e.key == "c") {
         GlobalVariables.atomsSelected = [];
@@ -200,6 +218,24 @@ export default memo(function FlowCanvas({
           clickHandledByMolecule = true;
         }
       });
+
+      //Draw the selection box
+      if (!clickHandledByMolecule) {
+        console.log("click not HandledByMolecule trying to add box?");
+        GlobalVariables.currentMolecule.placeAtom(
+          {
+            parentMolecule: GlobalVariables.currentMolecule,
+            x: GlobalVariables.pixelsToWidth(event.clientX),
+            y: GlobalVariables.pixelsToHeight(event.clientY),
+            parent: GlobalVariables.currentMolecule,
+            name: "Box",
+            atomType: "Box",
+          },
+          null,
+          GlobalVariables.availableTypes
+        );
+      }
+
       if (!clickHandledByMolecule) {
         /* Background click - molecule is active atom */
         setActiveAtom(GlobalVariables.currentMolecule);

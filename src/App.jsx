@@ -6,6 +6,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useNavigate,
 } from "react-router-dom";
 
 import { wrap } from "comlink";
@@ -28,7 +29,6 @@ import "./styles//codemirror.css";
 var authorizedUserOcto = null;
 
 const cad = wrap(new cadWorker());
-
 export default function ReplicadApp() {
   const [size, setSize] = useState(5);
   const [mesh, setMesh] = useState({});
@@ -48,30 +48,43 @@ export default function ReplicadApp() {
   );
 
   useEffect(() => {
+    console.log("useEffect  in top levelrunning");
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
       setOutdatedMesh(true);
-
-      cad
-        .generateDisplayMesh(id)
-        .then((m) => {
-          setMesh(m);
-          setOutdatedMesh(false);
-        })
-        .catch((e) => {
-          console.error("Can't display Mesh " + e);
-        });
-      // if something is connected to the output, set a wireframe mesh
-      cad
-        .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
-        .then((w) => setWireMesh(w))
-        .catch((e) => {
-          console.error("Can't comput Wireframe/No output " + e);
-        });
+      if (resetView) {
+        cad
+          .resetView()
+          .then((m) => {
+            setMesh(m);
+            setWireMesh(m);
+            setOutdatedMesh(false);
+          })
+          .catch((e) => {
+            console.error("reset view not working" + e);
+          });
+      } else {
+        cad
+          .generateDisplayMesh(id)
+          .then((m) => {
+            setMesh(m);
+            setOutdatedMesh(false);
+          })
+          .catch((e) => {
+            console.error("Can't display Mesh " + e);
+          });
+        // if something is connected to the output, set a wireframe mesh
+        cad
+          .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
+          .then((w) => setWireMesh(w))
+          .catch((e) => {
+            console.error("Can't comput Wireframe/No output " + e);
+          });
+      }
     };
 
     GlobalVariables.cad = cad;
-  });
+  }, [activeAtom]);
 
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
@@ -109,6 +122,7 @@ export default function ReplicadApp() {
   // Loads project
   const loadProject = function (project) {
     console.log(project);
+    GlobalVariables.recentMoleculeRepresentation = [];
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.repoName;
     GlobalVariables.currentRepo = project;
@@ -118,7 +132,7 @@ export default function ReplicadApp() {
 
     var octokit = new Octokit();
 
-    octokit
+    return octokit
       .request("GET /repos/{owner}/{repo}/contents/project.abundance", {
         owner: project.owner,
         repo: project.repoName,
@@ -137,6 +151,10 @@ export default function ReplicadApp() {
         }
         setActiveAtom(GlobalVariables.currentMolecule);
         GlobalVariables.currentMolecule.selected = true;
+      })
+      .catch((e) => {
+        alert("Can't load/find project " + e);
+        throw new Error("Can't load/find project " + e);
       });
   };
 

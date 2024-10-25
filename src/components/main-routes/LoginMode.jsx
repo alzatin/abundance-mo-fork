@@ -76,7 +76,7 @@ const InitialLog = ({ tryLogin }) => {
 };
 
 // adds individual projects after API call
-const AddProject = ({ nodes, authorizedUserOcto }) => {
+const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
   const [browseType, setBrowseType] = useState("thumb");
   const [orderType, setOrderType] = useState("byDateCreated");
 
@@ -172,7 +172,7 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           GlobalVariables.currentRepo = node;
         }}
       >
-        {node.topics.includes("abundance-tool") ? (
+        {node.topics && node.topics.includes("abundance-tool") ? (
           <h2
             style={{
               float: "right",
@@ -364,17 +364,26 @@ const ShowProjects = ({
   authorizedUserOcto,
   pageDict,
 }) => {
+  const loadingMessages = {
+    loading: "Loading projects...",
+    error: "Error",
+    noProjects: "No projects found",
+  };
+
   const [projectsLoaded, setStateLoaded] = useState([]);
   const [lastKey, setLastKey] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
   const [searchBarValue, setSearchBarValue] = useState("");
+  const [yearShow, setYearShow] = useState("2024");
+  const [apiStatus, setApiStatus] = useState(loadingMessages.loading);
 
   useEffect(() => {
     octokit = new Octokit();
     var query;
 
     const forkDummyProject = async function (authorizedUserOcto) {
-      var owner = "alzatin";
+      console.log("forking dummy project");
+      /*var owner = "alzatin";
       var repo = "My-first-Abundance-project";
       // if authenticated and it is not your project, make a clone of the project and return to create mode
       authorizedUserOcto
@@ -398,17 +407,12 @@ const ShowProjects = ({
                 })
                 .then((result) => {
                   GlobalVariables.currentRepo = result.data;
-
-                  authorizedUserOcto.rest.repos.replaceAllTopics({
-                    owner: activeUser,
-                    repo: GlobalVariables.currentRepo.repoName,
-                    names: ["abundance-project"],
-                  });
                 });
             });
-        });
+        });*/
     };
     const repoSearchRequest = async () => {
+      setStateLoaded([]); /*sets loading while fetching*/
       pageDict[pageNumber] = lastKey;
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
@@ -416,9 +420,9 @@ const ShowProjects = ({
 
       let searchQuery;
       if (searchBarValue != "") {
-        searchQuery = "&query=" + searchBarValue;
+        searchQuery = "&query=" + searchBarValue + "&yearShow=" + yearShow;
       } else {
-        searchQuery = "&query";
+        searchQuery = "&query" + "&yearShow=" + yearShow;
       }
 
       if (projectToShow == "all") {
@@ -471,7 +475,7 @@ const ShowProjects = ({
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
-
+      console.log(scanApiUrl);
       let awsRepos = await fetch(scanApiUrl); //< return result.json();[repos]
       //let awsRepos = await fetch(scanUserApiUrl);
       return awsRepos.json();
@@ -479,24 +483,29 @@ const ShowProjects = ({
 
     repoSearchRequest(projectToShow)
       .then((result) => {
-        if (result["repos"].length == 0 && user !== "") {
+        setStateLoaded([]);
+        setApiStatus(loadingMessages.loading);
+        if (result["repos"].length == 0 && projectToShow == "owned") {
+          setApiStatus(loadingMessages.noProjects);
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
               //setBrowsing(true);
               setStateLoaded(result["repos"]);
             });
           });
+        } else if (result["repos"].length == 0) {
+          setApiStatus(loadingMessages.noProjects);
         } else {
           setStateLoaded(result["repos"]);
           setLastKey(result["lastKey"]);
         }
       })
       .catch((err) => {
-        window.alert(
-          "Error loading projects. Please wait a few minutes then try again."
+        alert(
+          "Error loading projects from database. Please try again later. " + err
         );
       });
-  }, [searchBarValue, pageNumber, projectToShow]);
+  }, [searchBarValue, pageNumber, projectToShow, yearShow]);
 
   let nodes = [];
 
@@ -658,18 +667,44 @@ const ShowProjects = ({
                   opacity: "0.5",
                 }}
               />
+              {projectToShow == "all" ? (
+                <label htmlFor="year-by">
+                  <img
+                    src="/imgs/sort.svg"
+                    alt="year-show"
+                    style={{ width: "15px" }}
+                  />
+                  <select
+                    className="order_dropdown"
+                    id="year-by"
+                    defaultValue={2024}
+                    onChange={(e) => setYearShow(e.target.value)}
+                  >
+                    <option key={"2024_projects"} value={"2024"}>
+                      2024
+                    </option>
+                    <option key={"2023_projects"} value={"2023"}>
+                      2023
+                    </option>
+                    <option key={"2022_projects"} value={"2022"}>
+                      2022
+                    </option>
+                  </select>
+                </label>
+              ) : null}
             </button>
           </div>
           {projectsLoaded.length > 0 ? (
             <AddProject
               {...{
+                setYearShow,
                 nodes,
                 authorizedUserOcto,
                 user,
               }}
             />
           ) : (
-            <p> Loading...</p>
+            apiStatus
           )}
         </div>
       </div>

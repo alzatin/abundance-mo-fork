@@ -31,9 +31,10 @@ def lambda_handler(event: any, context: any):
         dateCreated = event["dateCreated"]
         parentRepo = event["parentRepo"]
         githubMoleculesUsed = event["githubMoleculesUsed"]
+        html_url = event["html_url"]
+        dateModified = datetime.now().strftime('%m/%d/%Y')
 
         newYear = datetime.now().year
-        print(newYear)
 
         itemToPut = {"owner": owner,
                      "description": description,
@@ -49,7 +50,9 @@ def lambda_handler(event: any, context: any):
                      "contentURL": contentURL,
                      "parentRepo": parentRepo,
                      "githubMoleculesUsed": githubMoleculesUsed,
-                     "yyyy": newYear}
+                     "yyyy": newYear,
+                     "html_url": html_url,
+                     "dateModified": dateModified}
 
         table.put_item(Item=itemToPut)
         returnObject['statusCode'] = 200
@@ -57,7 +60,7 @@ def lambda_handler(event: any, context: any):
 
     except:
         returnObject['statusCode'] = 400
-        message = 'no'
+        message = 'Something went wrong'
 
     returnObject['headers'] = {}
     returnObject["body"] = json.dumps(message)

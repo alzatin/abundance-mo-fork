@@ -500,8 +500,6 @@ export default class Atom {
    * Delete this atom. Silent prevents it from telling its neighbors
    */
   deleteNode(backgroundClickAfter = true, deletePath = true, silent = false) {
-    //deletes this node and all of it's inputs
-
     this.inputs.forEach((input) => {
       //disable the inputs before deleting
       input.ready = false;
@@ -611,7 +609,7 @@ export default class Atom {
       this.output.waitOnComingInformation();
     }
     if (this.processing) {
-      console.log("information sent to something processing");
+      //console.log("information sent to something processing");
       // this.processing = false;
     }
   }

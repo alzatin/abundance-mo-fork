@@ -209,7 +209,7 @@ export default class Molecule extends Atom {
       });
     }
 
-    if (GlobalVariables.currentRepo.parentRepo != null) {
+    if (GlobalVariables.currentRepo.parentRepo != null && this.topLevel) {
       inputParams["Reload from Github"] = button(() => {
         //Future compare to main branch
         this.reloadFork();
@@ -286,6 +286,7 @@ export default class Molecule extends Atom {
           })
           .then((response) => {
             // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
+
             GlobalVariables.topLevelMolecule.nodesOnTheScreen.forEach(
               (atom) => {
                 atom.deleteNode();
@@ -319,6 +320,24 @@ export default class Molecule extends Atom {
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
       atom.isMoving = false;
     });
+  }
+
+  /**
+   * Delineates bounds for selection box.
+   */
+  selectBox(x, y, xEnd, yEnd) {
+    let xIn = Math.min(x, xEnd);
+    let xOut = Math.max(x, xEnd);
+    let yIn = Math.min(y, yEnd);
+    let yOut = Math.max(y, yEnd);
+    let xInPixels = GlobalVariables.widthToPixels(this.x);
+    let yInPixels = GlobalVariables.heightToPixels(this.y);
+    if (xInPixels >= xIn && xInPixels <= xOut) {
+      if (yInPixels >= yIn && yInPixels <= yOut) {
+        //this.isMoving = true
+        this.selected = true;
+      }
+    }
   }
 
   /**
@@ -361,6 +380,26 @@ export default class Molecule extends Atom {
         );
       }
     });
+  }
+  /**
+   * Takes an array of recently deleted atoms
+   */
+  undo() {
+    if (GlobalVariables.recentMoleculeRepresentation.length > 0) {
+      let rawFile = JSON.parse(
+        GlobalVariables.recentMoleculeRepresentation.pop()
+      );
+      const nodesCopy = [...GlobalVariables.topLevelMolecule.nodesOnTheScreen];
+      // Delete nodes so deserialize doesn't repeat, could be useful to not delete for a diff in the future
+      nodesCopy.forEach((atom, index) => {
+        atom.deleteNode();
+      });
+
+      if (rawFile.fileTypeVersion == 1) {
+        GlobalVariables.topLevelMolecule.deserialize(rawFile);
+      }
+      GlobalVariables.currentMolecule.selected = true;
+    }
   }
 
   /**
