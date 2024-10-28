@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import globalvariables from "../../js/globalvariables.js";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
 
+import { useAuth0 } from "@auth0/auth0-react";
+
 /**
  * The octokit instance which allows interaction with GitHub.
  * @type {object}
@@ -15,7 +17,7 @@ var octokit = null;
  * Initial log component displays pop Up to either attempt Github login/browse projects
  *
  */
-const InitialLog = ({ tryLogin }) => {
+const InitialLog = ({ loginWithRedirect, tryLogin }) => {
   return (
     <div className="login-page">
       <div className="form animate fadeInUp one">
@@ -36,9 +38,14 @@ const InitialLog = ({ tryLogin }) => {
             <button
               type="button"
               id="loginButton"
-              className="submit-btn"
-              onClick={tryLogin}
               style={{ height: "40px" }}
+              className="submit-btn"
+              onClick={() =>
+                loginWithRedirect({
+                  connection: "github",
+                  scope: "openid profile email repo user", // Request necessary scopes here
+                })
+              }
             >
               Login With GitHub
             </button>
@@ -721,14 +728,42 @@ function LoginMode({
   const pageDict = { 0: null };
   const [projectToShow, setProjectsToShow] = useState("recents");
 
+  const {
+    loginWithRedirect,
+    logout,
+    user,
+    isAuthenticated,
+    isLoading,
+    getAccessTokenSilently,
+  } = useAuth0();
+
+  useEffect(() => {
+    const fetchRepositories = async () => {
+      if (isAuthenticated) {
+        try {
+          const token = await getAccessTokenSilently({
+            audience: "https://api.github.com/", // Audience for GitHub API
+            scope: "repo user", // Requested scopes
+          });
+          console.log(token);
+          const octokit = new Octokit({ auth: token });
+          const { data } = await octokit.rest.repos.listForAuthenticatedUser();
+          console.log(data); // Handle the list of repositories here
+        } catch (err) {
+          console.error("Error fetching repositories:", err);
+        }
+      }
+    };
+
+    fetchRepositories();
+  }, [isAuthenticated, getAccessTokenSilently]);
+
   let popUpContent;
-  if (exportPopUp && authorizedUserOcto) {
+  if (exportPopUp && isAuthenticated) {
     popUpContent = (
-      <NewProjectPopUp
-        {...{ setExportPopUp, authorizedUserOcto, exporting: false }}
-      />
+      <NewProjectPopUp {...{ setExportPopUp, user, exporting: false }} />
     );
-  } else if (authorizedUserOcto) {
+  } else if (isAuthenticated) {
     popUpContent = (
       <ShowProjects
         {...{
@@ -736,13 +771,13 @@ function LoginMode({
           setExportPopUp,
           setProjectsToShow,
           user: GlobalVariables.currentUser,
-          authorizedUserOcto,
+          user,
           pageDict,
         }}
       />
     );
   } else {
-    popUpContent = <InitialLog {...{ tryLogin }} />;
+    popUpContent = <InitialLog {...{ loginWithRedirect, tryLogin }} />;
   }
   return (
     <div
@@ -768,7 +803,18 @@ function LoginMode({
               <img></img>
             </button>
           </Link>
-        ) : null}
+        ) : (
+          <button
+            className="closeButton"
+            onClick={() => {
+              logout({
+                returnTo: window.location.origin, // Redirect to home page or specified URL
+              });
+            }}
+          >
+            <img></img>
+          </button>
+        )}
       </div>
       <div className="top-banner" style={{ margin: "35px 0 0 30px" }}>
         <div

@@ -90,6 +90,7 @@ export default function ReplicadApp() {
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
   /*DISABLED*/
+  /*DISABLED*/
   const tryLogin = function () {
     return new Promise((resolve, reject) => {
       // Initialize with OAuth.io app public key
@@ -183,7 +184,7 @@ export default function ReplicadApp() {
               />
             }
           />
-          <Route exact path="/callback" element={<p>WHAT THE FUCK</p>} />
+          <Route exact path="/callback" element={<p>callback</p>} />
           <Route
             path="/:owner/:repoName"
             element={
