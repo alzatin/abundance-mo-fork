@@ -3,7 +3,6 @@ import { OAuth } from "oauthio-web";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import {
   BrowserRouter,
-  HashRouter,
   BrowserRouter as Router,
   Routes,
   Route,
@@ -90,6 +89,7 @@ export default function ReplicadApp() {
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
+  /*DISABLED*/
   const tryLogin = function () {
     return new Promise((resolve, reject) => {
       // Initialize with OAuth.io app public key
@@ -163,7 +163,9 @@ export default function ReplicadApp() {
 
   return (
     <main>
-      <HashRouter>
+      <BrowserRouter
+        basename={import.meta.env.DEV ? "/" : "/Abundace-Mo-Fork/"}
+      >
         <Routes>
           <Route
             exact
@@ -181,6 +183,7 @@ export default function ReplicadApp() {
               />
             }
           />
+          <Route exact path="/callback" element={<p>WHAT THE FUCK</p>} />
           <Route
             path="/:owner/:repoName"
             element={
@@ -228,7 +231,7 @@ export default function ReplicadApp() {
             }
           />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </main>
   );
 }
