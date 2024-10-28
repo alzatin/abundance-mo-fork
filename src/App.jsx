@@ -163,11 +163,13 @@ export default function ReplicadApp() {
 
   return (
     <main>
-      <BrowserRouter basename={`/${process.env.PUBLIC_URL}`}>
+      <BrowserRouter
+        basename={import.meta.env.DEV ? "/" : "/Abundace-Mo-Fork/"}
+      >
         <Routes>
           <Route
             exact
-            path=""
+            path="/"
             element={
               <LoginMode
                 {...{
