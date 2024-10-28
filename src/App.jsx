@@ -163,9 +163,7 @@ export default function ReplicadApp() {
 
   return (
     <main>
-      <BrowserRouter
-        basename={import.meta.env.DEV ? "/" : "/Abundace-Mo-Fork/"}
-      >
+      <BrowserRouter basename={"/Abundace-Mo-Fork/"}>
         <Routes>
           <Route
             exact
