@@ -3,6 +3,7 @@ import { OAuth } from "oauthio-web";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import {
   BrowserRouter,
+  HashRouter,
   BrowserRouter as Router,
   Routes,
   Route,
@@ -162,7 +163,7 @@ export default function ReplicadApp() {
 
   return (
     <main>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route
             exact
@@ -227,7 +228,7 @@ export default function ReplicadApp() {
             }
           />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </main>
   );
 }
