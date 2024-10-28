@@ -1,10 +1,13 @@
 {
+  "homepage": "http://BarbourSmith.github.io/Abundance",
   "name": "replicad-app-example",
   "version": "0.14.6",
   "description": "A simple React app based on replicad.",
   "private": true,
   "scripts": {
     "start": "vite",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "vite build",
     "serve": "vite preview"
   },
