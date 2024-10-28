@@ -169,7 +169,7 @@ export default function ReplicadApp() {
         <Routes>
           <Route
             exact
-            path="/"
+            path=""
             element={
               <LoginMode
                 {...{
