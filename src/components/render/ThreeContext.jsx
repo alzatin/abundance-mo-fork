@@ -22,29 +22,27 @@ export default function ext({ children, ...props }) {
   let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
 
   const cameraRef = useRef();
-  const gridRef = useRef();
-  const [gridScale, setGridScale] = useState(1);
+  const [gridScale, setGridScale] = useState(50 / cameraZoom);
+  const [axesScale, setAxesScale] = useState(50 / cameraZoom);
 
   function PivotControl() {
-    let newScale = calculateInverseScale(cameraZoom);
-    console.log("newScale", newScale);
-    return <PivotControls disableRotations={true} scale={gridScale / 1.5} />;
-  }
-
-  function calculateInverseScale(zoom) {
-    const baseScale = 21; // The base scale value when zoom is 1
-    return baseScale / zoom;
+    return <PivotControls disableRotations={true} scale={axesScale / 1.5} />;
   }
 
   const [cellSection, setCellSection] = useState(100);
-  const projectUnit = globalvariables.topLevelMolecule
-    ? globalvariables.topLevelMolecule.unitsKey
-    : "MM";
 
   useEffect(() => {
-    setCellSection(gridScale);
+    if (gridScale < 10) {
+      setCellSection(1);
+    } else if (gridScale < 100) {
+      setCellSection(10);
+    } else if (gridScale < 1000) {
+      setCellSection(100);
+    }
+    setAxesScale(gridScale);
+
     console.log("gridScale", gridScale);
-  }, [gridScale]);
+  }, [gridScale, cameraZoom]);
 
   let previousZoomLevel = cameraZoom;
   window.addEventListener("wheel", (e) => {
@@ -81,16 +79,16 @@ export default function ext({ children, ...props }) {
         {props.axesParam ? <PivotControl /> : null}
         {props.gridParam ? (
           <Grid
-            ref={gridRef}
             position={[0, 0, 0]}
             cellSize={cellSection}
             args={[10000, 10000]}
-            cellColor={"#b6aebf"}
+            cellColor={"#726482"}
             fadeFrom={0}
+            lineColor={"#BFA301"}
             sectionColor={"#BFA301"}
-            fadeDistance={5000}
+            fadeDistance={9000}
             rotation={[Math.PI / 2, 0, 0]}
-            sectionSize={cellSection}
+            sectionSize={cellSection * 10}
           />
         ) : null}
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
