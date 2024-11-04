@@ -68,6 +68,7 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
   const [panelItem, setPanelItem] = useState({});
 
   const handleMouseOver = (item, key) => {
+    console.log(item);
     setPanelItem(item);
     setIsHovering(true);
   };
@@ -127,7 +128,7 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
               }}
             >
               <div className="GitInfoLeft">
-                <img src={"/imgs/defaultThumbnail.svg"}></img>
+                <img src={panelItem.svgURL}></img>
                 <div style={{ display: "flex" }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -137,16 +138,15 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
                   >
                     <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
                   </svg>
-                  <p>{panelItem.stargazers_count}</p>
+                  <p>{panelItem.ranking}</p>
                 </div>
               </div>
 
               <div className="GitInfo">
-                <span>Project Name: {panelItem.name}</span>
-                <span>Owner: {panelItem.owner.login}</span>
+                <span>Project Name: {panelItem.repoName}</span>
+                <span>Owner: {panelItem.owner}</span>
                 <span>Description: {panelItem.description || null}</span>
-                <span>PLACEHOLDER FOR README</span>
-                <span>Tags: PLACEHOLDER FOR tags or categories</span>
+                <span>Tags: {panelItem.topics}</span>
               </div>
             </div>
           ) : null}
