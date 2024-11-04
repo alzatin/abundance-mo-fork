@@ -6,7 +6,6 @@
   "private": true,
   "scripts": {
     "start": "vite",
-    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "build": "vite build",
     "serve": "vite preview"
@@ -14,8 +13,8 @@
   "dependencies": {
     "@octokit/plugin-paginate-rest": "^11.3.3",
     "@octokit/rest": "^21.0.2",
-    "@react-three/drei": "^9.97.0",
-    "@react-three/fiber": "8.15.16",
+    "@react-three/drei": "^9.115.0",
+    "@react-three/fiber": "^8.15.16",
     "@uiw/react-codemirror": "^4.22.0",
     "any-nest": "^1.0.3",
     "circular-menu": "^1.0.6",
@@ -30,13 +29,14 @@
     "react-dom": "18.2.0",
     "react-router-dom": "^6.22.3",
     "react-select": "^5.8.0",
+    "react-three-fiber": "^6.0.13",
     "replicad": "^0.16.1",
     "replicad-decorate": "^0.1.0",
     "replicad-opencascadejs": "^0.15.2",
     "replicad-shrink-wrap": "^0.1.0",
     "replicad-threejs-helper": "^0.15.2",
     "showdown": "^2.1.0",
-    "three": "0.161.0",
+    "three": "^0.161.0",
     "uuid": "^9.0.1",
     "webfontloader": "^1.6.28"
   },
