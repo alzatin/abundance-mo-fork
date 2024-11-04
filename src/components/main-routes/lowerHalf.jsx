@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import ThreeContext from "../render/ThreeContext.jsx";
 import ReplicadMesh from "../render/ReplicadMesh.jsx";
 import WireframeMesh from "../render/WireframeMesh.jsx";
