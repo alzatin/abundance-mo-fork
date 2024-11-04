@@ -159,6 +159,10 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
                   <strong>Topics: </strong>
                   <span>{panelItem.topics}</span>
                 </div>
+                <div>
+                  <strong>Created: </strong>
+                  <span>{panelItem.dateCreated}</span>
+                </div>
               </div>
             </div>
           ) : null}
