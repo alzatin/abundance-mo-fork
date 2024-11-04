@@ -220,7 +220,7 @@ export default memo(function FlowCanvas({
       });
 
       //Draw the selection box
-      if (!clickHandledByMolecule) {
+      if (!clickHandledByMolecule && GlobalVariables.ctrlDown) {
         console.log("click not HandledByMolecule trying to add box?");
         GlobalVariables.currentMolecule.placeAtom(
           {
