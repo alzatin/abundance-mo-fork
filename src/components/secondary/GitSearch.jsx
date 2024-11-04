@@ -124,12 +124,12 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
               className="GitProjectInfoPanel"
               style={{
                 top: GlobalVariables.lastClick[1] - 50 + "px",
-                left: GlobalVariables.lastClick[0] - 350 + "px",
+                left: GlobalVariables.lastClick[0] - 375 + "px",
               }}
             >
               <div className="GitInfoLeft">
                 <img src={panelItem.svgURL}></img>
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex", alignItems: "center" }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     style={{ transform: "scale(.7)" }}
@@ -138,15 +138,27 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
                   >
                     <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
                   </svg>
-                  <p>{panelItem.ranking}</p>
+                  <p style={{ fontSize: "0.5em" }}>{panelItem.ranking}</p>
                 </div>
               </div>
 
               <div className="GitInfo">
-                <span>Project Name: {panelItem.repoName}</span>
-                <span>Owner: {panelItem.owner}</span>
-                <span>Description: {panelItem.description || null}</span>
-                <span>Tags: {panelItem.topics}</span>
+                <div>
+                  <strong>Project Name: </strong>
+                  <span>{panelItem.repoName}</span>
+                </div>
+                <div>
+                  <strong>Creator: </strong>
+                  <span>{panelItem.owner}</span>
+                </div>
+                <div>
+                  <strong>Description: </strong>
+                  <span>{panelItem.description || null}</span>
+                </div>
+                <div>
+                  <strong>Topics: </strong>
+                  <span>{panelItem.topics}</span>
+                </div>
               </div>
             </div>
           ) : null}
