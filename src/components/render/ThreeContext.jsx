@@ -22,14 +22,14 @@ export default function ext({ children, ...props }) {
   let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
 
   const cameraRef = useRef();
-  const [gridScale, setGridScale] = useState(50 / cameraZoom);
-  const [axesScale, setAxesScale] = useState(50 / cameraZoom);
+  const [gridScale, setGridScale] = useState(10 / cameraZoom);
 
   function PivotControl() {
-    return <PivotControls disableRotations={true} scale={axesScale / 1.5} />;
+    return <PivotControls disableRotations={true} scale={axesScale} />;
   }
 
   const [cellSection, setCellSection] = useState(100);
+  const [axesScale, setAxesScale] = useState(0.3);
 
   useEffect(() => {
     if (gridScale < 10) {
@@ -39,12 +39,13 @@ export default function ext({ children, ...props }) {
     } else if (gridScale < 1000) {
       setCellSection(100);
     }
-    setAxesScale(gridScale);
+    setAxesScale(gridScale / 2);
 
     console.log("gridScale", gridScale);
   }, [gridScale, cameraZoom]);
 
   let previousZoomLevel = cameraZoom;
+
   window.addEventListener("wheel", (e) => {
     if (cameraRef.current) {
       // Check if the zoom level change is greater than 5 points
