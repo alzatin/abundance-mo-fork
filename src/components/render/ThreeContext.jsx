@@ -33,7 +33,7 @@ export default function ext({ children, ...props }) {
         near={0.1}
         pov={1000}
         far={9000}
-        zoom={cameraZoom}
+        //zoom={cameraZoom}
         position={[3000, 3000, 5000]}
       />
     );
@@ -67,7 +67,14 @@ export default function ext({ children, ...props }) {
         frameloop="always"
         shadows={true}
       >
-        <SceneCamera />
+        <OrthographicCamera
+          makeDefault={true}
+          near={0.1}
+          pov={1000}
+          far={9000}
+          zoom={cameraZoom}
+          position={[3000, 3000, 5000]}
+        />
         {props.axesParam ? <PivotControl /> : null}
         {props.gridParam ? (
           <Grid

@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState } from "react";
 import ThreeContext from "../render/ThreeContext.jsx";
 import ReplicadMesh from "../render/ReplicadMesh.jsx";
 import WireframeMesh from "../render/WireframeMesh.jsx";
+import globalvariables from "../../js/globalvariables.js";
 
 function useWindowSize() {
   // Initialize state with undefined width/height so server and client renders match
@@ -44,7 +45,15 @@ export default memo(function LowerHalf({
   const [cameraZoom, setCameraZoom] = useState(1);
 
   useEffect(() => {
-    setCameraZoom(mesh[0] ? mesh[0].cameraZoom : 1);
+    /*Reset the camera zoom to 1 when a new molecule is loaded*/
+    setCameraZoom(1);
+  }, [globalvariables.topLevelMolecule]);
+
+  useEffect(() => {
+    if (cameraZoom == 1 && mesh[0]) {
+      setCameraZoom(mesh[0].cameraZoom);
+      console.log("cameraZoom", cameraZoom);
+    }
   }, [mesh]);
 
   return (
