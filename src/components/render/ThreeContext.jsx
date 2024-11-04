@@ -40,18 +40,14 @@ export default function ext({ children, ...props }) {
       setCellSection(100);
     }
     setAxesScale(gridScale / 2);
-
-    console.log("gridScale", gridScale);
   }, [gridScale, cameraZoom]);
 
   let previousZoomLevel = cameraZoom;
-
   window.addEventListener("wheel", (e) => {
     if (cameraRef.current) {
       // Check if the zoom level change is greater than 5 points
-      if (Math.abs(cameraRef.current.zoom - previousZoomLevel) > 0.5) {
+      if (Math.abs(cameraRef.current.zoom - previousZoomLevel) > 3) {
         previousZoomLevel = cameraRef.current.zoom; // Update the previous zoom level
-
         setGridScale(50 / cameraRef.current.zoom);
       }
     }
