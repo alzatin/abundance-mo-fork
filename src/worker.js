@@ -13,6 +13,7 @@ import {
   importSTL,
   iterTopo,
   Solid,
+  drawRoundedRectangle,
 } from "replicad";
 import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";

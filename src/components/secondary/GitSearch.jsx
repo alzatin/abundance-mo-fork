@@ -6,6 +6,8 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
   let searchBarValue = "";
   var [gitRepos, setGitRepos] = useState([]);
   var [loadingGit, setLoadingGit] = useState(false);
+  const [lastKey, setLastKey] = useState("");
+  const [yearShow, setYearShow] = useState("2024");
   const maslowTopic = useRef(null);
 
   /**
@@ -20,14 +22,20 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
   // conditional query for maslow projects
   const searchGitHub = function () {
     const repoSearchRequest = async () => {
+      let lastKeyQuery = lastKey
+        ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
+        : "&lastKey";
+
       let searchQuery;
       if (searchBarValue != "") {
-        searchQuery = "&query=" + searchBarValue;
+        searchQuery = "&query=" + searchBarValue + "&yearShow=" + yearShow;
       } else {
-        searchQuery = "&query";
+        searchQuery = "&query" + "&yearShow=" + yearShow;
       }
       // gitsearch searches by repoName and does not specify user, we could specify last key if we wanted to paginate
-      let query = "attribute=searchField" + searchQuery + "&user" + "&lastKey";
+
+      let query =
+        "attribute=searchField" + searchQuery + "&user" + lastKeyQuery;
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
@@ -107,22 +115,7 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
               placeholder="Search for atom.."
               className="menu_search_canvas"
             ></input>
-            <label htmlFor="id_select"> Topic </label>
-            <select
-              ref={maslowTopic}
-              id="searchType"
-              className="menu_search_canvas"
-            >
-              {" "}
-              <option key={"empty-topic"} value={""}></option>
-              {topics.map((topic) => {
-                return (
-                  <option key={topic.label} value={topic.value}>
-                    {topic.label}
-                  </option>
-                );
-              })}
-            </select>
+
             <GitList />
           </div>
           {isHovering ? (
