@@ -27,7 +27,8 @@ export default function ext({ children, ...props }) {
 
   function PivotControl() {
     let newScale = calculateInverseScale(cameraZoom);
-    return <PivotControls scale={newScale} />;
+    console.log("newScale", newScale);
+    return <PivotControls disableRotations={true} scale={gridScale / 1.5} />;
   }
 
   function calculateInverseScale(zoom) {
