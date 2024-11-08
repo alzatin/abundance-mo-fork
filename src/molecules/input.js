@@ -211,10 +211,21 @@ export default class Input extends Atom {
       value: this.type,
       label: "Input Type",
       disabled: false,
-      options: ["number", "string"],
+      options: ["number", "string", "geometry", "array"],
       onChange: (value) => {
         if (this.type !== value) {
           this.type = value;
+          this.output.valueType = value;
+          //Add a new input to the current molecule
+          if (typeof this.parent !== "undefined") {
+            this.parent.updateIO(
+              "input",
+              this.name,
+              this.parent,
+              this.type,
+              10
+            );
+          }
         }
       },
     };

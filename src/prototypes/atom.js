@@ -300,6 +300,23 @@ export default class Atom {
     }
   }
 
+  updateIO(
+    type,
+    name,
+    target,
+    valueType,
+    defaultValue,
+    ready,
+    primary = false
+  ) {
+    let ap = target.inputs.find((o) => o.name === name && o.type === type);
+    if (ap) {
+      ap.valueType = valueType;
+      ap.value = defaultValue;
+      ap.defaultValue = defaultValue;
+    }
+  }
+
   /**
    * Removes an attachment point from an atom.
    * @param {boolean} type - The type of the IO (input or output).

@@ -208,11 +208,9 @@ export default class Molecule extends Atom {
             },
           };
           if (input.type) {
-            console.log(input);
             //not working because attachment point value needs to be given a type
             inputParams[this.uniqueID + input.name].type =
-              LevaInputs[input.type.toUpperCase()];
-            console.log(inputParams[this.uniqueID + input.name].type);
+              LevaInputs[input.valueType.toUpperCase()];
           }
         }
       });
