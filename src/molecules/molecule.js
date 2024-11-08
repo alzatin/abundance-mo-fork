@@ -196,22 +196,23 @@ export default class Molecule extends Atom {
         };
 
         /* Makes inputs for Io's other than geometry */
-        if (input.valueType !== "geometry") {
-          inputParams[this.uniqueID + input.name] = {
-            value: input.value,
-            label: input.name,
-            disabled: checkConnector(),
-            onChange: (value) => {
-              if (input.value !== value) {
-                input.setValue(value);
-              }
-            },
-          };
-          if (input.type) {
-            //not working because attachment point value needs to be given a type
-            inputParams[this.uniqueID + input.name].type =
-              LevaInputs[input.valueType.toUpperCase()];
-          }
+
+        inputParams[this.uniqueID + input.name] = {
+          value: input.value,
+          label: input.name,
+          disabled: checkConnector(),
+          onChange: (value) => {
+            if (input.value !== value) {
+              input.setValue(value);
+            }
+          },
+        };
+        if (input.type) {
+          inputParams[this.uniqueID + input.name].type =
+            LevaInputs[input.valueType.toUpperCase()];
+        }
+        if (input.valueType == "geometry") {
+          inputParams[this.uniqueID + input.name].disabled = true;
         }
       });
     }
