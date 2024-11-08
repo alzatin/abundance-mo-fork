@@ -370,7 +370,7 @@ body {
   scrollbar-width: thin;
   border-radius: 5px;
   color: #eceded;
-  width: 250px;
+  width: 210px;
   padding: 10px;
   position: absolute;
   z-index: 5;
@@ -960,11 +960,12 @@ Sidebar navigation
 
 /*gitmolecule info panel on hover gitmolecule from list*/
 .GitProjectInfoPanel {
+  padding: 10px;
   display: flex;
-  background-color: #27292ab0;
-  border: 2px solid #e7ddecc2;
-  color: white;
-  width: 300px;
+  background-color: #fbf9fcf5;
+  border: 2px solid #c4a3d5;
+  color: rgb(10, 9, 10);
+  width: 350px;
   position: absolute;
   left: 0px;
   top: 100px;
