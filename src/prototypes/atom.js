@@ -664,6 +664,7 @@ export default class Atom {
    */
   createLevaInputs() {
     let inputParams = {};
+
     /** Runs through active atom inputs and adds IO parameters to default param*/
     if (this.inputs) {
       this.inputs.map((input) => {

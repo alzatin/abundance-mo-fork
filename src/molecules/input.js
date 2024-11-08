@@ -39,6 +39,7 @@ export default class Input extends Atom {
      */
     this.height;
 
+    this.type = "number";
     /**
      * This atom's old name, used during name changes
      * @type {string}
@@ -47,23 +48,11 @@ export default class Input extends Atom {
 
     this.radius = this.radius * 1.3;
 
-    this.addIO(
-      "output",
-      "number or geometry",
-      this,
-      "number or geometry",
-      10.0
-    );
+    this.addIO("output", "number or geometry", this, this.type, 10.0);
 
     //Add a new input to the current molecule
     if (typeof this.parent !== "undefined") {
-      this.parent.addIO(
-        "input",
-        this.name,
-        this.parent,
-        "number or geometry",
-        10
-      );
+      this.parent.addIO("input", this.name, this.parent, this.type, 10);
     }
 
     this.setValues(values);
@@ -215,6 +204,17 @@ export default class Input extends Atom {
       onChange: (value) => {
         if (this.name !== value) {
           this.name = value;
+        }
+      },
+    };
+    inputNames[this.uniqueID + "type"] = {
+      value: this.type,
+      label: "Input Type",
+      disabled: false,
+      options: ["number", "string"],
+      onChange: (value) => {
+        if (this.type !== value) {
+          this.type = value;
         }
       },
     };

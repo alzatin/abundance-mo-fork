@@ -5,6 +5,7 @@ import { button } from "leva";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { BOMEntry } from "../js/BOM";
 import globalvariables from "../js/globalvariables.js";
+import { LevaInputs } from "leva";
 
 /**
  * This class creates the Molecule atom.
@@ -193,6 +194,7 @@ export default class Molecule extends Atom {
         const checkConnector = () => {
           return input.connectors.length > 0;
         };
+
         /* Makes inputs for Io's other than geometry */
         if (input.valueType !== "geometry") {
           inputParams[this.uniqueID + input.name] = {
@@ -205,6 +207,13 @@ export default class Molecule extends Atom {
               }
             },
           };
+          if (input.type) {
+            console.log(input);
+            //not working because attachment point value needs to be given a type
+            inputParams[this.uniqueID + input.name].type =
+              LevaInputs[input.type.toUpperCase()];
+            console.log(inputParams[this.uniqueID + input.name].type);
+          }
         }
       });
     }
