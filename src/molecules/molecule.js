@@ -915,6 +915,7 @@ export default class Molecule extends Atom {
             typeof newAtomObj.name !== "undefined"
           ) {
             atom.name = newAtomObj.name;
+            atom.type = newAtomObj.type;
             atom.draw(); //The poling happens in draw :roll_eyes:
           } else if (atom.atomType == "Input") {
             atom.name = GlobalVariables.incrementVariableName(atom.name, this);

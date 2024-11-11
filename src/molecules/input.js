@@ -187,8 +187,8 @@ export default class Input extends Atom {
         this.decreaseToProcessCountByOne();
         this.value = input.getValue();
         this.output.waitOnComingInformation(); //Lock all of the dependents
-
         this.output.setValue(this.value);
+        this.parent.updateIO("input", this.name, this.parent, this.type, 10);
       }
     });
   }
@@ -236,5 +236,17 @@ export default class Input extends Atom {
    */
   getOutput() {
     return this.output.getValue();
+  }
+
+  /**
+   * Add the input Type choice to the object which is saved for this molecule
+   */
+  serialize(offset = { x: 0, y: 0 }) {
+    var superSerialObject = super.serialize(offset);
+
+    //Write the current color selection to the serialized object
+    superSerialObject.type = this.type;
+
+    return superSerialObject;
   }
 }
