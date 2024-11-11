@@ -17,7 +17,9 @@ var octokit = null;
  * Initial log component displays pop Up to either attempt Github login/browse projects
  *
  */
-const InitialLog = ({ loginWithRedirect, tryLogin }) => {
+const InitialLog = ({}) => {
+  const { loginWithRedirect } = useAuth0();
+
   return (
     <div className="login-page">
       <div className="form animate fadeInUp one">
@@ -40,12 +42,7 @@ const InitialLog = ({ loginWithRedirect, tryLogin }) => {
               id="loginButton"
               style={{ height: "40px" }}
               className="submit-btn"
-              onClick={() =>
-                loginWithRedirect({
-                  connection: "github",
-                  scope: "openid profile email repo user", // Request necessary scopes here
-                })
-              }
+              onClick={() => loginWithRedirect()}
             >
               Login With GitHub
             </button>
@@ -740,7 +737,9 @@ function LoginMode({
   useEffect(() => {
     const fetchRepositories = async () => {
       if (isAuthenticated) {
-        try {
+        console.log("Authenticated");
+        console.log(user);
+        /*try {
           const token = await getAccessTokenSilently({
             audience: "https://api.github.com/", // Audience for GitHub API
             scope: "repo user", // Requested scopes
@@ -751,7 +750,7 @@ function LoginMode({
           console.log(data); // Handle the list of repositories here
         } catch (err) {
           console.error("Error fetching repositories:", err);
-        }
+        }*/
       }
     };
 

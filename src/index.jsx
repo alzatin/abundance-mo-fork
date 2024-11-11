@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { createRoot } from "react-dom/client";
 import { Auth0Provider } from "@auth0/auth0-react";
+import Auth0ProviderWithHistory from "./auth/auth0-provider-with-history.jsx";
+import { BrowserRouter } from "react-router-dom";
 
 // This is here to compensate for a bug in vite
 import "replicad-opencascadejs/src/replicad_single.wasm?url";
@@ -10,18 +12,11 @@ import "replicad-opencascadejs/src/replicad_single.wasm?url";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Auth0Provider
-      domain="dev-ln37eaqfk7dp2480.us.auth0.com"
-      clientId="zNpgG4wQuLXBdwjkqKEbGImYnYeqPXc3"
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-        audience: "https://api.github.com/", // The audience for GitHub API
-        scope: "repo user", // Requested scopes
-      }}
-    >
-      <App />
-    </Auth0Provider>
-    ,
+    <BrowserRouter basename={import.meta.env.DEV ? "/" : "/abundance-mo-fork/"}>
+      <Auth0ProviderWithHistory>
+        <App />
+      </Auth0ProviderWithHistory>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
