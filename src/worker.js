@@ -13,6 +13,7 @@ import {
   importSTL,
   iterTopo,
   Solid,
+  Sketch,
   drawRoundedRectangle,
 } from "replicad";
 import { drawProjection, ProjectionCamera } from "replicad";
@@ -1538,13 +1539,22 @@ function generateDisplayMesh(id) {
           .extrude(0.0001);
         return {
           faces: threeDShape.mesh({ tolerance: 0.1, angularTolerance: 0.5 }),
-          edges: threeDShape.meshEdges({ tolerance: 0.1, angularTolerance: 0.5 }),
+          edges: threeDShape.meshEdges({
+            tolerance: 0.1,
+            angularTolerance: 0.5,
+          }),
         };
       } else {
         finalMeshes.push({
           cameraZoom: cameraZoom,
-          faces: meshgeometry.geometry.mesh({ tolerance: 0.1, angularTolerance: 0.5 }),
-          edges: meshgeometry.geometry.meshEdges({ tolerance: 0.1, angularTolerance: 0.5 }),
+          faces: meshgeometry.geometry.mesh({
+            tolerance: 0.1,
+            angularTolerance: 0.5,
+          }),
+          edges: meshgeometry.geometry.meshEdges({
+            tolerance: 0.1,
+            angularTolerance: 0.5,
+          }),
           color: meshgeometry.color,
         });
       }

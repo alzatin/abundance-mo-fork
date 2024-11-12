@@ -207,7 +207,7 @@ export default class Molecule extends Atom {
             }
           },
         };
-        if (input.type) {
+        if (input.type && input.valueType) {
           inputParams[this.uniqueID + input.name].type =
             LevaInputs[input.valueType.toUpperCase()];
         }
