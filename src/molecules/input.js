@@ -48,11 +48,11 @@ export default class Input extends Atom {
 
     this.radius = this.radius * 1.3;
 
-    this.addIO("output", "number or geometry", this, this.type, 10.0);
+    this.addIO("output", "number or geometry", this, this.type, this.value);
 
     //Add a new input to the current molecule
     if (typeof this.parent !== "undefined") {
-      this.parent.addIO("input", this.name, this.parent, this.type, 10);
+      this.parent.addIO("input", this.name, this.parent, this.type, this.value);
     }
 
     this.setValues(values);
@@ -188,7 +188,13 @@ export default class Input extends Atom {
         this.value = input.getValue();
         this.output.waitOnComingInformation(); //Lock all of the dependents
         this.output.setValue(this.value);
-        this.parent.updateIO("input", this.name, this.parent, this.type, 10);
+        this.parent.updateIO(
+          "input",
+          this.name,
+          this.parent,
+          this.type,
+          this.value
+        );
       }
     });
   }
@@ -223,7 +229,7 @@ export default class Input extends Atom {
               this.name,
               this.parent,
               this.type,
-              10
+              this.value
             );
           }
         }

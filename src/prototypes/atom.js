@@ -300,20 +300,11 @@ export default class Atom {
     }
   }
 
-  updateIO(
-    type,
-    name,
-    target,
-    valueType,
-    defaultValue,
-    ready,
-    primary = false
-  ) {
+  updateIO(type, name, target, valueType, value) {
     let ap = target.inputs.find((o) => o.name === name && o.type === type);
     if (ap) {
       ap.valueType = valueType;
-      ap.value = defaultValue;
-      ap.defaultValue = defaultValue;
+      ap.value = value;
     }
   }
 
