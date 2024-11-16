@@ -12,6 +12,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.12.1",
     "@octokit/plugin-paginate-rest": "^11.3.3",
     "@octokit/rest": "^21.0.2",
     "@react-three/drei": "^9.97.0",

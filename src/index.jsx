@@ -11,13 +11,11 @@ import "replicad-opencascadejs/src/replicad_single.wasm?url";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter basename={import.meta.env.DEV ? "/" : "/abundance-mo-fork/"}>
-      <Auth0ProviderWithHistory>
-        <App />
-      </Auth0ProviderWithHistory>
-    </BrowserRouter>
-  </React.StrictMode>
+  <BrowserRouter basename={import.meta.env.DEV ? "/" : "/abundance-mo-fork/"}>
+    <Auth0ProviderWithHistory>
+      <App />
+    </Auth0ProviderWithHistory>
+  </BrowserRouter>
 );
 
 // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.

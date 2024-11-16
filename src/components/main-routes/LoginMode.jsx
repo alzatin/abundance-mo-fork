@@ -733,24 +733,39 @@ function LoginMode({
     isLoading,
     getAccessTokenSilently,
   } = useAuth0();
+  const [apiResponse, setApiResponse] = useState(null);
+
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchRepositories = async () => {
       if (isAuthenticated) {
-        console.log("Authenticated");
-        console.log(user);
-        /*try {
-          const token = await getAccessTokenSilently({
-            audience: "https://api.github.com/", // Audience for GitHub API
-            scope: "repo user", // Requested scopes
-          });
-          console.log(token);
-          const octokit = new Octokit({ auth: token });
-          const { data } = await octokit.rest.repos.listForAuthenticatedUser();
-          console.log(data); // Handle the list of repositories here
-        } catch (err) {
-          console.error("Error fetching repositories:", err);
-        }*/
+        console.log("isAuthenticated");
+
+        const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
+
+        const callSecureApi = async () => {
+          try {
+            const token = await getAccessTokenSilently();
+            console.log(serverUrl);
+
+            const response = await fetch(`${serverUrl}/api/greet`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            const responseData = await response.json();
+            console.log("responseData", responseData);
+
+            setMessage(responseData.message);
+          } catch (error) {
+            console.error(error);
+            setMessage(error.message);
+          }
+        };
+
+        callSecureApi();
       }
     };
 
