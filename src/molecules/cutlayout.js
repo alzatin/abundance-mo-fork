@@ -37,6 +37,11 @@ export default class CutLayout extends Atom {
      */
     this.description =
       "Extracts all parts tagged for cutting and lays them out on a sheet to cut.";
+    /**
+     * The array of placements returned by the layout function
+     * @type {array}
+     */
+    this.placements = [];
 
     this.progress = 0.0;
 
@@ -71,13 +76,6 @@ export default class CutLayout extends Atom {
       this,
       "number",
       GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 6 : .25
-    );
-    this.addIO(
-      "input",
-      "Sheet Padding",
-      this,
-      "number",
-      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 76 : 3
     );
 
     this.addIO("output", "geometry", this, "geometry", "");
@@ -183,7 +181,7 @@ export default class CutLayout extends Atom {
       var materialThickness = this.findIOValue("Material Thickness");
       var sheetWidth = this.findIOValue("Sheet Width");
       var sheetHeight = this.findIOValue("Sheet Height");
-      var sheetPadding = this.findIOValue("Sheet Padding");
+      var sheetPadding = 0;//this.findIOValue("Sheet Padding"); //It's easier to just adjust the sheet size than to add padding
       var partPadding = this.findIOValue("Part Padding");
       var tag = "cutLayout";
 
@@ -202,6 +200,11 @@ export default class CutLayout extends Atom {
           proxy((progress, cancelationHandle) => {
             this.progress = progress;
             this.cancelationHandle = cancelationHandle;
+          }),
+          proxy((placements) => {
+            this.placements = placements;
+            console.log("Placements: ");
+            console.log(placements);
           }),
           {
             thickness: materialThickness,

@@ -15,6 +15,7 @@ import {
   Solid,
   Sketch,
   drawRoundedRectangle,
+  makeSphere,
 } from "replicad";
 import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
@@ -418,8 +419,8 @@ async function Assembly(inputs) {
 // Runs the user entered code in the worker thread and returns the result.
 async function code(targetID, code, argumentsArray) {
   await started;
-  let keys1 = ["Rotate", "Assembly"];
-  let inputValues = [Rotate, Assembly];
+  let keys1 = ["Rotate", "Assembly", "makeSphere"];
+  let inputValues = [Rotate, Assembly, makeSphere];
   for (const [key, value] of Object.entries(argumentsArray)) {
     keys1.push(`${key}`);
     inputValues.push(value);
@@ -733,7 +734,7 @@ function extractKeepOut(inputGeometry) {
  *    - sheetPadding - space from the edge of the material where no parts will be placed
  *    - partPadding - space between parts in the resulting placement
  */
-function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
+function layout(targetID, inputID, TAG, progressCallback, placementsCallback, layoutConfig) {
   return started.then(() => {
     var THICKNESS_TOLLERANCE = 0.001;
 
@@ -860,6 +861,7 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
     let positionsPromise = computePositions(
       shapesForLayout,
       progressCallback,
+      placementsCallback,
       layoutConfig
     );
     return positionsPromise.then((positions) => {
@@ -930,7 +932,7 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
 /**
  * Use the packing engine, note this is potentially time consuming step. FIXME: Can this be moved into a different worker?
  */
-function computePositions(shapesForLayout, progressCallback, layoutConfig) {
+function computePositions(shapesForLayout, progressCallback, placementsCallback, layoutConfig) {
   const populationSize = 5;
   const nestingEngine = new AnyNest();
   const tolerance = 0.1;
@@ -995,6 +997,7 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
                 " generations. Final result: " +
                 JSON.stringify(placement)
             );
+            placementsCallback(placement);
             nestingEngine.stop();
             resolve(placement);
           }
