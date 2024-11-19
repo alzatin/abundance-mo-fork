@@ -747,24 +747,25 @@ function LoginMode({
       const callSecureApi = async () => {
         try {
           const token = await getAccessTokenSilently();
-          console.log(user);
-          console.log("token", token);
+
           //Returns authorized user from proxy server
           const response = await fetch(`${serverUrl}/api/greet`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          const userOctoResponse = await response.json();
-          console.log("userOctoRes", userOctoResponse.message);
-          const userOcto = userOctoResponse.message;
-          GlobalVariables.currentUser = userOctoResponse.message.login;
-          const { data } = await userOctoResponse.message.request("/user");
+          const authResponse = await response.json();
+          console.log("authResponse", authResponse.message);
+          const authorizedUser = new Octokit({
+            auth: authResponse.message,
+          });
+          const { data } = await authorizedUser.request("/user");
+          GlobalVariables.currentUser = data.login;
           console.log(data);
           if (GlobalVariables.currentUser) {
             setIsLoggedIn(true);
             console.log(GlobalVariables.currentUser);
-            setAuthorizedUserOcto(userOcto);
+            setAuthorizedUserOcto(authorizedUser);
           }
         } catch (error) {
           console.error(error);
