@@ -373,6 +373,7 @@ const ShowProjects = ({
     error: "Error",
     noProjects: "No projects found",
   };
+  console.log(user);
 
   const [projectsLoaded, setStateLoaded] = useState([]);
   const [lastKey, setLastKey] = useState("");
@@ -380,6 +381,7 @@ const ShowProjects = ({
   const [searchBarValue, setSearchBarValue] = useState("");
   const [yearShow, setYearShow] = useState("2024");
   const [apiStatus, setApiStatus] = useState(loadingMessages.loading);
+  console.log(authorizedUserOcto);
 
   useEffect(() => {
     octokit = new Octokit();
@@ -718,9 +720,11 @@ const ShowProjects = ({
 
 function LoginMode({
   tryLogin,
-  authorizedUserOcto,
   exportPopUp,
   setExportPopUp,
+  setIsLoggedIn,
+  authorizedUserOcto,
+  setAuthorizedUserOcto,
 }) {
   const pageDict = { 0: null };
   const [projectToShow, setProjectsToShow] = useState("recents");
@@ -733,51 +737,47 @@ function LoginMode({
     isLoading,
     getAccessTokenSilently,
   } = useAuth0();
-  const [apiResponse, setApiResponse] = useState(null);
-
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const fetchRepositories = async () => {
-      if (isAuthenticated) {
-        console.log("isAuthenticated");
+    if (isAuthenticated) {
+      console.log("isAuthenticated");
 
-        const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
+      const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
 
-        const callSecureApi = async () => {
-          try {
-            const token = await getAccessTokenSilently();
-            console.log(serverUrl);
-
-            const response = await fetch(`${serverUrl}/api/greet`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
-
-            const responseData = await response.json();
-            console.log("responseData", responseData);
-
-            setMessage(responseData.message);
-          } catch (error) {
-            console.error(error);
-            setMessage(error.message);
+      const callSecureApi = async () => {
+        try {
+          const token = await getAccessTokenSilently();
+          //Returns authorized user from proxy server
+          const response = await fetch(`${serverUrl}/api/greet`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const userOctoResponse = await response.json();
+          console.log("userOctoRes", userOctoResponse.message);
+          const userOcto = userOctoResponse.message;
+          GlobalVariables.currentUser = userOctoResponse.message.login;
+          const { data } = await userOctoResponse.message.request("/user");
+          console.log(data);
+          if (GlobalVariables.currentUser) {
+            setIsLoggedIn(true);
+            console.log(GlobalVariables.currentUser);
+            setAuthorizedUserOcto(userOcto);
           }
-        };
-
-        callSecureApi();
-      }
-    };
-
-    fetchRepositories();
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      callSecureApi();
+    }
   }, [isAuthenticated, getAccessTokenSilently]);
 
   let popUpContent;
-  if (exportPopUp && isAuthenticated) {
+  if (exportPopUp && authorizedUserOcto) {
     popUpContent = (
       <NewProjectPopUp {...{ setExportPopUp, user, exporting: false }} />
     );
-  } else if (isAuthenticated) {
+  } else if (authorizedUserOcto) {
     popUpContent = (
       <ShowProjects
         {...{
@@ -785,7 +785,7 @@ function LoginMode({
           setExportPopUp,
           setProjectsToShow,
           user: GlobalVariables.currentUser,
-          user,
+          authorizedUserOcto,
           pageDict,
         }}
       />

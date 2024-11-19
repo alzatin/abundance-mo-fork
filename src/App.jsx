@@ -26,7 +26,6 @@ import "./styles//codemirror.css";
  * The octokit instance which allows authenticated interaction with GitHub.
  * @type {object}
  */
-var authorizedUserOcto = null;
 
 const cad = wrap(new cadWorker());
 export default function ReplicadApp() {
@@ -43,6 +42,8 @@ export default function ReplicadApp() {
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
   const [exportPopUp, setExportPopUp] = useState(false);
+
+  const [authorizedUserOcto, setAuthorizedUserOcto] = useState(null);
   const [shortCutsOn, setShortCuts] = useState(
     GlobalVariables.displayShortcuts
   );
@@ -175,6 +176,7 @@ export default function ReplicadApp() {
                 setIsLoggedIn,
                 isloggedIn,
                 authorizedUserOcto,
+                setAuthorizedUserOcto,
                 exportPopUp,
                 setExportPopUp,
               }}
