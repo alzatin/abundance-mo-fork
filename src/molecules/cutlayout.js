@@ -202,7 +202,7 @@ export default class CutLayout extends Atom {
             this.cancelationHandle = cancelationHandle;
           }),
           proxy((placements) => {
-            this.placements = placements;
+            this.placements = placements[0];
             console.log("Placements: ");
             console.log(placements);
           }),
@@ -236,8 +236,42 @@ export default class CutLayout extends Atom {
           this.updateValueButton();
       });
 
-      //Here
-  
+
+      inputParams[this.uniqueID + "position"] = {
+        value: { x: 0, y: 0, z: 0 },
+        label: " " + 2323,
+        onChange: (value) => {
+          console.log(value);
+          // this.x = value.x;
+          // this.y = value.y;
+          // this.z = value.z;
+          // this.updateValue();
+        },
+      };
+
+      console.log("Placements: ");
+      console.log(this.placements);
+
+      //Expose the stored positions
+      this.placements.forEach((placement, index) => {
+        console.log("Placement: " + index);
+        console.log(placement);
+        console.log(placement.translate.y);
+        console.log(placement.rotate);
+        inputParams[this.uniqueID + "position" + index] = {
+          value: { x: placement.translate.x, y: placement.translate.y, z: 0 },
+          label: " " + index,
+          onChange: (value) => {
+            console.log(value);
+            // this.x = value.x;
+            // this.y = value.y;
+            // this.z = value.z;
+            // this.updateValue();
+          },
+        };
+      });
+
+
       return inputParams;
   }
 }
