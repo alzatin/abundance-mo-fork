@@ -747,6 +747,8 @@ function LoginMode({
       const callSecureApi = async () => {
         try {
           const token = await getAccessTokenSilently();
+          console.log(user);
+          console.log("token", token);
           //Returns authorized user from proxy server
           const response = await fetch(`${serverUrl}/api/greet`, {
             headers: {

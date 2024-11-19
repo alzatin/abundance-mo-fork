@@ -93,6 +93,7 @@ export default function ReplicadApp() {
   /*DISABLED*/
   /*DISABLED*/
   const tryLogin = function () {
+    /*
     return new Promise((resolve, reject) => {
       // Initialize with OAuth.io app public key
       if (window.location.href.includes("private")) {
@@ -106,7 +107,7 @@ export default function ReplicadApp() {
         /**
          * Oktokit object to access github
          * @type {object}
-         */
+         
         authorizedUserOcto = new Octokit({
           auth: github.access_token,
         });
@@ -119,7 +120,7 @@ export default function ReplicadApp() {
           }
         });
       });
-    });
+    });*/
   };
 
   // Loads project
