@@ -261,4 +261,16 @@ export default class CutLayout extends Atom {
 
       return inputParams;
   }
+
+  /**
+   * Save the placements to be loaded next time
+   */
+  serialize(values) {
+    //Save the readme text to the serial stream
+    var valuesObj = super.serialize(values);
+    valuesObj.placements = this.placements;
+
+    return valuesObj;
+  }
+
 }
