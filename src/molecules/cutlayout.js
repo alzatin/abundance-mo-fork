@@ -236,19 +236,6 @@ export default class CutLayout extends Atom {
           this.updateValueButton();
       });
 
-
-      inputParams[this.uniqueID + "position"] = {
-        value: { x: 0, y: 0, z: 0 },
-        label: " " + 2323,
-        onChange: (value) => {
-          console.log(value);
-          // this.x = value.x;
-          // this.y = value.y;
-          // this.z = value.z;
-          // this.updateValue();
-        },
-      };
-
       console.log("Placements: ");
       console.log(this.placements);
 
