@@ -879,55 +879,63 @@ function layout(targetID, inputID, TAG, progressCallback, placementsCallback, la
         }
       }
 
-      library[targetID] = actOnLeafs(
-        extractTags(library[targetID], TAG),
-        (leaf) => {
-          let transform, index;
-          for (var i = 0; i < positions.length; i++) {
-            let candidates = positions[i].filter(
-              (transform) => transform.id == leaf.id
-            );
-            if (candidates.length == 1) {
-              transform = candidates[0];
-              index = i;
-              break;
-            } else if (candidates.length > 1) {
-              console.warn("Found more than one transformation for same id");
-            }
-          }
-          if (transform == undefined) {
-            console.log("didn't find transform for id: " + leaf.id);
-            return undefined;
-          }
-          // apply rotation first. All rotations are around (0, 0, 0)
-          // Additionally, shift by sheet-index * sheet height so that multiple
-          // sheet layouts are spaced out from one another.
-          let newGeom = leaf.geometry[0]
-            .clone()
-            .rotate(
-              transform.rotate,
-              new Vector([0, 0, 0]),
-              new Vector([0, 0, 1])
-            )
-            .translate(
-              transform.translate.x,
-              transform.translate.y + i * layoutConfig.height,
-              0
-            );
-
-          return {
-            geometry: [newGeom],
-            tags: leaf.tags,
-            color: leaf.color,
-            plane: leaf.plane,
-            bom: leaf.bom,
-          };
-        }
-      );
+      //This does the actual layout of the parts. We want to break this out into it's own function which can be passed a list of positions
+      applyLayout(targetID, inputID, positions, TAG, layoutConfig);
       return warning;
     });
   });
 }
+
+/**
+ * Apply the transformations to the geometry to apply the layout
+ */
+ function applyLayout(targetID, inputID, positions, TAG, layoutConfig) {
+    library[targetID] = actOnLeafs(
+      extractTags(library[targetID], TAG),
+      (leaf) => {
+        let transform, index;
+        for (var i = 0; i < positions.length; i++) {
+          let candidates = positions[i].filter(
+            (transform) => transform.id == leaf.id
+          );
+          if (candidates.length == 1) {
+            transform = candidates[0];
+            index = i;
+            break;
+          } else if (candidates.length > 1) {
+            console.warn("Found more than one transformation for same id");
+          }
+        }
+        if (transform == undefined) {
+          console.log("didn't find transform for id: " + leaf.id);
+          return undefined;
+        }
+        // apply rotation first. All rotations are around (0, 0, 0)
+        // Additionally, shift by sheet-index * sheet height so that multiple
+        // sheet layouts are spaced out from one another.
+        let newGeom = leaf.geometry[0]
+          .clone()
+          .rotate(
+            transform.rotate,
+            new Vector([0, 0, 0]),
+            new Vector([0, 0, 1])
+          )
+          .translate(
+            transform.translate.x,
+            transform.translate.y + i * layoutConfig.height,
+            0
+          );
+
+        return {
+          geometry: [newGeom],
+          tags: leaf.tags,
+          color: leaf.color,
+          plane: leaf.plane,
+          bom: leaf.bom,
+        };
+      }
+    );
+  };
 
 /**
  * Use the packing engine, note this is potentially time consuming step. FIXME: Can this be moved into a different worker?
