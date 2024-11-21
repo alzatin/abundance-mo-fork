@@ -736,7 +736,43 @@ function extractKeepOut(inputGeometry) {
  */
 function layout(targetID, inputID, TAG, progressCallback, placementsCallback, layoutConfig) {
   return started.then(() => {
-    var THICKNESS_TOLLERANCE = 0.001;
+    
+    var shapesForLayout = rotateForLayout(targetID, inputID, TAG, layoutConfig);
+
+    let positionsPromise = computePositions(
+      shapesForLayout,
+      progressCallback,
+      placementsCallback,
+      layoutConfig
+    );
+    return positionsPromise.then((positions) => {
+      let warning;
+      if (positions.length == 0) {
+        warning = "Failed to place any parts. Are sheet dimensions right?";
+      } else {
+        let unplacedParts = shapesForLayout.length - positions.flat().length;
+        if (unplacedParts > 0) {
+          warning =
+            unplacedParts +
+            " parts are too big to fit on this sheet size. Failed layout for " +
+            unplacedParts +
+            " part(s)";
+        }
+      }
+
+      //This does the actual layout of the parts. We want to break this out into it's own function which can be passed a list of positions
+      applyLayout(targetID, inputID, positions, TAG, layoutConfig);
+      return warning;
+    });
+  });
+}
+
+
+/**
+ * Rotate shapes to be placed on their most cuttable face (basically lay them flat)
+ */
+function rotateForLayout(targetID, inputID, TAG, layoutConfig) {
+  var THICKNESS_TOLLERANCE = 0.001;
 
     let taggedGeometry = extractTags(library[inputID], TAG);
     if (!taggedGeometry) {
@@ -857,39 +893,18 @@ function layout(targetID, inputID, TAG, progressCallback, placementsCallback, la
 
       return newLeaf;
     });
-
-    let positionsPromise = computePositions(
-      shapesForLayout,
-      progressCallback,
-      placementsCallback,
-      layoutConfig
-    );
-    return positionsPromise.then((positions) => {
-      let warning;
-      if (positions.length == 0) {
-        warning = "Failed to place any parts. Are sheet dimensions right?";
-      } else {
-        let unplacedParts = shapesForLayout.length - positions.flat().length;
-        if (unplacedParts > 0) {
-          warning =
-            unplacedParts +
-            " parts are too big to fit on this sheet size. Failed layout for " +
-            unplacedParts +
-            " part(s)";
-        }
-      }
-
-      //This does the actual layout of the parts. We want to break this out into it's own function which can be passed a list of positions
-      applyLayout(targetID, inputID, positions, TAG, layoutConfig);
-      return warning;
-    });
-  });
-}
+    return shapesForLayout;
+  }
 
 /**
  * Apply the transformations to the geometry to apply the layout
  */
  function applyLayout(targetID, inputID, positions, TAG, layoutConfig) {
+    console.log("Applying layout:");
+    console.log("Target ID: " + targetID);
+    console.log("Input ID: " + inputID);
+
+
     library[targetID] = actOnLeafs(
       extractTags(library[targetID], TAG),
       (leaf) => {
@@ -1600,6 +1615,7 @@ expose({
   difference,
   tag,
   layout,
+  applyLayout,
   output,
   molecule,
   bom,

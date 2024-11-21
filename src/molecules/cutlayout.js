@@ -161,7 +161,47 @@ export default class CutLayout extends Atom {
    * We only want the layout to update when the button is pressed not when the inputs update so we block the regular update value behavior
    */
   updateValue() {
+    super.updateValue();
 
+    if (this.inputs.every((x) => x.ready)) {
+      this.processing = true;
+      var inputID = this.findIOValue("geometry");
+      var materialThickness = this.findIOValue("Material Thickness");
+      var sheetWidth = this.findIOValue("Sheet Width");
+      var sheetHeight = this.findIOValue("Sheet Height");
+      var sheetPadding = 0;//this.findIOValue("Sheet Padding"); //It's easier to just adjust the sheet size than to add padding
+      var partPadding = this.findIOValue("Part Padding");
+      var tag = "cutLayout";
+
+      if (!inputID) {
+        this.setAlert('"geometry" input is missing');
+        return;
+      }
+      
+      GlobalVariables.cad
+        .applyLayout(
+          this.uniqueID,
+          inputID,
+          [this.placements],
+          tag,
+          {
+            thickness: materialThickness,
+            width: sheetWidth,
+            height: sheetHeight,
+            sheetPadding: sheetPadding,
+            partPadding: partPadding
+          })
+        .then((warning) => {
+          this.basicThreadValueProcessing();
+          if (warning != undefined) {
+            this.setAlert(warning);
+          }
+          this.progress = 1.0;
+          this.cancelationHandle = undefined;
+          this.processing = false;
+        })
+        .catch(this.alertingErrorHandler());
+    }
   }
 
   /**
@@ -190,8 +230,6 @@ export default class CutLayout extends Atom {
         return;
       }
 
-      GlobalVariables.topLevelMolecule.unitsKey
-
       GlobalVariables.cad
         .layout(
           this.uniqueID,
@@ -203,8 +241,6 @@ export default class CutLayout extends Atom {
           }),
           proxy((placements) => {
             this.placements = placements[0];
-            console.log("Placements: ");
-            console.log(placements);
           }),
           {
             thickness: materialThickness,
@@ -236,20 +272,13 @@ export default class CutLayout extends Atom {
           this.updateValueButton();
       });
 
-      console.log("Placements: ");
-      console.log(this.placements);
-
       //Expose the stored positions
       this.placements.forEach((placement, index) => {
-        console.log("Placement: " + index);
-        console.log(placement);
-        console.log(placement.translate.y);
-        console.log(placement.rotate);
         inputParams[this.uniqueID + "position" + index] = {
           value: { x: placement.translate.x, y: placement.translate.y, z: 0 },
           label: " " + index,
           onChange: (value) => {
-            console.log(value);
+            //console.log(value);
             // this.x = value.x;
             // this.y = value.y;
             // this.z = value.z;
