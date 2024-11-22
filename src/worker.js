@@ -15,6 +15,7 @@ import {
   Solid,
   Sketch,
   drawRoundedRectangle,
+  makeSphere,
 } from "replicad";
 import { drawProjection, ProjectionCamera } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
@@ -418,8 +419,8 @@ async function Assembly(inputs) {
 // Runs the user entered code in the worker thread and returns the result.
 async function code(targetID, code, argumentsArray) {
   await started;
-  let keys1 = ["Rotate", "Assembly"];
-  let inputValues = [Rotate, Assembly];
+  let keys1 = ["Rotate", "Assembly", "makeSphere"];
+  let inputValues = [Rotate, Assembly, makeSphere];
   for (const [key, value] of Object.entries(argumentsArray)) {
     keys1.push(`${key}`);
     inputValues.push(value);
@@ -733,9 +734,55 @@ function extractKeepOut(inputGeometry) {
  *    - sheetPadding - space from the edge of the material where no parts will be placed
  *    - partPadding - space between parts in the resulting placement
  */
-function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
+function layout(targetID, inputID, TAG, progressCallback, placementsCallback, layoutConfig) {
   return started.then(() => {
-    var THICKNESS_TOLLERANCE = 0.001;
+    
+    var shapesForLayout = rotateForLayout(targetID, inputID, TAG, layoutConfig);
+
+    let positionsPromise = computePositions(
+      shapesForLayout,
+      progressCallback,
+      placementsCallback,
+      layoutConfig
+    );
+    return positionsPromise.then((positions) => {
+      let warning;
+      if (positions.length == 0) {
+        warning = "Failed to place any parts. Are sheet dimensions right?";
+      } else {
+        let unplacedParts = shapesForLayout.length - positions.flat().length;
+        if (unplacedParts > 0) {
+          warning =
+            unplacedParts +
+            " parts are too big to fit on this sheet size. Failed layout for " +
+            unplacedParts +
+            " part(s)";
+        }
+      }
+
+      //This does the actual layout of the parts. We want to break this out into it's own function which can be passed a list of positions
+      applyLayout(targetID, inputID, positions, TAG, layoutConfig);
+      return warning;
+    });
+  });
+}
+
+/**
+ * Lay the input geometry flat and apply the transformations to display it
+ */
+function displayLayout(targetID, inputID, positions, TAG, layoutConfig) {
+  rotateForLayout(targetID, inputID, TAG, layoutConfig);
+    
+  applyLayout(targetID, inputID, positions, TAG, layoutConfig);
+  
+}
+
+
+/**
+ * Rotate shapes to be placed on their most cuttable face (basically lay them flat)
+ */
+function rotateForLayout(targetID, inputID, TAG, layoutConfig) {
+  var THICKNESS_TOLLERANCE = 0.001;
 
     let taggedGeometry = extractTags(library[inputID], TAG);
     if (!taggedGeometry) {
@@ -856,81 +903,64 @@ function layout(targetID, inputID, TAG, progressCallback, layoutConfig) {
 
       return newLeaf;
     });
+    return shapesForLayout;
+  }
 
-    let positionsPromise = computePositions(
-      shapesForLayout,
-      progressCallback,
-      layoutConfig
-    );
-    return positionsPromise.then((positions) => {
-      let warning;
-      if (positions.length == 0) {
-        warning = "Failed to place any parts. Are sheet dimensions right?";
-      } else {
-        let unplacedParts = shapesForLayout.length - positions.flat().length;
-        if (unplacedParts > 0) {
-          warning =
-            unplacedParts +
-            " parts are too big to fit on this sheet size. Failed layout for " +
-            unplacedParts +
-            " part(s)";
+/**
+ * Apply the transformations to the geometry to apply the layout
+ */
+ function applyLayout(targetID, inputID, positions, TAG, layoutConfig) {
+    library[targetID] = actOnLeafs(
+      extractTags(library[targetID], TAG),
+      (leaf) => {
+        let transform, index;
+        for (var i = 0; i < positions.length; i++) {
+          let candidates = positions[i].filter(
+            (transform) => transform.id == leaf.id
+          );
+          if (candidates.length == 1) {
+            transform = candidates[0];
+            index = i;
+            break;
+          } else if (candidates.length > 1) {
+            console.warn("Found more than one transformation for same id");
+          }
         }
+        if (transform == undefined) {
+          console.log("didn't find transform for id: " + leaf.id);
+          return undefined;
+        }
+        // apply rotation first. All rotations are around (0, 0, 0)
+        // Additionally, shift by sheet-index * sheet height so that multiple
+        // sheet layouts are spaced out from one another.
+        let newGeom = leaf.geometry[0]
+          .clone()
+          .rotate(
+            transform.rotate,
+            new Vector([0, 0, 0]),
+            new Vector([0, 0, 1])
+          )
+          .translate(
+            transform.translate.x,
+            transform.translate.y + i * layoutConfig.height,
+            0
+          );
+
+        return {
+          geometry: [newGeom],
+          tags: leaf.tags,
+          color: leaf.color,
+          plane: leaf.plane,
+          bom: leaf.bom,
+        };
       }
-
-      library[targetID] = actOnLeafs(
-        extractTags(library[targetID], TAG),
-        (leaf) => {
-          let transform, index;
-          for (var i = 0; i < positions.length; i++) {
-            let candidates = positions[i].filter(
-              (transform) => transform.id == leaf.id
-            );
-            if (candidates.length == 1) {
-              transform = candidates[0];
-              index = i;
-              break;
-            } else if (candidates.length > 1) {
-              console.warn("Found more than one transformation for same id");
-            }
-          }
-          if (transform == undefined) {
-            console.log("didn't find transform for id: " + leaf.id);
-            return undefined;
-          }
-          // apply rotation first. All rotations are around (0, 0, 0)
-          // Additionally, shift by sheet-index * sheet height so that multiple
-          // sheet layouts are spaced out from one another.
-          let newGeom = leaf.geometry[0]
-            .clone()
-            .rotate(
-              transform.rotate,
-              new Vector([0, 0, 0]),
-              new Vector([0, 0, 1])
-            )
-            .translate(
-              transform.translate.x,
-              transform.translate.y + i * layoutConfig.height,
-              0
-            );
-
-          return {
-            geometry: [newGeom],
-            tags: leaf.tags,
-            color: leaf.color,
-            plane: leaf.plane,
-            bom: leaf.bom,
-          };
-        }
-      );
-      return warning;
-    });
-  });
-}
+    );
+  };
 
 /**
  * Use the packing engine, note this is potentially time consuming step. FIXME: Can this be moved into a different worker?
  */
-function computePositions(shapesForLayout, progressCallback, layoutConfig) {
+function computePositions(shapesForLayout, progressCallback, placementsCallback, layoutConfig) {
   const populationSize = 5;
   const nestingEngine = new AnyNest();
   const tolerance = 0.1;
@@ -995,6 +1025,7 @@ function computePositions(shapesForLayout, progressCallback, layoutConfig) {
                 " generations. Final result: " +
                 JSON.stringify(placement)
             );
+            placementsCallback(placement);
             nestingEngine.stop();
             resolve(placement);
           }
@@ -1068,9 +1099,9 @@ function preparePoints(mesh, tolerance) {
     });
 
     if (edgeStarts.length > 0 && nextEgdes.length != 1) {
-      console.log(result);
-      console.log(edgeStarts);
-      console.log(nextEgdes);
+      // console.log(result);
+      // console.log(edgeStarts);
+      // console.log(nextEgdes);
       throw new Error(
         "Geometry error when preparing for cutlayout. Part perimiter has an edge with: " +
           nextEgdes.length +
@@ -1589,6 +1620,7 @@ expose({
   difference,
   tag,
   layout,
+  displayLayout,
   output,
   molecule,
   bom,

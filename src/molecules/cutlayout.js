@@ -37,6 +37,11 @@ export default class CutLayout extends Atom {
      */
     this.description =
       "Extracts all parts tagged for cutting and lays them out on a sheet to cut.";
+    /**
+     * The array of placements returned by the layout function
+     * @type {array}
+     */
+    this.placements = [];
 
     this.progress = 0.0;
 
@@ -71,13 +76,6 @@ export default class CutLayout extends Atom {
       this,
       "number",
       GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 6 : .25
-    );
-    this.addIO(
-      "input",
-      "Sheet Padding",
-      this,
-      "number",
-      GlobalVariables.topLevelMolecule.unitsKey == "MM" ? 76 : 3
     );
 
     this.addIO("output", "geometry", this, "geometry", "");
@@ -164,6 +162,47 @@ export default class CutLayout extends Atom {
    */
   updateValue() {
 
+    super.updateValue();
+
+    if (this.inputs.every((x) => x.ready)) {
+      this.processing = true;
+      var inputID = this.findIOValue("geometry");
+      var materialThickness = this.findIOValue("Material Thickness");
+      var sheetWidth = this.findIOValue("Sheet Width");
+      var sheetHeight = this.findIOValue("Sheet Height");
+      var sheetPadding = 0;//this.findIOValue("Sheet Padding"); //It's easier to just adjust the sheet size than to add padding
+      var partPadding = this.findIOValue("Part Padding");
+      var tag = "cutLayout";
+
+      if (!inputID) {
+        this.setAlert('"geometry" input is missing');
+        return;
+      }
+      
+      GlobalVariables.cad
+        .displayLayout(
+          this.uniqueID,
+          inputID,
+          [this.placements],
+          tag,
+          {
+            thickness: materialThickness,
+            width: sheetWidth,
+            height: sheetHeight,
+            sheetPadding: sheetPadding,
+            partPadding: partPadding
+          })
+        .then((warning) => {
+          this.basicThreadValueProcessing();
+          if (warning != undefined) {
+            this.setAlert(warning);
+          }
+          this.progress = 1.0;
+          this.cancelationHandle = undefined;
+          this.processing = false;
+        })
+        .catch(this.alertingErrorHandler());
+    }
   }
 
   /**
@@ -183,7 +222,7 @@ export default class CutLayout extends Atom {
       var materialThickness = this.findIOValue("Material Thickness");
       var sheetWidth = this.findIOValue("Sheet Width");
       var sheetHeight = this.findIOValue("Sheet Height");
-      var sheetPadding = this.findIOValue("Sheet Padding");
+      var sheetPadding = 0;//this.findIOValue("Sheet Padding"); //It's easier to just adjust the sheet size than to add padding
       var partPadding = this.findIOValue("Part Padding");
       var tag = "cutLayout";
 
@@ -191,8 +230,6 @@ export default class CutLayout extends Atom {
         this.setAlert('"geometry" input is missing');
         return;
       }
-
-      GlobalVariables.topLevelMolecule.unitsKey
 
       GlobalVariables.cad
         .layout(
@@ -202,6 +239,9 @@ export default class CutLayout extends Atom {
           proxy((progress, cancelationHandle) => {
             this.progress = progress;
             this.cancelationHandle = cancelationHandle;
+          }),
+          proxy((placements) => {
+            this.placements = placements[0];
           }),
           {
             thickness: materialThickness,
@@ -232,7 +272,44 @@ export default class CutLayout extends Atom {
       inputParams["Compute Layout"] = button(() => {
           this.updateValueButton();
       });
-  
+
+      //Expose the stored positions
+      this.placements.forEach((placement, index) => {
+        inputParams[this.uniqueID + "position" + index] = {
+          value: { x: placement.translate.x, y: placement.translate.y, z: placement.rotate },
+          label: " " + index,
+          onChange: (value, index) => {
+              const match = index.match(/position(\d+)/);
+              const indexNumber = match ? parseInt(match[1], 10) : null;
+          
+              if (indexNumber !== null) {
+                  const placement = this.placements[indexNumber];
+                  //If anything has changed we need to update the value and recompute
+                  if (placement.translate.x !== value.x || placement.translate.y !== value.y || placement.rotate !== value.z) {
+                      placement.translate.x = value.x;
+                      placement.translate.y = value.y;
+                      placement.rotate = value.z;
+          
+                      this.updateValue();
+                  }
+              }
+          },
+        };
+      });
+
+
       return inputParams;
   }
+
+  /**
+   * Save the placements to be loaded next time
+   */
+  serialize(values) {
+    //Save the readme text to the serial stream
+    var valuesObj = super.serialize(values);
+    valuesObj.placements = this.placements;
+
+    return valuesObj;
+  }
+
 }
