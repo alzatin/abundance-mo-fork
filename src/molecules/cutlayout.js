@@ -162,9 +162,6 @@ export default class CutLayout extends Atom {
    */
   updateValue() {
 
-    console.log("CutLayout Update Value Called");
-    console.trace();
-
     super.updateValue();
 
     if (this.inputs.every((x) => x.ready)) {
