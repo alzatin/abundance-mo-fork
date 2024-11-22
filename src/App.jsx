@@ -26,7 +26,6 @@ import "./styles//codemirror.css";
  * The octokit instance which allows authenticated interaction with GitHub.
  * @type {object}
  */
-var authorizedUserOcto = null;
 
 const cad = wrap(new cadWorker());
 export default function ReplicadApp() {
@@ -43,6 +42,8 @@ export default function ReplicadApp() {
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
   const [exportPopUp, setExportPopUp] = useState(false);
+
+  const [authorizedUserOcto, setAuthorizedUserOcto] = useState(null);
   const [shortCutsOn, setShortCuts] = useState(
     GlobalVariables.displayShortcuts
   );
@@ -89,7 +90,10 @@ export default function ReplicadApp() {
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
+  /*DISABLED*/
+  /*DISABLED*/
   const tryLogin = function () {
+    /*
     return new Promise((resolve, reject) => {
       // Initialize with OAuth.io app public key
       if (window.location.href.includes("private")) {
@@ -103,7 +107,7 @@ export default function ReplicadApp() {
         /**
          * Oktokit object to access github
          * @type {object}
-         */
+         
         authorizedUserOcto = new Octokit({
           auth: github.access_token,
         });
@@ -116,7 +120,7 @@ export default function ReplicadApp() {
           }
         });
       });
-    });
+    });*/
   };
 
   // Loads project
@@ -162,72 +166,72 @@ export default function ReplicadApp() {
 
   return (
     <main>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            exact
-            path="/"
-            element={
-              <LoginMode
-                {...{
-                  tryLogin,
-                  setIsLoggedIn,
-                  isloggedIn,
-                  authorizedUserOcto,
-                  exportPopUp,
-                  setExportPopUp,
-                }}
-              />
-            }
-          />
-          <Route
-            path="/:owner/:repoName"
-            element={
-              <CreateMode
-                {...{
-                  activeAtom,
-                  setActiveAtom,
-                  authorizedUserOcto,
-                  tryLogin,
-                  loadProject,
-                  exportPopUp,
-                  setExportPopUp,
-                  shortCutsOn,
-                  setShortCuts,
-                  mesh,
-                  setMesh,
-                  size,
-                  cad,
-                  wireMesh,
-                  setWireMesh,
-                  outdatedMesh,
-                  setOutdatedMesh,
-                }}
-              />
-            }
-          />
-          <Route
-            path="/run/:owner/:repoName"
-            element={
-              <RunMode
-                {...{
-                  isloggedIn,
-                  setActiveAtom,
-                  activeAtom: GlobalVariables.currentMolecule,
-                  authorizedUserOcto,
-                  tryLogin,
-                  loadProject,
-                  mesh,
-                  wireMesh,
-                  setWireMesh,
-                  outdatedMesh,
-                  setOutdatedMesh,
-                }}
-              />
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route
+          exact
+          path=""
+          element={
+            <LoginMode
+              {...{
+                tryLogin,
+                setIsLoggedIn,
+                isloggedIn,
+                authorizedUserOcto,
+                setAuthorizedUserOcto,
+                exportPopUp,
+                setExportPopUp,
+              }}
+            />
+          }
+        />
+        <Route exact path="/callback" element={<p>callback</p>} />
+        <Route
+          path="/:owner/:repoName"
+          element={
+            <CreateMode
+              {...{
+                activeAtom,
+                setActiveAtom,
+                authorizedUserOcto,
+                tryLogin,
+                loadProject,
+                exportPopUp,
+                setExportPopUp,
+                shortCutsOn,
+                setShortCuts,
+                mesh,
+                setMesh,
+                size,
+                cad,
+                wireMesh,
+                setWireMesh,
+                outdatedMesh,
+                setOutdatedMesh,
+              }}
+            />
+          }
+        />
+        <Route
+          path="/run/:owner/:repoName"
+          element={
+            <RunMode
+              {...{
+                isloggedIn,
+                setActiveAtom,
+                activeAtom: GlobalVariables.currentMolecule,
+                authorizedUserOcto,
+                tryLogin,
+                loadProject,
+                mesh,
+                wireMesh,
+                setWireMesh,
+                outdatedMesh,
+                setOutdatedMesh,
+              }}
+            />
+          }
+        />
+      </Routes>
     </main>
   );
 }

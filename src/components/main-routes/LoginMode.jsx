@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import globalvariables from "../../js/globalvariables.js";
 import NewProjectPopUp from "../secondary/NewProjectPopUp.jsx";
 
+import { useAuth0 } from "@auth0/auth0-react";
+
 /**
  * The octokit instance which allows interaction with GitHub.
  * @type {object}
@@ -15,7 +17,9 @@ var octokit = null;
  * Initial log component displays pop Up to either attempt Github login/browse projects
  *
  */
-const InitialLog = ({ tryLogin }) => {
+const InitialLog = ({}) => {
+  const { loginWithRedirect } = useAuth0();
+
   return (
     <div className="login-page">
       <div className="form animate fadeInUp one">
@@ -36,9 +40,9 @@ const InitialLog = ({ tryLogin }) => {
             <button
               type="button"
               id="loginButton"
-              className="submit-btn"
-              onClick={tryLogin}
               style={{ height: "40px" }}
+              className="submit-btn"
+              onClick={() => loginWithRedirect()}
             >
               Login With GitHub
             </button>
@@ -475,7 +479,6 @@ const ShowProjects = ({
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
-      console.log(scanApiUrl);
       let awsRepos = await fetch(scanApiUrl); //< return result.json();[repos]
       //let awsRepos = await fetch(scanUserApiUrl);
       return awsRepos.json();
@@ -714,19 +717,69 @@ const ShowProjects = ({
 
 function LoginMode({
   tryLogin,
-  authorizedUserOcto,
   exportPopUp,
   setExportPopUp,
+  setIsLoggedIn,
+  authorizedUserOcto,
+  setAuthorizedUserOcto,
 }) {
   const pageDict = { 0: null };
   const [projectToShow, setProjectsToShow] = useState("recents");
 
+  const {
+    loginWithRedirect,
+    logout,
+    user,
+    isAuthenticated,
+    isLoading,
+    getAccessTokenSilently,
+  } = useAuth0();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const serverUrl =
+        "https://n3i60kesu6.execute-api.us-east-2.amazonaws.com/prox";
+
+      const callSecureApi = async () => {
+        try {
+          const token = await getAccessTokenSilently();
+
+          const testResponse = await fetch(`${serverUrl}/api/test`, {
+            method: "GET", // or 'POST', etc.
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Add this if authentication is required
+            },
+          });
+          const testResponseJson = await testResponse.json();
+          //Returns authorized user from proxy server
+          const response = await fetch(`${serverUrl}/api/greet`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const authResponse = await response.json();
+          const authorizedUser = new Octokit({
+            auth: authResponse.message,
+          });
+          const { data } = await authorizedUser.request("/user");
+          GlobalVariables.currentUser = data.login;
+          if (GlobalVariables.currentUser) {
+            setIsLoggedIn(true);
+            setAuthorizedUserOcto(authorizedUser);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      callSecureApi();
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
+
   let popUpContent;
   if (exportPopUp && authorizedUserOcto) {
     popUpContent = (
-      <NewProjectPopUp
-        {...{ setExportPopUp, authorizedUserOcto, exporting: false }}
-      />
+      <NewProjectPopUp {...{ setExportPopUp, user, exporting: false }} />
     );
   } else if (authorizedUserOcto) {
     popUpContent = (
@@ -742,7 +795,7 @@ function LoginMode({
       />
     );
   } else {
-    popUpContent = <InitialLog {...{ tryLogin }} />;
+    popUpContent = <InitialLog {...{ loginWithRedirect, tryLogin }} />;
   }
   return (
     <div
@@ -768,7 +821,18 @@ function LoginMode({
               <img></img>
             </button>
           </Link>
-        ) : null}
+        ) : (
+          <button
+            className="closeButton"
+            onClick={() => {
+              logout({
+                returnTo: window.location.origin, // Redirect to home page or specified URL
+              });
+            }}
+          >
+            <img></img>
+          </button>
+        )}
       </div>
       <div className="top-banner" style={{ margin: "35px 0 0 30px" }}>
         <div
