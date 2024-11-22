@@ -516,6 +516,7 @@ export default class AttachmentPoint {
    */
   setValue(newValue) {
     this.value = newValue;
+
     this.ready = true;
     //propagate the change to linked elements if this is an output
     if (this.type == "output") {

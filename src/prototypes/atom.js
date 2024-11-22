@@ -300,6 +300,14 @@ export default class Atom {
     }
   }
 
+  updateIO(type, name, target, valueType, value) {
+    let ap = target.inputs.find((o) => o.name === name && o.type === type);
+    if (ap) {
+      ap.valueType = valueType;
+      ap.value = value;
+    }
+  }
+
   /**
    * Removes an attachment point from an atom.
    * @param {boolean} type - The type of the IO (input or output).
@@ -664,6 +672,7 @@ export default class Atom {
    */
   createLevaInputs() {
     let inputParams = {};
+
     /** Runs through active atom inputs and adds IO parameters to default param*/
     if (this.inputs) {
       this.inputs.map((input) => {

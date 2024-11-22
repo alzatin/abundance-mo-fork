@@ -5,6 +5,7 @@ import { button } from "leva";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { BOMEntry } from "../js/BOM";
 import globalvariables from "../js/globalvariables.js";
+import { LevaInputs } from "leva";
 
 /**
  * This class creates the Molecule atom.
@@ -193,18 +194,25 @@ export default class Molecule extends Atom {
         const checkConnector = () => {
           return input.connectors.length > 0;
         };
+
         /* Makes inputs for Io's other than geometry */
-        if (input.valueType !== "geometry") {
-          inputParams[this.uniqueID + input.name] = {
-            value: input.value,
-            label: input.name,
-            disabled: checkConnector(),
-            onChange: (value) => {
-              if (input.value !== value) {
-                input.setValue(value);
-              }
-            },
-          };
+
+        inputParams[this.uniqueID + input.name] = {
+          value: input.value,
+          label: input.name,
+          disabled: checkConnector(),
+          onChange: (value) => {
+            if (input.value !== value) {
+              input.setValue(value);
+            }
+          },
+        };
+        if (input.type && input.valueType) {
+          inputParams[this.uniqueID + input.name].type =
+            LevaInputs[input.valueType.toUpperCase()];
+        }
+        if (input.valueType == "geometry") {
+          inputParams[this.uniqueID + input.name].disabled = true;
         }
       });
     }
@@ -907,6 +915,7 @@ export default class Molecule extends Atom {
             typeof newAtomObj.name !== "undefined"
           ) {
             atom.name = newAtomObj.name;
+            atom.type = newAtomObj.type;
             atom.draw(); //The poling happens in draw :roll_eyes:
           } else if (atom.atomType == "Input") {
             atom.name = GlobalVariables.incrementVariableName(atom.name, this);

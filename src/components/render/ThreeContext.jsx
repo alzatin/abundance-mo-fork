@@ -3,7 +3,6 @@ import { Canvas } from "@react-three/fiber";
 import {
   Wireframe,
   Grid,
-  PivotControls,
   OrthographicCamera,
 } from "@react-three/drei";
 import * as THREE from "three";
@@ -23,10 +22,6 @@ export default function ext({ children, ...props }) {
 
   const cameraRef = useRef();
   const [gridScale, setGridScale] = useState(10 / cameraZoom);
-
-  function PivotControl() {
-    return <PivotControls disableRotations={true} scale={axesScale} />;
-  }
 
   const [cellSection, setCellSection] = useState(100);
   const [axesScale, setAxesScale] = useState(0.3);
@@ -69,11 +64,10 @@ export default function ext({ children, ...props }) {
           makeDefault={true}
           near={0.1}
           pov={1000}
-          far={9000}
+          far={90000}
           zoom={cameraZoom}
           position={[3000, 3000, 5000]}
         />
-        {props.axesParam ? <PivotControl /> : null}
         {props.gridParam ? (
           <Grid
             position={[0, 0, 0]}
