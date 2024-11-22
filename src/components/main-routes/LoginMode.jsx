@@ -742,12 +742,22 @@ function LoginMode({
     if (isAuthenticated) {
       console.log("isAuthenticated");
 
-      const serverUrl = import.meta.env.VITE_APP_SERVER_URL;
+      const serverUrl =
+        "https://n3i60kesu6.execute-api.us-east-2.amazonaws.com/prox";
 
       const callSecureApi = async () => {
         try {
           const token = await getAccessTokenSilently();
 
+          const testResponse = await fetch(`${serverUrl}/api/test`, {
+            method: "GET", // or 'POST', etc.
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Add this if authentication is required
+            },
+          });
+          const testResponseJson = await testResponse.json();
+          console.log("testResponse", testResponseJson);
           //Returns authorized user from proxy server
           const response = await fetch(`${serverUrl}/api/greet`, {
             headers: {
