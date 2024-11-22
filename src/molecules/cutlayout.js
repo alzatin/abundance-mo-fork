@@ -161,6 +161,10 @@ export default class CutLayout extends Atom {
    * We only want the layout to update when the button is pressed not when the inputs update so we block the regular update value behavior
    */
   updateValue() {
+
+    console.log("CutLayout Update Value Called");
+    console.trace();
+
     super.updateValue();
 
     if (this.inputs.every((x) => x.ready)) {
@@ -278,14 +282,20 @@ export default class CutLayout extends Atom {
           value: { x: placement.translate.x, y: placement.translate.y, z: placement.rotate },
           label: " " + index,
           onChange: (value, index) => {
-            const match = index.match(/position(\d+)/);
-            const indexNumber = match ? parseInt(match[1], 10) : null;
-            
-            this.placements[indexNumber].translate.x = value.x;
-            this.placements[indexNumber].translate.y = value.y;
-            this.placements[indexNumber].rotate = value.z;
-            
-            this.updateValue();
+              const match = index.match(/position(\d+)/);
+              const indexNumber = match ? parseInt(match[1], 10) : null;
+          
+              if (indexNumber !== null) {
+                  const placement = this.placements[indexNumber];
+                  //If anything has changed we need to update the value and recompute
+                  if (placement.translate.x !== value.x || placement.translate.y !== value.y || placement.rotate !== value.z) {
+                      placement.translate.x = value.x;
+                      placement.translate.y = value.y;
+                      placement.rotate = value.z;
+          
+                      this.updateValue();
+                  }
+              }
           },
         };
       });
