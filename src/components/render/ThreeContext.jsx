@@ -1,15 +1,13 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useRef, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   Wireframe,
   Grid,
-  PivotControls,
   OrthographicCamera,
 } from "@react-three/drei";
 import * as THREE from "three";
 import Controls from "./ThreeControls.jsx";
 import globalvariables from "../../js/globalvariables.js";
-import { sec } from "mathjs";
 
 // We change the default orientation - threejs tends to use Y are the height,
 // while replicad uses Z. This is mostly a representation default.
@@ -22,39 +20,33 @@ export default function ext({ children, ...props }) {
   let cameraZoom = props.cameraZoom;
   let backColor = props.outdatedMesh ? "#ababab" : "#f5f5f5";
 
-  function PivotControl() {
-    let newScale = calculateInverseScale(cameraZoom);
-    return <PivotControls scale={newScale} />;
-  }
-  function SceneCamera() {
-    return (
-      <OrthographicCamera
-        makeDefault={true}
-        near={0.1}
-        pov={1000}
-        far={9000}
-        zoom={cameraZoom}
-        position={[3000, 3000, 5000]}
-      />
-    );
-  }
+  const cameraRef = useRef();
+  const [gridScale, setGridScale] = useState(10 / cameraZoom);
 
-  function calculateInverseScale(zoom) {
-    const baseScale = 21; // The base scale value when zoom is 1
-    return baseScale / zoom;
-  }
-  const projectUnit = globalvariables.topLevelMolecule
-    ? globalvariables.topLevelMolecule.unitsKey
-    : "MM";
-  let cellSize;
-  let sectionSize;
-  if (projectUnit == "MM") {
-    cellSize = 10;
-    sectionSize = 100;
-  } else if (projectUnit == "Inches") {
-    cellSize = 1;
-    sectionSize = 10;
-  }
+  const [cellSection, setCellSection] = useState(100);
+  const [axesScale, setAxesScale] = useState(0.3);
+
+  useEffect(() => {
+    if (gridScale < 10) {
+      setCellSection(1);
+    } else if (gridScale < 100) {
+      setCellSection(10);
+    } else if (gridScale < 1000) {
+      setCellSection(100);
+    }
+    setAxesScale(gridScale / 2);
+  }, [gridScale, cameraZoom]);
+
+  let previousZoomLevel = cameraZoom;
+  window.addEventListener("wheel", (e) => {
+    if (cameraRef.current) {
+      // Check if the zoom level change is greater than 5 points
+      if (Math.abs(cameraRef.current.zoom - previousZoomLevel) > 3) {
+        previousZoomLevel = cameraRef.current.zoom; // Update the previous zoom level
+        setGridScale(50 / cameraRef.current.zoom);
+      }
+    }
+  });
 
   return (
     <Suspense fallback={null}>
@@ -67,22 +59,31 @@ export default function ext({ children, ...props }) {
         frameloop="always"
         shadows={true}
       >
-        <SceneCamera />
-        {props.axesParam ? <PivotControl /> : null}
+        <OrthographicCamera
+          ref={cameraRef}
+          makeDefault={true}
+          near={0.1}
+          pov={1000}
+          far={90000}
+          zoom={cameraZoom}
+          position={[3000, 3000, 5000]}
+        />
         {props.gridParam ? (
           <Grid
             position={[0, 0, 0]}
-            cellSize={cellSize}
+            cellSize={cellSection}
             args={[10000, 10000]}
-            cellColor={"#b6aebf"}
+            cellColor={"#726482"}
             fadeFrom={0}
+            lineColor={"#BFA301"}
             sectionColor={"#BFA301"}
-            fadeDistance={5000}
+            fadeDistance={9000}
             rotation={[Math.PI / 2, 0, 0]}
-            sectionSize={sectionSize}
+            sectionSize={cellSection * 10}
           />
         ) : null}
         <Controls axesParam={props.axesParam} enableDamping={false}></Controls>
+
         {!props.outdatedMesh ? (
           <ambientLight intensity={0.9} />
         ) : (

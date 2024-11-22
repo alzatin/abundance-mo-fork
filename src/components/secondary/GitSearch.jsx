@@ -6,6 +6,8 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
   let searchBarValue = "";
   var [gitRepos, setGitRepos] = useState([]);
   var [loadingGit, setLoadingGit] = useState(false);
+  const [lastKey, setLastKey] = useState("");
+  const [yearShow, setYearShow] = useState("2024");
   const maslowTopic = useRef(null);
 
   /**
@@ -20,14 +22,20 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
   // conditional query for maslow projects
   const searchGitHub = function () {
     const repoSearchRequest = async () => {
+      let lastKeyQuery = lastKey
+        ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
+        : "&lastKey";
+
       let searchQuery;
       if (searchBarValue != "") {
-        searchQuery = "&query=" + searchBarValue;
+        searchQuery = "&query=" + searchBarValue + "&yearShow=" + yearShow;
       } else {
-        searchQuery = "&query";
+        searchQuery = "&query" + "&yearShow=" + yearShow;
       }
       // gitsearch searches by repoName and does not specify user, we could specify last key if we wanted to paginate
-      let query = "attribute=searchField" + searchQuery + "&user" + "&lastKey";
+
+      let query =
+        "attribute=searchField" + searchQuery + "&user" + lastKeyQuery;
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
@@ -60,6 +68,7 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
   const [panelItem, setPanelItem] = useState({});
 
   const handleMouseOver = (item, key) => {
+    console.log(item);
     setPanelItem(item);
     setIsHovering(true);
   };
@@ -107,22 +116,7 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
               placeholder="Search for atom.."
               className="menu_search_canvas"
             ></input>
-            <label htmlFor="id_select"> Topic </label>
-            <select
-              ref={maslowTopic}
-              id="searchType"
-              className="menu_search_canvas"
-            >
-              {" "}
-              <option key={"empty-topic"} value={""}></option>
-              {topics.map((topic) => {
-                return (
-                  <option key={topic.label} value={topic.value}>
-                    {topic.label}
-                  </option>
-                );
-              })}
-            </select>
+
             <GitList />
           </div>
           {isHovering ? (
@@ -130,12 +124,12 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
               className="GitProjectInfoPanel"
               style={{
                 top: GlobalVariables.lastClick[1] - 50 + "px",
-                left: GlobalVariables.lastClick[0] - 350 + "px",
+                left: GlobalVariables.lastClick[0] - 375 + "px",
               }}
             >
               <div className="GitInfoLeft">
-                <img src={"/imgs/defaultThumbnail.svg"}></img>
-                <div style={{ display: "flex" }}>
+                <img src={panelItem.svgURL}></img>
+                <div style={{ display: "flex", alignItems: "center" }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     style={{ transform: "scale(.7)" }}
@@ -144,16 +138,31 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
                   >
                     <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
                   </svg>
-                  <p>{panelItem.stargazers_count}</p>
+                  <p style={{ fontSize: "0.5em" }}>{panelItem.ranking}</p>
                 </div>
               </div>
 
               <div className="GitInfo">
-                <span>Project Name: {panelItem.name}</span>
-                <span>Owner: {panelItem.owner.login}</span>
-                <span>Description: {panelItem.description || null}</span>
-                <span>PLACEHOLDER FOR README</span>
-                <span>Tags: PLACEHOLDER FOR tags or categories</span>
+                <div>
+                  <strong>Project Name: </strong>
+                  <span>{panelItem.repoName}</span>
+                </div>
+                <div>
+                  <strong>Creator: </strong>
+                  <span>{panelItem.owner}</span>
+                </div>
+                <div>
+                  <strong>Description: </strong>
+                  <span>{panelItem.description || null}</span>
+                </div>
+                <div>
+                  <strong>Topics: </strong>
+                  <span>{panelItem.topics}</span>
+                </div>
+                <div>
+                  <strong>Created: </strong>
+                  <span>{panelItem.dateCreated}</span>
+                </div>
               </div>
             </div>
           ) : null}
