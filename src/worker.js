@@ -767,6 +767,16 @@ function layout(targetID, inputID, TAG, progressCallback, placementsCallback, la
   });
 }
 
+/**
+ * Lay the input geometry flat and apply the transformations to display it
+ */
+function displayLayout(targetID, inputID, positions, TAG, layoutConfig) {
+  rotateForLayout(targetID, inputID, TAG, layoutConfig);
+    
+  applyLayout(targetID, inputID, positions, TAG, layoutConfig);
+  
+}
+
 
 /**
  * Rotate shapes to be placed on their most cuttable face (basically lay them flat)
@@ -1615,7 +1625,7 @@ expose({
   difference,
   tag,
   layout,
-  applyLayout,
+  displayLayout,
   output,
   molecule,
   bom,

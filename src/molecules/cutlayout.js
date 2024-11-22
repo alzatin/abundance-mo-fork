@@ -179,7 +179,7 @@ export default class CutLayout extends Atom {
       }
       
       GlobalVariables.cad
-        .applyLayout(
+        .displayLayout(
           this.uniqueID,
           inputID,
           [this.placements],
