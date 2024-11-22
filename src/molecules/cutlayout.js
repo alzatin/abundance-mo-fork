@@ -275,14 +275,17 @@ export default class CutLayout extends Atom {
       //Expose the stored positions
       this.placements.forEach((placement, index) => {
         inputParams[this.uniqueID + "position" + index] = {
-          value: { x: placement.translate.x, y: placement.translate.y, z: 0 },
+          value: { x: placement.translate.x, y: placement.translate.y, z: placement.rotate },
           label: " " + index,
-          onChange: (value) => {
-            //console.log(value);
-            // this.x = value.x;
-            // this.y = value.y;
-            // this.z = value.z;
-            // this.updateValue();
+          onChange: (value, index) => {
+            const match = index.match(/position(\d+)/);
+            const indexNumber = match ? parseInt(match[1], 10) : null;
+            
+            this.placements[indexNumber].translate.x = value.x;
+            this.placements[indexNumber].translate.y = value.y;
+            this.placements[indexNumber].rotate = value.z;
+            
+            this.updateValue();
           },
         };
       });

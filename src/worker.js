@@ -910,11 +910,6 @@ function rotateForLayout(targetID, inputID, TAG, layoutConfig) {
  * Apply the transformations to the geometry to apply the layout
  */
  function applyLayout(targetID, inputID, positions, TAG, layoutConfig) {
-    console.log("Applying layout:");
-    console.log("Target ID: " + targetID);
-    console.log("Input ID: " + inputID);
-
-
     library[targetID] = actOnLeafs(
       extractTags(library[targetID], TAG),
       (leaf) => {
@@ -1104,9 +1099,9 @@ function preparePoints(mesh, tolerance) {
     });
 
     if (edgeStarts.length > 0 && nextEgdes.length != 1) {
-      console.log(result);
-      console.log(edgeStarts);
-      console.log(nextEgdes);
+      // console.log(result);
+      // console.log(edgeStarts);
+      // console.log(nextEgdes);
       throw new Error(
         "Geometry error when preparing for cutlayout. Part perimiter has an edge with: " +
           nextEgdes.length +
