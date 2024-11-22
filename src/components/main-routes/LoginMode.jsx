@@ -373,7 +373,6 @@ const ShowProjects = ({
     error: "Error",
     noProjects: "No projects found",
   };
-  console.log(user);
 
   const [projectsLoaded, setStateLoaded] = useState([]);
   const [lastKey, setLastKey] = useState("");
@@ -381,7 +380,6 @@ const ShowProjects = ({
   const [searchBarValue, setSearchBarValue] = useState("");
   const [yearShow, setYearShow] = useState("2024");
   const [apiStatus, setApiStatus] = useState(loadingMessages.loading);
-  console.log(authorizedUserOcto);
 
   useEffect(() => {
     octokit = new Octokit();
@@ -481,7 +479,6 @@ const ShowProjects = ({
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
-      console.log(scanApiUrl);
       let awsRepos = await fetch(scanApiUrl); //< return result.json();[repos]
       //let awsRepos = await fetch(scanUserApiUrl);
       return awsRepos.json();
@@ -740,8 +737,6 @@ function LoginMode({
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log("isAuthenticated");
-
       const serverUrl =
         "https://n3i60kesu6.execute-api.us-east-2.amazonaws.com/prox";
 
@@ -757,7 +752,6 @@ function LoginMode({
             },
           });
           const testResponseJson = await testResponse.json();
-          console.log("testResponse", testResponseJson);
           //Returns authorized user from proxy server
           const response = await fetch(`${serverUrl}/api/greet`, {
             headers: {
@@ -765,16 +759,13 @@ function LoginMode({
             },
           });
           const authResponse = await response.json();
-          console.log("authResponse", authResponse.message);
           const authorizedUser = new Octokit({
             auth: authResponse.message,
           });
           const { data } = await authorizedUser.request("/user");
           GlobalVariables.currentUser = data.login;
-          console.log(data);
           if (GlobalVariables.currentUser) {
             setIsLoggedIn(true);
-            console.log(GlobalVariables.currentUser);
             setAuthorizedUserOcto(authorizedUser);
           }
         } catch (error) {
