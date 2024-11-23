@@ -24,10 +24,17 @@ const InitialLog = ({}) => {
     <div className="login-page">
       <div className="form animate fadeInUp one">
         <div id="gitSide" className="logindiv">
-          <img className="logo" src="/imgs/abundance_logo.png" alt="logo" />
+          <img
+            className="logo"
+            src="/abundance-mo-fork/imgs/abundance_logo.png"
+            alt="logo"
+          />
           <div id="welcome">
             <img
-              src="/imgs/abundance_lettering.png"
+              src={
+                import.meta.env.VITE_APP_PATH_FOR_PICS +
+                "/imgs/abundance_lettering.png"
+              }
               alt="logo"
               style={{ width: "300px" }}
             />
@@ -737,6 +744,7 @@ function LoginMode({
 
   useEffect(() => {
     if (isAuthenticated) {
+      console.log("isAuthenticated");
       const serverUrl =
         "https://n3i60kesu6.execute-api.us-east-2.amazonaws.com/prox";
 
