@@ -834,7 +834,7 @@ function LoginMode({
             className="closeButton"
             onClick={() => {
               logout({
-                returnTo: window.location.origin, // Redirect to home page or specified URL
+                returnTo: "https://alzatin.github.io", // Redirect to home page or specified URL
               });
             }}
           >
