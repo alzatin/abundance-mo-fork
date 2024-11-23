@@ -21,10 +21,10 @@ const Auth0ProviderWithHistory = ({ children }) => {
       domain={domain}
       clientId={clientId}
       onRedirectCallback={onRedirectCallback}
-      redirectUri="https://alzatin.github.io"
+      redirectUri="https://alzatin.github.io/abundance-mo-fork"
       audience={audience}
       authorizationParams={{
-        redirect_uri: "https://alzatin.github.io",
+        redirect_uri: "https://alzatin.github.io/abundance-mo-fork",
         audience: audience,
       }}
     >
