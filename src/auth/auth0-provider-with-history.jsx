@@ -13,14 +13,17 @@ const Auth0ProviderWithHistory = ({ children }) => {
   const onRedirectCallback = (appState) => {
     console.log("onRedirectCallback");
     console.log(appState);
-    navigate(appState?.returnTo || window.location.pathname);
+    console.log(window.location.pathname);
+    navigate("");
   };
+
+  console.log("deployment 2:58");
 
   return (
     <Auth0Provider
       domain={domain}
       clientId={clientId}
-      onRedirectCallback={onRedirectCallback}
+      //onRedirectCallback={onRedirectCallback}
       redirectUri="https://alzatin.github.io/abundance-mo-fork"
       audience={audience}
       authorizationParams={{

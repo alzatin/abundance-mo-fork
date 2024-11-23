@@ -185,7 +185,23 @@ export default function ReplicadApp() {
             />
           }
         />
-        <Route exact path="/callback" element={<p>callback</p>} />
+        <Route
+          exact
+          path="/callback"
+          element={
+            <LoginMode
+              {...{
+                tryLogin,
+                setIsLoggedIn,
+                isloggedIn,
+                authorizedUserOcto,
+                setAuthorizedUserOcto,
+                exportPopUp,
+                setExportPopUp,
+              }}
+            />
+          }
+        />
         <Route
           path="/:owner/:repoName"
           element={
