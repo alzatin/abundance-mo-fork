@@ -10,7 +10,7 @@ const Auth0ProviderWithHistory = ({ children }) => {
   const audience = import.meta.env.VITE_APP_AUTH0_AUDIENCE;
   const navigate = useNavigate();
 
-  console.log("Deployment Nov 26/24");
+  console.log("Deployment Nov 25/24");
 
   return (
     <Auth0Provider
