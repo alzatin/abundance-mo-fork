@@ -139,7 +139,6 @@ export default class Join extends Atom {
           })
           .catch(this.alertingErrorHandler());
       } else if (this.unionType === "Assembly") {
-        console.log("calling worker");
         GlobalVariables.cad
           .assembly(inputValues, this.uniqueID)
           .then(() => {
@@ -156,8 +155,6 @@ export default class Join extends Atom {
   createLevaInputs() {
     let inputParams = {};
     const importOptions = ["Assembly", "Fusion"];
-    console.log(this.unionIndex);
-    console.log(this.unionType);
 
     inputParams[this.uniqueID + "union_ops"] = {
       value: this.unionIndex
