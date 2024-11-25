@@ -26,7 +26,10 @@ const InitialLog = ({}) => {
         <div id="gitSide" className="logindiv">
           <img
             className="logo"
-            src="/abundance-mo-fork/imgs/abundance_logo.png"
+            src={
+              import.meta.env.VITE_APP_PATH_FOR_PICS +
+              "/imgs/abundance_logo.png"
+            }
             alt="logo"
           />
           <div id="welcome">
@@ -108,7 +111,7 @@ const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
           onClick={() => setBrowseType("list")}
         >
           <img
-            src="/imgs/list.svg"
+            src={import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/list.svg"}
             alt="list_search"
             style={{
               width: "20px",
@@ -123,7 +126,7 @@ const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
           onClick={() => setBrowseType("thumb")}
         >
           <img
-            src="/imgs/thumbnail.svg"
+            src={import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/thumbnail.svg"}
             alt="thumb_search"
             style={{
               width: "20px",
@@ -133,7 +136,11 @@ const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
           />
         </button>
         <label htmlFor="order-by">
-          <img src="/imgs/sort.svg" alt="Sort by" style={{ width: "15px" }} />
+          <img
+            src={import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/sort.svg"}
+            alt="Sort by"
+            style={{ width: "15px" }}
+          />
           <select
             className="order_dropdown"
             id="order-by"
@@ -212,7 +219,9 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           src={node.svgURL}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
-            currentTarget.src = "/imgs/defaultThumbnail.svg";
+            currentTarget.src =
+              import.meta.env.VITE_APP_PATH_FOR_PICS +
+              "/imgs/defaultThumbnail.svg";
           }}
           alt={node.repoName}
         ></img>
@@ -668,7 +677,10 @@ const ShowProjects = ({
             />
             <button className="list_thumb_button">
               <img
-                src="/imgs/search_icon.svg"
+                src={
+                  import.meta.env.VITE_APP_PATH_FOR_PICS +
+                  "/imgs/search_icon.svg"
+                }
                 alt="search"
                 style={{
                   width: "20px",
@@ -680,7 +692,9 @@ const ShowProjects = ({
               {projectToShow == "all" ? (
                 <label htmlFor="year-by">
                   <img
-                    src="/imgs/sort.svg"
+                    src={
+                      import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/sort.svg"
+                    }
                     alt="year-show"
                     style={{ width: "15px" }}
                   />
@@ -787,7 +801,9 @@ function LoginMode({
   let popUpContent;
   if (exportPopUp && authorizedUserOcto) {
     popUpContent = (
-      <NewProjectPopUp {...{ setExportPopUp, user, exporting: false }} />
+      <NewProjectPopUp
+        {...{ setExportPopUp, authorizedUserOcto, exporting: false }}
+      />
     );
   } else if (authorizedUserOcto) {
     popUpContent = (
@@ -848,12 +864,18 @@ function LoginMode({
           style={{ display: "flex", margin: "10px 10px", alignItems: "center" }}
         >
           <img
-            src="/imgs/abundance_logo.png"
+            src={
+              import.meta.env.VITE_APP_PATH_FOR_PICS +
+              "/imgs/abundance_logo.png"
+            }
             alt="logo"
             style={{ width: "40px", height: "40px", borderRadius: "50%" }}
           />
           <img
-            src="/imgs/abundance_lettering.png"
+            src={
+              import.meta.env.VITE_APP_PATH_FOR_PICS +
+              "/imgs/abundance_lettering.png"
+            }
             alt="logo"
             style={{ height: "20px", padding: "10px" }}
           />

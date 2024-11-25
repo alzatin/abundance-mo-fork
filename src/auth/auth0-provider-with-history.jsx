@@ -10,20 +10,12 @@ const Auth0ProviderWithHistory = ({ children }) => {
   const audience = import.meta.env.VITE_APP_AUTH0_AUDIENCE;
   const navigate = useNavigate();
 
-  const onRedirectCallback = (appState) => {
-    console.log("onRedirectCallback");
-    console.log(appState);
-    console.log(window.location.pathname);
-    navigate("");
-  };
-
-  console.log("deployment 2:58");
+  console.log("Deployment Nov 26/24");
 
   return (
     <Auth0Provider
       domain={domain}
       clientId={clientId}
-      //onRedirectCallback={onRedirectCallback}
       redirectUri="https://alzatin.github.io/abundance-mo-fork"
       audience={audience}
       authorizationParams={{

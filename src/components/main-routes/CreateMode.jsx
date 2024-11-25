@@ -366,7 +366,10 @@ function CreateMode({
           <div id="headerBar">
             <img
               className="thumnail-logo"
-              src="/imgs/abundance_logo.png"
+              src={
+                import.meta.env.VITE_APP_PATH_FOR_PICS +
+                "/imgs/abundance_logo.png"
+              }
               alt="logo"
             />
           </div>
