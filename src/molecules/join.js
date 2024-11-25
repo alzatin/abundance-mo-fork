@@ -52,7 +52,7 @@ export default class Join extends Atom {
       });
     }
 
-    this.unionType;
+    this.unionType = "Assembly";
 
     this.unionIndex = 0;
 
