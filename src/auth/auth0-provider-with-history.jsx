@@ -16,10 +16,16 @@ const Auth0ProviderWithHistory = ({ children }) => {
     <Auth0Provider
       domain={domain}
       clientId={clientId}
-      redirectUri="https://alzatin.github.io/abundance-mo-fork"
+      redirectUri={
+        import.meta.env.VITE_APP_DEV
+          ? window.location.origin
+          : "https://alzatin.github.io/abundance-mo-fork"
+      }
       audience={audience}
       authorizationParams={{
-        redirect_uri: "https://alzatin.github.io/abundance-mo-fork",
+        redirect_uri: import.meta.env.VITE_APP_DEV
+          ? window.location.origin
+          : "https://alzatin.github.io/abundance-mo-fork",
         audience: audience,
       }}
     >

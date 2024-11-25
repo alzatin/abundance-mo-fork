@@ -123,8 +123,6 @@ function CreateMode({
     { owner, repo, base, changes },
     setState
   ) {
-    console.log("creating commit");
-    console.log(octokit);
     setState(35);
     if (!base) {
       octokit
