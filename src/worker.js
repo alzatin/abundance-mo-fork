@@ -1279,9 +1279,7 @@ async function assembly(inputIDs, targetID = null) {
 
   if (targetID != null) {
     library[targetID] = generatedAssembly;
-    console.log(library[targetID]);
   } else {
-    console.log("generatedAssembly", generatedAssembly);
     return generatedAssembly;
   }
 
@@ -1596,7 +1594,6 @@ function generateDisplayMesh(id) {
         geometry: cleanedGeometry,
       });
     });
-    console.log(meshArray);
     let cameraZoom;
     try {
       cameraZoom = generateCameraPosition(meshArray);
@@ -1607,7 +1604,6 @@ function generateDisplayMesh(id) {
     let finalMeshes = [];
     //Iterate through the meshArray and create final meshes with faces, edges and color to pass to display
     meshArray.forEach((meshgeometry) => {
-      console.log(meshgeometry);
       try {
         //Try extruding if there is no 3d shape
         if (meshgeometry.geometry.mesh == undefined) {
@@ -1641,7 +1637,6 @@ function generateDisplayMesh(id) {
       }
     });
 
-    console.log(finalMeshes);
     return finalMeshes;
   });
 }
