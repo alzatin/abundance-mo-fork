@@ -805,7 +805,7 @@ function LoginMode({
         {...{ setExportPopUp, authorizedUserOcto, exporting: false }}
       />
     );
-  } else if (authorizedUserOcto) {
+  } else if (isAuthenticated) {
     popUpContent = (
       <ShowProjects
         {...{
