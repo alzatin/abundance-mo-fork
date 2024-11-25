@@ -850,7 +850,9 @@ function LoginMode({
             className="closeButton"
             onClick={() => {
               logout({
-                returnTo: "https://alzatin.github.io/abundance-mo-fork", // Redirect to home page or specified URL
+                returnTo: import.meta.env.VITE_APP_DEV
+                  ? window.location.origin
+                  : "https://alzatin.github.io/abundance-mo-fork", // Redirect to home page or specified URL
               });
             }}
           >
