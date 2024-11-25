@@ -1578,7 +1578,6 @@ function generateDisplayMesh(id) {
 
     //Flatten the assembly to remove hierarchy
     const flattened = flattenAssembly(library[id]);
-    console.log(flattened);
 
     flattened.forEach((displayObject) => {
       var cleanedGeometry = [];
