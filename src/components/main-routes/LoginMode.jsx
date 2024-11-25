@@ -750,7 +750,6 @@ function LoginMode({
   const {
     loginWithRedirect,
     logout,
-    user,
     isAuthenticated,
     isLoading,
     getAccessTokenSilently,
@@ -766,14 +765,6 @@ function LoginMode({
         try {
           const token = await getAccessTokenSilently();
 
-          const testResponse = await fetch(`${serverUrl}/api/test`, {
-            method: "GET", // or 'POST', etc.
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Add this if authentication is required
-            },
-          });
-          const testResponseJson = await testResponse.json();
           //Returns authorized user from proxy server
           const response = await fetch(`${serverUrl}/api/greet`, {
             headers: {
@@ -805,7 +796,7 @@ function LoginMode({
         {...{ setExportPopUp, authorizedUserOcto, exporting: false }}
       />
     );
-  } else if (isAuthenticated) {
+  } else if (isAuthenticated && authorizedUserOcto) {
     popUpContent = (
       <ShowProjects
         {...{
@@ -817,6 +808,35 @@ function LoginMode({
           pageDict,
         }}
       />
+    );
+  } else if (isAuthenticated || isLoading) {
+    popUpContent = (
+      <div className="login-page">
+        <div className="form animate fadeInUp one">
+          <div id="gitSide" className="logindiv">
+            <img
+              className="logo"
+              src={
+                import.meta.env.VITE_APP_PATH_FOR_PICS +
+                "/imgs/abundance_logo.png"
+              }
+              alt="logo"
+            />
+            <div id="welcome">
+              <img
+                src={
+                  import.meta.env.VITE_APP_PATH_FOR_PICS +
+                  "/imgs/abundance_lettering.png"
+                }
+                alt="logo"
+                style={{ width: "300px" }}
+              />
+            </div>
+
+            <p> Redirecting you to your projects ... </p>
+          </div>
+        </div>
+      </div>
     );
   } else {
     popUpContent = <InitialLog {...{ loginWithRedirect, tryLogin }} />;
