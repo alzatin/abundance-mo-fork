@@ -695,7 +695,6 @@ function extractTags(inputGeometry, TAG) {
 }
 
 function extractKeepOut(inputGeometry) {
-  console.log(inputGeometry);
   if (inputGeometry.tags.includes("keepout")) {
     return false;
   } else if (isAssembly(inputGeometry)) {
