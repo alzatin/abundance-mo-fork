@@ -79,7 +79,9 @@ export default class Color extends Atom {
     super.draw(); //Super call to draw the rest
 
     GlobalVariables.c.beginPath();
-    GlobalVariables.c.fillStyle = this.selectedValueColor;
+    GlobalVariables.c.fillStyle = Object.values(this.colorOptions)[
+      this.selectedColorIndex
+    ];
 
     GlobalVariables.c.arc(
       GlobalVariables.widthToPixels(this.x),
@@ -162,24 +164,6 @@ export default class Color extends Atom {
       });
       return inputParams;
     }
-  }
-  /**
-   * Create a drop down to choose the color.
-   */
-  updateSidebar() {
-    const list = super.updateSidebar();
-    const dropdown = document.createElement("div");
-    list.appendChild(dropdown);
-    this.createDropDown(
-      dropdown,
-      this,
-      Object.keys(this.colorOptions),
-      this.selectedColorIndex,
-      "Color",
-      (index) => {
-        this.changeColor(index);
-      }
-    );
   }
 
   /**
