@@ -1,4 +1,5 @@
 const fonts = {
+  ANTON: "http://fonts.gstatic.com/s/anton/v7/XIbCenm-W0IRHWYIh7CGUQ.ttf",
   ROBOTO: "https://fonts.gstatic.com/s/roboto/v15/W5F8_SL0XFawnjxHGsZjJA.ttf",
 
   NOTOSANS:
@@ -9,6 +10,12 @@ const fonts = {
 
   MONSERRAT:
     "http://fonts.gstatic.com/s/montserrat/v15/JTURjIg1_i6t8kCHKm45_dJE3gnD-w.ttf",
+
+  AGUAFINA:
+    "http://fonts.gstatic.com/s/aguafinascript/v5/65g7cgMtMGnNlNyq_Z6CvMxLhO8OSNnfAp53LK1_iRs.ttf",
+
+  OPEN_SANS:
+    "http://fonts.gstatic.com/s/opensans/v13/IgZJs4-7SA1XX_edsoXWog.ttf",
 };
 
 export default fonts;
