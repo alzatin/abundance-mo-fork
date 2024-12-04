@@ -138,7 +138,7 @@ function TopMenu({
         >
           <img
             className="nav-img thumnail-logo"
-            src={"/imgs/Go Up.svg"}
+            src={import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/Go Up.svg"}
             key=""
             title=""
           />
@@ -200,14 +200,20 @@ function TopMenu({
                 className={`thumnail-logo nav-img ${
                   !currentMoleculeTop ? " rotati-right" : ""
                 }`}
-                src={"/imgs/three-menu.svg"}
+                src={
+                  import.meta.env.VITE_APP_PATH_FOR_PICS +
+                  "/imgs/three-menu.svg"
+                }
               />
             ) : (
               <img
                 className={`thumnail-logo nav-img  ${
                   !currentMoleculeTop ? " rotati-plus " : "rotati"
                 }`}
-                src={"/imgs/three-menu.svg"}
+                src={
+                  import.meta.env.VITE_APP_PATH_FOR_PICS +
+                  "/imgs/three-menu.svg"
+                }
               />
             )}
           </button>
@@ -218,7 +224,12 @@ function TopMenu({
                 <img
                   className=" thumnail-logo"
                   alt={item}
-                  src={"/imgs/" + item.id + ".svg"}
+                  src={
+                    import.meta.env.VITE_APP_PATH_FOR_PICS +
+                    "/imgs/" +
+                    item.id +
+                    ".svg"
+                  }
                   key={item.id}
                   title={item.id + "-button"}
                   onClick={item.buttonFunc}

@@ -52,9 +52,9 @@ export default class Join extends Atom {
       });
     }
 
-    this.unionType;
+    this.unionType = "Assembly";
 
-    this.unionIndex = 0;
+    this.unionIndex;
 
     this.setValues([]);
   }
@@ -157,16 +157,16 @@ export default class Join extends Atom {
     const importOptions = ["Assembly", "Fusion"];
 
     inputParams[this.uniqueID + "union_ops"] = {
-      value: this.unionType || importOptions[this.unionIndex],
+      value: this.unionIndex
+        ? importOptions[this.unionIndex]
+        : importOptions[0],
       options: importOptions,
       label: "Union Type",
       onChange: (value) => {
         this.unionIndex = importOptions.indexOf(value);
-        if (this.unionType !== importOptions[this.unionIndex]) {
-          this.unionType = importOptions[this.unionIndex];
-          this.name = this.unionType;
-          this.updateValue();
-        }
+        this.unionType = importOptions[this.unionIndex];
+        this.name = this.unionType;
+        this.updateValue();
       },
     };
     return inputParams;
@@ -191,6 +191,7 @@ export default class Join extends Atom {
 
     thisAsObject.ioValues = ioValues;
     thisAsObject.unionType = this.unionType;
+    thisAsObject.unionIndex = this.unionIndex;
 
     return thisAsObject;
   }

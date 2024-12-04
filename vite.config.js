@@ -1,10 +1,12 @@
 import { defineConfig } from "vite";
 import reactPlugin from "@vitejs/plugin-react";
+import Pages from "vite-plugin-pages";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [reactPlugin()],
-  base: "/",
+  plugins: [reactPlugin(), Pages()],
+
+  base: "/abundance-mo-fork", //change to "/" for local development or to "/abundance-mo-fork" for deployment
   build: {
     outDir: "dist",
   },

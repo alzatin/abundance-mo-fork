@@ -84,7 +84,7 @@ const NewProjectPopUp = ({ setExportPopUp, authorizedUserOcto, exporting }) => {
       });
     }
     GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
-
+    console.log(authorizedUserOcto);
     await authorizedUserOcto
       .request("POST /user/repos", {
         name: name,

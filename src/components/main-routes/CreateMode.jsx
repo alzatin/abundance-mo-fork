@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import GlobalVariables from "../../js/globalvariables.js";
-import { Octokit } from "octokit";
+import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import ToggleRunCreate from "../secondary/ToggleRunCreate.jsx";
 import TopMenu from "../secondary/TopMenu.jsx";
 import FlowCanvas from "./flowCanvas.jsx";
@@ -123,8 +123,6 @@ function CreateMode({
     { owner, repo, base, changes },
     setState
   ) {
-    console.log("creating commit");
-    console.log(octokit);
     setState(35);
     if (!base) {
       octokit
@@ -366,7 +364,10 @@ function CreateMode({
           <div id="headerBar">
             <img
               className="thumnail-logo"
-              src="/imgs/abundance_logo.png"
+              src={
+                import.meta.env.VITE_APP_PATH_FOR_PICS +
+                "/imgs/abundance_logo.png"
+              }
               alt="logo"
             />
           </div>

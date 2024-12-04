@@ -3,7 +3,8 @@ import { OAuth } from "oauthio-web";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import {
   BrowserRouter,
-  BrowserRouter as Router,
+  HashRouter as Router,
+  // BrowserRouter as Router,
   Routes,
   Route,
   useNavigate,
@@ -184,7 +185,7 @@ export default function ReplicadApp() {
             />
           }
         />
-        <Route exact path="/callback" element={<p>callback</p>} />
+
         <Route
           path="/:owner/:repoName"
           element={

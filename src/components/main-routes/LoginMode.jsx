@@ -24,10 +24,20 @@ const InitialLog = ({}) => {
     <div className="login-page">
       <div className="form animate fadeInUp one">
         <div id="gitSide" className="logindiv">
-          <img className="logo" src="/imgs/abundance_logo.png" alt="logo" />
+          <img
+            className="logo"
+            src={
+              import.meta.env.VITE_APP_PATH_FOR_PICS +
+              "/imgs/abundance_logo.png"
+            }
+            alt="logo"
+          />
           <div id="welcome">
             <img
-              src="/imgs/abundance_lettering.png"
+              src={
+                import.meta.env.VITE_APP_PATH_FOR_PICS +
+                "/imgs/abundance_lettering.png"
+              }
               alt="logo"
               style={{ width: "300px" }}
             />
@@ -101,7 +111,7 @@ const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
           onClick={() => setBrowseType("list")}
         >
           <img
-            src="/imgs/list.svg"
+            src={import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/list.svg"}
             alt="list_search"
             style={{
               width: "20px",
@@ -116,7 +126,7 @@ const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
           onClick={() => setBrowseType("thumb")}
         >
           <img
-            src="/imgs/thumbnail.svg"
+            src={import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/thumbnail.svg"}
             alt="thumb_search"
             style={{
               width: "20px",
@@ -126,7 +136,11 @@ const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
           />
         </button>
         <label htmlFor="order-by">
-          <img src="/imgs/sort.svg" alt="Sort by" style={{ width: "15px" }} />
+          <img
+            src={import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/sort.svg"}
+            alt="Sort by"
+            style={{ width: "15px" }}
+          />
           <select
             className="order_dropdown"
             id="order-by"
@@ -205,7 +219,9 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           src={node.svgURL}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
-            currentTarget.src = "/imgs/defaultThumbnail.svg";
+            currentTarget.src =
+              import.meta.env.VITE_APP_PATH_FOR_PICS +
+              "/imgs/defaultThumbnail.svg";
           }}
           alt={node.repoName}
         ></img>
@@ -661,7 +677,10 @@ const ShowProjects = ({
             />
             <button className="list_thumb_button">
               <img
-                src="/imgs/search_icon.svg"
+                src={
+                  import.meta.env.VITE_APP_PATH_FOR_PICS +
+                  "/imgs/search_icon.svg"
+                }
                 alt="search"
                 style={{
                   width: "20px",
@@ -673,7 +692,9 @@ const ShowProjects = ({
               {projectToShow == "all" ? (
                 <label htmlFor="year-by">
                   <img
-                    src="/imgs/sort.svg"
+                    src={
+                      import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/sort.svg"
+                    }
                     alt="year-show"
                     style={{ width: "15px" }}
                   />
@@ -729,7 +750,6 @@ function LoginMode({
   const {
     loginWithRedirect,
     logout,
-    user,
     isAuthenticated,
     isLoading,
     getAccessTokenSilently,
@@ -737,6 +757,7 @@ function LoginMode({
 
   useEffect(() => {
     if (isAuthenticated) {
+      console.log("isAuthenticated");
       const serverUrl =
         "https://n3i60kesu6.execute-api.us-east-2.amazonaws.com/prox";
 
@@ -744,14 +765,6 @@ function LoginMode({
         try {
           const token = await getAccessTokenSilently();
 
-          const testResponse = await fetch(`${serverUrl}/api/test`, {
-            method: "GET", // or 'POST', etc.
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Add this if authentication is required
-            },
-          });
-          const testResponseJson = await testResponse.json();
           //Returns authorized user from proxy server
           const response = await fetch(`${serverUrl}/api/greet`, {
             headers: {
@@ -779,9 +792,11 @@ function LoginMode({
   let popUpContent;
   if (exportPopUp && authorizedUserOcto) {
     popUpContent = (
-      <NewProjectPopUp {...{ setExportPopUp, user, exporting: false }} />
+      <NewProjectPopUp
+        {...{ setExportPopUp, authorizedUserOcto, exporting: false }}
+      />
     );
-  } else if (authorizedUserOcto) {
+  } else if (isAuthenticated && authorizedUserOcto) {
     popUpContent = (
       <ShowProjects
         {...{
@@ -793,6 +808,35 @@ function LoginMode({
           pageDict,
         }}
       />
+    );
+  } else if (isAuthenticated || isLoading) {
+    popUpContent = (
+      <div className="login-page">
+        <div className="form animate fadeInUp one">
+          <div id="gitSide" className="logindiv">
+            <img
+              className="logo"
+              src={
+                import.meta.env.VITE_APP_PATH_FOR_PICS +
+                "/imgs/abundance_logo.png"
+              }
+              alt="logo"
+            />
+            <div id="welcome">
+              <img
+                src={
+                  import.meta.env.VITE_APP_PATH_FOR_PICS +
+                  "/imgs/abundance_lettering.png"
+                }
+                alt="logo"
+                style={{ width: "300px" }}
+              />
+            </div>
+
+            <p> Redirecting you to your projects ... </p>
+          </div>
+        </div>
+      </div>
     );
   } else {
     popUpContent = <InitialLog {...{ loginWithRedirect, tryLogin }} />;
@@ -826,7 +870,9 @@ function LoginMode({
             className="closeButton"
             onClick={() => {
               logout({
-                returnTo: window.location.origin, // Redirect to home page or specified URL
+                returnTo: import.meta.env.VITE_APP_DEV
+                  ? window.location.origin
+                  : "https://alzatin.github.io/abundance-mo-fork", // Redirect to home page or specified URL
               });
             }}
           >
@@ -840,12 +886,18 @@ function LoginMode({
           style={{ display: "flex", margin: "10px 10px", alignItems: "center" }}
         >
           <img
-            src="/imgs/abundance_logo.png"
+            src={
+              import.meta.env.VITE_APP_PATH_FOR_PICS +
+              "/imgs/abundance_logo.png"
+            }
             alt="logo"
             style={{ width: "40px", height: "40px", borderRadius: "50%" }}
           />
           <img
-            src="/imgs/abundance_lettering.png"
+            src={
+              import.meta.env.VITE_APP_PATH_FOR_PICS +
+              "/imgs/abundance_lettering.png"
+            }
             alt="logo"
             style={{ height: "20px", padding: "10px" }}
           />
