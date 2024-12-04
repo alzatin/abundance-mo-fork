@@ -872,7 +872,7 @@ function LoginMode({
               logout({
                 returnTo: import.meta.env.VITE_APP_DEV
                   ? window.location.origin
-                  : "https://barboursmith.github.io/Abundance/", // Redirect to home page or specified URL
+                  : "https://barboursmith.github.io/Abundance", // Redirect to home page or specified URL
               });
             }}
           >
