@@ -3,6 +3,7 @@ import GlobalVariables from "../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { button } from "leva";
 import { re } from "mathjs";
+import { LevaInputs } from "leva";
 
 /**
  * This class creates the GitHubMolecule atom.
@@ -86,6 +87,14 @@ export default class GitHubMolecule extends Molecule {
               }
             },
           };
+          if (input.type && input.valueType) {
+            inputParams[this.uniqueID + input.name].type =
+              LevaInputs[input.valueType.toUpperCase()];
+          }
+        }
+        if (input.type && input.valueType) {
+          inputParams[this.uniqueID + input.name].type =
+            LevaInputs[input.valueType.toUpperCase()];
         }
       });
       inputParams["Reload From Github"] = button(() =>

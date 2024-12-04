@@ -31,6 +31,14 @@ export default class Text extends Atom {
 
     this.fontFamily = "ROBOTO";
 
+    /**
+     * The index of the currently selected color option.
+     * @type {number}
+     */
+    this.selectedFontIndex = 0;
+
+    this.availableFonts = Fonts;
+
     this.addIO("input", "Font Size", this, "number", 10.0);
     this.addIO("input", "Text", this, "string", "Lorem Ipsum");
     this.addIO("output", "geometry", this, "geometry", "");
@@ -96,13 +104,17 @@ export default class Text extends Atom {
       });
     }
     const fontOptions = Fonts;
-    inputParams["Font Family"] = {
-      options: Object.keys(fontOptions),
+
+    inputParams[this.uniqueID + "FontFamily"] = {
+      value: Object.keys(fontOptions)[this.selectedFontIndex],
       label: "Font Family",
+      options: Object.keys(fontOptions),
       onChange: (value) => {
-        this.fontFamily = value;
-        this.updateValue();
-        //importIndex = fontOptions.indexOf(value);
+        if (value != this.fontFamily) {
+          this.selectedFontIndex = Object.keys(fontOptions).indexOf(value);
+          this.fontFamily = Object.keys(fontOptions)[this.selectedFontIndex];
+          this.updateValue();
+        }
       },
     };
 
@@ -141,6 +153,7 @@ export default class Text extends Atom {
 
     thisAsObject.ioValues = ioValues;
     thisAsObject.fontFamily = this.fontFamily;
+    thisAsObject.selectedFontIndex = this.selectedFontIndex;
 
     return thisAsObject;
   }
