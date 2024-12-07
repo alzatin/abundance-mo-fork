@@ -921,7 +921,6 @@ function LoginMode({
             to={`/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`}
           >
             <button
-              className="closeButton"
               onClick={() => {
                 setExportPopUp(false);
               }}
