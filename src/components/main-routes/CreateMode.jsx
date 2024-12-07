@@ -500,17 +500,20 @@ function CreateMode({
     console.warn("You are not logged in");
     const { owner, repoName } = useParams();
     var octokit = new Octokit();
+    console.log("owner: " + owner + " repoName: " + repoName);
     octokit
       .request("GET /repos/{owner}/{repo}", {
         owner: owner,
         repo: repoName,
       })
       .then((result) => {
+        console.log(result.data);
         GlobalVariables.currentRepoName = result.data.name;
         GlobalVariables.currentRepo = result.data;
         navigate(
           `/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
         );
+        alert("You are not logged in");
 
         //auto login - turned off for development
         /*
