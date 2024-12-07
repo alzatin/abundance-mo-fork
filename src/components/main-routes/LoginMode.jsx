@@ -927,13 +927,15 @@ function LoginMode({
               }}
             >
               <img></img>
-              <span class="glyphicon glyphicon-log-out"></span> Return to
-              project
+              <span class="glyphicon glyphicon-log-out">
+                {" "}
+                Return to project
+              </span>
+              <span className="closeButton"></span>
             </button>
           </Link>
         ) : isAuthenticated ? (
           <button
-            className="closeButton"
             onClick={() => {
               logout({
                 returnTo: import.meta.env.VITE_APP_DEV
@@ -942,7 +944,8 @@ function LoginMode({
               });
             }}
           >
-            <span class="glyphicon glyphicon-log-out"></span> Log out
+            <span class="glyphicon glyphicon-log-out"> Log out </span>
+            <span className="closeButton"></span>
           </button>
         ) : null}
       </div>
