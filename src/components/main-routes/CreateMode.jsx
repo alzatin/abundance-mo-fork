@@ -503,14 +503,12 @@ function CreateMode({
     console.warn("You are not logged in");
     const { owner, repoName } = useParams();
     var octokit = new Octokit();
-    console.log("owner: " + owner + " repoName: " + repoName);
     octokit
       .request("GET /repos/{owner}/{repo}", {
         owner: owner,
         repo: repoName,
       })
       .then((result) => {
-        console.log(result.data);
         GlobalVariables.currentRepoName = result.data.name;
         GlobalVariables.currentRepo = result.data;
         navigate(
@@ -525,19 +523,7 @@ function CreateMode({
         } else {
           // user clicked cancel and is redirected to the run mode
         }
-
-        //auto login - turned off for development
-        /*
-        tryLogin()
-        .then((result) => {
-          navigate(`/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
-        })
-        .catch((error) => {
-          navigate(`/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
-        });*/
       });
-
-    //tryLogin();
   }
 }
 

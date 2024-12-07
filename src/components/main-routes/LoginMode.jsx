@@ -916,7 +916,7 @@ function LoginMode({
     >
       <div>
         {" "}
-        {GlobalVariables.currentRepo ? (
+        {GlobalVariables.currentRepo && isAuthenticated ? (
           <Link
             to={`/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`}
           >
@@ -929,7 +929,7 @@ function LoginMode({
               <img></img>
             </button>
           </Link>
-        ) : (
+        ) : isAuthenticated ? (
           <button
             className="closeButton"
             onClick={() => {
@@ -940,9 +940,9 @@ function LoginMode({
               });
             }}
           >
-            <img></img>
+            <span class="glyphicon glyphicon-log-out"></span> Log out
           </button>
-        )}
+        ) : null}
       </div>
       <div className="top-banner" style={{ margin: "35px 0 0 30px" }}>
         <div
