@@ -270,7 +270,7 @@ const NewProjectPopUp = ({ setExportPopUp, authorizedUserOcto, exporting }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPending(true);
-    const projectName = projectRef.current.value;
+    const projectName = projectRef.current.value.replace(/\//g, "");
     const projectTopicArray = projectTopicRef.current.getValue();
     const projectDescription = projectDescriptionRef.current.value;
     const projectTopic = [];
