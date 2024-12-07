@@ -511,7 +511,7 @@ function CreateMode({
         GlobalVariables.currentRepoName = result.data.name;
         GlobalVariables.currentRepo = result.data;
         navigate(
-          `/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
+          `/run/${GlobalVariables.currentRepo.owner.login}/${GlobalVariables.currentRepoName}`
         );
         alert("You are not logged in");
 
