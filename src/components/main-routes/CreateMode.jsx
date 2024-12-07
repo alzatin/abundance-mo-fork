@@ -508,6 +508,10 @@ function CreateMode({
       .then((result) => {
         GlobalVariables.currentRepoName = result.data.name;
         GlobalVariables.currentRepo = result.data;
+        navigate(
+          `/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`
+        );
+
         //auto login - turned off for development
         /*
         tryLogin()
