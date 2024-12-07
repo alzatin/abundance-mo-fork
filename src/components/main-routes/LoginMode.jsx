@@ -927,6 +927,8 @@ function LoginMode({
               }}
             >
               <img></img>
+              <span class="glyphicon glyphicon-log-out"></span> Return to
+              project
             </button>
           </Link>
         ) : isAuthenticated ? (
