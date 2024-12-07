@@ -787,7 +787,11 @@ function LoginMode({
   setAuthorizedUserOcto,
 }) {
   const pageDict = { 0: null };
-  const [projectToShow, setProjectsToShow] = useState("recents");
+
+  const [projectToShow, setProjectsToShow] = useState((user) =>
+    GlobalVariables.currentUser ? "recents" : "featured"
+  );
+
   const [noUserBrowsing, setNoUserBrowsing] = useState(false);
 
   const {
@@ -885,7 +889,7 @@ function LoginMode({
     popUpContent = (
       <ShowProjects
         {...{
-          projectToShow: "all",
+          projectToShow,
           setExportPopUp,
           setProjectsToShow,
           user: null,
