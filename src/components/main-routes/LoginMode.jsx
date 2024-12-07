@@ -17,7 +17,7 @@ var octokit = null;
  * Initial log component displays pop Up to either attempt Github login/browse projects
  *
  */
-const InitialLog = ({}) => {
+const InitialLog = ({ setNoUserBrowsing }) => {
   const { loginWithRedirect } = useAuth0();
 
   return (
@@ -75,7 +75,7 @@ const InitialLog = ({}) => {
           <button
             type="button"
             onClick={() => {
-              //setBrowsing(true);
+              setNoUserBrowsing(true);
             }}
             className="submit-btn"
             id="browseNonGit"
@@ -383,6 +383,8 @@ const ShowProjects = ({
   user,
   authorizedUserOcto,
   pageDict,
+  loginWithRedirect,
+  setNoUserBrowsing,
 }) => {
   const loadingMessages = {
     loading: "Loading projects...",
@@ -543,74 +545,114 @@ const ShowProjects = ({
     }
   };
 
+  const UserNavDiv = (
+    <div className="left-login-div">
+      <div
+        className="login-nav-item"
+        onClick={() => {
+          setExportPopUp(true);
+        }}
+      >
+        <p>New project</p>
+      </div>
+      <div
+        className={
+          "login-nav-item" +
+          (projectToShow == "owned" ? " login-nav-item-clicked" : "")
+        }
+        onClick={(e) => {
+          setProjectsToShow("owned");
+        }}
+      >
+        <p>My Projects</p>
+      </div>
+      <div
+        className={
+          "login-nav-item" +
+          (projectToShow == "recents" ? " login-nav-item-clicked" : "")
+        }
+        onClick={() => {
+          setProjectsToShow("recents");
+        }}
+      >
+        <p> Recent Projects</p>
+      </div>
+      <div
+        className={
+          "login-nav-item" +
+          (projectToShow == "liked" ? " login-nav-item-clicked" : "")
+        }
+        onClick={() => {
+          setProjectsToShow("liked");
+        }}
+      >
+        <p> Liked Projects</p>
+      </div>
+      <div
+        className={
+          "login-nav-item" +
+          (projectToShow == "featured" ? " login-nav-item-clicked" : "")
+        }
+        onClick={() => {
+          setProjectsToShow("featured");
+        }}
+      >
+        <p> Browse Featured Projects</p>
+      </div>
+      <div
+        className={
+          "login-nav-item" +
+          (projectToShow == "all" ? " login-nav-item-clicked" : "")
+        }
+        onClick={() => {
+          setProjectsToShow("all");
+        }}
+      >
+        <p> Browse All Other Projects</p>
+      </div>
+    </div>
+  );
+
+  const noUserNavDiv = (
+    <div className="left-login-div">
+      <div
+        className="login-nav-item"
+        onClick={() => {
+          setNoUserBrowsing(false);
+          loginWithRedirect();
+        }}
+      >
+        <p>Login</p>
+      </div>
+      <div
+        className={
+          "login-nav-item" +
+          (projectToShow == "featured" ? " login-nav-item-clicked" : "")
+        }
+        onClick={() => {
+          setProjectsToShow("featured");
+        }}
+      >
+        <p> Browse Featured Projects</p>
+      </div>
+      <div
+        className={
+          "login-nav-item" +
+          (projectToShow == "all" ? " login-nav-item-clicked" : "")
+        }
+        onClick={() => {
+          setProjectsToShow("all");
+        }}
+      >
+        <p> Browse All Other Projects</p>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <div className="login-content-div">
-        <div className="left-login-div">
-          <div
-            className="login-nav-item"
-            onClick={() => {
-              setExportPopUp(true);
-            }}
-          >
-            <p>New project</p>
-          </div>
-          <div
-            className={
-              "login-nav-item" +
-              (projectToShow == "owned" ? " login-nav-item-clicked" : "")
-            }
-            onClick={(e) => {
-              setProjectsToShow("owned");
-            }}
-          >
-            <p>My Projects</p>
-          </div>
-          <div
-            className={
-              "login-nav-item" +
-              (projectToShow == "recents" ? " login-nav-item-clicked" : "")
-            }
-            onClick={() => {
-              setProjectsToShow("recents");
-            }}
-          >
-            <p> Recent Projects</p>
-          </div>
-          <div
-            className={
-              "login-nav-item" +
-              (projectToShow == "liked" ? " login-nav-item-clicked" : "")
-            }
-            onClick={() => {
-              setProjectsToShow("liked");
-            }}
-          >
-            <p> Liked Projects</p>
-          </div>
-          <div
-            className={
-              "login-nav-item" +
-              (projectToShow == "featured" ? " login-nav-item-clicked" : "")
-            }
-            onClick={() => {
-              setProjectsToShow("featured");
-            }}
-          >
-            <p> Browse Featured Projects</p>
-          </div>
-          <div
-            className={
-              "login-nav-item" +
-              (projectToShow == "all" ? " login-nav-item-clicked" : "")
-            }
-            onClick={() => {
-              setProjectsToShow("all");
-            }}
-          >
-            <p> Browse All Other Projects</p>
-          </div>
-        </div>
+        {GlobalVariables.currentUser ? UserNavDiv : noUserNavDiv}
         <div className="right-login-div">
           <span style={{ fontFamily: "Roboto" }}>
             Welcome to Abundance {GlobalVariables.currentUser}
@@ -746,6 +788,7 @@ function LoginMode({
 }) {
   const pageDict = { 0: null };
   const [projectToShow, setProjectsToShow] = useState("recents");
+  const [noUserBrowsing, setNoUserBrowsing] = useState(false);
 
   const {
     loginWithRedirect,
@@ -838,8 +881,25 @@ function LoginMode({
         </div>
       </div>
     );
+  } else if (noUserBrowsing) {
+    popUpContent = (
+      <ShowProjects
+        {...{
+          projectToShow: "all",
+          setExportPopUp,
+          setProjectsToShow,
+          user: null,
+          authorizedUserOcto,
+          pageDict,
+          loginWithRedirect,
+          setNoUserBrowsing,
+        }}
+      />
+    );
   } else {
-    popUpContent = <InitialLog {...{ loginWithRedirect, tryLogin }} />;
+    popUpContent = (
+      <InitialLog {...{ loginWithRedirect, tryLogin, setNoUserBrowsing }} />
+    );
   }
   return (
     <div
