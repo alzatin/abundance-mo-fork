@@ -7,6 +7,7 @@ import FlowCanvas from "./flowCanvas.jsx";
 import LowerHalf from "./lowerHalf.jsx";
 import ParamsEditor from "../secondary/ParameterEditor.jsx";
 import CodeWindow from "../secondary/codeWindow.jsx";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import {
   BrowserRouter as Router,
@@ -58,6 +59,8 @@ function CreateMode({
 
   /** State for top level molecule */
   const [currentMoleculeTop, setTop] = useState(false);
+
+  const { loginWithRedirect } = useAuth0();
 
   /**
    * Object containing letters and values used for keyboard shortcuts
@@ -508,18 +511,19 @@ function CreateMode({
       .then((result) => {
         GlobalVariables.currentRepoName = result.data.name;
         GlobalVariables.currentRepo = result.data;
-        //auto login - turned off for development
-        /*
-        tryLogin()
-        .then((result) => {
-          navigate(`/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
-        })
-        .catch((error) => {
-          navigate(`/run/${GlobalVariables.currentRepo.owner}/${GlobalVariables.currentRepo.repoName}`);
-        });*/
-      });
+        navigate(
+          `/run/${GlobalVariables.currentRepo.owner.login}/${GlobalVariables.currentRepoName}`
+        );
+        const loginConfirm = confirm(
+          "You are not logged in. Would you like to log in?"
+        );
 
-    //tryLogin();
+        if (loginConfirm) {
+          loginWithRedirect();
+        } else {
+          // user clicked cancel and is redirected to the run mode
+        }
+      });
   }
 }
 

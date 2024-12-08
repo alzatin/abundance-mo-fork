@@ -232,6 +232,7 @@ export default function ReplicadApp() {
             />
           }
         />
+        <Route path="/redirect" element={<div>redirect working</div>} />
       </Routes>
     </main>
   );

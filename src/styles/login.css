@@ -350,42 +350,22 @@
   top: 5px;
   right: 15px;
   border: none;
-  height: 2em;
-  background: transparent;
-  font: inherit;
+  height: 1.5em;
+  background-color: #281c28;
+  font: 0.75em sans-serif;
   cursor: pointer;
   margin-top: 3px;
   border-color: #ffffff;
-  color: #3c3a3a;
+  border-radius: 30px;
+  padding: 0 15px 0 15px;
+  color: #f2f0f0;
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+}
 
-  &:focus {
-    outline: solid 0 transparent;
-    box-shadow: 0 0 0 2px #b2b2b3;
-  }
-
-  &:hover {
-    background: rgba(29, 161, 142, 0.1);
-  }
-
-  &:before,
-  &:after {
-    position: absolute;
-    top: 15%;
-    left: calc(50% - 0.0625em);
-    width: 0.125em;
-    height: 70%;
-    border-radius: 0.125em;
-    transform: rotate(45deg);
-    background: currentcolor;
-    content: "";
-  }
-
-  &:after {
-    transform: rotate(-45deg);
-  }
+&:hover {
+  background: rgba(29, 161, 142, 0.1);
 }
 
 .container {
