@@ -39,6 +39,7 @@ function ShareDialog({
             <a
               style={{ margin: "16px" }}
               href={
+                window.location.origin +
                 "/run/" +
                 GlobalVariables.currentRepo.owner +
                 "/" +
