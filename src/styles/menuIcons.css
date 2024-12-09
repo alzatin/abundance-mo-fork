@@ -3,246 +3,246 @@
 }
 
 .Actions {
-  background: url("/abundance-mo-fork/imgs/actions.png");
+  background: url("/Abundance/imgs/actions.png");
   width: 400%;
   height: 400%;
 }
 
 .Inputs {
-  background: url("/abundance-mo-fork/imgs/Input.png");
+  background: url("/Abundance/imgs/Input.png");
   width: 400%;
   height: 400%;
 }
 .Shapes {
-  background: url("/abundance-mo-fork/imgs/Shapes.png");
+  background: url("/Abundance/imgs/Shapes.png");
   width: 150%;
   height: 150%;
 }
 .Assembly {
-  background: url("/abundance-mo-fork/imgs/Assembly.png");
+  background: url("/Abundance/imgs/Assembly.png");
   width: 150%;
   height: 150%;
 }
 .Join {
-  background: url("/abundance-mo-fork/imgs/join.png");
+  background: url("/Abundance/imgs/join.png");
   width: 150%;
   height: 150%;
 }
 .Interaction {
-  background: url("/abundance-mo-fork/imgs/interaction.png");
+  background: url("/Abundance/imgs/interaction.png");
   width: 150%;
   height: 150%;
 }
 .Intersection {
-  background: url("/abundance-mo-fork/imgs/intersection.png");
+  background: url("/Abundance/imgs/intersection.png");
   width: 150%;
   height: 150%;
 }
 .ShrinkWrap {
-  background: url("/abundance-mo-fork/imgs/shrinkwrap.png");
+  background: url("/Abundance/imgs/shrinkwrap.png");
   width: 150%;
   height: 150%;
 }
 .Tags {
-  background: url("/abundance-mo-fork/imgs/tag.png");
+  background: url("/Abundance/imgs/tag.png");
   width: 150%;
   height: 150%;
 }
 
 .OverCut-Corners {
-  background: url("/abundance-mo-fork/imgs/Overcut.png");
+  background: url("/Abundance/imgs/Overcut.png");
   width: 150%;
   height: 150%;
 }
 
 .Import-Export {
-  background: url("/abundance-mo-fork/imgs/import.png");
+  background: url("/Abundance/imgs/import.png");
   width: 150%;
   height: 150%;
 }
 
 .Export {
-  background: url("/abundance-mo-fork/imgs/Export_menu.svg");
+  background: url("/Abundance/imgs/Export_menu.svg");
   width: 150%;
   height: 150%;
 }
 
 .Import {
-  background: url("/abundance-mo-fork/imgs/Import_menu.svg");
+  background: url("/Abundance/imgs/Import_menu.svg");
   width: 150%;
   height: 150%;
 }
 
 .Group {
-  background: url("/abundance-mo-fork/imgs/Group.png");
+  background: url("/Abundance/imgs/Group.png");
   width: 150%;
   height: 150%;
 }
 .Text {
-  background: url("/abundance-mo-fork/imgs/text.png");
+  background: url("/Abundance/imgs/text.png");
   width: 150%;
   height: 150%;
 }
 
 .Difference {
-  background: url("/abundance-mo-fork/imgs/difference.png");
+  background: url("/Abundance/imgs/difference.png");
   width: 150%;
   height: 150%;
 }
 
 .Rectangle {
-  background: url("/abundance-mo-fork/imgs/rectangle.png");
+  background: url("/Abundance/imgs/rectangle.png");
   width: 150%;
   height: 150%;
 }
 
 .Circle {
-  background: url("/abundance-mo-fork/imgs/circle.png");
+  background: url("/Abundance/imgs/circle.png");
   width: 150%;
   height: 150%;
 }
 
 .Code {
-  background: url("/abundance-mo-fork/imgs/code.png");
+  background: url("/Abundance/imgs/code.png");
   width: 150%;
   height: 150%;
 }
 .Gcode {
-  background: url("/abundance-mo-fork/imgs/gcode.png");
+  background: url("/Abundance/imgs/gcode.png");
   width: 150%;
   height: 150%;
 }
 
 .Scale {
-  background: url("/abundance-mo-fork/imgs/scale.png");
+  background: url("/Abundance/imgs/scale.png");
   width: 150%;
   height: 150%;
 }
 
 .RegularPolygon {
-  background: url("/abundance-mo-fork/imgs/RegularPolygon.png");
+  background: url("/Abundance/imgs/RegularPolygon.png");
   width: 150%;
   height: 150%;
 }
 
 .Extrude {
-  background: url("/abundance-mo-fork/imgs/extrude.png");
+  background: url("/Abundance/imgs/extrude.png");
   width: 150%;
   height: 150%;
 }
 .Move {
-  background: url("/abundance-mo-fork/imgs/move.png");
+  background: url("/Abundance/imgs/move.png");
   width: 150%;
   height: 150%;
 }
 .Molecule {
-  background: url("/abundance-mo-fork/imgs/molecule.png");
+  background: url("/Abundance/imgs/molecule.png");
   width: 150%;
   height: 150%;
 }
 .GitHubMolecule {
-  background: url("/abundance-mo-fork/imgs/githubmolecule.png");
+  background: url("/Abundance/imgs/githubmolecule.png");
   width: 250%;
   height: 250%;
 }
 .GeneticAlgorithm {
-  background: url("/abundance-mo-fork/imgs/genetic.svg");
+  background: url("/Abundance/imgs/genetic.svg");
   width: 150%;
   height: 150%;
 }
 
 .Color {
-  background: url("/abundance-mo-fork/imgs/Color.png");
+  background: url("/Abundance/imgs/Color.png");
   width: 150%;
   height: 150%;
 }
 
 .CutList {
-  background: url("/abundance-mo-fork/imgs/Cutlist.png");
+  background: url("/Abundance/imgs/Cutlist.png");
   width: 150%;
   height: 150%;
 }
 
 .Rotate {
-  background: url("/abundance-mo-fork/imgs/Rotate.png");
+  background: url("/Abundance/imgs/Rotate.png");
   width: 150%;
   height: 150%;
 }
 
 .Input {
-  background: url("/abundance-mo-fork/imgs/Input.png");
+  background: url("/Abundance/imgs/Input.png");
   width: 150%;
   height: 150%;
 }
 
 .Equation {
-  background: url("/abundance-mo-fork/imgs/Equation.png");
+  background: url("/Abundance/imgs/Equation.png");
   width: 150%;
   height: 150%;
 }
 
 .Loft {
-  background: url("/abundance-mo-fork/imgs/loft.png");
+  background: url("/Abundance/imgs/loft.png");
   width: 150%;
   height: 150%;
 }
 
 .Stretch {
-  background: url("/abundance-mo-fork/imgs/Stretch.png");
+  background: url("/Abundance/imgs/Stretch.png");
   width: 150%;
   height: 150%;
 }
 
 .Stl {
-  background: url("/abundance-mo-fork/imgs/stl.png");
+  background: url("/Abundance/imgs/stl.png");
   width: 150%;
   height: 150%;
 }
 
 .Svg {
-  background: url("/abundance-mo-fork/imgs/svg.png");
+  background: url("/Abundance/imgs/svg.png");
   width: 150%;
   height: 150%;
 }
 
 .CutAway {
-  background: url("/abundance-mo-fork/imgs/CutAway.png");
+  background: url("/Abundance/imgs/CutAway.png");
   width: 150%;
   height: 150%;
 }
 
 .Tag {
-  background: url("/abundance-mo-fork/imgs/tag.png");
+  background: url("/Abundance/imgs/tag.png");
   width: 150%;
   height: 150%;
 }
 
 .Add-BOM-Tag {
-  background: url("/abundance-mo-fork/imgs/Bom.png");
+  background: url("/Abundance/imgs/Bom.png");
   width: 150%;
   height: 150%;
 }
 
 .Readme {
-  background: url("/abundance-mo-fork/imgs/readme.png");
+  background: url("/Abundance/imgs/readme.png");
   width: 50%;
   height: 50%;
 }
 
 .CutLayout {
-  background: url("/abundance-mo-fork/imgs/cutlayout.png");
+  background: url("/Abundance/imgs/cutlayout.png");
   width: 150%;
   height: 150%;
 }
 
 .ExtractTag {
-  background: url("/abundance-mo-fork/imgs/extracttag.png");
+  background: url("/Abundance/imgs/extracttag.png");
   width: 150%;
   height: 150%;
 }
 
 .Constant {
-  background: url("/abundance-mo-fork/imgs/Constant.png");
+  background: url("/Abundance/imgs/Constant.png");
   width: 150%;
   height: 150%;
 }
