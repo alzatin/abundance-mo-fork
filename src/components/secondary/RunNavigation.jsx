@@ -166,7 +166,7 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
         } else {
           console.log("not starred");
           document.getElementById("Star-button").style.backgroundColor =
-            "white";
+            "var(--abundance-color-hightlightOffWhite)";
           starred = false;
         }
       });
@@ -252,7 +252,7 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
     //disable button before api call so user can't click multiple times
     starred = false;
     document.getElementById("Star-button").disabled = true;
-    document.getElementById("Star-button").style.backgroundColor = "white";
+    //document.getElementById("Star-button").style.backgroundColor = "white";
 
     /*add item to your liked projects on aws*/
     const apiUpdateUserUrl =
