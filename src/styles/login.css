@@ -34,10 +34,10 @@
   font-family: "Roboto", sans-serif;
 }
 .login-nav-item:hover {
-  background-color: rgba(233, 221, 242, 0.58);
+  background-color: var(--loginPopup-projectColorHover);
 }
 .login-nav-item-clicked {
-  background-color: rgba(233, 221, 242, 0.58);
+  background-color: var(--loginPopup-projectColorHover);
 }
 .home-section {
   float: right;
@@ -58,7 +58,7 @@
   display: flex;
   align-content: center;
   justify-content: space-around;
-  background-color: #f9f6f6;
+  background-color: var(--loginPopup-background);
   flex-wrap: wrap;
   align-self: center;
   padding: 20px;
@@ -68,19 +68,6 @@
 
 .login-page {
   margin: auto;
-}
-.liked {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  outline: 0;
-  background: whitesmoke;
-  width: 100%;
-  border: 0;
-  color: #444;
-  font-size: 14px;
-  -webkit-transition: all 0.3 ease;
-  transition: all 0.3 ease;
-  cursor: pointer;
 }
 
 /*Settings div styling*/
@@ -131,52 +118,11 @@
   margin-bottom: 5px;
   text-align: left;
   width: 100%;
-  color: #ffffff8a;
-}
-
-.pullDiv {
-  display: flex;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.pullDiv label {
-  margin-right: 10px;
-  margin-left: 5px;
-  width: 100px;
-  text-align: left;
-}
-.pullDiv textarea {
-  overflow: hidden;
-  width: 100%;
-  height: 150px;
-  padding: 12px 20px;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  background-color: #f8f8f8;
-  resize: none;
-  font-size: 0.8em;
-}
-
-.pull-title {
-  display: inline;
-  padding: 3px;
-  color: black;
-  background-color: whitesmoke;
-  border: 2px solid #f1eeee;
-  margin-bottom: 10px;
-}
-.pull-title p {
-  font-size: 0.6em;
-  display: inline;
-  padding: 2px;
-  color: black;
-  background-color: whitesmoke;
-  border: 2px solid #f1eeee;
+  color: var(--settingsPopup-text);
 }
 
 .form {
-  background-color: #4c4b4b;
+  background-color: var(--loginPopup-input);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -188,11 +134,7 @@
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
-.input-data label {
-  position: relative;
-  top: -45px;
-  color: #00000078;
-}
+
 .form-row .submit-btn {
   width: 40%;
 }
@@ -266,14 +208,14 @@
   align-items: baseline;
   justify-content: left;
   gap: 20px;
-  color: #dedbdb;
+  color: var(--loginPopup-projectColor);
   margin: -20px 0 10px 0;
 }
 .form input {
   width: 100%;
   font-family: "Roboto", sans-serif;
   outline: 0;
-  background: #f2f2f2;
+  background: var(--newProject-form-input);
   border: 0;
   margin: 0 0 10px;
   padding: 9px;
@@ -281,7 +223,7 @@
   font-size: 14px;
 }
 .form label {
-  color: #dedbdb;
+  color: var(--settingsPopup-text);
   font-size: 14px;
   margin-bottom: 5px;
   font-family: "Roboto", sans-serif;
@@ -291,7 +233,7 @@
 .form select {
   font-family: "Roboto", sans-serif;
   outline: 0;
-  background: #f2f2f2;
+  background: var(--settingsPopup-text);
   width: 100%;
   border: 0;
   margin: 0 0 15px;
@@ -300,7 +242,7 @@
   font-size: 14px;
 }
 .form h2 {
-  color: #ffffff;
+  color: var(--settingsPopup-text);
   font-size: 20px;
   margin-bottom: 5px;
   font-family: "Roboto", sans-serif;
@@ -313,12 +255,12 @@
   text-transform: uppercase;
   margin-top: 3px;
   outline: 0;
-  background: #444;
+  background: var(--loginPopup-input);
   width: 100%;
   border: 1;
   border-radius: 2px;
-  border-color: #ffffff;
-  color: #ffffff;
+  border-color: var(--settingsPopup-text);
+  color: var(--settingsPopup-text);
   font-size: 14px;
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
@@ -328,21 +270,9 @@
 .form button:active,
 .form button:focus,
 .submit-btn:hover {
-  background: #f1eff1;
-  border: 2px solid #444;
-  color: #444;
-}
-.form .message {
-  margin: 15px 0 0;
-  color: #b3b3b3;
-  font-size: 12px;
-}
-.form .message a {
-  color: #4caf50;
-  text-decoration: none;
-}
-.form .register-form {
-  display: none;
+  background: var(--settingsPopup-text);
+  border: 2px solid var(--loginPopup-border);
+  color: var(--loginPopup-button);
 }
 
 .closeButton {
@@ -351,21 +281,17 @@
   right: 15px;
   border: none;
   height: 1.5em;
-  background-color: #281c28;
+  background-color: var(--settingsPopup-closeButton);
   font: 0.75em sans-serif;
   cursor: pointer;
   margin-top: 3px;
-  border-color: #ffffff;
+  border-color: var(--settingsPopup-text);
   border-radius: 30px;
   padding: 0 15px 0 15px;
-  color: #f2f0f0;
+  color: var(--settingsPopup-text);
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
-}
-
-&:hover {
-  background: rgba(29, 161, 142, 0.1);
 }
 
 .container {
@@ -409,8 +335,8 @@
   padding: 2% 0;
   width: 12rem;
   box-sizing: border-box;
-  background-color: rgb(248 243 251);
-  color: #333;
+  background-color: var(--loginPopup-background);
+  color: var(--loginPopup-text);
   border: 1px solid #aaa;
   box-shadow: 2px 2px 2px #999;
   border-radius: 0.2rem;
@@ -461,32 +387,18 @@
   align-items: center;
 }
 
-.github-login-display {
-  width: 50%;
-  height: 90%;
-  border: 1px solid black;
-  text-align: center;
-}
-.topBrowse {
-  margin: 10px;
-  width: 96%;
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
 #project_search {
   width: 30%;
   margin-right: 10px;
-  border: 3px solid #353232;
+  border: 3px solid var(--loginPopup-input);
   border-radius: 5px 5px;
   outline: none;
 }
 .order_dropdown {
   align-self: center;
-  border: 3px solid #353232;
-  color: #d2cbcb;
-  background-color: #353232;
+  border: 3px solid var(--loginPopup-input);
+  color: var(--settingsPopup-text);
+  background-color: var(--loginPopup-input);
   border-radius: 5px 5px;
   outline: none;
 }
@@ -522,108 +434,26 @@
 }
 
 .custom-select select {
-  background: #444;
-  color: white;
+  background: var(--loginPopup-input);
+  color: var(--loginPopup-text);
   display: inline-block;
   width: 100%;
   height: 30px;
   cursor: pointer;
   padding: 10px 15px;
   outline: 0;
-  border: 1 px solid #444;
+  border: 1 px solid var(--loginPopup-border);
   border-radius: none;
-  background: light-grey;
-  color: darkgrey;
   margin: 6px;
-}
-
-.select__arrow {
-  position: absolute;
-  top: 16px;
-  right: 15px;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  border-style: solid;
-  border-width: 8px 5px 0 5px;
-}
-
-.browseDisplay {
-  display: flex;
-  align-self: flex-end;
-  margin: 30px 30px 0 0;
-  background-color: #ddd;
-  width: 30px;
-  height: 30px;
-}
-.browseColumn {
-  overflow: hidden;
-  text-align: left;
-  width: 150px;
-  height: 30px;
-  margin-right: 10px;
-}
-
-.top_browse_menu {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  width: 100%;
-}
-
-.newProjectDiv {
-  display: flex;
-  margin: 10px;
-  width: 40%;
-  height: 120px;
-  align-content: center;
-  justify-content: space-evenly;
-  background-color: white;
-  flex-wrap: wrap;
-  border: 1px solid #efe7e7;
-}
-.newProjectDiv:hover,
-.browseDisplay:hover {
-  background-color: #e6e6ff;
-}
-
-#titlesDiv {
-  font-size: 13px;
-  display: none;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-  background-color: #a9a9a91a;
-  padding: 5px 10px;
-  margin: 20px 0 0 0;
-  height: 4%;
-  box-sizing: border-box;
-}
-
-.browseButton {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  outline: 0;
-  background: #444;
-  margin: 20px;
-  padding: 25px;
-  width: 100%;
-  border: 0;
-  color: #ffffff;
-  font-size: 14px;
-  -webkit-transition: all 0.3 ease;
-  transition: all 0.3 ease;
-  cursor: pointer;
 }
 
 .searchButton {
   font-family: "Roboto", sans-serif;
   outline: 0;
-  background: #444;
+  background: var(--loginPopup-input);
   width: 100%;
   border: 0;
-  color: #ffffff;
+  color: var(--loginPopup-button);
   font-size: 14px;
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
@@ -635,15 +465,9 @@
   width: 100%;
 }
 
-.browseButton:hover {
-  background: #f1eff1;
-  border: 2px solid #444;
-  color: #444;
-}
-
 .project {
   text-wrap: nowrap;
-  background-color: #ffffff7d;
+  background-color: var(--loginPopup-projectColor);
   margin: 10px;
   width: 125px;
   height: 125px;
@@ -651,19 +475,20 @@
   padding: 10px;
   font-size: 13px;
   justify-content: flex-start;
-  border: 2px solid #f2f2f200;
 }
 
 .project_list {
   text-wrap: nowrap;
   display: flex;
-  background-color: #ffffff7d;
+  background-color: var(--loginPopup-projectColor);
   margin: 10px;
-
   font-size: 13px;
   justify-content: flex-start;
-  border: 2px solid #f2f2f200;
 }
+.project_list:hover {
+  background-color: var(--loginPopup-projectColorHover);
+}
+
 .project_image {
   display: block;
   margin: auto;
@@ -682,12 +507,7 @@
 }
 
 .project:hover {
-  background-color: white;
-  border-color: rgb(132, 130, 130);
-}
-
-.mine {
-  background-color: #2ea44f;
+  background-color: var(--loginPopup-projectColorHover);
 }
 
 /* width */
@@ -711,25 +531,12 @@
   background: #555;
 }
 
-.page_change {
-  margin-top: 10px;
-  position: relative;
-  bottom: 10px;
-  height: 25px;
-  width: 50px;
-  height: 35px;
-  border: none;
-  background-color: Transparent;
-  font-size: 20px;
-}
-
 /*Save bar styling*/
 
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 .save-bar {
   font-family: "Montserrat", sans-serif;
   font-size: 10px;
-  color: #000000a9;
   padding: 5px;
   display: flex;
   align-items: center;
@@ -740,7 +547,7 @@
   width: 300px;
 }
 .progress {
-  background-color: #d8d8d8;
+  background-color: var(--saveBar-background);
   border-radius: 20px;
   position: relative;
   margin: 5px 15px;
@@ -749,10 +556,10 @@
 }
 
 .progress-done {
-  background: linear-gradient(to left, #e388de, #be3fe5);
+  background: linear-gradient(to left, #e388de, var(--saveBar-progressColor));
   box-shadow: 0 3px 3px -5px #e15e8a, 0 2px 5px #d42ab5;
   border-radius: 20px;
-  color: #fff;
+  color: var(--saveBar-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -760,17 +567,4 @@
   width: 0;
   opacity: 0;
   transition: 1s ease 0.3s;
-}
-
-/*Create project Bar */
-
-#createBarProgress {
-  width: 100%;
-  background-color: grey;
-}
-
-#createBar {
-  width: 1%;
-  height: 30px;
-  background-color: green;
 }

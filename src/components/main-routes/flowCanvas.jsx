@@ -323,7 +323,7 @@ export default memo(function FlowCanvas({
           zIndex: "5",
           top: "20px",
           left: "55px",
-          color: "rgb(255 255 255 / 34%)",
+          color: "var(---flowCanvas-background)",
         }}
       >
         {parentLinkPath.map((item, index) => {
