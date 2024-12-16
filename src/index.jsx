@@ -11,9 +11,7 @@ import "replicad-opencascadejs/src/replicad_single.wasm?url";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter
-    basename={import.meta.env.VITE_APP_DEV ? "" : "/Abundance"}
-  >
+  <BrowserRouter basename={import.meta.env.VITE_APP_DEV ? "" : "/Abundance"}>
     <Auth0ProviderWithHistory>
       <App />
     </Auth0ProviderWithHistory>
