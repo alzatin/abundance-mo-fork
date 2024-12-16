@@ -1,23 +1,8 @@
 import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
-import { setOC, loadFont } from "replicad";
+import * as replicad from "replicad";
 import { expose, proxy } from "comlink";
-import {
-  drawCircle,
-  drawRectangle,
-  drawPolysides,
-  drawText,
-  Plane,
-  Vector,
-  importSTEP,
-  importSTL,
-  iterTopo,
-  Solid,
-  Sketch,
-  drawRoundedRectangle,
-  makeSphere,
-} from "replicad";
-import { drawProjection, ProjectionCamera } from "replicad";
+import { Plane, Solid } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 import { addSVG, drawSVG } from "replicad-decorate";
 import Fonts from "./js/fonts.js";
@@ -36,7 +21,7 @@ const init = async () => {
   });
 
   loaded = true;
-  setOC(OC);
+  replicad.setOC(OC);
 
   return true;
 };
@@ -97,7 +82,7 @@ function circle(id, diameter) {
   return started.then(() => {
     const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
-      geometry: [drawCircle(diameter / 2)],
+      geometry: [replicad.drawCircle(diameter / 2)],
       tags: [],
       plane: newPlane,
       color: "#FF9065",
@@ -111,7 +96,7 @@ function rectangle(id, x, y) {
   return started.then(() => {
     const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
-      geometry: [drawRectangle(x, y)],
+      geometry: [replicad.drawRectangle(x, y)],
       tags: [],
       plane: newPlane,
       color: "#FF9065",
@@ -125,7 +110,7 @@ function regularPolygon(id, radius, numberOfSides) {
   return started.then(() => {
     const newPlane = new Plane().pivot(0, "Y");
     library[id] = {
-      geometry: [drawPolysides(radius, numberOfSides)],
+      geometry: [replicad.drawPolysides(radius, numberOfSides)],
       tags: [],
       plane: newPlane,
       color: "#FF9065",
@@ -135,14 +120,15 @@ function regularPolygon(id, radius, numberOfSides) {
   });
 }
 async function text(id, text, fontSize, fontFamily) {
-  await loadFont(Fonts[fontFamily])
+  await replicad
+    .loadFont(Fonts[fontFamily])
     .then(() => console.log("Font loaded"))
     .catch((err) => console.error("Error loading font: ", err));
 
   return started.then(() => {
     const newPlane = new Plane().pivot(0, "Y");
 
-    const textGeometry = drawText(text, {
+    const textGeometry = replicad.drawText(text, {
       startX: 0,
       startY: 0,
       fontSize: fontSize,
@@ -545,7 +531,7 @@ function visExport(targetID, inputID, fileType) {
     if (fileType == "SVG") {
       /** Fuses input geometry, draws a top view projection*/
       if (is3D(library[inputID])) {
-        finalGeometry = [drawProjection(fusedGeometry, "top").visible];
+        finalGeometry = [replicad.drawProjection(fusedGeometry, "top").visible];
       } else {
         finalGeometry = [fusedGeometry];
       }
@@ -581,7 +567,7 @@ function downExport(ID, fileType, svgResolution, units) {
 }
 
 async function importingSTEP(targetID, file) {
-  let STEPresult = await importSTEP(file);
+  let STEPresult = await replicad.importSTEP(file);
 
   library[targetID] = {
     geometry: [STEPresult],
@@ -593,7 +579,7 @@ async function importingSTEP(targetID, file) {
 }
 
 async function importingSTL(targetID, file) {
-  let STLresult = await importSTL(file);
+  let STLresult = await replicad.importSTL(file);
 
   library[targetID] = {
     geometry: [STLresult],
@@ -635,7 +621,7 @@ const prettyProjection = (shape) => {
     bbox.center[1] - bbox.height,
     bbox.center[2] + bbox.depth,
   ];
-  const camera = new ProjectionCamera(corner).lookAt(center);
+  const camera = new replicad.ProjectionCamera(corner).lookAt(center);
   const { visible, hidden } = drawProjection(shape, camera);
 
   return { visible, hidden };
@@ -938,7 +924,11 @@ function applyLayout(targetID, inputID, positions, TAG, layoutConfig) {
       // sheet layouts are spaced out from one another.
       let newGeom = leaf.geometry[0]
         .clone()
-        .rotate(transform.rotate, new Vector([0, 0, 0]), new Vector([0, 0, 1]))
+        .rotate(
+          transform.rotate,
+          new replicad.Vector([0, 0, 0]),
+          new replicad.Vector([0, 0, 1])
+        )
         .translate(
           transform.translate.x,
           transform.translate.y + i * layoutConfig.height,
@@ -1123,7 +1113,7 @@ function moveFaceToCuttingPlane(geom, face) {
 
   // Always use "XY" plane as the cutting surface
   // TODO(tristan): there's an inversion here I don't fully understand, hence using the negative Z vector.
-  let cutPlaneNormal = new Vector([0, 0, -1]);
+  let cutPlaneNormal = new replicad.Vector([0, 0, -1]);
 
   let rotationAxis = faceNormal.cross(cutPlaneNormal);
   if (rotationAxis.Length == 0) {
@@ -1321,7 +1311,7 @@ function fusion(targetID, inputIDs) {
 function disjointGeometryToAssembly(inputID) {
   let input = toGeometry(inputID).geometry[0]; //This does not accept assemblies
   let solidsArray = Array.from(
-    iterTopo(input.wrapped, "solid"),
+    replicad.iterTopo(input.wrapped, "solid"),
     (s) => new Solid(s)
   );
   console.log("solidsArray", solidsArray);
