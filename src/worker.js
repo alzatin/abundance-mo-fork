@@ -27,6 +27,9 @@ const init = async () => {
 };
 const started = init();
 
+console.log("Replicad Module:");
+console.log(replicad);
+
 /**
  * A function which converts any input into Abundance style geometry. Input can be a library ID, an abundance object, or a single geometry object.
  * This is useful for allowing our functions to work within the Code atom or within the flow canvas.
@@ -405,8 +408,8 @@ async function Assembly(inputs) {
 // Runs the user entered code in the worker thread and returns the result.
 async function code(targetID, code, argumentsArray) {
   await started;
-  let keys1 = ["Rotate", "Assembly", "makeSphere"];
-  let inputValues = [Rotate, Assembly, makeSphere];
+  let keys1 = ["Rotate", "Assembly"];
+  let inputValues = [Rotate, Assembly];
   for (const [key, value] of Object.entries(argumentsArray)) {
     keys1.push(`${key}`);
     inputValues.push(value);
@@ -622,7 +625,7 @@ const prettyProjection = (shape) => {
     bbox.center[2] + bbox.depth,
   ];
   const camera = new replicad.ProjectionCamera(corner).lookAt(center);
-  const { visible, hidden } = drawProjection(shape, camera);
+  const { visible, hidden } = replicad.drawProjection(shape, camera);
 
   return { visible, hidden };
 };
@@ -641,7 +644,7 @@ function generateThumbnail(inputID) {
         fusedGeometry = digFuse(library[inputID])
           .sketchOnPlane("XY")
           .extrude(0.0001);
-        projectionShape = drawProjection(fusedGeometry, "top").visible;
+        projectionShape = replicad.drawProjection(fusedGeometry, "top").visible;
         svg = projectionShape.toSVG();
       }
       //let hiddenSvg = projectionShape.hidden.toSVGPaths();
