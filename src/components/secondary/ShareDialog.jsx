@@ -38,8 +38,6 @@ function ShareDialog({
         exportType
       )
       .then((result) => {
-        console.log("Exported geometry: ", result);
-        console.log(GlobalVariables.topLevelMolecule);
         let resolution = 72;
 
         GlobalVariables.cad
@@ -50,7 +48,6 @@ function ShareDialog({
             GlobalVariables.topLevelMolecule.unitsKey
           )
           .then((result) => {
-            console.log("Downloaded export file: ", result);
             saveAs(
               result,
               GlobalVariables.currentMolecule.name +
