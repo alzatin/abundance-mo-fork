@@ -41,7 +41,6 @@ function ShareDialog({
         console.log("Exported geometry: ", result);
         console.log(GlobalVariables.topLevelMolecule);
         let resolution = 72;
-
         GlobalVariables.cad
           .downExport(
             exportID,
