@@ -90,9 +90,24 @@ const InitialLog = ({ setNoUserBrowsing }) => {
 };
 
 // adds individual projects after API call
-const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
+const AddProject = ({
+  setYearShow,
+  nodes,
+  authorizedUserOcto,
+  projectToShow,
+}) => {
   const [browseType, setBrowseType] = useState("thumb");
-  const [orderType, setOrderType] = useState("byDateCreated");
+
+  let initialOrder =
+    projectToShow == "featured"
+      ? "byStars"
+      : projectToShow == "all"
+      ? "byName"
+      : projectToShow == "recents"
+      ? "byDateCreated"
+      : "byName";
+
+  const [orderType, setOrderType] = useState(initialOrder);
 
   return (
     <>
@@ -281,18 +296,6 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
             textOverflow: "ellipsis",
             display: "block",
             overflow: "hidden",
-            width: "70%",
-          }}
-        >
-          {node.node.forks}
-        </p>
-
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
             width: "80%",
           }}
         >
@@ -432,7 +435,9 @@ const ShowProjects = ({
     };
     const repoSearchRequest = async () => {
       setStateLoaded([]); /*sets loading while fetching*/
-      pageDict[pageNumber] = lastKey;
+      //pageDict[pageNumber] = lastKey;
+      console.log("lastKey: ", lastKey);
+
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
         : "&lastKey";
@@ -445,6 +450,7 @@ const ShowProjects = ({
       }
 
       if (projectToShow == "all") {
+        console.log(lastKeyQuery);
         query = "attribute=searchField" + searchQuery + "&user" + lastKeyQuery;
       } else if (projectToShow == "owned") {
         query =
@@ -516,6 +522,7 @@ const ShowProjects = ({
         } else {
           setStateLoaded(result["repos"]);
           setLastKey(result["lastKey"]);
+          console.log("lastKey: ", lastKey);
         }
       })
       .catch((err) => {
@@ -678,27 +685,31 @@ const ShowProjects = ({
                   margin: "0px 10px 0px 10px",
                 }}
               >
-                <button
-                  onClick={() => {
-                    if (pageNumber > 0) {
-                      setPageNumber(pageNumber - 1);
-                    }
-                  }}
-                  className="page_back_button"
-                >
-                  {"\u2190"}
-                </button>
+                {lastKey ? (
+                  <button
+                    onClick={() => {
+                      if (pageNumber > 0) {
+                        setPageNumber(pageNumber - 1);
+                      }
+                    }}
+                    className="page_back_button"
+                  >
+                    {"\u2190"}
+                  </button>
+                ) : null}
 
-                <button
-                  className="page_forward_button"
-                  onClick={() => {
-                    if (lastKey != "") {
-                      setPageNumber(pageNumber + 1);
-                    }
-                  }}
-                >
-                  {"\u2192"}
-                </button>
+                {lastKey ? (
+                  <button
+                    className="page_forward_button"
+                    onClick={() => {
+                      if (lastKey != "") {
+                        setPageNumber(pageNumber + 1);
+                      }
+                    }}
+                  >
+                    {"\u2192"}
+                  </button>
+                ) : null}
               </div>
             ) : null}
 
@@ -764,6 +775,7 @@ const ShowProjects = ({
                 nodes,
                 authorizedUserOcto,
                 user,
+                projectToShow,
               }}
             />
           ) : (
