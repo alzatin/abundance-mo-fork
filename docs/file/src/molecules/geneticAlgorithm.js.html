@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/molecules/geneticAlgorithm.js | replicad-app-example</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A simple React app based on replicad."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="replicad-app-example"><meta property="twitter:description" content="A simple React app based on replicad."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js">js</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/BOM.js~BOMEntry.html">BOMEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/globalvariables.js~GlobalVariables.html">GlobalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convertLinks">convertLinks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCMenu">createCMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addOrDeletePorts">addOrDeletePorts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fonts">fonts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-globalVariables">globalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-licenses">licenses</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-topics">topics</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu">js/circular-menu</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-index">index</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src">js/circular-menu/src</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-CMenu">CMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classed">classed</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-config">config</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hide">hide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-show">show</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-style">style</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styles">styles</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-window">window</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-creator">js/circular-menu/src/Creator</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createAnchor">createAnchor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createHorizontal">createHorizontal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createIcon">createIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hasIcon">hasIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createList">createList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createLists">createLists</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createMenu">createMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createSubMenu">createSubMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createText">createText</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Creator">Creator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styleSheet">styleSheet</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-calculation">js/circular-menu/src/calculation</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clickZoneSize">clickZoneSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverRadius">coverRadius</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverSize">coverSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Calculation">Calculation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-listSize">listSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-menuSize">menuSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startDeg">startDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-textTop">textTop</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fixedTop">fixedTop</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#molecules">molecules</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/BOM.js~AddBOMTag.html">AddBOMTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/box.js~Box.html">Box</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/circle.js~Circle.html">Circle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/code.js~Code.html">Code</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/color.js~Color.html">Color</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/constant.js~Constant.html">Constant</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/cutlayout.js~CutLayout.html">CutLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/difference.js~Difference.html">Difference</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/equation.js~Equation.html">Equation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/export.js~Export.html">Export</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extracttag.js~ExtractTag.html">ExtractTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extrude.js~Extrude.html">Extrude</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/gcode.js~Gcode.html">Gcode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/geneticAlgorithm.js~GeneticAlgorithm.html">GeneticAlgorithm</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/githubmolecule.js~GitHubMolecule.html">GitHubMolecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/group.js~Group.html">Group</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/input.js~Input.html">Input</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/intersection.js~Intersection.html">Intersection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/join.js~Join.html">Join</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/loft.js~ShrinkWrap.html">ShrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/molecule.js~Molecule.html">Molecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/move.js~Move.html">Move</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/nest.js~Nest.html">Nest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/output.js~Output.html">Output</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/readme.js~Readme.html">Readme</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rectangle.js~Rectangle.html">Rectangle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/regularPolygon.js~RegularPolygon.html">RegularPolygon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rotate.js~Rotate.html">Rotate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/shrinkWrap.js~shrinkWrap.html">shrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/tag.js~Tag.html">Tag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/text.js~Text.html">Text</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#prototypes">prototypes</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/attachmentpoint.js~AttachmentPoint.html">AttachmentPoint</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/connector.js~Connector.html">Connector</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/molecules/geneticAlgorithm.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Atom from &apos;../prototypes/atom.js&apos;
+import GlobalVariables from &apos;../js/globalvariables.js&apos;
+
+/**
+ * This class creates the Genetic Algorithm atom.
+ */
+export default class GeneticAlgorithm extends Atom {
+    
+    /**
+     * The constructor function.
+     * @param {object} values An array of values passed in which will be assigned to the class as this.x
+     */ 
+    constructor(values){
+        
+        super(values)
+        
+        /**
+         * This atom&apos;s name
+         * @type {string}
+         */
+        this.name = &apos;Genetic Algorithm&apos;
+        
+        /**
+         * This atom&apos;s type
+         * @type {string}
+         */
+        this.atomType = &apos;Genetic Algorithm&apos;
+        /** 
+         * A description of this atom
+         * @type {string}
+         */
+        this.description = &quot;Defines a new genetic algorithm which will simulate evolution to maximize the fitness function using the input population size and number of generations. Only constants which are upstream of this atom with evolve checked will be changed.&quot;
+        
+        /**
+         * An array of constant objects which need to be evolved
+         * @type {array}
+         */
+        this.constantsToEvolve = []
+        
+        /**
+         * An array of objects representing the current population
+         * @type {array}
+         */
+        this.population = []
+        
+        /**
+         * Current individual being evaluated in this generation
+         * @type {integer}
+         */
+        this.individualIndex = 0
+         
+        /**
+         * Current generation
+         * @type {integer}
+         */
+        this.generation = 0
+        
+        /**
+         * Top fitness value for the current generation
+         * @type {float}
+         */
+        this.topFitness = 0
+        
+        /**
+         * A flag to indicate if evolution is in process
+         * @type {boolean}
+         */
+        this.evolutionInProcess = false
+        
+        this.addIO(&apos;input&apos;, &apos;fitness function&apos;, this, &apos;number&apos;, 0)
+        this.addIO(&apos;input&apos;, &apos;population size&apos;, this, &apos;number&apos;, 50)
+        this.addIO(&apos;input&apos;, &apos;number of generations&apos;, this, &apos;number&apos;, 10)
+        
+        this.setValues(values)
+        
+        this.updateValue()
+    }
+
+    /**
+     * Draw the code atom which has a code icon.
+     */ 
+    draw(){
+
+        super.draw() //Super call to draw the rest
+         
+
+        const xInPixels = GlobalVariables.widthToPixels(this.x)
+        const yInPixels = GlobalVariables.heightToPixels(this.y)
+        const radiusInPixels = GlobalVariables.widthToPixels(this.radius)
+      
+       
+        GlobalVariables.c.beginPath()
+        GlobalVariables.c.arc(GlobalVariables.widthToPixels(this.x - this.radius/5), 
+            GlobalVariables.heightToPixels(this.y), 
+            GlobalVariables.widthToPixels(this.radius/2), Math.PI *3.4, Math.PI * 2.7, false) 
+        GlobalVariables.c.stroke() 
+        GlobalVariables.c.closePath()
+
+        GlobalVariables.c.beginPath()
+        GlobalVariables.c.arc(GlobalVariables.widthToPixels(this.x + this.radius/5), 
+            GlobalVariables.heightToPixels(this.y ), 
+            GlobalVariables.widthToPixels(this.radius/2), Math.PI *3.6, Math.PI * 2.3, true) 
+        GlobalVariables.c.stroke() 
+        GlobalVariables.c.closePath()  
+
+        GlobalVariables.c.beginPath()
+        GlobalVariables.c.fillStyle = &apos;#949294&apos;
+        GlobalVariables.c.moveTo(xInPixels - radiusInPixels/3, yInPixels )
+        GlobalVariables.c.lineTo(xInPixels + radiusInPixels/3, yInPixels )
+        GlobalVariables.c.stroke()
+        GlobalVariables.c.closePath()
+
+        GlobalVariables.c.beginPath()
+        GlobalVariables.c.fillStyle = &apos;#949294&apos;
+        GlobalVariables.c.moveTo(xInPixels - radiusInPixels/3, yInPixels - radiusInPixels/5 )
+        GlobalVariables.c.lineTo(xInPixels + radiusInPixels/3, yInPixels - radiusInPixels/5)
+        GlobalVariables.c.stroke()
+        GlobalVariables.c.closePath()
+
+        GlobalVariables.c.beginPath()
+        GlobalVariables.c.fillStyle = &apos;#949294&apos;
+        GlobalVariables.c.moveTo(xInPixels - radiusInPixels/3, yInPixels + radiusInPixels/5 )
+        GlobalVariables.c.lineTo(xInPixels + radiusInPixels/3, yInPixels + radiusInPixels/5)
+        GlobalVariables.c.stroke()
+        GlobalVariables.c.closePath()
+
+
+
+    }
+    
+    /**
+     * Generate a layered outline of the part where the tool will cut
+     */ 
+    updateValue(){
+        this.decreaseToProcessCountByOne()
+        if(this.evolutionInProcess){
+            this.updateSidebar()
+            /**
+             * Atom is processing
+            * @type {boolean}
+             */
+            this.processing = true
+            //Store the result from this individual in it&apos;s fitness value
+            this.population[this.individualIndex].fitness = this.findIOValue(&apos;fitness function&apos;)
+            
+            //Evaluate the next individual
+            this.individualIndex = this.individualIndex + 1
+            if(this.individualIndex &lt; this.findIOValue(&apos;population size&apos;)){
+                //Evaluate the next individual by updating all of the inputs
+                this.beginEvaluatingIndividual()
+            }
+            else{
+                this.generation = this.generation + 1
+                if(this.generation &lt; this.findIOValue(&apos;number of generations&apos;)){
+                    // Generate a new generation from the existing generation and start the process over
+                    this.breedAndCullPopulation()
+                    this.individualIndex = 0
+                    this.beginEvaluatingIndividual()
+                }
+                else{
+                    this.evolutionInProcess = false
+                    this.processing = false
+                    // Set the inputs to the prime candidate
+                    this.population = this.population.sort((a, b) =&gt; parseFloat(b.fitness) - parseFloat(a.fitness))
+                    this.individualIndex = 0
+                    this.generation = 0
+                    this.beginEvaluatingIndividual()
+                    
+                    this.updateSidebar()
+                }
+            }
+        }
+    }
+    
+    /**
+     * Add a button to trigger the evolution process
+     */ 
+    updateSidebar(){
+        
+        if(this.evolutionInProcess){
+            
+            //Remove everything in the sidebar
+            let sideBar = document.querySelector(&apos;.sideBar&apos;)
+            while (sideBar.firstChild) {
+                sideBar.removeChild(sideBar.firstChild)
+            }
+            
+            //Generate the list
+            var sbList = document.createElement(&apos;ul&apos;)
+            sideBar.appendChild(sbList)
+            sbList.setAttribute(&apos;class&apos;, &apos;sidebar-list&apos;)
+            
+            //Add text to the list element
+            var listElement = document.createElement(&apos;LI&apos;)
+            sbList.appendChild(listElement)
+            
+            var labelDiv = document.createElement(&apos;div&apos;)
+            listElement.appendChild(labelDiv)
+            var labelText = document.createTextNode(&quot;Evolving...   Individual: &quot; + this.individualIndex + &quot;,    Generation: &quot; + this.generation + &quot;,    Best Fitness Value: &quot; + this.topFitness)
+            labelDiv.appendChild(labelText)
+            labelDiv.setAttribute(&apos;class&apos;, &apos;sidebar-subitem label-item&apos;)
+        }
+        else{
+            
+            var valueList =  super.updateSidebar() 
+            
+            this.createButton(valueList,this,&apos;Evolve&apos;,() =&gt; {
+                this.evolutionInProcess = true
+                
+                //Generate a list of all the constants to evolve
+                this.updateConstantsList()
+                
+                //Generate a population from those constants
+                this.initializePopulation()
+                
+                //Evaluate the first individual
+                this.beginEvaluatingIndividual()
+            })
+        }
+    }
+    
+    /**
+     * Trigger the process to evaluate the current individual
+     */ 
+    beginEvaluatingIndividual(){
+        const individualToEvaluate = this.population[this.individualIndex]
+        
+        //Lock all the constants
+        individualToEvaluate.genome.forEach(gene =&gt; {
+            gene.constantAtom.output.waitOnComingInformation()
+        })
+        
+        //Set all of their values
+        individualToEvaluate.genome.forEach(gene =&gt; {
+            gene.constantAtom.output.value = gene.newValue
+        })
+        
+        //Trigger them to update
+        individualToEvaluate.genome.forEach(gene =&gt; {
+            gene.constantAtom.updateValue()
+        })
+    }
+    
+    /**
+     * Generate a random number between min and max
+     */ 
+    getRandomValue(min, max) {
+        const randomVal = Math.random() * (max - min) + min
+        return randomVal
+    }
+    
+    /**
+     * Generate an initial population
+     */ 
+    initializePopulation(){
+        this.population = []
+        this.individualIndex = 0
+        this.generation = 0
+        this.topFitness = 0
+        
+        var i = 0
+        while(i &lt; this.findIOValue(&apos;population size&apos;)){
+            var genome = []
+            this.constantsToEvolve.forEach(constant =&gt; {
+                var gene = {
+                    newValue: this.getRandomValue(constant.min, constant.max),
+                    constantAtom: constant
+                }
+                genome.push(gene)
+            })
+            
+            //Generate an individual with a random value for each input
+            var individual = {
+                genome: genome,
+                fitness: null
+            }
+            this.population.push(individual)
+            
+            i++
+        }
+    }
+    
+    /**
+     * Take two individuals and breed them to form a new individual with a mix of their genes and mutations
+     */ 
+    breedTwo(A, B){
+        const lengthOfGenome = A.genome.length
+        
+        var child = {
+            fitness: null,
+            genome: []
+        }
+        
+        var geneIndex = 0
+        while(geneIndex &lt; lengthOfGenome){
+            var newGene = {
+                newValue: null,
+                constantAtom: A.genome[geneIndex].constantAtom
+            }
+            
+            
+            const maxVal         = A.genome[geneIndex].constantAtom.max
+            const minVal         = A.genome[geneIndex].constantAtom.min
+            const mutationAmount = 0.1*(maxVal-minVal)*(Math.random()-.5) //Mutate by at most +-.5%
+            
+            var newGeneVal = null
+            if(Math.random() &gt; 0.5){
+                newGeneVal = A.genome[geneIndex].newValue+mutationAmount
+            }else{
+                newGeneVal = B.genome[geneIndex].newValue+mutationAmount
+            }
+            
+            //Constrain to within bounds
+            newGene.newValue = Math.min(Math.max(newGeneVal, minVal), maxVal)
+            
+            child.genome.push(newGene)
+            
+            geneIndex++
+        }
+        return child
+    }
+    
+    /**
+     * Breed the best performers in the population, cull the rest
+     */ 
+    breedAndCullPopulation(){
+        this.population = this.population.sort((a, b) =&gt; parseFloat(b.fitness) - parseFloat(a.fitness))
+        
+        this.topFitness = this.population[0].fitness
+        
+        // Create a new population by taking the top 1/5th of the original population
+        const keptPopulationNumber = Math.round(this.population.length / 5)
+        
+        const breeders = this.population.slice(0,keptPopulationNumber)
+        
+        //Generate a new population of individuals by breading from the last generation
+        var newGeneration = []
+        var index = 0
+        while(index &lt; this.population.length - keptPopulationNumber){
+            const individualOneIndex = Math.round(Math.random()*(breeders.length-1))
+            const individualTwoIndex = Math.round(Math.random()*(breeders.length-1))
+            const newIndividual = this.breedTwo(breeders[individualOneIndex], breeders[individualTwoIndex])
+            newGeneration.push(newIndividual)
+            index = index + 1
+        }
+        
+        this.population = breeders.concat(newGeneration)
+    }
+    
+    /**
+     * Regenerate the list of constants we are evolving
+     */ 
+    updateConstantsList(){
+        //Create an array of the inputs by walking up stream
+        this.constantsToEvolve = []
+        this.inputs.forEach(input =&gt; {
+            input.connectors.forEach(connector =&gt; {
+                connector.walkBackForConstants(constantObject =&gt; {this.addToConstantsList(constantObject)})
+            })
+        })
+    }
+    
+    /**
+     * Add a constant to the list. Used as a callback from passing up the tree.
+     */ 
+    addToConstantsList(constantObject){
+        this.constantsToEvolve.push(constantObject)
+    }
+    
+}</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

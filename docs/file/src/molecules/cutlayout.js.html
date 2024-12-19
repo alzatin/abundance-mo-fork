@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/molecules/cutlayout.js | replicad-app-example</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A simple React app based on replicad."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="replicad-app-example"><meta property="twitter:description" content="A simple React app based on replicad."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js">js</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/BOM.js~BOMEntry.html">BOMEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/globalvariables.js~GlobalVariables.html">GlobalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convertLinks">convertLinks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCMenu">createCMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addOrDeletePorts">addOrDeletePorts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fonts">fonts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-globalVariables">globalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-licenses">licenses</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-topics">topics</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu">js/circular-menu</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-index">index</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src">js/circular-menu/src</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-CMenu">CMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classed">classed</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-config">config</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hide">hide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-show">show</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-style">style</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styles">styles</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-window">window</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-creator">js/circular-menu/src/Creator</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createAnchor">createAnchor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createHorizontal">createHorizontal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createIcon">createIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hasIcon">hasIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createList">createList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createLists">createLists</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createMenu">createMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createSubMenu">createSubMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createText">createText</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Creator">Creator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styleSheet">styleSheet</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-calculation">js/circular-menu/src/calculation</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clickZoneSize">clickZoneSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverRadius">coverRadius</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverSize">coverSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Calculation">Calculation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-listSize">listSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-menuSize">menuSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startDeg">startDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-textTop">textTop</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fixedTop">fixedTop</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#molecules">molecules</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/BOM.js~AddBOMTag.html">AddBOMTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/box.js~Box.html">Box</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/circle.js~Circle.html">Circle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/code.js~Code.html">Code</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/color.js~Color.html">Color</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/constant.js~Constant.html">Constant</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/cutlayout.js~CutLayout.html">CutLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/difference.js~Difference.html">Difference</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/equation.js~Equation.html">Equation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/export.js~Export.html">Export</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extracttag.js~ExtractTag.html">ExtractTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extrude.js~Extrude.html">Extrude</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/gcode.js~Gcode.html">Gcode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/geneticAlgorithm.js~GeneticAlgorithm.html">GeneticAlgorithm</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/githubmolecule.js~GitHubMolecule.html">GitHubMolecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/group.js~Group.html">Group</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/input.js~Input.html">Input</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/intersection.js~Intersection.html">Intersection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/join.js~Join.html">Join</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/loft.js~ShrinkWrap.html">ShrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/molecule.js~Molecule.html">Molecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/move.js~Move.html">Move</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/nest.js~Nest.html">Nest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/output.js~Output.html">Output</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/readme.js~Readme.html">Readme</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rectangle.js~Rectangle.html">Rectangle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/regularPolygon.js~RegularPolygon.html">RegularPolygon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rotate.js~Rotate.html">Rotate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/shrinkWrap.js~shrinkWrap.html">shrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/tag.js~Tag.html">Tag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/text.js~Text.html">Text</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#prototypes">prototypes</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/attachmentpoint.js~AttachmentPoint.html">AttachmentPoint</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/connector.js~Connector.html">Connector</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/molecules/cutlayout.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Atom from &quot;../prototypes/atom.js&quot;;
+import GlobalVariables from &quot;../js/globalvariables.js&quot;;
+//import GlobalVariables from &apos;../js/globalvariables.js&apos;
+import { proxy } from &quot;comlink&quot;;
+import { button, LevaInputs } from &quot;leva&quot;;
+
+
+/**
+ * The Cut Layout atom extracts a copy of each shape on the cutlist and places them optimally on a cut sheet.
+ */
+export default class CutLayout extends Atom {
+  /**
+   * The constructor function.
+   * @param {object} values An array of values passed in which will be assigned to the class as this.x
+   */
+  constructor(values) {
+    super(values);
+
+    /**
+     * This atom&apos;s type
+     * @type {string}
+     */
+    this.atomType = &quot;Cut Layout&quot;;
+    /**
+     * This atom&apos;s type
+     * @type {string}
+     */
+    this.type = &quot;cutLayout&quot;;
+    /**
+     * This atom&apos;s name
+     * @type {string}
+     */
+    this.name = &quot;Cut Layout&quot;;
+    /**
+     * A description of this atom
+     * @type {string}
+     */
+    this.description =
+      &quot;Extracts all parts tagged for cutting and lays them out on a sheet to cut.&quot;;
+    /**
+     * The array of placements returned by the layout function
+     * @type {array}
+     */
+    this.placements = [];
+
+    this.progress = 0.0;
+
+    this.cancelationHandle = undefined;
+
+    this.addIO(&quot;input&quot;, &quot;geometry&quot;, this, &quot;geometry&quot;, null);
+
+    this.addIO(
+      &quot;input&quot;,
+      &quot;Material Thickness&quot;,
+      this,
+      &quot;number&quot;,
+      GlobalVariables.topLevelMolecule.unitsKey == &quot;MM&quot; ? 19 : 0.75
+    );
+    this.addIO(
+      &quot;input&quot;,
+      &quot;Sheet Width&quot;,
+      this,
+      &quot;number&quot;,
+      GlobalVariables.topLevelMolecule.unitsKey == &quot;MM&quot; ? 2438 : 96
+    );
+    this.addIO(
+      &quot;input&quot;,
+      &quot;Sheet Height&quot;,
+      this,
+      &quot;number&quot;,
+      GlobalVariables.topLevelMolecule.unitsKey == &quot;MM&quot; ? 1219 : 48
+    );
+    this.addIO(
+      &quot;input&quot;,
+      &quot;Part Padding&quot;,
+      this,
+      &quot;number&quot;,
+      GlobalVariables.topLevelMolecule.unitsKey == &quot;MM&quot; ? 6 : .25
+    );
+
+    this.addIO(&quot;output&quot;, &quot;geometry&quot;, this, &quot;geometry&quot;, &quot;&quot;);
+
+    this.setValues(values);
+  }
+
+  /**
+   * Draw the cutlayout icon
+   */
+  draw() {
+    super.draw(); //Super call to draw the rest
+
+    const xInPixels = GlobalVariables.widthToPixels(this.x);
+    const yInPixels = GlobalVariables.heightToPixels(this.y);
+    const radiusInPixels = GlobalVariables.widthToPixels(this.radius);
+
+    GlobalVariables.c.beginPath();
+    GlobalVariables.c.fillStyle = &quot;#949294&quot;;
+    GlobalVariables.c.moveTo(
+      xInPixels - radiusInPixels / 2,
+      yInPixels + radiusInPixels / 2
+    );
+    GlobalVariables.c.lineTo(
+      xInPixels + radiusInPixels / 2,
+      yInPixels + radiusInPixels / 2
+    );
+    GlobalVariables.c.lineTo(xInPixels + radiusInPixels / 2, yInPixels);
+    GlobalVariables.c.lineTo(xInPixels - radiusInPixels / 2, yInPixels);
+    GlobalVariables.c.lineTo(
+      xInPixels - radiusInPixels / 2,
+      yInPixels + radiusInPixels / 2
+    );
+    //GlobalVariables.c.fill()
+    GlobalVariables.c.setLineDash([3, 3]);
+    GlobalVariables.c.stroke();
+    GlobalVariables.c.closePath();
+    GlobalVariables.c.beginPath();
+    GlobalVariables.c.lineTo(
+      xInPixels + radiusInPixels / 4,
+      yInPixels - radiusInPixels / 1.7
+    );
+    GlobalVariables.c.lineTo(
+      xInPixels - radiusInPixels / 4,
+      yInPixels - radiusInPixels / 2
+    );
+    GlobalVariables.c.lineTo(xInPixels - radiusInPixels / 4, yInPixels);
+    GlobalVariables.c.lineTo(xInPixels + radiusInPixels / 2, yInPixels);
+    GlobalVariables.c.lineTo(
+      xInPixels + radiusInPixels / 4,
+      yInPixels - radiusInPixels / 1.7
+    );
+
+    //GlobalVariables.c.fill()
+    GlobalVariables.c.lineWidth = 1;
+    GlobalVariables.c.lineJoin = &quot;round&quot;;
+    GlobalVariables.c.stroke();
+    GlobalVariables.c.setLineDash([]);
+    GlobalVariables.c.closePath();
+
+
+    //draw progress circle in the middle
+    if (this.progress &lt; 1.0) {
+      GlobalVariables.c.beginPath();
+      GlobalVariables.c.fillStyle = this.centerColor;
+      GlobalVariables.c.moveTo(
+        GlobalVariables.widthToPixels(this.x),
+        GlobalVariables.heightToPixels(this.y)
+      );
+      GlobalVariables.c.arc(
+        GlobalVariables.widthToPixels(this.x),
+        GlobalVariables.heightToPixels(this.y),
+        GlobalVariables.widthToPixels(this.radius) / 1.5,
+        0,
+        this.progress * Math.PI * 2,
+        false
+      );
+      GlobalVariables.c.closePath();
+      GlobalVariables.c.fill();
+    }
+  }
+  /**
+   * We only want the layout to update when the button is pressed not when the inputs update so we block the regular update value behavior
+   */
+  updateValue() {
+
+    super.updateValue();
+
+    if (this.inputs.every((x) =&gt; x.ready)) {
+      this.processing = true;
+      var inputID = this.findIOValue(&quot;geometry&quot;);
+      var materialThickness = this.findIOValue(&quot;Material Thickness&quot;);
+      var sheetWidth = this.findIOValue(&quot;Sheet Width&quot;);
+      var sheetHeight = this.findIOValue(&quot;Sheet Height&quot;);
+      var sheetPadding = 0;//this.findIOValue(&quot;Sheet Padding&quot;); //It&apos;s easier to just adjust the sheet size than to add padding
+      var partPadding = this.findIOValue(&quot;Part Padding&quot;);
+      var tag = &quot;cutLayout&quot;;
+
+      if (!inputID) {
+        this.setAlert(&apos;&quot;geometry&quot; input is missing&apos;);
+        return;
+      }
+      
+      GlobalVariables.cad
+        .displayLayout(
+          this.uniqueID,
+          inputID,
+          [this.placements],
+          tag,
+          {
+            thickness: materialThickness,
+            width: sheetWidth,
+            height: sheetHeight,
+            sheetPadding: sheetPadding,
+            partPadding: partPadding
+          })
+        .then((warning) =&gt; {
+          this.basicThreadValueProcessing();
+          if (warning != undefined) {
+            this.setAlert(warning);
+          }
+          this.progress = 1.0;
+          this.cancelationHandle = undefined;
+          this.processing = false;
+        })
+        .catch(this.alertingErrorHandler());
+    }
+  }
+
+  /**
+   * Pass the input geometry to a worker function to compute the translation.
+   */
+  updateValueButton() {
+    super.updateValue();
+
+    if (this.inputs.every((x) =&gt; x.ready)) {
+      if (this.cancelationHandle) {
+        // There&apos;s an in-progress nesting worker. Cancel it and start another nesting
+        // computation with the new inputs.
+        this.cancelationHandle();
+      }
+      this.processing = true;
+      var inputID = this.findIOValue(&quot;geometry&quot;);
+      var materialThickness = this.findIOValue(&quot;Material Thickness&quot;);
+      var sheetWidth = this.findIOValue(&quot;Sheet Width&quot;);
+      var sheetHeight = this.findIOValue(&quot;Sheet Height&quot;);
+      var sheetPadding = 0;//this.findIOValue(&quot;Sheet Padding&quot;); //It&apos;s easier to just adjust the sheet size than to add padding
+      var partPadding = this.findIOValue(&quot;Part Padding&quot;);
+      var tag = &quot;cutLayout&quot;;
+
+      if (!inputID) {
+        this.setAlert(&apos;&quot;geometry&quot; input is missing&apos;);
+        return;
+      }
+
+      GlobalVariables.cad
+        .layout(
+          this.uniqueID,
+          inputID,
+          tag,
+          proxy((progress, cancelationHandle) =&gt; {
+            this.progress = progress;
+            this.cancelationHandle = cancelationHandle;
+          }),
+          proxy((placements) =&gt; {
+            this.placements = placements[0];
+          }),
+          {
+            thickness: materialThickness,
+            width: sheetWidth,
+            height: sheetHeight,
+            sheetPadding: sheetPadding,
+            partPadding: partPadding
+          })
+        .then((warning) =&gt; {
+          this.basicThreadValueProcessing();
+          if (warning != undefined) {
+            this.setAlert(warning);
+          }
+          this.progress = 1.0;
+          this.cancelationHandle = undefined;
+          this.processing = false;
+        })
+        .catch(this.alertingErrorHandler());
+    }
+  }
+
+  /**
+   * Add the &quot;Compute Layout&quot; button to the leva inputs.
+   */
+  createLevaInputs() {
+      let inputParams = super.createLevaInputs();
+  
+      inputParams[&quot;Compute Layout&quot;] = button(() =&gt; {
+          this.updateValueButton();
+      });
+
+      //Expose the stored positions
+      this.placements.forEach((placement, index) =&gt; {
+        inputParams[this.uniqueID + &quot;position&quot; + index] = {
+          value: { x: placement.translate.x, y: placement.translate.y, z: placement.rotate },
+          label: &quot; &quot; + index,
+          onChange: (value, index) =&gt; {
+              const match = index.match(/position(\d+)/);
+              const indexNumber = match ? parseInt(match[1], 10) : null;
+          
+              if (indexNumber !== null) {
+                  const placement = this.placements[indexNumber];
+                  //If anything has changed we need to update the value and recompute
+                  if (placement.translate.x !== value.x || placement.translate.y !== value.y || placement.rotate !== value.z) {
+                      placement.translate.x = value.x;
+                      placement.translate.y = value.y;
+                      placement.rotate = value.z;
+          
+                      this.updateValue();
+                  }
+              }
+          },
+        };
+      });
+
+
+      return inputParams;
+  }
+
+  /**
+   * Save the placements to be loaded next time
+   */
+  serialize(values) {
+    //Save the readme text to the serial stream
+    var valuesObj = super.serialize(values);
+    valuesObj.placements = this.placements;
+
+    return valuesObj;
+  }
+
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

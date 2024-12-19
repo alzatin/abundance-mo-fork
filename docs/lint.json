@@ -1,0 +1,586 @@
+[
+  {
+    "name": "GlobalVariables#constrainToCanvasBorders",
+    "filePath": "src/js/globalvariables.js",
+    "lines": [
+      {
+        "lineNumber": 314,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 315,
+        "line": "   * Snaps the given x,y coordinates to the nearest point within the canvas boundaries. Where x"
+      },
+      {
+        "lineNumber": 316,
+        "line": "   * and y are width fraction and heigh fraction respectively."
+      },
+      {
+        "lineNumber": 317,
+        "line": "   * @param {} x"
+      },
+      {
+        "lineNumber": 318,
+        "line": "   * @param {*} y"
+      },
+      {
+        "lineNumber": 319,
+        "line": "   * @return a tuple of [snapped x position, snapped y position], both in fractional position"
+      },
+      {
+        "lineNumber": 320,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 321,
+        "line": "  constrainToCanvasBorders(x, y) {"
+      }
+    ],
+    "codeParams": [
+      "x",
+      "y"
+    ],
+    "docParams": [
+      "y"
+    ]
+  },
+  {
+    "name": "GlobalVariables#constrainToCanvasBordersPixels",
+    "filePath": "src/js/globalvariables.js",
+    "lines": [
+      {
+        "lineNumber": 325,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 326,
+        "line": "   * Snaps the given x,y coordinates to the nearest point within the canvas boundaries. Where x"
+      },
+      {
+        "lineNumber": 327,
+        "line": "   * and y are measuring pixels from the top-left of the canvas."
+      },
+      {
+        "lineNumber": 328,
+        "line": "   * @param {} xPixels"
+      },
+      {
+        "lineNumber": 329,
+        "line": "   * @param {*} yPixels"
+      },
+      {
+        "lineNumber": 330,
+        "line": "   * @return a tuple of [snapped x position, snapped y position], both in pixels"
+      },
+      {
+        "lineNumber": 331,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 332,
+        "line": "  constrainToCanvasBordersPixels(xPixels, yPixels) {"
+      }
+    ],
+    "codeParams": [
+      "xPixels",
+      "yPixels"
+    ],
+    "docParams": [
+      "yPixels"
+    ]
+  },
+  {
+    "name": "GlobalVariables#pixelsToWidth",
+    "filePath": "src/js/globalvariables.js",
+    "lines": [
+      {
+        "lineNumber": 347,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 348,
+        "line": "   * A function to generate a 0-1 value from pixels for location on screen depending on screen width."
+      },
+      {
+        "lineNumber": 349,
+        "line": "   * @param {number} width"
+      },
+      {
+        "lineNumber": 350,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 351,
+        "line": "  pixelsToWidth(pixels) {"
+      }
+    ],
+    "codeParams": [
+      "pixels"
+    ],
+    "docParams": [
+      "width"
+    ]
+  },
+  {
+    "name": "GlobalVariables#heightToPixels",
+    "filePath": "src/js/globalvariables.js",
+    "lines": [
+      {
+        "lineNumber": 355,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 356,
+        "line": "   * Convert from a fractional height value to a number of pixels."
+      },
+      {
+        "lineNumber": 357,
+        "line": "   * @param {number} width"
+      },
+      {
+        "lineNumber": 358,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 359,
+        "line": "  heightToPixels(height) {"
+      }
+    ],
+    "codeParams": [
+      "height"
+    ],
+    "docParams": [
+      "width"
+    ]
+  },
+  {
+    "name": "GlobalVariables#pixelsToHeight",
+    "filePath": "src/js/globalvariables.js",
+    "lines": [
+      {
+        "lineNumber": 364,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 365,
+        "line": "   * Convert from a pixel position or distance to a fraction of the page height between 0 and 1 inclusive."
+      },
+      {
+        "lineNumber": 366,
+        "line": "   * @param {number} width"
+      },
+      {
+        "lineNumber": 367,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 368,
+        "line": "  pixelsToHeight(pixels) {"
+      }
+    ],
+    "codeParams": [
+      "pixels"
+    ],
+    "docParams": [
+      "width"
+    ]
+  },
+  {
+    "name": "GlobalVariables#toBinaryStr",
+    "filePath": "src/js/globalvariables.js",
+    "lines": [
+      {
+        "lineNumber": 373,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 374,
+        "line": "   * A function to encode strings that contain characters outside of latin range so they can pass through btoa"
+      },
+      {
+        "lineNumber": 375,
+        "line": "   * @param {str} The string to encode"
+      },
+      {
+        "lineNumber": 376,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 377,
+        "line": "  toBinaryStr(str) {"
+      }
+    ],
+    "codeParams": [
+      "str"
+    ],
+    "docParams": [
+      "The"
+    ]
+  },
+  {
+    "name": "GlobalVariables#writeToDisplay",
+    "filePath": "src/js/globalvariables.js",
+    "lines": [
+      {
+        "lineNumber": 385,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 386,
+        "line": "   * A function which reads the value of a unique ID and passes to display"
+      },
+      {
+        "lineNumber": 387,
+        "line": "   * @param {string} The unique ID to read from"
+      },
+      {
+        "lineNumber": 388,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 389,
+        "line": "  writeToDisplay(id, resetView = false) {"
+      }
+    ],
+    "codeParams": [
+      "id",
+      "resetView"
+    ],
+    "docParams": [
+      "The"
+    ]
+  },
+  {
+    "name": "Molecule#deserialize",
+    "filePath": "src/molecules/molecule.js",
+    "lines": [
+      {
+        "lineNumber": 722,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 723,
+        "line": "   * Load the children of this from a JSON representation"
+      },
+      {
+        "lineNumber": 724,
+        "line": "   * @param {object} json - A json representation of the molecule"
+      },
+      {
+        "lineNumber": 725,
+        "line": "   * @param {object} values - An array of values to apply to this molecule before de-serializing it's contents. Used by githubmolecules to set top level correctly"
+      },
+      {
+        "lineNumber": 726,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 727,
+        "line": "  deserialize(json, values = {}, forceBeginPropagation = false) {"
+      }
+    ],
+    "codeParams": [
+      "json",
+      "values",
+      "forceBeginPropagation"
+    ],
+    "docParams": [
+      "json",
+      "values"
+    ]
+  },
+  {
+    "name": "Molecule#loadGithubMoleculeByName",
+    "filePath": "src/molecules/molecule.js",
+    "lines": [
+      {
+        "lineNumber": 777,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 778,
+        "line": "   * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed."
+      },
+      {
+        "lineNumber": 779,
+        "line": "   * @param {number} id - The GitHub project ID for the project to be loaded."
+      },
+      {
+        "lineNumber": 780,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 781,
+        "line": "  async loadGithubMoleculeByName("
+      }
+    ],
+    "codeParams": [
+      "item",
+      "oldObject",
+      "oldParentObjectConnectors"
+    ],
+    "docParams": [
+      "id"
+    ]
+  },
+  {
+    "name": "Molecule#placeAtom",
+    "filePath": "src/molecules/molecule.js",
+    "lines": [
+      {
+        "lineNumber": 877,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 878,
+        "line": "   * Places a new atom inside the molecule"
+      },
+      {
+        "lineNumber": 879,
+        "line": "   * @param {object} newAtomObj - An object defining the new atom to be placed"
+      },
+      {
+        "lineNumber": 880,
+        "line": "   * @param {array} moleculeList - Only passed if we are placing an instance of Molecule."
+      },
+      {
+        "lineNumber": 881,
+        "line": "   * @param {object} typesList - A dictionary of all of the available types with references to their constructors"
+      },
+      {
+        "lineNumber": 882,
+        "line": "   * @param {boolean} unlock - A flag to indicate if this atom should spawn in the unlocked state."
+      },
+      {
+        "lineNumber": 883,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 884,
+        "line": "  async placeAtom(newAtomObj, unlock, values) {"
+      }
+    ],
+    "codeParams": [
+      "newAtomObj",
+      "unlock",
+      "values"
+    ],
+    "docParams": [
+      "newAtomObj",
+      "moleculeList",
+      "typesList",
+      "unlock"
+    ]
+  },
+  {
+    "name": "Atom#addIO",
+    "filePath": "src/prototypes/atom.js",
+    "lines": [
+      {
+        "lineNumber": 260,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 261,
+        "line": "   * Adds a new attachment point to this atom"
+      },
+      {
+        "lineNumber": 262,
+        "line": "   * @param {boolean} type - The type of the IO (input or output)"
+      },
+      {
+        "lineNumber": 263,
+        "line": "   * @param {string} name - The name of the new attachment point"
+      },
+      {
+        "lineNumber": 264,
+        "line": "   * @param {object} target - The atom to attach the new attachment point to. Should we force this to always be this one?"
+      },
+      {
+        "lineNumber": 265,
+        "line": "   * @param {string} valueType - Describes the type of value the input is expecting options are number, geometry, array"
+      },
+      {
+        "lineNumber": 266,
+        "line": "   * @param {object} defaultValue - The default value to be used when the value is not yet set"
+      },
+      {
+        "lineNumber": 267,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 268,
+        "line": "  addIO(type, name, target, valueType, defaultValue, ready, primary = false) {"
+      }
+    ],
+    "codeParams": [
+      "type",
+      "name",
+      "target",
+      "valueType",
+      "defaultValue",
+      "ready",
+      "primary"
+    ],
+    "docParams": [
+      "type",
+      "name",
+      "target",
+      "valueType",
+      "defaultValue"
+    ]
+  },
+  {
+    "name": "AttachmentPoint#computePosition",
+    "filePath": "src/prototypes/attachmentpoint.js",
+    "lines": [
+      {
+        "lineNumber": 298,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 299,
+        "line": "   * Computes the correct position for this AP based on parent and the provided boundary."
+      },
+      {
+        "lineNumber": 300,
+        "line": "   * Returns a tuple of [xposition, yposition] both values in fraction-of-screen units."
+      },
+      {
+        "lineNumber": 301,
+        "line": "   * @param {} boundary - radius of the boundary within which APs must be displayed relative to"
+      },
+      {
+        "lineNumber": 302,
+        "line": "   * the parent molecule."
+      },
+      {
+        "lineNumber": 303,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 304,
+        "line": "  computePosition(boundary) {"
+      }
+    ],
+    "codeParams": [
+      "boundary"
+    ],
+    "docParams": []
+  },
+  {
+    "name": "AttachmentPoint#isCloseEnoughToTarget",
+    "filePath": "src/prototypes/attachmentpoint.js",
+    "lines": [
+      {
+        "lineNumber": 358,
+        "line": "  /**"
+      },
+      {
+        "lineNumber": 359,
+        "line": "   * Returns true if the given point is close enough to this AP that this AP should be \"targetted\","
+      },
+      {
+        "lineNumber": 360,
+        "line": "   * ie, should treat clicks or mouse-releases as if they hit this AP."
+      },
+      {
+        "lineNumber": 361,
+        "line": "   * Always false if this AP isn't visible."
+      },
+      {
+        "lineNumber": 362,
+        "line": "   *"
+      },
+      {
+        "lineNumber": 363,
+        "line": "   * @param {} x - position in pixels"
+      },
+      {
+        "lineNumber": 364,
+        "line": "   * @param {*} y - position in pixels"
+      },
+      {
+        "lineNumber": 365,
+        "line": "   */"
+      },
+      {
+        "lineNumber": 366,
+        "line": "  isCloseEnoughToTarget(x, y) {"
+      }
+    ],
+    "codeParams": [
+      "x",
+      "y"
+    ],
+    "docParams": [
+      "y"
+    ]
+  },
+  {
+    "name": "layout",
+    "filePath": "src/worker.js",
+    "lines": [
+      {
+        "lineNumber": 713,
+        "line": "/**"
+      },
+      {
+        "lineNumber": 714,
+        "line": " * @param progressCallback - a function which takes two parameters:"
+      },
+      {
+        "lineNumber": 715,
+        "line": " *    - progress - 0 to 1 inclusive"
+      },
+      {
+        "lineNumber": 716,
+        "line": " *    - cancelationHandle - a callable which cancels this task."
+      },
+      {
+        "lineNumber": 717,
+        "line": " * @param {*} layoutConfig - dictionary with keys:"
+      },
+      {
+        "lineNumber": 718,
+        "line": " *    - thickness - thickness of the stock material"
+      },
+      {
+        "lineNumber": 719,
+        "line": " *    - width"
+      },
+      {
+        "lineNumber": 720,
+        "line": " *    - height - together with width specifies the demensions of the stock material"
+      },
+      {
+        "lineNumber": 721,
+        "line": " *    - sheetPadding - space from the edge of the material where no parts will be placed"
+      },
+      {
+        "lineNumber": 722,
+        "line": " *    - partPadding - space between parts in the resulting placement"
+      },
+      {
+        "lineNumber": 723,
+        "line": " */"
+      },
+      {
+        "lineNumber": 724,
+        "line": "function layout("
+      }
+    ],
+    "codeParams": [
+      "targetID",
+      "inputID",
+      "TAG",
+      "progressCallback",
+      "placementsCallback",
+      "layoutConfig"
+    ],
+    "docParams": [
+      "progressCallback",
+      "layoutConfig"
+    ]
+  }
+]

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/prototypes/attachmentpoint.js | replicad-app-example</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A simple React app based on replicad."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="replicad-app-example"><meta property="twitter:description" content="A simple React app based on replicad."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js">js</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/BOM.js~BOMEntry.html">BOMEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/globalvariables.js~GlobalVariables.html">GlobalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convertLinks">convertLinks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCMenu">createCMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addOrDeletePorts">addOrDeletePorts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fonts">fonts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-globalVariables">globalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-licenses">licenses</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-topics">topics</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu">js/circular-menu</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-index">index</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src">js/circular-menu/src</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-CMenu">CMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classed">classed</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-config">config</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hide">hide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-show">show</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-style">style</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styles">styles</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-window">window</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-creator">js/circular-menu/src/Creator</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createAnchor">createAnchor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createHorizontal">createHorizontal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createIcon">createIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hasIcon">hasIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createList">createList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createLists">createLists</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createMenu">createMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createSubMenu">createSubMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createText">createText</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Creator">Creator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styleSheet">styleSheet</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-calculation">js/circular-menu/src/calculation</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clickZoneSize">clickZoneSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverRadius">coverRadius</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverSize">coverSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Calculation">Calculation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-listSize">listSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-menuSize">menuSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startDeg">startDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-textTop">textTop</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fixedTop">fixedTop</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#molecules">molecules</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/BOM.js~AddBOMTag.html">AddBOMTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/box.js~Box.html">Box</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/circle.js~Circle.html">Circle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/code.js~Code.html">Code</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/color.js~Color.html">Color</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/constant.js~Constant.html">Constant</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/cutlayout.js~CutLayout.html">CutLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/difference.js~Difference.html">Difference</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/equation.js~Equation.html">Equation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/export.js~Export.html">Export</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extracttag.js~ExtractTag.html">ExtractTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extrude.js~Extrude.html">Extrude</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/gcode.js~Gcode.html">Gcode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/geneticAlgorithm.js~GeneticAlgorithm.html">GeneticAlgorithm</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/githubmolecule.js~GitHubMolecule.html">GitHubMolecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/group.js~Group.html">Group</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/input.js~Input.html">Input</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/intersection.js~Intersection.html">Intersection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/join.js~Join.html">Join</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/loft.js~ShrinkWrap.html">ShrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/molecule.js~Molecule.html">Molecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/move.js~Move.html">Move</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/nest.js~Nest.html">Nest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/output.js~Output.html">Output</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/readme.js~Readme.html">Readme</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rectangle.js~Rectangle.html">Rectangle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/regularPolygon.js~RegularPolygon.html">RegularPolygon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rotate.js~Rotate.html">Rotate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/shrinkWrap.js~shrinkWrap.html">shrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/tag.js~Tag.html">Tag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/text.js~Text.html">Text</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#prototypes">prototypes</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/attachmentpoint.js~AttachmentPoint.html">AttachmentPoint</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/connector.js~Connector.html">Connector</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/prototypes/attachmentpoint.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Connector from &quot;./connector.js&quot;;
+import GlobalVariables from &quot;../js/globalvariables.js&quot;;
+
+/**
+ * This class creates a new attachmentPoint which are the input and output blobs on Atoms
+ */
+export default class AttachmentPoint {
+  // Constant dictates how far from the parent molecule APs are rendered when in a hover position.
+  // Expressed as a multiple of the parents radius.
+  static get DIST_FROM_PARENT() {
+    return 3.5;
+  }
+
+  // Constant dictates how much larger an AP becomes when it&apos;s activated for selection, ie, when clicking
+  // or unclicking will engage the AP.
+  static get TARGET_SCALEUP() {
+    return 1.2;
+  }
+
+  // Constant dictates the radius of all APs, as a fraction of page width.
+  static get RADIUS() {
+    return 1 / 150;
+  }
+
+  /**
+   * The constructor function.
+   * @param {object} values An array of values passed in which will be assigned to the class as this.x
+   */
+  constructor(values) {
+    /**
+     * Whether this AP is currently visible in the Flow Canvas, eg if the mouse is close to this
+     * APs parent molecule.
+     */
+    this.isVisible = false;
+
+    /**
+     * If this AP is in a &apos;targetted&apos; state. This AP is &apos;targetted&apos; if a at the mouse&apos;s current location a
+     * click or release will activate this AP, starting or completing a connection respectively.
+     */
+    this.isTargetted = false;
+
+    /**
+     * The current position of this AP. Measured in fraction of canvas width (x) or canvas height (x).
+     */
+    this.x;
+    this.y;
+
+    /**
+     * A unique identifying number for this attachment point among all other elements on the Flow Canvas.
+     * @type {number}
+     */
+    this.uniqueID = 0;
+
+    /**
+     * The attachment point type.
+     * @type {string}
+     */
+    this.atomType = &quot;AttachmentPoint&quot;;
+
+    /**
+     * The attachment point value type. Options are number, geometry, array.
+     * @type {string}
+     */
+    this.valueType = &quot;number&quot;;
+
+    /**
+     * The attachment point type. Options are input, output.
+     * @type {string}
+     */
+    this.type = &quot;output&quot;;
+
+    /**
+     * The attachment point current value.
+     * @type {number}
+     */
+    this.value = 10;
+
+    /**
+     * The default value to be used by the ap when nothing is attached
+     * @type {string}
+     */
+    this.defaultValue = 10;
+
+    /**
+     * A flag to indicate if the attachment point is currently ready. Used to order initilization when program is loaded.
+     * @type {string}
+     */
+    this.ready = true;
+
+    /**
+     * A list of all of the connectors attached to this attachment point
+     * @type {object}
+     */
+    this.connectors = [];
+
+    for (var key in values) {
+      /**
+       * Assign values in values as this.x
+       */
+      this[key] = values[key];
+    }
+
+    // Initially hide this attachment point.
+    this.unexpand();
+  }
+
+  /**
+   * Draws the attachment point on the screen. Called with each frame.
+   */
+  draw() {
+    // No-op if this AP is not currently visible.
+    if (!this.isVisible) {
+      return;
+    }
+    let xInPixels = GlobalVariables.widthToPixels(this.x);
+    let yInPixels = GlobalVariables.heightToPixels(this.y);
+    let radiusInPixels = GlobalVariables.widthToPixels(AttachmentPoint.RADIUS);
+
+    if (this.isTargetted) {
+      radiusInPixels = radiusInPixels * AttachmentPoint.TARGET_SCALEUP;
+    }
+
+    GlobalVariables.c.font = &quot;10px Work Sans&quot;;
+    var textWidth = GlobalVariables.c.measureText(this.name).width;
+
+    var bubbleColor =
+      this.name === &quot;geometry&quot; ? this.parentMolecule.selectedColor : &quot;#C300FF&quot;;
+    var halfRadius = radiusInPixels * 0.5;
+    GlobalVariables.c.globalCompositeOperation = &quot;source-over&quot;;
+    GlobalVariables.c.beginPath();
+    GlobalVariables.c.fillStyle = bubbleColor;
+
+    var topEdge = yInPixels - radiusInPixels;
+    var leftEdge = xInPixels;
+    if (this.type == &quot;input&quot;) {
+      leftEdge = xInPixels - textWidth - radiusInPixels - halfRadius;
+    }
+
+    var textStart = leftEdge;
+    if (this.type == &quot;output&quot;) {
+      textStart = leftEdge + radiusInPixels + halfRadius;
+    }
+
+    // Draw pill-shape for the text of this AP
+    GlobalVariables.c.arc(
+      leftEdge,
+      yInPixels,
+      radiusInPixels,
+      Math.PI / 2,
+      (-1 * Math.PI) / 2
+    );
+    GlobalVariables.c.rect(
+      leftEdge,
+      topEdge,
+      textWidth + radiusInPixels + halfRadius,
+      radiusInPixels * 2
+    );
+    GlobalVariables.c.arc(
+      leftEdge + textWidth + radiusInPixels + halfRadius,
+      yInPixels,
+      radiusInPixels,
+      (-1 * Math.PI) / 2,
+      Math.PI / 2
+    );
+    GlobalVariables.c.fill();
+
+    // Draw text name of this AP
+    GlobalVariables.c.beginPath();
+    GlobalVariables.c.fillStyle = this.parentMolecule.defaultColor;
+    GlobalVariables.c.fillText(this.name, textStart, yInPixels + 2);
+    GlobalVariables.c.fill();
+    GlobalVariables.c.closePath();
+
+    // Draw the circular connection target
+    GlobalVariables.c.beginPath();
+    if (this.ready) {
+      GlobalVariables.c.fillStyle = this.parentMolecule.color;
+    } else {
+      GlobalVariables.c.fillStyle = &quot;#6ba4ff&quot;;
+    }
+    GlobalVariables.c.strokeStyle = this.parentMolecule.strokeColor;
+    GlobalVariables.c.lineWidth = 1;
+
+    GlobalVariables.c.arc(
+      xInPixels,
+      yInPixels,
+      radiusInPixels,
+      0,
+      Math.PI * 2,
+      false
+    );
+    GlobalVariables.c.fill();
+    GlobalVariables.c.stroke();
+    GlobalVariables.c.closePath();
+  }
+
+  /**
+   * Handles mouse click down. If the click is inside the AP it&apos;s connectors are selected if it is an input.
+   * @param {number} x - The x coordinate of the click
+   * @param {number} y - The y coordinate of the click
+   * @param {boolean} clickProcessed - Has the click already been handled
+   */
+  clickDown(x, y, clickProcessed) {
+    if (this.isCloseEnoughToTarget(x, y) &amp;&amp; !clickProcessed) {
+      if (this.type == &quot;output&quot;) {
+        //begin to extend a connector from this if it is an output
+        new Connector({
+          parentMolecule: this.parentMolecule,
+          attachmentPoint1: this,
+          atomType: &quot;Connector&quot;,
+          isMoving: true,
+        });
+      }
+      if (this.type == &quot;input&quot;) {
+        //connectors can only be selected by clicking on an input
+        this.connectors.forEach((connector) =&gt; {
+          //select any connectors attached to this node
+          connector.selected = true;
+        });
+      }
+
+      return true; //indicate that the click was handled by this object
+    } else {
+      if (this.type == &quot;input&quot;) {
+        //connectors can only be selected by clicking on an input
+        this.connectors.forEach((connector) =&gt; {
+          //unselect any connectors attached to this node
+          connector.selected = false;
+        });
+      }
+      return false; //indicate that the click was not handled by this object
+    }
+  }
+
+  /**
+   * Handles mouse click up. If the click is inside the AP and a connector is currently extending, then a connection is made
+   * @param {number} x - The x coordinate of the click
+   * @param {number} y - The y coordinate of the click
+   */
+  clickUp(x, y) {
+    this.connectors.forEach((connector) =&gt; {
+      connector.clickUp(x, y);
+    });
+  }
+
+  /**
+   * Handles mouse click and move to expand the AP.
+   * @param {number} x - The x coordinate of the click
+   * @param {number} y - The y coordinate of the click
+   */
+  mouseMove(x, y) {
+    let activationBoundary =
+      AttachmentPoint.DIST_FROM_PARENT * this.parentMolecule.radius;
+
+    let parentXInPixels = GlobalVariables.widthToPixels(this.parentMolecule.x);
+    let parentYInPixels = GlobalVariables.heightToPixels(this.parentMolecule.y);
+    if (
+      GlobalVariables.distBetweenPoints(
+        parentXInPixels,
+        x,
+        parentYInPixels,
+        y
+      ) &lt;= GlobalVariables.widthToPixels(activationBoundary)
+    ) {
+      this.isVisible = true;
+      [this.x, this.y] = this.computePosition(activationBoundary);
+      [this.x, this.y] = GlobalVariables.constrainToCanvasBorders(
+        this.x,
+        this.y
+      );
+      this.isTargetted = this.isCloseEnoughToTarget(x, y);
+    } else {
+      this.unexpand();
+    }
+
+    this.connectors.forEach((connector) =&gt; {
+      connector.mouseMove(x, y);
+    });
+  }
+
+  /**
+   * Unexpands this attachment point, eg: when the app starts, when the mouse
+   * is moved out of the expansion range, etc.
+   */
+  unexpand() {
+    this.isVisible = false;
+    this.isTargetted = false;
+    // Also restore this.x and this.x to be on the perimiter of parent module
+    // since those values are used when rendering connectors.
+    this.y = this.parentMolecule.y;
+    if (this.type == &quot;input&quot;) {
+      this.x = this.parentMolecule.x - this.parentMolecule.radius;
+    } else {
+      this.x = this.parentMolecule.x + this.parentMolecule.radius;
+    }
+    [this.x, this.y] = GlobalVariables.constrainToCanvasBorders(this.x, this.y);
+  }
+
+  /**
+   * Computes the correct position for this AP based on parent and the provided boundary.
+   * Returns a tuple of [xposition, yposition] both values in fraction-of-screen units.
+   * @param {} boundary - radius of the boundary within which APs must be displayed relative to
+   * the parent molecule.
+   */
+  computePosition(boundary) {
+    const inputList = this.parentMolecule.inputs.filter(
+      (input) =&gt; input.type == &quot;input&quot;
+    );
+    if (this.type == &quot;output&quot;) {
+      // Outputs are always singular and always positioned partially overlapped by the right-most
+      // pole of the parent molecule.
+      return [
+        this.parentMolecule.x +
+          this.parentMolecule.radius +
+          AttachmentPoint.RADIUS * 0.75,
+        this.parentMolecule.y,
+      ];
+    } else if (this.type == &quot;input&quot; &amp;&amp; inputList.length == 1) {
+      // Singular inputs are located in a mirror of the output, ie partially overlapped by the
+      // left-most pole of the parent molecule.
+      return [
+        this.parentMolecule.x -
+          this.parentMolecule.radius -
+          AttachmentPoint.RADIUS * 0.75,
+        this.parentMolecule.y,
+      ];
+    } else {
+      // This is one of several input APs for the parent molecule.
+      // Otherwise APs are spaced in an arc at a distance around the parent molecule.
+      const attachmentPointNumber = inputList.indexOf(this);
+      const anglePerIO = Math.PI / (inputList.length + 1);
+      // Reduce radius to ensure that the entire attachment point is inside boundary, even when targetted.
+      const hoverRadius =
+        boundary - AttachmentPoint.RADIUS * AttachmentPoint.TARGET_SCALEUP;
+
+      // angle correction so that it centers menu adjusting to however many attachment points there are
+      const angleCorrection = Math.PI / 2 + anglePerIO;
+      let hoverOffsetX =
+        hoverRadius *
+        Math.cos(attachmentPointNumber * anglePerIO + angleCorrection);
+
+      // Do this calculation in pixels. The fractional units of height(y) might not be 1:1 proportionate with
+      // fractional units of width(x) if the canvas is rectangular. We always want these APs to look like they&apos;re
+      // in a circular pattern so do this calculation in pixels then convert back to height fraction.
+      let hoverOffsetY =
+        -1 *
+        GlobalVariables.pixelsToHeight(
+          GlobalVariables.widthToPixels(hoverRadius) *
+            Math.sin(attachmentPointNumber * anglePerIO + angleCorrection)
+        );
+
+      return [
+        this.parentMolecule.x + hoverOffsetX,
+        this.parentMolecule.y + hoverOffsetY,
+      ];
+    }
+  }
+
+  /**
+   * Returns true if the given point is close enough to this AP that this AP should be &quot;targetted&quot;,
+   * ie, should treat clicks or mouse-releases as if they hit this AP.
+   * Always false if this AP isn&apos;t visible.
+   *
+   * @param {} x - position in pixels
+   * @param {*} y - position in pixels
+   */
+  isCloseEnoughToTarget(x, y) {
+    if (!this.isVisible) {
+      return false;
+    }
+    const dist = GlobalVariables.distBetweenPoints(
+      x,
+      GlobalVariables.widthToPixels(this.x),
+      y,
+      GlobalVariables.heightToPixels(this.y)
+    );
+    const apRadiusInPixels = GlobalVariables.widthToPixels(
+      AttachmentPoint.RADIUS
+    );
+    if (this.type == &quot;output&quot;) {
+      return dist &lt;= apRadiusInPixels * 2;
+    } else {
+      // this.type == &quot;input&quot;
+      let targetRadius = apRadiusInPixels * 2;
+      // check if this creates overlapping target areas in the case where there&apos;s multiple inputs.
+      // If so reduce the targetting radius.
+      const inputCount = this.parentMolecule.inputs.filter(
+        (input) =&gt; input.type == &quot;input&quot;
+      ).length;
+
+      let hoverRadius = GlobalVariables.widthToPixels(
+        AttachmentPoint.DIST_FROM_PARENT * this.parentMolecule.radius -
+          AttachmentPoint.RADIUS * AttachmentPoint.TARGET_SCALEUP
+      );
+
+      const anglePerIO = Math.PI / (inputCount + 1);
+      const maxNonOverlappingRadius = hoverRadius * Math.sin(anglePerIO / 2);
+
+      targetRadius = Math.max(
+        apRadiusInPixels,
+        Math.min(targetRadius, maxNonOverlappingRadius)
+      );
+      return dist &lt; targetRadius;
+    }
+  }
+
+  /**
+   * Just passes a key press to the attached connectors. No impact on the connector.
+   * @param {string} key - The key which was pressed
+   */
+  keyPress(key) {
+    this.connectors.forEach((connector) =&gt; {
+      connector.keyPress(key);
+    });
+  }
+
+  /**
+   * Delete any connectors attached to this ap
+   */
+  deleteSelf(silent = false) {
+    //remove any connectors which were attached to this attachment point
+    var connectorsList = [...this.connectors]; //Make a copy of the list so that we can delete elements without having issues with forEach as we remove things from the list
+    connectorsList.forEach((connector) =&gt; {
+      connector.deleteSelf(silent);
+    });
+  }
+
+  /**
+   * Delete a target connector which is passed in. The default option is to delete all of the connectors.
+   */
+  deleteConnector(connector = &quot;all&quot;) {
+    try {
+      const connectorIndex = this.connectors.indexOf(connector);
+      if (connectorIndex != -1) {
+        this.connectors.splice(connectorIndex, 1); //Remove the target connector
+      } else {
+        this.connectors = []; //Remove all of the connectors
+      }
+    } catch (err) {
+      console.warn(&quot;Error deleting connector: &quot;);
+      console.warn(err);
+    }
+  }
+
+  /**
+   * Can be called to see if the target coordinates are within this ap. Returns true/false.
+   * @param {number} x - The x coordinate of the target
+   * @param {number} y - The y coordinate of the target
+   */
+  wasConnectionMade(x, y) {
+    return this.isCloseEnoughToTarget(x, y) &amp;&amp; this.connectors.length == 0;
+  }
+
+  /**
+   * Attaches a new connector to this ap
+   * @param {object} connector - The connector to attach
+   */
+  attach(connector) {
+    this.connectors.push(connector);
+  }
+
+  /**
+   * Starts propagation from this attachmentPoint if it is not waiting for anything up stream.
+   */
+  beginPropagation() {
+    //If nothing is connected it is a starting point
+    if (this.connectors.length == 0) {
+      this.setValue(this.value);
+    }
+  }
+
+  /**
+   * Passes a lock command to the parent molecule, or to the attached connector depending on input/output.
+   */
+  waitOnComingInformation() {
+    if (this.type == &quot;output&quot;) {
+      this.connectors.forEach((connector) =&gt; {
+        connector.waitOnComingInformation();
+      });
+    } else {
+      //If this is an input
+      this.ready = false;
+      this.parentMolecule.waitOnComingInformation(this.name);
+    }
+  }
+
+  /**
+   * Restores the ap to it&apos;s default value.
+   */
+  setDefault() {
+    this.setValue(this.defaultValue);
+  }
+
+  /**
+   * Updates the default value for the ap.
+   */
+  updateDefault(newDefault) {
+    var oldDefault = this.defaultValue;
+    this.defaultValue = newDefault;
+
+    if (this.connectors.length == 0 &amp;&amp; this.value == oldDefault) {
+      //Update the value to be the default if there is nothing attached
+      this.value = this.defaultValue;
+    }
+  }
+
+  /**
+   * Reads and returns the current value of the ap.
+   */
+  getValue() {
+    return this.value;
+  }
+
+  /**
+   * Sets the current value of the ap. Force forces an update even if the value hasn&apos;t changed.
+   */
+  setValue(newValue) {
+    this.value = newValue;
+
+    this.ready = true;
+    //propagate the change to linked elements if this is an output
+    if (this.type == &quot;output&quot;) {
+      this.connectors.forEach((connector) =&gt; {
+        //select any connectors attached to this node
+        connector.propogate();
+      });
+    }
+    //if this is an input attachment point
+    else {
+      this.parentMolecule.updateValue(this.name);
+    }
+  }
+
+  /**
+   * Computes the curent position and then draws the ap on the screen.
+   */
+  update() {
+    this.draw();
+
+    this.connectors.forEach((connector) =&gt; {
+      //update any connectors attached to this node
+      connector.update();
+    });
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

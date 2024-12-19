@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/js/globalvariables.js | replicad-app-example</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A simple React app based on replicad."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="replicad-app-example"><meta property="twitter:description" content="A simple React app based on replicad."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js">js</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/BOM.js~BOMEntry.html">BOMEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/globalvariables.js~GlobalVariables.html">GlobalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convertLinks">convertLinks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCMenu">createCMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addOrDeletePorts">addOrDeletePorts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fonts">fonts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-globalVariables">globalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-licenses">licenses</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-topics">topics</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu">js/circular-menu</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-index">index</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src">js/circular-menu/src</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-CMenu">CMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classed">classed</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-config">config</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hide">hide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-show">show</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-style">style</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styles">styles</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-window">window</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-creator">js/circular-menu/src/Creator</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createAnchor">createAnchor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createHorizontal">createHorizontal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createIcon">createIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hasIcon">hasIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createList">createList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createLists">createLists</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createMenu">createMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createSubMenu">createSubMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createText">createText</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Creator">Creator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styleSheet">styleSheet</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-calculation">js/circular-menu/src/calculation</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clickZoneSize">clickZoneSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverRadius">coverRadius</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverSize">coverSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Calculation">Calculation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-listSize">listSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-menuSize">menuSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startDeg">startDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-textTop">textTop</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fixedTop">fixedTop</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#molecules">molecules</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/BOM.js~AddBOMTag.html">AddBOMTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/box.js~Box.html">Box</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/circle.js~Circle.html">Circle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/code.js~Code.html">Code</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/color.js~Color.html">Color</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/constant.js~Constant.html">Constant</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/cutlayout.js~CutLayout.html">CutLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/difference.js~Difference.html">Difference</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/equation.js~Equation.html">Equation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/export.js~Export.html">Export</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extracttag.js~ExtractTag.html">ExtractTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extrude.js~Extrude.html">Extrude</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/gcode.js~Gcode.html">Gcode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/geneticAlgorithm.js~GeneticAlgorithm.html">GeneticAlgorithm</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/githubmolecule.js~GitHubMolecule.html">GitHubMolecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/group.js~Group.html">Group</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/input.js~Input.html">Input</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/intersection.js~Intersection.html">Intersection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/join.js~Join.html">Join</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/loft.js~ShrinkWrap.html">ShrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/molecule.js~Molecule.html">Molecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/move.js~Move.html">Move</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/nest.js~Nest.html">Nest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/output.js~Output.html">Output</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/readme.js~Readme.html">Readme</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rectangle.js~Rectangle.html">Rectangle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/regularPolygon.js~RegularPolygon.html">RegularPolygon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rotate.js~Rotate.html">Rotate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/shrinkWrap.js~shrinkWrap.html">shrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/tag.js~Tag.html">Tag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/text.js~Text.html">Text</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#prototypes">prototypes</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/attachmentpoint.js~AttachmentPoint.html">AttachmentPoint</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/connector.js~Connector.html">Connector</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/js/globalvariables.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { create, all } from &quot;mathjs&quot;;
+import Join from &quot;../molecules/join.js&quot;;
+import Circle from &quot;../molecules/circle.js&quot;;
+import Color from &quot;../molecules/color.js&quot;;
+import CutLayout from &quot;../molecules/cutlayout.js&quot;;
+import ShrinkWrap from &quot;../molecules/shrinkWrap.js&quot;;
+import Rectangle from &quot;../molecules/rectangle.js&quot;;
+import Loft from &quot;../molecules/loft.js&quot;;
+import Move from &quot;../molecules/move.js&quot;;
+import Tag from &quot;../molecules/tag.js&quot;;
+import RegularPolygon from &quot;../molecules/regularPolygon.js&quot;;
+import Extrude from &quot;../molecules/extrude.js&quot;;
+//import Nest              from &apos;../molecules/nest.js&apos;
+import Intersection from &quot;../molecules/intersection.js&quot;;
+import Difference from &quot;../molecules/difference.js&quot;;
+import Constant from &quot;../molecules/constant.js&quot;;
+import Equation from &quot;../molecules/equation.js&quot;;
+import ExtractTag from &quot;../molecules/extracttag.js&quot;;
+import Molecule from &quot;../molecules/molecule.js&quot;;
+import GeneticAlgorithm from &quot;../molecules/geneticAlgorithm.js&quot;;
+import Input from &quot;../molecules/input.js&quot;;
+import Readme from &quot;../molecules/readme.js&quot;;
+import AddBOMTag from &quot;../molecules/BOM.js&quot;;
+import Rotate from &quot;../molecules/rotate.js&quot;;
+import GitHubMolecule from &quot;../molecules/githubmolecule.js&quot;;
+import Output from &quot;../molecules/output.js&quot;;
+import Gcode from &quot;../molecules/gcode.js&quot;;
+import Code from &quot;../molecules/code.js&quot;;
+import Group from &quot;../molecules/group.js&quot;;
+import Import from &quot;../molecules/import.js&quot;;
+import Export from &quot;../molecules/export.js&quot;;
+import Text from &quot;../molecules/text.js&quot;;
+import Box from &quot;../molecules/box.js&quot;;
+
+/**
+ * This class defines things which are made available to all objects which import it. It is a singlton which means that each time it is imported the same instance is made available so if it is written to in one place, it can be read somewhere else.
+ */
+class GlobalVariables {
+  /**
+   * The constructor creates a new instance of the Global Variables object.
+   */
+  constructor() {
+    /**
+     * The canvas object on which the atoms are drawn.
+     * @type {object}
+     */
+    this.canvas = null;
+    /**
+     * The 2D reference to the canvas object on which the atoms are drawn.
+     * @type {object}
+     */
+    this.c = null;
+    /**
+     * An array of all of the available types of atoms which can be placed with a right click.
+     * @type {array}
+     */
+    this.availableTypes = {
+      box: { creator: Box, atomType: &quot;Box&quot; },
+      intersection: {
+        creator: Intersection,
+        atomType: &quot;Intersection&quot;,
+        atomCategory: &quot;Interactions&quot;,
+      },
+      difference: {
+        creator: Difference,
+        atomType: &quot;Difference&quot;,
+        atomCategory: &quot;Interactions&quot;,
+      },
+      union: {
+        creator: Join,
+        atomType: &quot;Join&quot;,
+        atomCategory: &quot;Interactions&quot;,
+      },
+      group: { creator: Group, atomType: &quot;Group&quot;, atomCategory: &quot;None&quot; },
+      loft: {
+        creator: Loft,
+        atomType: &quot;Loft&quot;,
+        atomCategory: &quot;Interactions&quot;,
+      },
+      shrinkWrap: {
+        creator: ShrinkWrap,
+        atomType: &quot;ShrinkWrap&quot;,
+        atomCategory: &quot;Interactions&quot;,
+      },
+
+      readme: { creator: Readme, atomType: &quot;Readme&quot;, atomCategory: &quot;Tags&quot; },
+      addBOMTag: {
+        creator: AddBOMTag,
+        atomType: &quot;Add-BOM-Tag&quot;,
+        atomCategory: &quot;Tags&quot;,
+      },
+      color: { creator: Color, atomType: &quot;Color&quot;, atomCategory: &quot;Actions&quot; },
+      tag: { creator: Tag, atomType: &quot;Tag&quot;, atomCategory: &quot;Tags&quot; },
+      extracttag: {
+        creator: ExtractTag,
+        atomType: &quot;ExtractTag&quot;,
+        atomCategory: &quot;Tags&quot;,
+      },
+      cutLayout: {
+        creator: CutLayout,
+        atomType: &quot;CutLayout&quot;,
+        atomCategory: &quot;Tags&quot;,
+      },
+      regularPolygon: {
+        creator: RegularPolygon,
+        atomType: &quot;RegularPolygon&quot;,
+        atomCategory: &quot;Shapes&quot;,
+      },
+      costant: {
+        creator: Constant,
+        atomType: &quot;Constant&quot;,
+        atomCategory: &quot;Inputs&quot;,
+      },
+      circle: { creator: Circle, atomType: &quot;Circle&quot;, atomCategory: &quot;Shapes&quot; },
+      text: { creator: Text, atomType: &quot;Text&quot;, atomCategory: &quot;Shapes&quot; },
+      rectangle: {
+        creator: Rectangle,
+        atomType: &quot;Rectangle&quot;,
+        atomCategory: &quot;Shapes&quot;,
+      },
+      molecule: {
+        creator: Molecule,
+        atomType: &quot;Molecule&quot;,
+        atomCategory: &quot;Shapes&quot;,
+      },
+      input: { creator: Input, atomType: &quot;Input&quot;, atomCategory: &quot;Inputs&quot; },
+      equation: {
+        creator: Equation,
+        atomType: &quot;Equation&quot;,
+        atomCategory: &quot;Inputs&quot;,
+      },
+      code: { creator: Code, atomType: &quot;Code&quot;, atomCategory: &quot;Inputs&quot; },
+
+      rotate: { creator: Rotate, atomType: &quot;Rotate&quot;, atomCategory: &quot;Actions&quot; },
+      extrude: {
+        creator: Extrude,
+        atomType: &quot;Extrude&quot;,
+        atomCategory: &quot;Actions&quot;,
+      },
+      move: { creator: Move, atomType: &quot;Move&quot;, atomCategory: &quot;Actions&quot; },
+      GeneticAlgorithm: {
+        creator: GeneticAlgorithm,
+        atomType: &quot;GeneticAlgorithm&quot;,
+        atomCategory: &quot;Actions&quot;,
+      },
+      //nest:               {creator: Nest, atomType: &apos;Nest&apos;, atomCategory: &apos;Export&apos;},
+      gcode: {
+        creator: Gcode,
+        atomType: &quot;Gcode&quot;,
+        atomCategory: &quot;ImportExport&quot;,
+      },
+      import: {
+        creator: Import,
+        atomType: &quot;Import&quot;,
+        atomCategory: &quot;ImportExport&quot;,
+      },
+      export: {
+        creator: Export,
+        atomType: &quot;Export&quot;,
+        atomCategory: &quot;ImportExport&quot;,
+      },
+      githubmolecule: {
+        creator: GitHubMolecule,
+        atomType: &quot;GitHubMolecule&quot;,
+        atomCategory: &quot;ImportExport&quot;,
+      },
+
+      output: { creator: Output, atomType: &quot;Output&quot; },
+    };
+    /**
+     * A reference to the molecule curently being displayed on the screen.
+     * @type {object}
+     */
+    this.currentMolecule;
+    /**
+     * A reference to logged in authenticated.
+     * @type {string}
+     */
+    this.currentUser;
+    /** 
+          /** 
+         * A reference to the selected repository name.
+         * @type {string}
+         */
+    this.currentRepoName;
+    /**
+     * A reference to the selected repository authenticated.
+     * @type {string}
+     */
+    this.currentRepo;
+    /**
+     * A reference to the repo that goes through loaded project().
+     * @type {string}
+     */
+    this.loadedRepo;
+    /**
+     * A reference to the top level molecule of the project.
+     * @type {object}
+     */
+    this.topLevelMolecule;
+
+    /**
+     * A flag to indicate if the program is running with a touch interface. Set in flowDraw.js.
+     * @type {boolean}
+     */
+    this.touchInterface = false;
+    /**
+     * The replicad object which is used to interact with the replicad worker.
+     * @type {object}
+     */
+    this.cad = null; //Set in flowCanvas
+    /**
+     * A total of the number of atoms in this project
+     * @type {integer}
+     */
+    this.totalAtomCount = 0;
+    /**
+     * A counter used during the loading process to keep track of how many atoms are still to be loaded.
+     * @type {integer}
+     */
+    this.numberOfAtomsToLoad = 0;
+    /**
+     * A flag to indicate if the project is a fork.
+     * @type {boolean}
+     */
+    this.fork = false;
+    /**
+     * A flag to indicate if command is pressed
+     * @type {boolean}
+     */
+    this.ctrlDown = false;
+    /**
+     * A variable to save array to be copied
+     * @type {array}
+     */
+    this.atomsSelected = [];
+    /**
+     * The size (in mm) of segments to use for circles.
+     * @type {number}
+     */
+    this.circleSegmentSize = 2;
+    /**
+     * A flag to indicate if a display value is currently being processed.
+     * @type {bool}
+     */
+    this.displayProcessing = false;
+    /**
+     * The function to call to cancel the processing of the prevous display value.
+     * @type {function}
+     */
+    this.cancelLastDisplayWorker = function () {};
+    /**
+     * A flag to indicate if a grid should be displayed behind the shape
+     * @type {boolean}
+     */
+    this.displayGrid = true;
+    /**
+     * A flag to indicate if the edges of the shape should be displayed.
+     * @type {boolean}
+     */
+    this.displayAxis = true;
+    /**
+     * A flag to indicate if the display should show axis.
+     * @type {boolean}
+     */
+    this.displayTriangles = true;
+    /**
+     * A flag to indicate if shortcuts should be displayed.
+     * @type {boolean}
+     */
+    this.displayShortcuts = false;
+    /**
+     * A flag to indicate if the faces of the shape should be displayed.
+     * @type {boolean}
+     */
+    this.displayEdges = true;
+    /**
+     * An array to keep track of recent molecule changes to allow undo to revert back recently deleted molecules.
+     * @type {array}
+     */
+    this.recentMoleculeRepresentation = [];
+
+    const math = create(all); //What does this do? I think it is used to evalue strings as math
+    /**
+     * An evaluator for strings as mathmatical equations which is sandboxed and secure.
+     * @type {function}
+     */
+    this.limitedEvaluate = math.evaluate;
+    this.lastClick;
+    math.import(
+      {
+        import: function () {
+          throw new Error(&quot;Function import is disabled&quot;);
+        },
+        createUnit: function () {
+          throw new Error(&quot;Function createUnit is disabled&quot;);
+        },
+        evaluate: function () {
+          throw new Error(&quot;Function evaluate is disabled&quot;);
+        },
+        parse: function () {
+          throw new Error(&quot;Function parse is disabled&quot;);
+        },
+        simplify: function () {
+          throw new Error(&quot;Function simplify is disabled&quot;);
+        },
+        derivative: function () {
+          throw new Error(&quot;Function derivative is disabled&quot;);
+        },
+      },
+      { override: true }
+    );
+  }
+
+  /**
+   * Snaps the given x,y coordinates to the nearest point within the canvas boundaries. Where x
+   * and y are width fraction and heigh fraction respectively.
+   * @param {} x
+   * @param {*} y
+   * @return a tuple of [snapped x position, snapped y position], both in fractional position
+   */
+  constrainToCanvasBorders(x, y) {
+    return [Math.max(0, Math.min(1, x)), Math.max(0, Math.min(1, y))];
+  }
+
+  /**
+   * Snaps the given x,y coordinates to the nearest point within the canvas boundaries. Where x
+   * and y are measuring pixels from the top-left of the canvas.
+   * @param {} xPixels
+   * @param {*} yPixels
+   * @return a tuple of [snapped x position, snapped y position], both in pixels
+   */
+  constrainToCanvasBordersPixels(xPixels, yPixels) {
+    return [
+      Math.max(0, Math.min(this.canvas.current.width, xPixels)),
+      Math.max(0, Math.min(this.canvas.current.height, yPixels)),
+    ];
+  }
+
+  /**
+   * A function to generate a pixel value for 0-1 location on screen depending on screen width.
+   * @param {number} width
+   */
+  widthToPixels(width) {
+    let pixels = this.canvas.current.width * width;
+    return pixels;
+  }
+  /**
+   * A function to generate a 0-1 value from pixels for location on screen depending on screen width.
+   * @param {number} width
+   */
+  pixelsToWidth(pixels) {
+    let width = 1 / (this.canvas.current.width / pixels);
+    return width;
+  }
+  /**
+   * Convert from a fractional height value to a number of pixels.
+   * @param {number} width
+   */
+  heightToPixels(height) {
+    let pixels = this.canvas.current.height * height;
+    return pixels;
+  }
+
+  /**
+   * Convert from a pixel position or distance to a fraction of the page height between 0 and 1 inclusive.
+   * @param {number} width
+   */
+  pixelsToHeight(pixels) {
+    let height = 1 / (this.canvas.current.height / pixels);
+    return height;
+  }
+
+  /**
+   * A function to encode strings that contain characters outside of latin range so they can pass through btoa
+   * @param {str} The string to encode
+   */
+  toBinaryStr(str) {
+    const encoder = new TextEncoder();
+    // 1: split the UTF-16 string into an array of bytes
+    const charCodes = encoder.encode(str);
+    // 2: concatenate byte data to create a binary string
+    return String.fromCharCode(...charCodes);
+  }
+
+  /**
+   * A function which reads the value of a unique ID and passes to display
+   * @param {string} The unique ID to read from
+   */
+  writeToDisplay(id, resetView = false) {
+    console.log(&quot;Write to display not set&quot;); //This is a placedholder. It is created in flowCanvas.js
+  }
+
+  /**
+   * A function to generate a unique ID value.
+   */
+  generateUniqueID() {
+    const dateString = new Date().getTime();
+    const randomness = Math.floor(Math.random() * 1000);
+    const newID = dateString + randomness;
+    return newID;
+  }
+
+  /**
+   * A function to avoid repeating input names in a molecule
+   */
+  incrementVariableName(varName, molecule) {
+    if (molecule.inputs.find((o) =&gt; o.name === varName)) {
+      // Find the last number in the variable name
+      let lastNumber = varName.match(/\d+(?=\D*$)/);
+
+      // Increment the number by 1
+      const incrementedNumber = parseInt(lastNumber[0]) + 1;
+
+      // Replace the last occurrence of the number in the variable name with the incremented number
+      const incrementedVarName = varName.replace(
+        new RegExp(lastNumber[0] + &quot;(?=D*$)&quot;),
+        incrementedNumber
+      );
+      return this.incrementVariableName(incrementedVarName, molecule);
+    } else {
+      return varName;
+    }
+  }
+  /**
+   * Computes the distance between two points on a plane. This is a duplicate of the one in utils which should probably be deleted.
+   * @param {number} x1 - The x cordinate of the first point.
+   * @param {number} x2 - The x cordinate of the second point.
+   * @param {number} y1 - The y cordinate of the first point.
+   * @param {number} y2 - The y cordinate of the second point.
+   */
+  distBetweenPoints(x1, x2, y1, y2) {
+    var a2 = Math.pow(x1 - x2, 2);
+    var b2 = Math.pow(y1 - y2, 2);
+    var dist = Math.sqrt(a2 + b2);
+
+    return dist;
+  }
+}
+
+/**
+ * Because we want global variables to be the same every time it is imported we export an instance of global variables instead of the constructor.
+ */
+export default new GlobalVariables();
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

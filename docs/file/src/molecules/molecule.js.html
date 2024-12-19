@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/molecules/molecule.js | replicad-app-example</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A simple React app based on replicad."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="replicad-app-example"><meta property="twitter:description" content="A simple React app based on replicad."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js">js</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/BOM.js~BOMEntry.html">BOMEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/globalvariables.js~GlobalVariables.html">GlobalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convertLinks">convertLinks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCMenu">createCMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addOrDeletePorts">addOrDeletePorts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fonts">fonts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-globalVariables">globalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-licenses">licenses</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-topics">topics</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu">js/circular-menu</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-index">index</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src">js/circular-menu/src</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-CMenu">CMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classed">classed</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-config">config</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hide">hide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-show">show</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-style">style</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styles">styles</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-window">window</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-creator">js/circular-menu/src/Creator</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createAnchor">createAnchor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createHorizontal">createHorizontal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createIcon">createIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hasIcon">hasIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createList">createList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createLists">createLists</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createMenu">createMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createSubMenu">createSubMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createText">createText</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Creator">Creator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styleSheet">styleSheet</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-calculation">js/circular-menu/src/calculation</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clickZoneSize">clickZoneSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverRadius">coverRadius</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverSize">coverSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Calculation">Calculation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-listSize">listSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-menuSize">menuSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startDeg">startDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-textTop">textTop</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fixedTop">fixedTop</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#molecules">molecules</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/BOM.js~AddBOMTag.html">AddBOMTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/box.js~Box.html">Box</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/circle.js~Circle.html">Circle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/code.js~Code.html">Code</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/color.js~Color.html">Color</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/constant.js~Constant.html">Constant</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/cutlayout.js~CutLayout.html">CutLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/difference.js~Difference.html">Difference</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/equation.js~Equation.html">Equation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/export.js~Export.html">Export</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extracttag.js~ExtractTag.html">ExtractTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extrude.js~Extrude.html">Extrude</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/gcode.js~Gcode.html">Gcode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/geneticAlgorithm.js~GeneticAlgorithm.html">GeneticAlgorithm</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/githubmolecule.js~GitHubMolecule.html">GitHubMolecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/group.js~Group.html">Group</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/input.js~Input.html">Input</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/intersection.js~Intersection.html">Intersection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/join.js~Join.html">Join</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/loft.js~ShrinkWrap.html">ShrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/molecule.js~Molecule.html">Molecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/move.js~Move.html">Move</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/nest.js~Nest.html">Nest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/output.js~Output.html">Output</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/readme.js~Readme.html">Readme</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rectangle.js~Rectangle.html">Rectangle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/regularPolygon.js~RegularPolygon.html">RegularPolygon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rotate.js~Rotate.html">Rotate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/shrinkWrap.js~shrinkWrap.html">shrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/tag.js~Tag.html">Tag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/text.js~Text.html">Text</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#prototypes">prototypes</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/attachmentpoint.js~AttachmentPoint.html">AttachmentPoint</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/connector.js~Connector.html">Connector</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/molecules/molecule.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Atom from &quot;../prototypes/atom.js&quot;;
+import Connector from &quot;../prototypes/connector.js&quot;;
+import GlobalVariables from &quot;../js/globalvariables.js&quot;;
+import { button } from &quot;leva&quot;;
+import { Octokit } from &quot;https://esm.sh/octokit@2.0.19&quot;;
+import { BOMEntry } from &quot;../js/BOM&quot;;
+import globalvariables from &quot;../js/globalvariables.js&quot;;
+import { LevaInputs } from &quot;leva&quot;;
+
+/**
+ * This class creates the Molecule atom.
+ */
+export default class Molecule extends Atom {
+  /**
+   * The constructor function.
+   * @param {object} values An array of values passed in which will be assigned to the class as this.x
+   */
+  constructor(values) {
+    super(values);
+
+    /**
+     * A list of all of the atoms within this Molecule which should be drawn on the screen as objects.
+     * @type {array}
+     */
+    this.nodesOnTheScreen = [];
+    /**
+     * An array of the molecules inputs. Is this not inherited from atom?
+     * @type {array}
+     */
+    this.inputs = [];
+    /**
+     * This atom&apos;s type
+     * @type {string}
+     */
+    this.name = &quot;Molecule&quot;;
+    /**
+     * A description of this atom
+     * @type {string}
+     */
+    this.description =
+      &quot;Molecules provide an organizational structure to contain atoms. Double click on a molecule to enter it. Use the up arrow in the upper right hand corner of the screen to go up one level.&quot;;
+    /**
+     * This atom&apos;s type
+     * @type {string}
+     */
+    this.atomType = &quot;Molecule&quot;;
+    /**
+     * The color for the middle dot in the molecule
+     * @type {string}
+     */
+    this.centerColor = &quot;#949294&quot;;
+    /**
+     * A flag to indicate if this molecule is the top level molecule.
+     * @type {boolean}
+     */
+    this.topLevel = false;
+    /**
+     * A flag to indicate if this molecule is currently processing.
+     * @type {boolean}
+     */
+    this.processing = false; //Should be pulled from atom. Docs made me put this here
+
+    /**
+     * The total number of atoms contained in this molecule
+     * @type {integer}
+     */
+    this.totalAtomCount = 1;
+    /**
+     * The total number of atoms contained in this molecule which are waiting to process
+     * @type {integer}
+     */
+    this.toProcess = 0;
+    /**
+     * A flag to indicate if this molecule was waiting propagation. If it is it will take place
+     *the next time we go up one level.
+     * @type {number}
+     */
+    this.awaitingPropagationFlag = false;
+    /**
+     * A list of available units with corresponding scaling numbers.
+     * @type {object}
+     */
+    this.units = { MM: &quot;MM&quot;, Inches: &quot;Inches&quot; };
+    /**
+     * The key of the currently selected unit.
+     * @type {string}
+     */
+    this.unitsKey;
+    /**
+     * List of BOM items.
+     * @type {array}
+     */
+    this.BOMlist;
+
+    this.compiledBom = {};
+
+    this.partToExport = null;
+
+    /**
+     * List of all available tags in project.
+     * @type {array}
+     */
+    this.projectAvailableTags = [];
+
+    this.setValues(values);
+
+    this.color;
+  }
+
+  /**
+   * Gives this molecule inputs with the same names as all of it&apos;s parent&apos;s inputs
+   */
+  copyInputsFromParent() {
+    if (this.parent) {
+      this.parent.nodesOnTheScreen.forEach((node) =&gt; {
+        if (node.atomType == &quot;Input&quot;) {
+          this.placeAtom(
+            {
+              parentMolecule: this,
+              y: node.y,
+              parent: this,
+              name: node.name,
+              atomType: &quot;Input&quot;,
+              uniqueID: GlobalVariables.generateUniqueID(),
+            },
+            null,
+            GlobalVariables.availableTypes,
+            true
+          );
+        }
+      });
+    }
+  }
+
+  /**
+   * Add the center dot to the molecule
+   */
+  draw() {
+    const percentLoaded = 1 - this.toProcess / this.totalAtomCount;
+    if (this.toProcess &gt; 1) {
+      this.processing = true;
+    } else {
+      this.processing = false;
+    }
+
+    super.draw(); //Super call to draw the rest
+
+    //draw the circle in the middle
+    GlobalVariables.c.beginPath();
+    GlobalVariables.c.fillStyle = this.centerColor;
+    GlobalVariables.c.moveTo(
+      GlobalVariables.widthToPixels(this.x),
+      GlobalVariables.heightToPixels(this.y)
+    );
+    GlobalVariables.c.arc(
+      GlobalVariables.widthToPixels(this.x),
+      GlobalVariables.heightToPixels(this.y),
+      GlobalVariables.widthToPixels(this.radius) / 2,
+      0,
+      percentLoaded * Math.PI * 2,
+      false
+    );
+    GlobalVariables.c.closePath();
+    GlobalVariables.c.fill();
+  }
+
+  /**
+   * Create Leva Menu Input - returns to ParameterEditor
+   */
+  createLevaInputs() {
+    let inputParams = {};
+    inputParams[&quot;molecule name&quot; + this.uniqueID] = {
+      value: this.topLevel ? GlobalVariables.currentRepoName : this.name,
+      label: &quot;Molecule Name&quot;,
+      disabled: this.topLevel ? true : false,
+      onChange: (value) =&gt; {
+        this.name = value;
+      },
+    };
+    if (this.topLevel == true) {
+      inputParams[&quot;molecule name&quot; + this.uniqueID + &quot;units&quot;] = {
+        value: this.unitsKey,
+        label: &quot;Project Units&quot;,
+        options: Object.keys(this.units),
+        disabled: false,
+        onChange: (value) =&gt; {
+          this.unitsKey = this.units[value];
+        },
+      };
+    }
+    /** Runs through active atom inputs and adds IO parameters to default param*/
+    if (this.inputs) {
+      this.inputs.map((input) =&gt; {
+        const checkConnector = () =&gt; {
+          return input.connectors.length &gt; 0;
+        };
+
+        /* Makes inputs for Io&apos;s other than geometry */
+
+        inputParams[this.uniqueID + input.name] = {
+          value: input.value,
+          label: input.name,
+          disabled: checkConnector(),
+          onChange: (value) =&gt; {
+            if (input.value !== value) {
+              input.setValue(value);
+            }
+          },
+        };
+        if (input.type &amp;&amp; input.valueType) {
+          inputParams[this.uniqueID + input.name].type =
+            LevaInputs[input.valueType.toUpperCase()];
+        }
+        if (input.valueType == &quot;geometry&quot;) {
+          inputParams[this.uniqueID + input.name].disabled = true;
+        }
+      });
+    }
+
+    if (GlobalVariables.currentRepo.parentRepo != null &amp;&amp; this.topLevel) {
+      inputParams[&quot;Reload from Github&quot;] = button(() =&gt; {
+        //Future compare to main branch
+        this.reloadFork();
+      });
+    }
+
+    return inputParams;
+  }
+
+  createLevaExport() {
+    let exportParams = {};
+    const exportOptions = [&quot;STL&quot;, &quot;SVG&quot;, &quot;STEP&quot;];
+    const exportAtoms = this.nodesOnTheScreen.filter(
+      (node) =&gt; node.atomType === &quot;Export&quot;
+    );
+
+    exportParams[this.uniqueID + &quot;part_ops&quot;] = {
+      value: this.partToExport
+        ? this.partToExport.fileName
+        : &quot;Pick a part to export&quot;,
+      options: exportAtoms.map(
+        (option) =&gt;
+          option.inputs.filter((input) =&gt; input.name === &quot;Part Name&quot;)[0].value
+      ),
+      label: &quot;Part&quot;,
+      onChange: (value) =&gt; {
+        this.partToExport = exportAtoms.find(
+          (atom) =&gt;
+            atom.inputs.filter((input) =&gt; input.name === &quot;Part Name&quot;)[0]
+              .value === value
+        );
+
+        this.updateValue();
+      },
+    };
+
+    exportParams[this.uniqueID + &quot;file_ops&quot;] = {
+      value: this.partToExport
+        ? this.partToExport.fileType
+        : &quot;Pick a file type&quot;,
+      options: exportOptions,
+      label: &quot;File Type&quot;,
+      onChange: (value) =&gt; {
+        if (this.partToExport) {
+          this.partToExport.type = value;
+        }
+        //atom.exportFile()
+      },
+    };
+
+    exportParams[&quot;Export As&quot;] = button(() =&gt; {
+      this.partToExport.exportFile();
+    });
+
+    return exportParams;
+  }
+
+  async reloadFork() {
+    const octokit = new Octokit();
+    let parent = GlobalVariables.currentRepo.parentRepo.split(&quot;/&quot;);
+    let parentOwner = parent[0];
+    let parentRepo = parent[1];
+    octokit
+      .request(&quot;GET /repos/{owner}/{repo}&quot;, {
+        owner: parentOwner,
+        repo: parentRepo,
+      })
+      .then((response) =&gt; {
+        octokit.rest.repos
+          .getContent({
+            owner: response.data.owner.login,
+            repo: response.data.name,
+            path: &quot;project.abundance&quot;,
+          })
+          .then((response) =&gt; {
+            // Delete nodes so deserialize doesn&apos;t repeat, could be useful to not delete for a diff in the future
+
+            GlobalVariables.topLevelMolecule.nodesOnTheScreen.forEach(
+              (atom) =&gt; {
+                atom.deleteNode();
+              }
+            );
+            let rawFile = JSON.parse(atob(response.data.content));
+
+            if (rawFile.filetypeVersion == 1) {
+              GlobalVariables.topLevelMolecule.deserialize(rawFile);
+            }
+            GlobalVariables.currentMolecule.selected = true;
+          });
+      });
+  }
+
+  /**
+   * Computes and returns an array of BOMEntry objects after looking at the tags of a geometry.*/
+  async extractBomTags() {
+    var tag = &quot;BOMitem&quot;;
+    let bomlist = await GlobalVariables.cad.extractBomList(this.output.value);
+    return bomlist;
+  }
+
+  /**
+   * Set the atom&apos;s response to a mouse click up. If the atom is moving this makes it stop moving.
+   * @param {number} x - The X coordinate of the click
+   * @param {number} y - The Y coordinate of the click
+   */
+  clickUp(x, y) {
+    super.clickUp(x, y);
+    GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) =&gt; {
+      atom.isMoving = false;
+    });
+  }
+
+  /**
+   * Delineates bounds for selection box.
+   */
+  selectBox(x, y, xEnd, yEnd) {
+    let xIn = Math.min(x, xEnd);
+    let xOut = Math.max(x, xEnd);
+    let yIn = Math.min(y, yEnd);
+    let yOut = Math.max(y, yEnd);
+    let xInPixels = GlobalVariables.widthToPixels(this.x);
+    let yInPixels = GlobalVariables.heightToPixels(this.y);
+    if (xInPixels &gt;= xIn &amp;&amp; xInPixels &lt;= xOut) {
+      if (yInPixels &gt;= yIn &amp;&amp; yInPixels &lt;= yOut) {
+        //this.isMoving = true
+        this.selected = true;
+      }
+    }
+  }
+
+  /**
+   * Handle double clicks by replacing the molecule currently on the screen with this one, esentially diving into it.
+   * @param {number} x - The x coordinate of the click
+   * @param {number} y - The y coordinate of the click
+   *
+   */
+  doubleClick(x, y) {
+    //returns true if something was done with the click
+    x = GlobalVariables.pixelsToWidth(x);
+    y = GlobalVariables.pixelsToHeight(y);
+
+    var clickProcessed = false;
+
+    var distFromClick = GlobalVariables.distBetweenPoints(x, this.x, y, this.y);
+
+    if (distFromClick &lt; this.radius * 2) {
+      GlobalVariables.currentMolecule = this; //set this to be the currently displayed molecule
+
+      /**
+       * Deselects Atom
+       * @type {boolean}
+       */
+      this.selected = false;
+      clickProcessed = true;
+    }
+
+    return clickProcessed;
+  }
+
+  /**
+   * Pushes serialized atoms into array if selected
+   */
+  copy() {
+    this.nodesOnTheScreen.forEach((atom) =&gt; {
+      if (atom.selected) {
+        GlobalVariables.atomsSelected.push(
+          atom.serialize({ x: 0.05, y: 0.05 })
+        );
+      }
+    });
+  }
+  /**
+   * Takes an array of recently deleted atoms
+   */
+  undo() {
+    if (GlobalVariables.recentMoleculeRepresentation.length &gt; 0) {
+      let rawFile = JSON.parse(
+        GlobalVariables.recentMoleculeRepresentation.pop()
+      );
+      const nodesCopy = [...GlobalVariables.topLevelMolecule.nodesOnTheScreen];
+      // Delete nodes so deserialize doesn&apos;t repeat, could be useful to not delete for a diff in the future
+      nodesCopy.forEach((atom, index) =&gt; {
+        atom.deleteNode();
+      });
+
+      if (rawFile.fileTypeVersion == 1) {
+        GlobalVariables.topLevelMolecule.deserialize(rawFile);
+      }
+      GlobalVariables.currentMolecule.selected = true;
+    }
+  }
+
+  /**
+   * Unselect this molecule
+   */
+  deselect() {
+    this.selected = false;
+  }
+
+  /**
+   * Grab values from the inputs and push them out to the input atoms.
+   */
+  updateValue(targetName) {
+    //Molecules are fully transparent so we don&apos;t wait for all of the inputs to begin processing the things inside
+    this.nodesOnTheScreen.forEach((atom) =&gt; {
+      //Scan all the input atoms
+      if (atom.atomType == &quot;Input&quot; &amp;&amp; atom.name == targetName) {
+        atom.updateValue(); //Tell that input to update it&apos;s value
+      }
+    });
+  }
+
+  compileBom() {
+    let compiled = this.extractBomTags().then((result) =&gt; {
+      let bomList = [];
+      let compileBomItems = [];
+      if (result) {
+        result.forEach(function (bomElement) {
+          if (bomElement.BOMitemName) {
+            if (!bomList[bomElement.BOMitemName]) {
+              //If the list of items doesn&apos;t already have one of these
+              bomList[bomElement.BOMitemName] = new BOMEntry(); //Create one
+              bomList[bomElement.BOMitemName].numberNeeded = 0; //Set the number needed to zerio initially
+              bomList[bomElement.BOMitemName].BOMitemName =
+                bomElement.BOMitemName; //With the information from the item
+              bomList[bomElement.BOMitemName].source = bomElement.source;
+              compileBomItems.push(bomList[bomElement.BOMitemName]);
+            }
+            bomList[bomElement.BOMitemName].numberNeeded +=
+              bomElement.numberNeeded;
+            bomList[bomElement.BOMitemName].costUSD += bomElement.costUSD;
+          }
+        });
+
+        // Alphabetize by source
+        compileBomItems = compileBomItems.sort((a, b) =&gt;
+          a.source &gt; b.source ? 1 : b.source &gt; a.source ? -1 : 0
+        );
+        return compileBomItems;
+      }
+    });
+    return compiled;
+  }
+
+  formatBom() {
+    /**
+     * Takes a link and converts it to be an affiliate link if it should be.
+     * @param {string} link - The link to check.
+     */
+    const convertLinks = function (link) {
+      if (link.toLowerCase().includes(&quot;amazon&quot;)) {
+        return &quot;[Amazon](&quot; + link + &quot;?tag=maslowcnc01-20)&quot;;
+      }
+      return link;
+    };
+
+    // format and compile the BOM
+    var bomHeader =
+      &quot;###### Note: Do not edit this file directly, it is automatically generated from the CAD model \n# Bill Of Materials \n |Part|Number Needed|Price|Source| \n |----|----------|-----|-----|&quot;;
+
+    var bomItems = GlobalVariables.topLevelMolecule.compiledBom;
+    var bomContent = bomHeader;
+    var totalParts = 0;
+    var totalCost = 0;
+    if (bomItems.length &gt; 0) {
+      bomItems.forEach((item) =&gt; {
+        totalParts += item.numberNeeded;
+        totalCost += item.costUSD;
+        bomContent =
+          bomContent +
+          &quot;\n|&quot; +
+          item.BOMitemName +
+          &quot;|&quot; +
+          item.numberNeeded +
+          &quot;|$&quot; +
+          item.costUSD.toFixed(2) +
+          &quot;|&quot; +
+          convertLinks(item.source) +
+          &quot;|&quot;;
+      });
+    }
+    bomContent =
+      bomContent +
+      &quot;\n|&quot; +
+      &quot;Total: &quot; +
+      &quot;|&quot; +
+      totalParts +
+      &quot;|$&quot; +
+      totalCost.toFixed(2) +
+      &quot;|&quot; +
+      &quot; &quot; +
+      &quot;|&quot;;
+    bomContent = bomContent + &quot;\n\n 3xCOG MSRP: $&quot; + (3 * totalCost).toFixed(2);
+    return bomContent;
+  }
+
+  createLevaBom() {
+    let bomParams = {};
+    if (this.compiledBom) {
+      if (this.compiledBom.length &gt; 0) {
+        this.compiledBom.map((item) =&gt; {
+          bomParams[item.BOMitemName] = {
+            value: item.numberNeeded,
+            label: item.BOMitemName + &quot; x&quot;,
+            disabled: true,
+          };
+        });
+        bomParams[&quot;Download List of Materials&quot;] = button(() =&gt; {
+          var fileName =
+            GlobalVariables.currentRepoName + &quot;-Bill-of-Materials.txt&quot;;
+          var fileContent = this.formatBom();
+          var myFile = new Blob([fileContent], { type: &quot;text/plain&quot; });
+
+          saveAs(myFile, fileName + &quot;.&quot; + &quot;txt&quot;);
+        });
+
+        return bomParams;
+      }
+    }
+  }
+
+  /**
+   * Reads molecule&apos;s output atom ID to recompute the molecule in worker
+   */
+  recomputeMolecule(outputID) {
+    //super.updateValue();
+
+    console.log(&quot;recompute molecule in molecule&quot; + this.name);
+    try {
+      GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() =&gt; {
+        this.basicThreadValueProcessing();
+        this.compileBom().then((result) =&gt; {
+          this.compiledBom = result;
+        });
+        if (this.selected) {
+          this.sendToRender();
+        }
+      });
+    } catch (err) {
+      this.setAlert(err);
+    }
+  }
+
+  /**
+   * Sets atoms to wait on coming information.
+   */
+  waitOnComingInformation(inputName) {
+    this.nodesOnTheScreen.forEach((atom) =&gt; {
+      if (atom.name == inputName) {
+        atom.waitOnComingInformation();
+      }
+    });
+  }
+
+  /**
+   * Called when this molecules value changes
+   */
+  propagate() {
+    try {
+      this.updateValue();
+    } catch (err) {
+      this.setAlert(err);
+    }
+  }
+
+  /**
+   * Walks through each of the atoms in this molecule and begins Propagation from them if they have no inputs to wait for
+   */
+  beginPropagation(force = false) {
+    //Tell every atom inside this molecule to begin Propagation
+    this.nodesOnTheScreen.forEach((node) =&gt; {
+      node.beginPropagation(force);
+    });
+    this.inputs.forEach((input) =&gt; {
+      input.beginPropagation();
+    });
+  }
+
+  /**
+   * Walks through each of the atoms in this molecule and takes a census of how many there are and how many are currently waiting to be processed.
+   */
+  census() {
+    this.totalAtomCount = 0;
+    this.toProcess = 0;
+
+    this.nodesOnTheScreen.forEach((atom) =&gt; {
+      const newInformation = atom.census();
+      this.totalAtomCount = this.totalAtomCount + newInformation[0];
+      this.toProcess = this.toProcess + newInformation[1];
+    });
+
+    return [this.totalAtomCount, this.toProcess];
+  }
+
+  changeUnits(newUnitsIndex) {
+    this.unitsIndex = newUnitsIndex;
+  }
+
+  /**
+   * Replace the currently displayed molecule with the parent of this molecule...moves the user up one level.
+   */
+  goToParentMolecule() {
+    //Go to the parent molecule if there is one
+    if (!GlobalVariables.currentMolecule.topLevel) {
+      GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) =&gt; {
+        atom.selected = false;
+      });
+      //Push any changes up to the next level if there are any changes waiting in the output
+      if (GlobalVariables.currentMolecule.awaitingPropagationFlag == true) {
+        GlobalVariables.currentMolecule.propagate();
+        GlobalVariables.currentMolecule.awaitingPropagationFlag = false;
+      }
+
+      GlobalVariables.currentMolecule = GlobalVariables.currentMolecule.parent; //set parent this to be the currently displayed molecule
+    }
+  }
+
+  async generateProjectThumbnail() {
+    //Generate a thumbnail for the project
+    return GlobalVariables.cad.generateThumbnail(this.uniqueID);
+  }
+
+  /**
+   * Check to see if any of this molecules children have contributions to make to the README file. Children closer to the top left will be applied first. TODO: No contribution should be made if it&apos;s just a title.
+   */
+  async requestReadme() {
+    var sortableAtomsList = this.nodesOnTheScreen;
+    sortableAtomsList = sortableAtomsList
+      .filter(
+        (atom) =&gt; atom.atomType == &quot;Molecule&quot; || atom.atomType == &quot;Readme&quot;
+      )
+      .sort(function (a, b) {
+        return (
+          GlobalVariables.distBetweenPoints(a.x, 0, a.y, 0) -
+          GlobalVariables.distBetweenPoints(b.x, 0, b.y, 0)
+        );
+      });
+    const promiseArray = sortableAtomsList.map((atom) =&gt; {
+      return atom.requestReadme();
+    });
+    let finalReadMe = [];
+
+    await Promise.all(promiseArray).then((values) =&gt; {
+      values.forEach((value) =&gt; {
+        let text;
+        if (value instanceof Array) {
+          value.forEach((arrayItem) =&gt; {
+            text = arrayItem.readMeText;
+            finalReadMe.push({
+              uniqueID: arrayItem.uniqueID,
+              readMeText: text,
+              svg: arrayItem.svg,
+            });
+          });
+        } else {
+          text = value.readMeText;
+          if (value.svg) {
+            text = text.concat(
+              &quot; \n\n![readme](/readme&quot; + value.uniqueID + &quot;.svg)\n\n&quot;
+            );
+          }
+          finalReadMe.push({
+            uniqueID: value.uniqueID,
+            readMeText: text,
+            svg: value.svg,
+          });
+        }
+      });
+    });
+    return finalReadMe;
+  }
+
+  /**
+   * Generates and returns a object representation of this molecule and all of its children.
+   */
+  serialize(offset = { x: 0, y: 0 }) {
+    var allAtoms = []; //An array of all the atoms contained in this molecule
+    var allConnectors = []; //An array of all the connectors contained in this molecule
+
+    this.nodesOnTheScreen.forEach((atom) =&gt; {
+      //Store a representation of the atom
+      allAtoms.push(atom.serialize());
+      //Store a representation of the atom&apos;s connectors
+      if (atom.output) {
+        atom.output.connectors.forEach((connector) =&gt; {
+          allConnectors.push(connector.serialize());
+        });
+      }
+    });
+
+    var thisAsObject = super.serialize(offset); //Do the atom serialization to create an object, then add all the bits of this one to it
+    thisAsObject.topLevel = this.topLevel;
+    thisAsObject.allAtoms = allAtoms;
+    thisAsObject.allConnectors = allConnectors;
+    thisAsObject.parentRepo = this.parentRepo;
+    thisAsObject.unitsKey = this.unitsKey;
+    thisAsObject.fileTypeVersion = 1;
+    thisAsObject.compiledBom = this.compiledBom;
+
+    return thisAsObject;
+  }
+
+  /**
+   * Load the children of this from a JSON representation
+   * @param {object} json - A json representation of the molecule
+   * @param {object} values - An array of values to apply to this molecule before de-serializing it&apos;s contents. Used by githubmolecules to set top level correctly
+   */
+  deserialize(json, values = {}, forceBeginPropagation = false) {
+    //Find the target molecule in the list
+    let promiseArray = [];
+
+    //Try to place molecule&apos;s output
+    this.placeAtom(
+      {
+        parentMolecule: this,
+        x: 0.98,
+        y: 0.5,
+        parent: this,
+        name: &quot;Output&quot;,
+        atomType: &quot;Output&quot;,
+        uniqueID: GlobalVariables.generateUniqueID(),
+      },
+      false
+    );
+
+    this.setValues(json); //Grab the values of everything from the passed object
+    this.setValues(values); //Over write those values with the passed ones where needed
+
+    if (json.allAtoms) {
+      json.allAtoms.forEach((atom) =&gt; {
+        //Place the atoms
+        const promise = this.placeAtom(atom, false);
+        promiseArray.push(promise);
+
+        this.setValues([]); //Call set values again with an empty list to trigger loading of IO values from memory
+      });
+    }
+    return Promise.all(promiseArray).then(() =&gt; {
+      //Once all the atoms are placed we can finish
+      this.setValues([]); //Call set values again with an empty list to trigger loading of IO values from memory
+
+      if (this.topLevel) {
+        GlobalVariables.totalAtomCount = GlobalVariables.numberOfAtomsToLoad;
+
+        this.census();
+
+        this.beginPropagation(forceBeginPropagation);
+      }
+
+      //Place the connectors
+      if (json.allConnectors) {
+        json.allConnectors.forEach((connector) =&gt; {
+          this.placeConnector(connector);
+        });
+      }
+    });
+  }
+  /**
+   * Loads a project into this GitHub molecule from github based on the passed github ID. This function is async and execution time depends on project complexity, and network speed.
+   * @param {number} id - The GitHub project ID for the project to be loaded.
+   */
+  async loadGithubMoleculeByName(
+    item,
+    oldObject = {},
+    oldParentObjectConnectors = {}
+  ) {
+    let octokit = new Octokit();
+    await octokit
+      .request(&quot;GET /repos/{owner}/{repo}/contents/project.abundance&quot;, {
+        owner: item.owner,
+        repo: item.repoName,
+      })
+      .then((response) =&gt; {
+        let rawFile = JSON.parse(atob(response.data.content));
+        let rawFileWithNewIds = this.remapIDs(rawFile);
+        rawFileWithNewIds.atomType = &quot;GitHubMolecule&quot;;
+
+        //content will be base64 encoded
+        let valuesToOverwriteInLoadedVersion = {};
+        let newMoleculeUniqueID = GlobalVariables.generateUniqueID();
+
+        //If there are stored io values to recover
+        if (oldObject.ioValues != undefined) {
+          valuesToOverwriteInLoadedVersion = {
+            uniqueID: newMoleculeUniqueID,
+            x: this.x,
+            y: this.y,
+            parentRepo: item,
+            topLevel: false,
+            ioValues: oldObject.ioValues,
+          };
+        } else {
+          valuesToOverwriteInLoadedVersion = {
+            uniqueID: newMoleculeUniqueID,
+            parentRepo: item,
+            x: GlobalVariables.pixelsToWidth(GlobalVariables.lastClick[0]),
+            y: GlobalVariables.pixelsToHeight(GlobalVariables.lastClick[1]),
+            topLevel: false,
+          };
+        }
+
+        GlobalVariables.currentMolecule
+          .placeAtom(rawFileWithNewIds, true, valuesToOverwriteInLoadedVersion)
+          .then(() =&gt; {
+            oldParentObjectConnectors.forEach((connector) =&gt; {
+              if (connector.ap1ID == oldObject.uniqueID) {
+                connector.ap1ID = newMoleculeUniqueID;
+                this.parent.placeConnector(connector);
+              }
+              if (connector.ap2ID == oldObject.uniqueID) {
+                connector.ap2ID = newMoleculeUniqueID;
+                this.parent.placeConnector(connector);
+              }
+            });
+          });
+      });
+  }
+
+  /** Gives new unique IDs to all atoms in a json object and remaps the connections with the attachment points */
+  remapIDs(json) {
+    let idPairs = {};
+    if (json.allAtoms) {
+      json.allAtoms.forEach((atom) =&gt; {
+        let oldID = atom.uniqueID;
+        let newID = GlobalVariables.generateUniqueID();
+        idPairs[oldID] = newID;
+        atom.uniqueID = newID;
+      });
+      json.allConnectors.forEach((connector) =&gt; {
+        if (connector.ap1ID &amp;&amp; idPairs[connector.ap1ID]) {
+          connector.ap1ID = idPairs[connector.ap1ID];
+        }
+        if (connector.ap2ID &amp;&amp; idPairs[connector.ap2ID]) {
+          connector.ap2ID = idPairs[connector.ap2ID];
+        }
+        if (connector.ap2ID &amp;&amp; idPairs[connector.ap2ID]) {
+          connector.ap2ID = idPairs[connector.ap2ID];
+        }
+      });
+
+      return json;
+    }
+  }
+
+  /**
+   * Delete this molecule and everything in it.
+   */
+  deleteNode(backgroundClickAfter = true, deletePath = true, silent = false) {
+    //make a copy of the nodes on the screen array since we will be modifying it
+    const copyOfNodesOnTheScreen = [...this.nodesOnTheScreen];
+
+    copyOfNodesOnTheScreen.forEach((atom) =&gt; {
+      atom.deleteNode(backgroundClickAfter, deletePath, silent);
+    });
+    super.deleteNode(backgroundClickAfter, deletePath, silent);
+  }
+
+  /**
+   * Places a new atom inside the molecule
+   * @param {object} newAtomObj - An object defining the new atom to be placed
+   * @param {array} moleculeList - Only passed if we are placing an instance of Molecule.
+   * @param {object} typesList - A dictionary of all of the available types with references to their constructors
+   * @param {boolean} unlock - A flag to indicate if this atom should spawn in the unlocked state.
+   */
+  async placeAtom(newAtomObj, unlock, values) {
+    try {
+      GlobalVariables.numberOfAtomsToLoad =
+        GlobalVariables.numberOfAtomsToLoad + 1; //Indicate that one more atom needs to be loaded
+
+      let promise = null;
+
+      for (var key in GlobalVariables.availableTypes) {
+        if (
+          GlobalVariables.availableTypes[key].atomType == newAtomObj.atomType
+        ) {
+          newAtomObj.parent = this;
+          var atom = new GlobalVariables.availableTypes[key].creator(
+            newAtomObj
+          );
+          //If this is a molecule, de-serialize it
+          if (
+            atom.atomType == &quot;Molecule&quot; ||
+            atom.atomType == &quot;GitHubMolecule&quot;
+          ) {
+            promise = atom.deserialize(newAtomObj, values, true);
+
+            if (unlock) {
+              atom.beginPropagation();
+            }
+          }
+
+          //reassign the name of the Inputs to preserve linking
+          if (
+            atom.atomType == &quot;Input&quot; &amp;&amp;
+            typeof newAtomObj.name !== &quot;undefined&quot;
+          ) {
+            atom.name = newAtomObj.name;
+            atom.type = newAtomObj.type;
+            atom.draw(); //The poling happens in draw :roll_eyes:
+          } else if (atom.atomType == &quot;Input&quot;) {
+            atom.name = GlobalVariables.incrementVariableName(atom.name, this);
+          }
+
+          //If this is an output, check to make sure there are no existing outputs, and if there are delete the existing one because there can only be one
+          if (atom.atomType == &quot;Output&quot;) {
+            //Check for existing outputs
+            this.nodesOnTheScreen.forEach((atom) =&gt; {
+              if (atom.atomType == &quot;Output&quot;) {
+                atom.deleteOutputAtom(false); //Remove them
+              }
+            });
+          }
+
+          //Add the atom to the list to display
+          this.nodesOnTheScreen.push(atom);
+          // fakes a click on newly placed atom
+          //atom.selected = false;
+
+          if (unlock) {
+            //Make this molecule spawn with all of it&apos;s parent&apos;s inputs
+            if (atom.atomType == &quot;Molecule&quot;) {
+              //Not GitHubMolecule
+              atom.copyInputsFromParent();
+
+              //Make begin propagation from an atom when it is placed. This is used when copy and pasting molecules.
+              if (promise != null) {
+                promise.then(() =&gt; {
+                  atom.beginPropagation();
+                });
+              } else {
+                atom.beginPropagation();
+              }
+            }
+
+            atom.updateValue();
+          }
+        }
+      }
+      return promise;
+    } catch (err) {
+      console.warn(&quot;Unable to place: &quot; + newAtomObj);
+      console.warn(err);
+      return Promise.resolve();
+    }
+  }
+  /**
+   * Places a new connector within the molecule
+   * @param {object} connectorObj - An object representation of the connector specifying its inputs and outputs.
+   */
+  placeConnector(connectorObj) {
+    var outputAttachmentPoint = false;
+    var inputAttachmentPoint = false;
+
+    this.nodesOnTheScreen.forEach((atom) =&gt; {
+      //Check each atom on the screen
+      if (atom.uniqueID == connectorObj.ap1ID) {
+        //When we have found the output atom
+        outputAttachmentPoint = atom.output;
+      }
+      if (atom.uniqueID == connectorObj.ap2ID) {
+        //When we have found the input atom
+        atom.inputs.forEach((input) =&gt; {
+          //Check each of its inputs
+          if (input.name == connectorObj.ap2Name) {
+            inputAttachmentPoint = input; //Until we find the one with the right name
+          }
+        });
+      }
+    });
+
+    if (outputAttachmentPoint &amp;&amp; inputAttachmentPoint) {
+      //If we have found the output and input
+      new Connector({
+        atomType: &quot;Connector&quot;,
+        attachmentPoint1: outputAttachmentPoint,
+        attachmentPoint2: inputAttachmentPoint,
+      });
+    } else {
+      console.warn(&quot;Unable to place connector&quot;);
+    }
+  }
+
+  sendToRender() {
+    //Send code to JSxCAD to render
+    GlobalVariables.writeToDisplay(this.uniqueID);
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

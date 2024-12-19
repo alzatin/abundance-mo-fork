@@ -1,0 +1,593 @@
+{
+  "coverage": "76.75%",
+  "expectCount": 740,
+  "actualCount": 568,
+  "files": {
+    "src/js/BOM.js": {
+      "expectCount": 7,
+      "actualCount": 7,
+      "undocumentLines": []
+    },
+    "src/js/NewMenu.js": {
+      "expectCount": 2,
+      "actualCount": 1,
+      "undocumentLines": [
+        10
+      ]
+    },
+    "src/js/alwaysOneFreeInput.js": {
+      "expectCount": 4,
+      "actualCount": 4,
+      "undocumentLines": []
+    },
+    "src/js/circular-menu/index.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        3
+      ]
+    },
+    "src/js/circular-menu/src/CMenu.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        6
+      ]
+    },
+    "src/js/circular-menu/src/Creator/createAnchor.js": {
+      "expectCount": 5,
+      "actualCount": 0,
+      "undocumentLines": [
+        6,
+        9,
+        14,
+        25,
+        27
+      ]
+    },
+    "src/js/circular-menu/src/Creator/createHorizontal.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        4
+      ]
+    },
+    "src/js/circular-menu/src/Creator/createIcon.js": {
+      "expectCount": 7,
+      "actualCount": 0,
+      "undocumentLines": [
+        4,
+        5,
+        6,
+        8,
+        14,
+        18,
+        22
+      ]
+    },
+    "src/js/circular-menu/src/Creator/createList.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        4
+      ]
+    },
+    "src/js/circular-menu/src/Creator/createLists.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/circular-menu/src/Creator/createMenu.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        6
+      ]
+    },
+    "src/js/circular-menu/src/Creator/createSubMenu.js": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        6,
+        7,
+        10
+      ]
+    },
+    "src/js/circular-menu/src/Creator/createText.js": {
+      "expectCount": 3,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        6,
+        8
+      ]
+    },
+    "src/js/circular-menu/src/Creator/index.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        11
+      ]
+    },
+    "src/js/circular-menu/src/Creator/styleSheet.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        1,
+        8
+      ]
+    },
+    "src/js/circular-menu/src/calculation/clickZoneSize.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        1,
+        3
+      ]
+    },
+    "src/js/circular-menu/src/calculation/coverSize.js": {
+      "expectCount": 3,
+      "actualCount": 0,
+      "undocumentLines": [
+        1,
+        3,
+        8
+      ]
+    },
+    "src/js/circular-menu/src/calculation/horizontalDeg.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/circular-menu/src/calculation/index.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        10
+      ]
+    },
+    "src/js/circular-menu/src/calculation/listSize.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/circular-menu/src/calculation/menuSize.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/circular-menu/src/calculation/rotateDeg.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/circular-menu/src/calculation/startDeg.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/circular-menu/src/calculation/textTop.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        3,
+        5
+      ]
+    },
+    "src/js/circular-menu/src/classed.js": {
+      "expectCount": 9,
+      "actualCount": 0,
+      "undocumentLines": [
+        1,
+        5,
+        9,
+        34,
+        39,
+        44,
+        48,
+        52,
+        56
+      ]
+    },
+    "src/js/circular-menu/src/config.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        4,
+        19
+      ]
+    },
+    "src/js/circular-menu/src/extend.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/circular-menu/src/hide.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        2
+      ]
+    },
+    "src/js/circular-menu/src/on.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/circular-menu/src/show.js": {
+      "expectCount": 3,
+      "actualCount": 0,
+      "undocumentLines": [
+        4,
+        14,
+        20
+      ]
+    },
+    "src/js/circular-menu/src/style.js": {
+      "expectCount": 4,
+      "actualCount": 0,
+      "undocumentLines": [
+        3,
+        7,
+        11,
+        17
+      ]
+    },
+    "src/js/circular-menu/src/styles.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        3
+      ]
+    },
+    "src/js/circular-menu/src/window.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/fonts.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/js/globalvariables.js": {
+      "expectCount": 33,
+      "actualCount": 33,
+      "undocumentLines": []
+    },
+    "src/js/licenseOptions.js": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    },
+    "src/js/maslowTopics.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/molecules/BOM.js": {
+      "expectCount": 13,
+      "actualCount": 13,
+      "undocumentLines": []
+    },
+    "src/molecules/box.js": {
+      "expectCount": 15,
+      "actualCount": 15,
+      "undocumentLines": []
+    },
+    "src/molecules/circle.js": {
+      "expectCount": 8,
+      "actualCount": 8,
+      "undocumentLines": []
+    },
+    "src/molecules/code.js": {
+      "expectCount": 20,
+      "actualCount": 17,
+      "undocumentLines": [
+        117,
+        196,
+        200
+      ]
+    },
+    "src/molecules/color.js": {
+      "expectCount": 14,
+      "actualCount": 12,
+      "undocumentLines": [
+        105,
+        108
+      ]
+    },
+    "src/molecules/constant.js": {
+      "expectCount": 16,
+      "actualCount": 15,
+      "undocumentLines": [
+        129
+      ]
+    },
+    "src/molecules/cutlayout.js": {
+      "expectCount": 15,
+      "actualCount": 12,
+      "undocumentLines": [
+        46,
+        48,
+        168
+      ]
+    },
+    "src/molecules/difference.js": {
+      "expectCount": 8,
+      "actualCount": 7,
+      "undocumentLines": [
+        77
+      ]
+    },
+    "src/molecules/equation.js": {
+      "expectCount": 16,
+      "actualCount": 16,
+      "undocumentLines": []
+    },
+    "src/molecules/export.js": {
+      "expectCount": 16,
+      "actualCount": 11,
+      "undocumentLines": [
+        45,
+        56,
+        58,
+        88,
+        101
+      ]
+    },
+    "src/molecules/extracttag.js": {
+      "expectCount": 14,
+      "actualCount": 11,
+      "undocumentLines": [
+        82,
+        93,
+        109
+      ]
+    },
+    "src/molecules/extrude.js": {
+      "expectCount": 7,
+      "actualCount": 7,
+      "undocumentLines": []
+    },
+    "src/molecules/gcode.js": {
+      "expectCount": 11,
+      "actualCount": 11,
+      "undocumentLines": []
+    },
+    "src/molecules/geneticAlgorithm.js": {
+      "expectCount": 22,
+      "actualCount": 22,
+      "undocumentLines": []
+    },
+    "src/molecules/githubmolecule.js": {
+      "expectCount": 10,
+      "actualCount": 10,
+      "undocumentLines": []
+    },
+    "src/molecules/group.js": {
+      "expectCount": 11,
+      "actualCount": 11,
+      "undocumentLines": []
+    },
+    "src/molecules/input.js": {
+      "expectCount": 21,
+      "actualCount": 18,
+      "undocumentLines": [
+        42,
+        49,
+        212
+      ]
+    },
+    "src/molecules/intersection.js": {
+      "expectCount": 8,
+      "actualCount": 7,
+      "undocumentLines": [
+        87
+      ]
+    },
+    "src/molecules/join.js": {
+      "expectCount": 15,
+      "actualCount": 10,
+      "undocumentLines": [
+        55,
+        123,
+        127,
+        155,
+        166
+      ]
+    },
+    "src/molecules/loft.js": {
+      "expectCount": 12,
+      "actualCount": 11,
+      "undocumentLines": [
+        114
+      ]
+    },
+    "src/molecules/molecule.js": {
+      "expectCount": 53,
+      "actualCount": 40,
+      "undocumentLines": [
+        95,
+        97,
+        187,
+        230,
+        278,
+        346,
+        433,
+        465,
+        517,
+        615,
+        616,
+        638,
+        1003
+      ]
+    },
+    "src/molecules/move.js": {
+      "expectCount": 8,
+      "actualCount": 7,
+      "undocumentLines": [
+        80
+      ]
+    },
+    "src/molecules/nest.js": {
+      "expectCount": 20,
+      "actualCount": 20,
+      "undocumentLines": []
+    },
+    "src/molecules/output.js": {
+      "expectCount": 18,
+      "actualCount": 18,
+      "undocumentLines": []
+    },
+    "src/molecules/readme.js": {
+      "expectCount": 18,
+      "actualCount": 17,
+      "undocumentLines": [
+        109
+      ]
+    },
+    "src/molecules/rectangle.js": {
+      "expectCount": 8,
+      "actualCount": 8,
+      "undocumentLines": []
+    },
+    "src/molecules/regularPolygon.js": {
+      "expectCount": 8,
+      "actualCount": 8,
+      "undocumentLines": []
+    },
+    "src/molecules/rotate.js": {
+      "expectCount": 9,
+      "actualCount": 8,
+      "undocumentLines": [
+        102
+      ]
+    },
+    "src/molecules/shrinkWrap.js": {
+      "expectCount": 10,
+      "actualCount": 9,
+      "undocumentLines": [
+        103
+      ]
+    },
+    "src/molecules/tag.js": {
+      "expectCount": 16,
+      "actualCount": 12,
+      "undocumentLines": [
+        74,
+        78,
+        87,
+        130
+      ]
+    },
+    "src/molecules/text.js": {
+      "expectCount": 13,
+      "actualCount": 9,
+      "undocumentLines": [
+        32,
+        40,
+        79,
+        140
+      ]
+    },
+    "src/prototypes/atom.js": {
+      "expectCount": 50,
+      "actualCount": 49,
+      "undocumentLines": [
+        303
+      ]
+    },
+    "src/prototypes/attachmentpoint.js": {
+      "expectCount": 37,
+      "actualCount": 32,
+      "undocumentLines": [
+        10,
+        16,
+        21,
+        290,
+        292
+      ]
+    },
+    "src/prototypes/connector.js": {
+      "expectCount": 23,
+      "actualCount": 23,
+      "undocumentLines": []
+    },
+    "src/worker.js": {
+      "expectCount": 64,
+      "actualCount": 18,
+      "undocumentLines": [
+        12,
+        15,
+        16,
+        28,
+        76,
+        84,
+        98,
+        112,
+        125,
+        151,
+        181,
+        199,
+        210,
+        294,
+        320,
+        351,
+        367,
+        409,
+        439,
+        457,
+        472,
+        490,
+        502,
+        572,
+        584,
+        596,
+        619,
+        633,
+        658,
+        686,
+        1041,
+        1113,
+        1141,
+        1146,
+        1281,
+        1348,
+        1375,
+        1394,
+        1406,
+        1426,
+        1450,
+        1455,
+        1461,
+        1515,
+        1547,
+        1559
+      ]
+    }
+  }
+}

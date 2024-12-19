@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../../">
+  <title data-ice="title">src/js/circular-menu/dist/js/circular-menu.js | replicad-app-example</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A simple React app based on replicad."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="replicad-app-example"><meta property="twitter:description" content="A simple React app based on replicad."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js">js</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/BOM.js~BOMEntry.html">BOMEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/globalvariables.js~GlobalVariables.html">GlobalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convertLinks">convertLinks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCMenu">createCMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addOrDeletePorts">addOrDeletePorts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fonts">fonts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-globalVariables">globalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-licenses">licenses</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-topics">topics</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu">js/circular-menu</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-index">index</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src">js/circular-menu/src</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-CMenu">CMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classed">classed</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-config">config</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hide">hide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-show">show</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-style">style</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styles">styles</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-window">window</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-creator">js/circular-menu/src/Creator</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createAnchor">createAnchor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createHorizontal">createHorizontal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createIcon">createIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hasIcon">hasIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createList">createList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createLists">createLists</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createMenu">createMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createSubMenu">createSubMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createText">createText</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Creator">Creator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styleSheet">styleSheet</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-calculation">js/circular-menu/src/calculation</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clickZoneSize">clickZoneSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverRadius">coverRadius</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverSize">coverSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Calculation">Calculation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-listSize">listSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-menuSize">menuSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startDeg">startDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-textTop">textTop</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fixedTop">fixedTop</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#molecules">molecules</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/BOM.js~AddBOMTag.html">AddBOMTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/box.js~Box.html">Box</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/circle.js~Circle.html">Circle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/code.js~Code.html">Code</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/color.js~Color.html">Color</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/constant.js~Constant.html">Constant</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/cutlayout.js~CutLayout.html">CutLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/difference.js~Difference.html">Difference</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/equation.js~Equation.html">Equation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/export.js~Export.html">Export</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extracttag.js~ExtractTag.html">ExtractTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extrude.js~Extrude.html">Extrude</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/gcode.js~Gcode.html">Gcode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/geneticAlgorithm.js~GeneticAlgorithm.html">GeneticAlgorithm</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/githubmolecule.js~GitHubMolecule.html">GitHubMolecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/group.js~Group.html">Group</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/input.js~Input.html">Input</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/intersection.js~Intersection.html">Intersection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/join.js~Join.html">Join</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/loft.js~ShrinkWrap.html">ShrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/molecule.js~Molecule.html">Molecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/move.js~Move.html">Move</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/nest.js~Nest.html">Nest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/output.js~Output.html">Output</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/readme.js~Readme.html">Readme</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rectangle.js~Rectangle.html">Rectangle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/regularPolygon.js~RegularPolygon.html">RegularPolygon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rotate.js~Rotate.html">Rotate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/shrinkWrap.js~shrinkWrap.html">shrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/tag.js~Tag.html">Tag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/text.js~Text.html">Text</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#prototypes">prototypes</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/attachmentpoint.js~AttachmentPoint.html">AttachmentPoint</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/connector.js~Connector.html">Connector</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/js/circular-menu/dist/js/circular-menu.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">//circular-menu
+(function (global, factory) {
+    typeof exports === &apos;object&apos; &amp;&amp; typeof module !== &apos;undefined&apos; ? module.exports = factory() :
+    typeof define === &apos;function&apos; &amp;&amp; define.amd ? define(factory) :
+    (global.CMenu = factory());
+}(this, function () { &apos;use strict&apos;;
+
+    function rotateDeg (i){
+        return this.startDeg + this.rotateUnit * i;
+    }
+
+    function rotateDeg$1 (i){
+        return - (this.rotateDeg(i) + this.unskewDeg);
+    }
+
+    function startDeg(config) {
+        var top = -(config.totalAngle - 180) / 2,
+            positions = {
+                top: top,
+                left: top - 90,
+                right: top + 90,
+                bottom: top + 180
+            };
+
+        return config.start !== undefined ? config.start : positions[config.position];
+    }
+
+    const antialiasing = 3;
+
+    function coverRadius(radius, percent) {
+        var square = radius * radius * 2;
+        return Math.sqrt(square) * percent + antialiasing;
+    }
+
+    function coverSize (coverRadius) {
+        var l = coverRadius * 2;
+        var m = -l / 2;
+
+        l += &quot;px&quot;;
+        m += &quot;px&quot;;
+        
+        return {
+            width:  l,
+            height: l,
+            marginLeft: m,
+            marginTop: m
+        };
+    }
+
+    function menuSize (config) {
+        var l = config.diameter;
+        var m = - config.diameter / 2;
+
+        l += &quot;px&quot;;
+        m += &quot;px&quot;;
+
+        return {
+            width:  l,
+            height: l,
+            marginLeft: m,
+            marginTop: m
+        };
+    }
+
+    const fixedTop  = 10;
+
+    function clickZoneSize (config) {
+        var l = config.diameter;
+        var m = - config.diameter / 2;
+
+        l += &quot;px&quot;;
+        m += &quot;px&quot;;
+
+        return {
+            width:  l,
+            height: l,
+            marginRight: m,
+            marginBottom: m
+        };
+    }
+
+    function listSize (config) {
+        var l = (config.diameter / 2) + &apos;px&apos;;
+
+        return {
+            width:  l,
+            height: l
+        };
+    }
+
+    const middleRatio = 0.41;
+
+    function textTop (clickZoneRadius) {
+        return clickZoneRadius * middleRatio - fixedTop + &apos;px&apos;;
+
+    }
+
+    function Calculation(config) {
+        this._config = config;
+
+        var c = this.config = config,
+            itemsNum = c.menus.length,
+            spaceNumber = c.totalAngle === 360 ? itemsNum : itemsNum - 1;
+
+        this.radius = config.diameter / 2;
+        this.coverRadius = coverRadius(this.radius, config.percent);
+        this.clickZoneRadius = this.radius - this.coverRadius;
+
+
+
+        this.listSize = listSize(config);
+        this.clickZoneSize = clickZoneSize(config);
+        this.menuSize = menuSize(config);
+        this.coverSize = coverSize(this.coverRadius);
+        this.startDeg = startDeg(config);
+        this.centralDeg = (c.totalAngle - (c.spaceDeg * spaceNumber)) / itemsNum;
+        this.rotateUnit = this.centralDeg + c.spaceDeg;
+        this.skewDeg = 90 - this.centralDeg;
+        this.unskewDeg = - (90 - this.centralDeg / 2);
+        this.textTop = textTop(this.clickZoneRadius);
+    }
+
+    Calculation.prototype = {
+        constructor: Calculation,
+        rotateDeg: rotateDeg,
+        horizontalDeg: rotateDeg$1
+    };
+
+    function createLists (parent) {
+        
+        this._config.menus.forEach(function(v, k){
+
+            this._createList(parent, v, k);
+            
+        }, this);
+
+    }
+
+    function defaultView(node) {
+        return (node.ownerDocument &amp;&amp; node.ownerDocument.defaultView) // node is a Node
+            || (node.document &amp;&amp; node) // node is a Window
+            || node.defaultView; // node is a Document
+    }
+
+    function styleRemove(name) {
+        this.style.removeProperty(name);
+    }
+
+    function styleConstant(name, value, priority) {
+        this.style.setProperty(name, value, priority);
+    }
+
+    function styleFunction(name, value, priority) {
+        var v = value.apply(this, arguments);
+        if (v == null) this.style.removeProperty(name);
+        else this.style.setProperty(name, v, priority);
+    }
+
+    function style(ele, name, value, priority) {
+
+        var node;
+        return arguments.length &gt; 1
+            ? ((value == null
+            ? styleRemove : typeof value === &quot;function&quot;
+            ? styleFunction
+            : styleConstant).call(ele, name, value, priority == null ? &quot;&quot; : priority))
+            : defaultView(node = ele)
+            .getComputedStyle(node, null)
+            .getPropertyValue(name);
+    }
+
+    function createList(parent, data, index){
+
+        var list = document.createElement(&apos;li&apos;);
+        style(list, &apos;width&apos;, this._calc.listSize.width);
+        style(list, &apos;height&apos;, this._calc.listSize.height);
+        style(list, &apos;transform&apos;, &apos;rotate(&apos;+ this._calc.rotateDeg(index) +&apos;deg) skew(&apos;+ this._calc.skewDeg +&apos;deg)&apos;);
+
+        parent.appendChild(list);
+
+        this._createAnchor(list, data, index);
+
+    }
+
+    function classArray(string) {
+        return string.trim().split(/^|\s+/);
+    }
+
+    function classList(node) {
+        return node.classList || new ClassList(node);
+    }
+
+    function ClassList(node) {
+        this._node = node;
+        this._names = classArray(node.getAttribute(&quot;class&quot;) || &quot;&quot;);
+    }
+
+    ClassList.prototype = {
+        add: function(name) {
+            var i = this._names.indexOf(name);
+            if (i &lt; 0) {
+                this._names.push(name);
+                this._node.setAttribute(&quot;class&quot;, this._names.join(&quot; &quot;));
+            }
+        },
+        remove: function(name) {
+            var i = this._names.indexOf(name);
+            if (i &gt;= 0) {
+                this._names.splice(i, 1);
+                this._node.setAttribute(&quot;class&quot;, this._names.join(&quot; &quot;));
+            }
+        },
+        contains: function(name) {
+            return this._names.indexOf(name) &gt;= 0;
+        }
+    };
+
+    function classedAdd(node, names) {
+        var list = classList(node), i = -1, n = names.length;
+        while (++i &lt; n) list.add(names[i]);
+    }
+
+    function classedRemove(node, names) {
+        var list = classList(node), i = -1, n = names.length;
+        while (++i &lt; n) list.remove(names[i]);
+    }
+
+    function classedTrue(names) {
+        classedAdd(this, names);
+    }
+
+    function classedFalse(names) {
+        classedRemove(this, names);
+    }
+
+    function classedFunction(names, value) {
+        (value.apply(this, arguments) ? classedAdd : classedRemove)(this, names);
+    }
+
+    function classed(ele, name, value) {
+        var names = classArray(name + &quot;&quot;);
+
+        if (arguments.length &lt; 2) {
+            var list = classList(this), i = -1, n = names.length;
+            while (++i &lt; n) if (!list.contains(names[i])) return false;
+            return true;
+        }
+
+        var callee = (typeof value === &quot;function&quot;
+            ? classedFunction : value
+            ? classedTrue
+            : classedFalse).call(ele, names, value);
+    }
+
+    var UID = {
+        _current: 0,
+        getNew: function(){
+            this._current++;
+            return this._current;
+        }
+    };
+    function styleSheet (element, prop, value, pseudo) {
+        
+        var _this = element;
+        var _sheetId = &quot;sheetStyles&quot;;
+        var _head = document.head || document.getElementsByTagName(&apos;head&apos;)[0];
+        var _sheet = document.getElementById(_sheetId) || document.createElement(&apos;style&apos;);
+        _sheet.id = _sheetId;
+        var className = &quot;s-S&quot; + UID.getNew();
+        
+        _this.className += &quot; &quot; + className;
+
+
+
+        _sheet.innerHTML += &quot; .&quot; + className + ( pseudo ? (&quot;:&quot; + pseudo) : &quot;&quot; ) + &quot;{&quot; + prop + &quot;:&quot; + value + &quot;}&quot;;
+        _head.appendChild(_sheet);
+        return this;
+    };
+
+    function on (ele, type, callback, data) {
+        ele.addEventListener(type, function(e){
+            callback.call(this, e, data);
+        });
+    }
+
+    function createMenu(){
+        var p = this._container;
+
+        classed(p, &apos;circular-menu&apos;, true);
+        style(p, &apos;width&apos;, this._calc.menuSize.width);
+        style(p, &apos;height&apos;, this._calc.menuSize.height);
+        style(p, &apos;margin-top&apos;, this._calc.menuSize.marginTop);
+        style(p, &apos;margin-left&apos;, this._calc.menuSize.marginLeft);
+        
+        var self = this;
+        on(p, &quot;click&quot;, function(e){
+            if(e.toElement === p){
+                self._cMenu.hide();
+            }
+        });
+        setTimeout(function(){
+            style(p, &apos;display&apos;, &apos;block&apos;);
+        },100);
+
+        styleSheet(p, &apos;width&apos;, this._calc.coverSize.width, &apos;after&apos;);
+        styleSheet(p, &apos;height&apos;, this._calc.coverSize.height, &apos;after&apos;);
+        styleSheet(p, &apos;margin-left&apos;, this._calc.coverSize.marginLeft, &apos;after&apos;);
+        styleSheet(p, &apos;margin-top&apos;, this._calc.coverSize.marginTop, &apos;after&apos;);
+        styleSheet(p, &apos;border&apos;, &quot;3px solid &quot; + this._config.pageBackground, &apos;after&apos;);
+
+
+        var ul = p.appendChild(document.createElement(&apos;ul&apos;));
+        this._createLists(ul);
+    }
+
+    function hasSubMenus(menus) {
+        return menus instanceof Array &amp;&amp; menus.length !== 0;
+    }
+    function ifDisabled(disabled){
+        if(disabled instanceof Function)
+            return disabled();
+        else
+            return Boolean(disabled);
+    }
+
+    function setHref(ele, href){
+        if(!href) return;
+
+        if(href instanceof Object){
+            ele.href = href.url;
+            ele.target = href.blank? &quot;_blank&quot; : &quot;&quot;;
+        }else{
+            ele.href = href;
+        }
+    }
+
+
+
+    var delayShow = null;// delayShow reference the last setTimeout triggered by any one of menu item(anchor)
+
+    function createAnchor (parent, data, index) {
+        var self = this;
+
+        var delayHide = null;// delayHide reference the last setTimeout triggered by the menu item itself
+
+        var a = document.createElement(&apos;a&apos;);
+
+        setHref(a, data.href);
+
+        a.setDisabled = function(){
+            classed(a, &apos;disabled&apos;, ifDisabled(data.disabled));
+        };
+        this._anchors.push(a);
+
+
+        style(a, &apos;width&apos;, this._calc.clickZoneSize.width);
+        style(a, &apos;height&apos;, this._calc.clickZoneSize.height);
+        style(a, &apos;right&apos;, this._calc.clickZoneSize.marginRight);
+        style(a, &apos;bottom&apos;, this._calc.clickZoneSize.marginBottom);
+        style(a, &apos;transform&apos;, &apos;skew(&apos; + -this._calc.skewDeg + &apos;deg) rotate(&apos; + this._calc.unskewDeg + &apos;deg) scale(1)&apos;);
+
+        classed(a, &apos;disabled&apos;, ifDisabled(data.disabled));
+
+
+        var percent = this._config.percent * 100 + &quot;%&quot;;
+        styleSheet(a, &apos;background&apos;, &apos;radial-gradient(transparent &apos; + percent + &apos;, &apos; + this._config.background + &apos; &apos; + percent + &apos;)&apos;);
+        styleSheet(a, &apos;background&apos;, &apos;radial-gradient(transparent &apos; + percent + &apos;, &apos; + this._config.backgroundHover + &apos; &apos; + percent + &apos;)&apos;, &apos;hover&apos;);
+
+
+        function clickCallBack(e, data){
+            if (data.click) data.click.call(this, e, data);
+
+            if(self._config.hideAfterClick){
+                self._cMenu.hide();
+                if(self._cMenu._pMenu) self._cMenu._pMenu.hide();
+                if(subMenu) subMenu.hide();
+            }
+        }
+
+        on(a, &apos;click&apos;, clickCallBack, data);
+
+        parent.appendChild(a);
+
+        this._createHorizontal(a, data, index);
+        
+        
+        //toggle subMenu
+        if (hasSubMenus(data.menus)) {
+            var subMenu = this._createSubMenu(self, data.menus, index);
+
+            on(a, &apos;mouseenter&apos;, function () {
+                delayShow = setTimeout(function () {
+                    subMenu
+                        .styles({
+                                    top: self._container.offsetTop + self._calc.radius + &apos;px&apos;,
+                                    left: self._container.offsetLeft + self._calc.radius + &apos;px&apos;
+                                })
+                        .show();
+                }, 150);
+            });
+
+            on(a, &apos;mouseleave&apos;, function (e) {
+                if (!subMenu._container.contains(e.toElement)) {
+                    delayHide = setTimeout(function () {
+                        subMenu.hide();
+                    }, 200);
+                }
+            });
+
+            on(subMenu._container, &apos;mouseenter&apos;, function () {
+                clearTimeout(delayShow);
+                clearTimeout(delayHide);
+            });
+
+            on(subMenu._container, &apos;mouseleave&apos;, function (e) {
+                if (!a.contains(e.toElement) || e.toElement.children[0] === a) {
+                    subMenu.hide();
+                }
+            });
+        }
+    }
+
+    const sizeRatio = 0.65;
+    const marginTopRatio = 0.2;
+    const fontHeight = 13;
+
+    function hasIcon(icon){
+        if(icon === undefined) return false;
+        else if(typeof icon === &quot;string&quot;) return icon !== &quot;&quot;;
+        else return icon.length &amp;&amp; icon[0] !== &quot;&quot;;
+    }
+
+    function getIcon(icon){
+        return typeof icon === &quot;string&quot;? icon : icon[0];
+    }
+
+    function getIconColor(icon){
+        return typeof icon === &quot;string&quot;? null : icon[1];
+    }
+
+    function createIcon (parent, data, index) {
+        if(!hasIcon(data.icon)) return;
+
+        var span = document.createElement(&apos;span&apos;);
+
+        var icon = getIcon(data.icon),
+            color = getIconColor(data.icon);
+
+        classed(span, icon + &quot; cm-icon&quot;, true);
+        style(span, &apos;color&apos;, color);
+
+        var l = this._calc.clickZoneRadius * sizeRatio - fontHeight + &quot;px&quot;,
+            m = this._calc.clickZoneRadius * marginTopRatio - fontHeight + &quot;px&quot;;
+        style(span, &apos;width&apos;, l);
+        style(span, &apos;height&apos;, l);
+        style(span, &apos;font-size&apos;, l);
+        style(span, &apos;margin-top&apos;, m);
+
+        parent.appendChild(span);
+    }
+
+    const withIconMarginTop = &quot;3px&quot;;
+    const withIconTop = &quot;-3px&quot;;
+
+    function createText (parent, data, index) {
+
+        var span = document.createElement(&apos;span&apos;);
+        span.textContent = data.title;
+
+        classed(span, &apos;text&apos;, true);
+        style(span, &apos;margin-top&apos;, hasIcon(data.icon)? withIconMarginTop : this._calc.textTop);
+        style(span, &apos;top&apos;, hasIcon(data.icon)? withIconTop : 0);
+
+        parent.appendChild(span);
+    }
+
+    function createHorizontal (parent, data, index) {
+
+        var div = document.createElement(&apos;div&apos;);
+        classed(div, &quot;horizontal&quot;, true);
+
+        if(this._config.horizontal) style(div, &apos;transform&apos;, &apos;rotate(&apos;+ this._calc.horizontalDeg(index) +&apos;deg)&apos;);
+
+        parent.appendChild(div);
+
+        this._createIcon(div, data, index);
+        this._createText(div, data, index);
+    }
+
+    function extend$1 () {
+        // Variables
+        var extended = {};
+        var deep = false;
+        var i = 0;
+        var length = arguments.length;
+
+        // Check if a deep merge
+        if (Object.prototype.toString.call(arguments[0]) === &apos;[object Boolean]&apos;) {
+            deep = arguments[0];
+            i++;
+        }
+
+        // Merge the object into the extended object
+        var merge = function (obj) {
+            for (var prop in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                    // If deep merge and property is an object, merge properties
+                    if (deep &amp;&amp; Object.prototype.toString.call(obj[prop]) === &apos;[object Object]&apos;) {
+                        extended[prop] = extend(true, extended[prop], obj[prop]);
+                    } else {
+                        extended[prop] = obj[prop];
+                    }
+                }
+            }
+        };
+
+        // Loop through each object and conduct a merge
+        for (; i &lt; length; i++) {
+            var obj = arguments[i];
+            merge(obj);
+        }
+
+        return extended;
+
+    };
+
+    const sizeRatio$1 = 5 / 3;
+    const percentRatio = 0.45;
+    const centralDegRatio = 0.618;
+
+
+    function createSubMenu(creator, menus, index) {
+        var subMenu = document.createElement(&apos;div&apos;);
+
+        classed(subMenu, &apos;circular-sub-menu&apos;, true);
+
+        this._container.parentNode.insertBefore(subMenu, this._container);
+
+        var totalAngle = this._calc.centralDeg * centralDegRatio * menus.length;
+        var startDeg = this._calc.rotateDeg(index) - totalAngle / 2 + this._calc.centralDeg / 2;
+
+        var config = extend$1(this._config, {
+            totalAngle: totalAngle,//deg,
+            percent: percentRatio,//%
+            diameter: this._config.diameter * sizeRatio$1,//px
+            start: startDeg,//deg
+            animation: &quot;into&quot;,
+            menus: menus
+        });
+        
+        return new CMenu(subMenu, creator._cMenu)
+            .config(config);
+    }
+
+    function Creator(cMenu, config){
+        this._cMenu = cMenu;
+        this._container = cMenu._container;
+        this._config = config;
+        this._calc = new Calculation(config);
+        this._anchors = [];
+    }
+
+
+    Creator.prototype = {
+        constructor: Creator,
+        createMenu: createMenu,
+        _createLists: createLists,
+        _createList: createList,
+        _createAnchor: createAnchor,
+        _createText: createText,
+        _createHorizontal: createHorizontal,
+        _createIcon: createIcon,
+        _createSubMenu: createSubMenu
+    };
+
+    const defaultConfig = {
+        totalAngle: 360,//deg,
+        spaceDeg: 0,//deg
+        background: &quot;#323232&quot;,
+        backgroundHover: &quot;#515151&quot;,
+        pageBackground: &quot;transparent&quot;,
+        percent: 0.32,//%
+        diameter: 300,//px
+        position: &apos;top&apos;,
+        horizontal: true,
+        animation: &quot;into&quot;,
+        hideAfterClick: true
+    };
+
+
+    function config (config) {
+
+        config = extend$1(defaultConfig, config);
+
+        this._creator = new Creator(this, config);
+        this._creator.createMenu();
+
+        return this;
+    }
+
+    function setCoordinate(coordinate){
+        if( !(coordinate instanceof Array) || !(coordinate.length === 2) ) return;
+
+        //TODO verify if has unit
+        style(this._container, &apos;left&apos;, coordinate[0] + &quot;px&quot;);
+        style(this._container, &apos;top&apos;, coordinate[1] + &quot;px&quot;);
+    }
+
+    //check disabled
+
+    function setDisabled(){
+        this._creator._anchors.forEach(function(v){
+            v.setDisabled();
+        });
+    }
+
+    function show (coordinate) {
+
+
+        setDisabled.call(this);
+
+        setCoordinate.call(this, coordinate);
+
+        classed(this._container, &apos;opened-nav&apos;, true);
+        return this;
+    }
+
+    function hide () {
+        classed(this._container, &apos;opened-nav&apos;, false);
+        return this;
+    }
+
+    function styles (styles) {
+        if(!styles instanceof Object) return this;
+        
+        for(var k in styles){
+            if(styles.hasOwnProperty(k)) style(this._container, k, styles[k]);
+        }
+
+        return this;
+    }
+
+    function CMenu(element, pMenu){
+        this._container = element;
+        
+        if(pMenu) this._pMenu = pMenu;
+    }
+
+    CMenu.prototype = {
+        constructor: CMenu,
+        config: config,
+        show: show,
+        hide: hide,
+        styles: styles
+
+    };
+
+    function index (selector) {
+        return typeof selector === &quot;string&quot;
+            ? new CMenu(document.querySelector(selector))
+            : new CMenu(selector);
+    }
+
+    return index;
+
+}));
+//# sourceMappingURL=circular-menu.js.map
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

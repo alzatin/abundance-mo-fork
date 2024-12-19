@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/worker.js | replicad-app-example</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="A simple React app based on replicad."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="replicad-app-example"><meta property="twitter:description" content="A simple React app based on replicad."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js">js</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/BOM.js~BOMEntry.html">BOMEntry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/js/globalvariables.js~GlobalVariables.html">GlobalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convertLinks">convertLinks</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCMenu">createCMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addOrDeletePorts">addOrDeletePorts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fonts">fonts</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-globalVariables">globalVariables</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-licenses">licenses</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-topics">topics</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu">js/circular-menu</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-index">index</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src">js/circular-menu/src</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-CMenu">CMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classed">classed</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-config">config</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hide">hide</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-show">show</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-style">style</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styles">styles</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-window">window</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-creator">js/circular-menu/src/Creator</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createAnchor">createAnchor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createHorizontal">createHorizontal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createIcon">createIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hasIcon">hasIcon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createList">createList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createLists">createLists</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createMenu">createMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createSubMenu">createSubMenu</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createText">createText</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Creator">Creator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-styleSheet">styleSheet</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#js-circular-menu-src-calculation">js/circular-menu/src/calculation</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clickZoneSize">clickZoneSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverRadius">coverRadius</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-coverSize">coverSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Calculation">Calculation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-listSize">listSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-menuSize">menuSize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-rotateDeg">rotateDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startDeg">startDeg</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-textTop">textTop</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-fixedTop">fixedTop</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#molecules">molecules</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/BOM.js~AddBOMTag.html">AddBOMTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/box.js~Box.html">Box</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/circle.js~Circle.html">Circle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/code.js~Code.html">Code</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/color.js~Color.html">Color</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/constant.js~Constant.html">Constant</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/cutlayout.js~CutLayout.html">CutLayout</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/difference.js~Difference.html">Difference</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/equation.js~Equation.html">Equation</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/export.js~Export.html">Export</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extracttag.js~ExtractTag.html">ExtractTag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/extrude.js~Extrude.html">Extrude</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/gcode.js~Gcode.html">Gcode</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/geneticAlgorithm.js~GeneticAlgorithm.html">GeneticAlgorithm</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/githubmolecule.js~GitHubMolecule.html">GitHubMolecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/group.js~Group.html">Group</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/input.js~Input.html">Input</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/intersection.js~Intersection.html">Intersection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/join.js~Join.html">Join</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/loft.js~ShrinkWrap.html">ShrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/molecule.js~Molecule.html">Molecule</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/move.js~Move.html">Move</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/nest.js~Nest.html">Nest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/output.js~Output.html">Output</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/readme.js~Readme.html">Readme</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rectangle.js~Rectangle.html">Rectangle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/regularPolygon.js~RegularPolygon.html">RegularPolygon</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/rotate.js~Rotate.html">Rotate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/shrinkWrap.js~shrinkWrap.html">shrinkWrap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/tag.js~Tag.html">Tag</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/molecules/text.js~Text.html">Text</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#prototypes">prototypes</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/attachmentpoint.js~AttachmentPoint.html">AttachmentPoint</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/prototypes/connector.js~Connector.html">Connector</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/worker.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import opencascade from &quot;replicad-opencascadejs/src/replicad_single.js&quot;;
+import opencascadeWasm from &quot;replicad-opencascadejs/src/replicad_single.wasm?url&quot;;
+import * as replicad from &quot;replicad&quot;;
+import { expose, proxy } from &quot;comlink&quot;;
+import { Plane, Solid } from &quot;replicad&quot;;
+import shrinkWrap from &quot;replicad-shrink-wrap&quot;;
+import { addSVG, drawSVG } from &quot;replicad-decorate&quot;;
+import Fonts from &quot;./js/fonts.js&quot;;
+import { AnyNest, FloatPolygon } from &quot;any-nest&quot;;
+import { re } from &quot;mathjs&quot;;
+
+var library = {};
+
+// This is the logic to load the web assembly code into replicad
+let loaded = false;
+const init = async () =&gt; {
+  if (loaded) return Promise.resolve(true);
+
+  const OC = await opencascade({
+    locateFile: () =&gt; opencascadeWasm,
+  });
+
+  loaded = true;
+  replicad.setOC(OC);
+
+  return true;
+};
+const started = init();
+
+console.log(&quot;Replicad Module:&quot;);
+console.log(replicad);
+
+/**
+ * A function which converts any input into Abundance style geometry. Input can be a library ID, an abundance object, or a single geometry object.
+ * This is useful for allowing our functions to work within the Code atom or within the flow canvas.
+ */
+function toGeometry(input) {
+  //If the input is a library ID we look it up
+  if (typeof input === &quot;number&quot;) {
+    return library[input];
+  }
+  //If the input is already an abundance object we return it
+  else if (input.geometry) {
+    return input;
+  }
+  //Else we build an abundance object from the input
+  else {
+    return {
+      geometry: [input],
+      tags: [],
+      color: &quot;#FF9065&quot;,
+      bom: [],
+    };
+  }
+}
+
+/**
+ * A function to generate a unique ID value.
+ */
+function generateUniqueID() {
+  const dateString = new Date().getTime();
+  const randomness = Math.floor(Math.random() * 1000);
+  const newID = dateString + randomness;
+  return newID;
+}
+
+/**
+ * A function that deletes a geometry from the library.
+ */
+function deleteFromLibrary(inputID) {
+  return started.then(() =&gt; {
+    delete library[inputID];
+  });
+}
+
+function createMesh(thickness) {
+  return started.then(() =&gt; {
+    // This is how you get the data structure that the replica-three-helper
+    // can synchronize with three BufferGeometry
+    return [];
+  });
+}
+
+function circle(id, diameter) {
+  return started.then(() =&gt; {
+    const newPlane = new Plane().pivot(0, &quot;Y&quot;);
+    library[id] = {
+      geometry: [replicad.drawCircle(diameter / 2)],
+      tags: [],
+      plane: newPlane,
+      color: &quot;#FF9065&quot;,
+      bom: [],
+    };
+    return true;
+  });
+}
+
+function rectangle(id, x, y) {
+  return started.then(() =&gt; {
+    const newPlane = new Plane().pivot(0, &quot;Y&quot;);
+    library[id] = {
+      geometry: [replicad.drawRectangle(x, y)],
+      tags: [],
+      plane: newPlane,
+      color: &quot;#FF9065&quot;,
+      bom: [],
+    };
+    return true;
+  });
+}
+
+function regularPolygon(id, radius, numberOfSides) {
+  return started.then(() =&gt; {
+    const newPlane = new Plane().pivot(0, &quot;Y&quot;);
+    library[id] = {
+      geometry: [replicad.drawPolysides(radius, numberOfSides)],
+      tags: [],
+      plane: newPlane,
+      color: &quot;#FF9065&quot;,
+      bom: [],
+    };
+    return true;
+  });
+}
+async function text(id, text, fontSize, fontFamily) {
+  await replicad
+    .loadFont(Fonts[fontFamily])
+    .then(() =&gt; console.log(&quot;Font loaded&quot;))
+    .catch((err) =&gt; console.error(&quot;Error loading font: &quot;, err));
+
+  return started.then(() =&gt; {
+    const newPlane = new Plane().pivot(0, &quot;Y&quot;);
+
+    const textGeometry = replicad.drawText(text, {
+      startX: 0,
+      startY: 0,
+      fontSize: fontSize,
+      font: fontFamily,
+    });
+    library[id] = {
+      geometry: [textGeometry],
+      tags: [],
+      plane: newPlane,
+      color: &quot;#FF9065&quot;,
+      bom: [],
+    };
+    return true;
+  });
+}
+
+function loftShapes(targetID, inputsIDs) {
+  return started.then(() =&gt; {
+    let arrayOfSketchedGeometry = [];
+
+    inputsIDs.forEach((inputID) =&gt; {
+      if (is3D(library[inputID])) {
+        throw new Error(&quot;Parts to be lofted must be sketches&quot;);
+      }
+      let partToLoft = digFuse(library[inputID]);
+      let sketchedpart = partToLoft.sketchOnPlane(library[inputID].plane);
+      if (!sketchedpart.sketches) {
+        arrayOfSketchedGeometry.push(sketchedpart);
+      } else {
+        throw new Error(&quot;Sketches to be lofted can&apos;t have interior geometries&quot;);
+      }
+    });
+    let startGeometry = arrayOfSketchedGeometry.shift();
+    const newPlane = new Plane().pivot(0, &quot;Y&quot;);
+
+    library[targetID] = {
+      geometry: [startGeometry.loftWith([...arrayOfSketchedGeometry])],
+      tags: [],
+      plane: newPlane,
+      color: &quot;#FF9065&quot;,
+      bom: [],
+    };
+    return true;
+  });
+}
+
+function extrude(targetID, inputID, height) {
+  return started.then(() =&gt; {
+    library[targetID] = actOnLeafs(library[inputID], (leaf) =&gt; {
+      return {
+        geometry: [
+          leaf.geometry[0].clone().sketchOnPlane(leaf.plane).extrude(height),
+        ],
+        tags: leaf.tags,
+        plane: leaf.plane,
+        color: leaf.color,
+        bom: leaf.bom,
+      };
+    });
+    return true;
+  });
+}
+
+/* function to check if shape has mesh*/
+function is3D(inputs) {
+  // if it&apos;s an assembly assume it&apos;s 3d since our assemblies don&apos;t work for drawings right now
+  if (isAssembly(inputs)) {
+    return inputs.geometry.some((input) =&gt; is3D(input));
+  } else if (inputs.geometry[0].mesh !== undefined) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function move(targetID, inputID, x, y, z) {
+  return started.then(() =&gt; {
+    if (is3D(library[inputID])) {
+      library[targetID] = actOnLeafs(library[inputID], (leaf) =&gt; {
+        return {
+          geometry: [leaf.geometry[0].clone().translate(x, y, z)],
+          plane: leaf.plane,
+          tags: leaf.tags,
+          color: leaf.color,
+          bom: leaf.bom,
+        };
+      });
+    } else {
+      library[targetID] = actOnLeafs(
+        library[inputID],
+        (leaf) =&gt; {
+          return {
+            geometry: [leaf.geometry[0].clone().translate([x, y])],
+            tags: leaf.tags,
+            plane: leaf.plane.translate([0, 0, z]),
+            color: leaf.color,
+            bom: leaf.bom,
+          };
+        },
+        library[inputID].plane.translate([0, 0, z])
+      );
+    }
+    return true;
+  });
+}
+
+/**
+ * Function to rotate a geometry around the x, y, and z axis
+ * @param {string} inputGeometry - The geometry to rotate. Can be any type
+ * @param {number} x - The angle to rotate around the x axis
+ * @param {number} y - The angle to rotate around the y axis
+ * @param {number} z - The angle to rotate around the z axis
+ * @param {string} targetID - The ID to store the result in. If it undefined the result will be returned instead
+ * @returns {object} - The rotated geometry
+ **/
+function rotate(inputGeometry, x, y, z, targetID = null) {
+  let input = toGeometry(inputGeometry);
+  return started.then(() =&gt; {
+    if (is3D(input)) {
+      let result = actOnLeafs(input, (leaf) =&gt; {
+        return {
+          geometry: [
+            leaf.geometry[0]
+              .clone()
+              .rotate(x, [0, 0, 0], [1, 0, 0])
+              .rotate(y, [0, 0, 0], [0, 1, 0])
+              .rotate(z, [0, 0, 0], [0, 0, 1]),
+          ],
+          tags: leaf.tags,
+          plane: leaf.plane,
+          color: leaf.color,
+          bom: leaf.bom,
+        };
+      });
+      if (targetID) {
+        library[targetID] = result;
+      } else {
+        return result;
+      }
+    } else {
+      let result = actOnLeafs(toGeometry(inputGeometry), (leaf) =&gt; {
+        return {
+          geometry: [leaf.geometry[0].clone().rotate(z, [0, 0, 0], [0, 0, 1])],
+          tags: leaf.tags,
+          plane: leaf.plane.pivot(x, &quot;X&quot;).pivot(y, &quot;Y&quot;),
+          color: leaf.color,
+          bom: leaf.bom,
+        };
+      });
+      if (targetID) {
+        library[targetID] = result;
+        //library[inputID].plane.pivot(x, &quot;X&quot;).pivot(y, &quot;Y&quot;); //@Alzatin what is this line for?
+      } else {
+        return result;
+      }
+    }
+  });
+}
+
+function difference(targetID, input1ID, input2ID) {
+  return started.then(() =&gt; {
+    let cutTemplate;
+
+    if (
+      (is3D(library[input1ID]) &amp;&amp; is3D(library[input2ID])) ||
+      (!is3D(library[input1ID]) &amp;&amp; !is3D(library[input2ID]))
+    ) {
+      cutTemplate = digFuse(library[input2ID]);
+
+      library[targetID] = actOnLeafs(library[input1ID], (leaf) =&gt; {
+        return {
+          geometry: [leaf.geometry[0].clone().cut(cutTemplate)],
+          tags: leaf.tags,
+          color: leaf.color,
+          plane: leaf.plane,
+          bom: leaf.bom,
+        };
+      });
+    } else {
+      throw new Error(&quot;Both inputs must be either 3D or 2D&quot;);
+    }
+    return true;
+  });
+}
+
+function shrinkWrapSketches(targetID, inputIDs) {
+  return started.then(() =&gt; {
+    let BOM = [];
+    if (inputIDs.every((inputID) =&gt; !is3D(library[inputID]))) {
+      let inputsToFuse = [];
+      inputIDs.forEach((inputID) =&gt; {
+        let fusedInput = digFuse(library[inputID]);
+        inputsToFuse.push(fusedInput);
+        if (fusedInput.innerShape.blueprints) {
+          throw new Error(
+            &quot;Sketches to be lofted can&apos;t have interior geometries&quot;
+          );
+        }
+        BOM.push(library[inputID].bom);
+      });
+      let geometryToWrap = chainFuse(inputsToFuse);
+      const newPlane = new Plane().pivot(0, &quot;Y&quot;);
+      library[targetID] = {
+        geometry: [shrinkWrap(geometryToWrap, 50)],
+        tags: [],
+        color: &quot;#FF9065&quot;,
+        plane: newPlane,
+        bom: BOM,
+      };
+      return true;
+    } else {
+      throw new Error(&quot;All inputs must be sketches&quot;);
+    }
+  });
+}
+
+function intersect(targetID, input1ID, input2ID) {
+  return started.then(() =&gt; {
+    library[targetID] = actOnLeafs(library[input1ID], (leaf) =&gt; {
+      const shapeToIntersectWith = digFuse(library[input2ID]);
+      return {
+        geometry: [leaf.geometry[0].clone().intersect(shapeToIntersectWith)],
+        tags: leaf.tags,
+        color: leaf.color,
+        plane: leaf.plane,
+        bom: leaf.bom,
+      };
+    });
+    return true;
+  });
+}
+
+function tag(targetID, inputID, TAG) {
+  return started.then(() =&gt; {
+    library[targetID] = {
+      geometry: library[inputID].geometry,
+      bom: library[inputID].bom,
+      tags: [...TAG, ...library[inputID].tags],
+      color: library[inputID].color,
+      plane: library[inputID].plane,
+    };
+    return true;
+  });
+}
+
+//---------------------Functions for the code atom---------------------
+
+/**
+ * A wrapper for the rotate function to allow it to be Rotate and used in the Code atom
+ */
+async function Rotate(input, x, y, z) {
+  try {
+    const rotatedGeometry = await rotate(input, x, y, z);
+    return rotatedGeometry;
+  } catch (error) {
+    console.error(&quot;Error rotating geometry:&quot;, error);
+    throw error;
+  }
+}
+
+/**
+ * A wrapper for the assembly function to allow it to be Assembly and used in the Code atom
+ */
+async function Assembly(inputs) {
+  try {
+    const assembledGeometry = await assembly(inputs);
+    return assembledGeometry;
+  } catch (error) {
+    console.error(&quot;Error assembling geometry:&quot;, error);
+    throw error;
+  }
+}
+
+// Runs the user entered code in the worker thread and returns the result.
+async function code(targetID, code, argumentsArray) {
+  await started;
+  let keys1 = [&quot;Rotate&quot;, &quot;Assembly&quot;];
+  let inputValues = [Rotate, Assembly];
+  for (const [key, value] of Object.entries(argumentsArray)) {
+    keys1.push(`${key}`);
+    inputValues.push(value);
+  }
+
+  // revisit this eval/ Is this the right/safest way to do this?
+  var result = await eval(
+    &quot;(async (&quot; +
+      keys1.join(&quot;,&quot;) +
+      &quot;) =&gt; {&quot; +
+      code +
+      &quot;})(&quot; +
+      inputValues.join(&quot;,&quot;) +
+      &quot;)&quot;
+  );
+
+  library[targetID] = result;
+
+  // If the type of the result is a number return the number so it can be passed to the next atom
+  if (typeof result === &quot;number&quot;) {
+    return result;
+  } else {
+    return true;
+  }
+}
+
+function color(targetID, inputID, color) {
+  return started.then(() =&gt; {
+    library[targetID] = actOnLeafs(library[inputID], (leaf) =&gt; {
+      // keep out color add tag
+      if (color == &quot;#D9544D&quot;) {
+        leaf.tags.push(&quot;keepout&quot;);
+      }
+      return {
+        geometry: leaf.geometry,
+        tags: [...leaf.tags],
+        color: color,
+        bom: leaf.bom,
+        plane: leaf.plane,
+      };
+    });
+  });
+}
+
+function bom(targetID, inputID, BOM) {
+  return started.then(() =&gt; {
+    if (library[inputID].bom != []) {
+      BOM = [...library[inputID].bom, BOM];
+    }
+    library[targetID] = {
+      geometry: library[inputID].geometry,
+      tags: [...library[inputID].tags],
+      bom: BOM,
+      color: library[inputID].color,
+    };
+    return true;
+  });
+}
+
+function extractTag(targetID, inputID, TAG) {
+  return started.then(() =&gt; {
+    let taggedGeometry = extractTags(library[inputID], TAG);
+    if (taggedGeometry != false) {
+      library[targetID] = {
+        bom: taggedGeometry.bom,
+        geometry: taggedGeometry.geometry,
+        tags: taggedGeometry.tags,
+        color: taggedGeometry.color,
+      };
+    } else {
+      throw new Error(&quot;Tag not found&quot;);
+    }
+
+    return true;
+  });
+}
+
+function output(targetID, inputID) {
+  return started.then(() =&gt; {
+    if (library[inputID] != undefined) {
+      library[targetID] = library[inputID];
+    } else {
+      throw new Error(&quot;Nothing is connected to the output&quot;);
+    }
+
+    return true;
+  });
+}
+
+function molecule(targetID, inputID) {
+  return started.then(() =&gt; {
+    if (library[inputID] != undefined) {
+      library[targetID] = library[inputID];
+    } else {
+      throw new Error(&quot;output ID is undefined&quot;);
+    }
+    return true;
+  });
+}
+
+/** Function that extracts geometry with BOM tags and returns bomItems*/
+function extractBomList(inputID) {
+  if (library[inputID].bom !== undefined) {
+    return library[inputID].bom;
+  } else {
+    return false;
+  }
+}
+
+/** Visualize STL or STEP*/
+function visExport(targetID, inputID, fileType) {
+  return started.then(() =&gt; {
+    let geometryToExport = extractKeepOut(library[inputID]);
+    let fusedGeometry = digFuse(geometryToExport);
+    let displayColor =
+      fileType == &quot;STL&quot;
+        ? &quot;#91C8D5&quot;
+        : fileType == &quot;STEP&quot;
+        ? &quot;#ACAFDD&quot;
+        : &quot;#3C3C3C&quot;;
+    let finalGeometry;
+    if (fileType == &quot;SVG&quot;) {
+      /** Fuses input geometry, draws a top view projection*/
+      if (is3D(library[inputID])) {
+        finalGeometry = [replicad.drawProjection(fusedGeometry, &quot;top&quot;).visible];
+      } else {
+        finalGeometry = [fusedGeometry];
+      }
+    } else {
+      finalGeometry = [fusedGeometry];
+    }
+    library[targetID] = {
+      geometry: finalGeometry,
+      color: displayColor,
+      plane: library[inputID].plane,
+    };
+    return true;
+  });
+}
+
+/** down STL*/
+function downExport(ID, fileType, svgResolution, units) {
+  return started.then(() =&gt; {
+    let scaleUnit = units == &quot;Inches&quot; ? 1 : units == &quot;MM&quot; ? 25.4 : 1;
+    if (fileType == &quot;SVG&quot;) {
+      let svg = library[ID].geometry[0]
+        .scale(svgResolution / scaleUnit)
+        .toSVG(svgResolution / scaleUnit);
+      var blob = new Blob([svg], { type: &quot;image/svg+xml;charset=utf-8&quot; });
+
+      return blob;
+    } else if (fileType == &quot;STL&quot;) {
+      return library[ID].geometry[0].clone().blobSTL();
+    } else {
+      return library[ID].geometry[0].clone().blobSTEP();
+    }
+  });
+}
+
+async function importingSTEP(targetID, file) {
+  let STEPresult = await replicad.importSTEP(file);
+
+  library[targetID] = {
+    geometry: [STEPresult],
+    tags: [],
+    color: &quot;#FF9065&quot;,
+    bom: [],
+  };
+  return true;
+}
+
+async function importingSTL(targetID, file) {
+  let STLresult = await replicad.importSTL(file);
+
+  library[targetID] = {
+    geometry: [STLresult],
+    tags: [],
+    color: &quot;#FF9065&quot;,
+    bom: [],
+  };
+  return true;
+}
+
+async function importingSVG(targetID, svg, width) {
+  const baseWidth = width + width * 0.05;
+  const baseShape = drawRectangle(baseWidth, baseWidth)
+    .sketchOnPlane()
+    .extrude(1);
+  const svgString = svg;
+
+  /* Add svg to face, consider bringing back if we are ever able to choose faces or want to add pattern to face
+  addSVG(baseShape, {
+    faceIndex: 5,
+    depth: depth,
+    svgString: svgString,
+    width: width,
+  })*/
+  library[targetID] = {
+    geometry: [drawSVG(svgString, { width: width })],
+    tags: [],
+    color: &quot;#FF9065&quot;,
+    bom: [],
+  };
+  return true;
+}
+
+const prettyProjection = (shape) =&gt; {
+  const bbox = shape.boundingBox;
+  const center = bbox.center;
+  const corner = [
+    bbox.center[0] + bbox.width,
+    bbox.center[1] - bbox.height,
+    bbox.center[2] + bbox.depth,
+  ];
+  const camera = new replicad.ProjectionCamera(corner).lookAt(center);
+  const { visible, hidden } = replicad.drawProjection(shape, camera);
+
+  return { visible, hidden };
+};
+
+function generateThumbnail(inputID) {
+  return started.then(() =&gt; {
+    if (library[inputID] != undefined) {
+      let fusedGeometry;
+      let projectionShape;
+      let svg;
+      if (is3D(library[inputID])) {
+        fusedGeometry = digFuse(library[inputID]);
+        projectionShape = prettyProjection(fusedGeometry);
+        svg = projectionShape.visible.toSVG();
+      } else {
+        fusedGeometry = digFuse(library[inputID])
+          .sketchOnPlane(&quot;XY&quot;)
+          .extrude(0.0001);
+        projectionShape = replicad.drawProjection(fusedGeometry, &quot;top&quot;).visible;
+        svg = projectionShape.toSVG();
+      }
+      //let hiddenSvg = projectionShape.hidden.toSVGPaths();
+      return svg;
+    } else {
+      throw new Error(&quot;can&apos;t generate thumbnail for undefined geometry&quot;);
+    }
+  });
+}
+
+function extractTags(inputGeometry, TAG) {
+  if (inputGeometry.tags.includes(TAG)) {
+    return inputGeometry;
+  } else if (isAssembly(inputGeometry)) {
+    let geometryWithTags = [];
+    inputGeometry.geometry.forEach((subAssembly) =&gt; {
+      let extractedGeometry = extractTags(subAssembly, TAG);
+
+      if (extractedGeometry != false) {
+        geometryWithTags.push(extractedGeometry);
+      }
+    });
+    if (geometryWithTags.length &gt; 0) {
+      let thethingtoreturn = {
+        geometry: geometryWithTags,
+        tags: inputGeometry.tags,
+        color: inputGeometry.color,
+        bom: inputGeometry.bom,
+      };
+      return thethingtoreturn;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+function extractKeepOut(inputGeometry) {
+  if (inputGeometry.tags.includes(&quot;keepout&quot;)) {
+    return false;
+  } else if (isAssembly(inputGeometry)) {
+    let geometryNoKeepOut = [];
+    inputGeometry.geometry.forEach((subAssembly) =&gt; {
+      let extractedGeometry = extractKeepOut(subAssembly, &quot;keepout&quot;);
+
+      if (extractedGeometry != false) {
+        geometryNoKeepOut.push(extractedGeometry);
+      }
+    });
+    if (geometryNoKeepOut.length &gt; 0) {
+      let thethingtoreturn = {
+        geometry: geometryNoKeepOut,
+        tags: inputGeometry.tags,
+        color: inputGeometry.color,
+        bom: inputGeometry.bom,
+      };
+      return thethingtoreturn;
+    } else {
+      return false;
+    }
+  } else {
+    return inputGeometry;
+  }
+}
+
+/**
+ * @param progressCallback - a function which takes two parameters:
+ *    - progress - 0 to 1 inclusive
+ *    - cancelationHandle - a callable which cancels this task.
+ * @param {*} layoutConfig - dictionary with keys:
+ *    - thickness - thickness of the stock material
+ *    - width
+ *    - height - together with width specifies the demensions of the stock material
+ *    - sheetPadding - space from the edge of the material where no parts will be placed
+ *    - partPadding - space between parts in the resulting placement
+ */
+function layout(
+  targetID,
+  inputID,
+  TAG,
+  progressCallback,
+  placementsCallback,
+  layoutConfig
+) {
+  return started.then(() =&gt; {
+    var shapesForLayout = rotateForLayout(targetID, inputID, TAG, layoutConfig);
+
+    let positionsPromise = computePositions(
+      shapesForLayout,
+      progressCallback,
+      placementsCallback,
+      layoutConfig
+    );
+    return positionsPromise.then((positions) =&gt; {
+      let warning;
+      if (positions.length == 0) {
+        warning = &quot;Failed to place any parts. Are sheet dimensions right?&quot;;
+      } else {
+        let unplacedParts = shapesForLayout.length - positions.flat().length;
+        if (unplacedParts &gt; 0) {
+          warning =
+            unplacedParts +
+            &quot; parts are too big to fit on this sheet size. Failed layout for &quot; +
+            unplacedParts +
+            &quot; part(s)&quot;;
+        }
+      }
+
+      //This does the actual layout of the parts. We want to break this out into it&apos;s own function which can be passed a list of positions
+      applyLayout(targetID, inputID, positions, TAG, layoutConfig);
+      return warning;
+    });
+  });
+}
+
+/**
+ * Lay the input geometry flat and apply the transformations to display it
+ */
+function displayLayout(targetID, inputID, positions, TAG, layoutConfig) {
+  rotateForLayout(targetID, inputID, TAG, layoutConfig);
+
+  applyLayout(targetID, inputID, positions, TAG, layoutConfig);
+}
+
+/**
+ * Rotate shapes to be placed on their most cuttable face (basically lay them flat)
+ */
+function rotateForLayout(targetID, inputID, TAG, layoutConfig) {
+  var THICKNESS_TOLLERANCE = 0.001;
+
+  let taggedGeometry = extractTags(library[inputID], TAG);
+  if (!taggedGeometry) {
+    throw new Error(&quot;No Upstream Geometries Tagged for Cut&quot;);
+  }
+  let localId = 0;
+  let shapesForLayout = [];
+
+  //Split apart disjoint geometry into assemblies so they can be placed seperately
+  // let splitGeometry = actOnLeafs(taggedGeometry, disjointGeometryToAssembly);
+
+  // console.log(splitGeometry);
+
+  // Rotate all shapes to be most cuttable.
+  library[targetID] = actOnLeafs(taggedGeometry, (leaf) =&gt; {
+    // For each face, consider it as the underside of the shape on the CNC bed.
+    // In order to be considered, a face must be...
+    //  1) a flat PLANE, not a cylander, or sphere or other curved face type.
+    //  2) the thickness of the part normal to this plane must be less than or equal to
+    //     the raw material thickness
+    //  3) there must be no parts of the shape which protrude &quot;below&quot; this face
+    let candidates = [];
+    let hasFlatFace = false;
+    let faceIndex = 0;
+    leaf.geometry[0].faces.forEach((face) =&gt; {
+      if (face.geomType == &quot;PLANE&quot;) {
+        hasFlatFace = true;
+        let prospectiveGoem = moveFaceToCuttingPlane(leaf.geometry[0], face);
+        let thickness = prospectiveGoem.boundingBox.depth;
+        if (thickness &lt; layoutConfig.thickness + THICKNESS_TOLLERANCE) {
+          // Check for protrusions &quot;below&quot; the bottom of the raw material.
+          if (
+            prospectiveGoem.boundingBox.bounds[0][2] &gt;
+            -1 * THICKNESS_TOLLERANCE
+          ) {
+            candidates.push({
+              face: face,
+              geom: prospectiveGoem,
+              faceIndex: faceIndex,
+            });
+          }
+        }
+      }
+      faceIndex++;
+    });
+
+    let selected;
+    if (candidates.length == 0) {
+      if (!hasFlatFace) {
+        // TODO: how to specify which upstream object? We know which leaf we&apos;re dealing with here
+        // but I&apos;m not sure how to back-track that to alerting on the relevant atom or
+        // providing a user visible indication of which geom is the problem.
+        throw new Error(&quot;Upstream object uncuttable, has no flat face&quot;);
+      } else {
+        throw new Error(&quot;Upstream object too thick for specified material&quot;);
+      }
+    } else if (candidates.length == 1) {
+      selected = candidates[0];
+    } else {
+      // The candidate selection here doesn&apos;t guarantee a printable piece. In particular there
+      // are shapes with overhangs which we cannot easily detect.
+      // These tie-break heuristics are designed to usually pick a printable orientation for
+      // this piece. (TODO) However, we should consider allowing user-modification of these
+      // orientations before the packing stage.
+
+      // Filter out faces with extra interiorWires, as these may indicate carve-outs which will
+      // be unreachable on the underside of the sheet.
+      let minInteriorWires = Math.min(
+        ...candidates.map((c) =&gt; {
+          return c.face.clone().innerWires().length;
+        })
+      );
+      candidates = candidates.filter((c) =&gt; {
+        return c.face.clone().innerWires().length === minInteriorWires;
+      });
+      if (candidates.length === 1) {
+        selected = candidates[0];
+      }
+
+      // prefer candidates whose thickness is equal to material thickness, if any.
+      let temp = candidates.filter((c) =&gt; {
+        return (
+          Math.abs(c.geom.boundingBox.depth - layoutConfig.thickness) &lt;
+          THICKNESS_TOLLERANCE
+        );
+      });
+      if (temp.length &gt; 0) {
+        candidates = temp;
+      }
+
+      // Pick the largest of the remaining candidates (note: it&apos;s not trivial to calculate area, so here we
+      // just compare bounding boxes)
+      let maxArea = 0;
+      candidates.forEach((c) =&gt; {
+        if (areaApprox(c.face.UVBounds) &gt; maxArea) {
+          maxArea = areaApprox(c.face.UVBounds);
+          selected = c;
+        }
+      });
+    }
+    let newLeaf = {
+      geometry: [selected.geom],
+      id: localId,
+      referencePoint: selected.face.center,
+      tags: leaf.tags,
+      color: leaf.color,
+      plane: leaf.plane,
+      bom: leaf.bom,
+    };
+    // Retrieve face from the re-positioned shape so that we get the shape of the face after
+    // it&apos;s been moved to the xy cutting plane. Otherwise we can get weird skewed projections
+    // of the face shape.
+    shapesForLayout.push({
+      id: localId,
+      shape: newLeaf.geometry[0].faces[selected.faceIndex],
+    });
+    localId++;
+
+    return newLeaf;
+  });
+  return shapesForLayout;
+}
+
+/**
+ * Apply the transformations to the geometry to apply the layout
+ */
+function applyLayout(targetID, inputID, positions, TAG, layoutConfig) {
+  library[targetID] = actOnLeafs(
+    extractTags(library[targetID], TAG),
+    (leaf) =&gt; {
+      let transform, index;
+      for (var i = 0; i &lt; positions.length; i++) {
+        let candidates = positions[i].filter(
+          (transform) =&gt; transform.id == leaf.id
+        );
+        if (candidates.length == 1) {
+          transform = candidates[0];
+          index = i;
+          break;
+        } else if (candidates.length &gt; 1) {
+          console.warn(&quot;Found more than one transformation for same id&quot;);
+        }
+      }
+      if (transform == undefined) {
+        console.log(&quot;didn&apos;t find transform for id: &quot; + leaf.id);
+        return undefined;
+      }
+      // apply rotation first. All rotations are around (0, 0, 0)
+      // Additionally, shift by sheet-index * sheet height so that multiple
+      // sheet layouts are spaced out from one another.
+      let newGeom = leaf.geometry[0]
+        .clone()
+        .rotate(
+          transform.rotate,
+          new replicad.Vector([0, 0, 0]),
+          new replicad.Vector([0, 0, 1])
+        )
+        .translate(
+          transform.translate.x,
+          transform.translate.y + i * layoutConfig.height,
+          0
+        );
+
+      return {
+        geometry: [newGeom],
+        tags: leaf.tags,
+        color: leaf.color,
+        plane: leaf.plane,
+        bom: leaf.bom,
+      };
+    }
+  );
+}
+
+/**
+ * Use the packing engine, note this is potentially time consuming step. FIXME: Can this be moved into a different worker?
+ */
+function computePositions(
+  shapesForLayout,
+  progressCallback,
+  placementsCallback,
+  layoutConfig
+) {
+  const populationSize = 5;
+  const nestingEngine = new AnyNest();
+  const tolerance = 0.1;
+
+  // include tolerance * 2 to ensure padding is the minimum spacing between parts.
+  const configWithDefaults = nestingEngine.config({
+    spacing: layoutConfig.partPadding + tolerance * 2,
+    binSpacing: layoutConfig.sheetPadding,
+    populationSize: populationSize,
+    exploreConcave: false, // we eventually want this to be true, but it&apos;s unsupported right now
+  });
+  nestingEngine.setBin(
+    FloatPolygon.fromPoints(
+      [
+        { x: 0, y: 0 },
+        { x: layoutConfig.width, y: 0 },
+        { x: layoutConfig.width, y: layoutConfig.height },
+        { x: 0, y: layoutConfig.height },
+      ],
+      &quot;bin&quot;
+    )
+  );
+
+  let parts = [];
+
+  shapesForLayout.forEach((shape) =&gt; {
+    let face = shape.shape;
+    const mesh = face
+      .clone()
+      .outerWire()
+      .meshEdges({ tolerance: 0.5, angularTolerance: 5 }); //The tolerance here is described in the conversation here https://github.com/BarbourSmith/Abundance/pull/173
+    const points = preparePoints(mesh, tolerance); // TOOD: it&apos;s not actually clear that this tolerance should be the same..
+    parts.push(FloatPolygon.fromPoints(points, shape.id));
+  });
+  nestingEngine.setParts(parts);
+
+  console.log(
+    &quot;Starting nesting task with configuration: &quot; +
+      JSON.stringify(configWithDefaults)
+  );
+  let callbackCounter = 0;
+  const targetGenerations = 5;
+  return new Promise((resolve, reject) =&gt; {
+    try {
+      nestingEngine.start(
+        (num) =&gt; {
+          const fraction = 1 / (targetGenerations * populationSize);
+          // start at 0.1 to acknowledge the rotation computations which happed above.
+          progressCallback(
+            0.1 + 0.9 * (num + callbackCounter) * fraction,
+            proxy(() =&gt; {
+              nestingEngine.stop();
+            })
+          );
+        },
+        (placement, utilization) =&gt; {
+          callbackCounter++;
+          if (callbackCounter &gt;= targetGenerations * populationSize) {
+            console.log(
+              &quot;nesting search completed &quot; +
+                targetGenerations +
+                &quot; generations. Final result: &quot; +
+                JSON.stringify(placement)
+            );
+            placementsCallback(placement);
+            nestingEngine.stop();
+            resolve(placement);
+          }
+        }
+      );
+    } catch (err) {
+      console.log(&quot;error in nesting engine: &quot; + err);
+      nestingEngine.stop();
+      reject(err);
+    }
+  });
+}
+
+// from the mesh format of [x1, y1, z1, x2, y2, z2, ...] to FloatPolygon friendly format of
+// [{x: x1, y: y1}, {x: x2, y: y2}...]
+function preparePoints(mesh, tolerance) {
+  // Unfortunately the &quot;edges&quot; of this mesh aren&apos;t always in sequential order. Here we re-sort them so we can
+  // pass the points into FloatPolygon in a looping order, ie, starting at one point and looping around the
+  // perimiter of the shape.
+
+  // create structure for lookup of line segments by start point or end point
+  let edgeStarts = [];
+  mesh.edgeGroups.forEach((edge) =&gt; {
+    edgeStarts.push({
+      startPoint: {
+        x: mesh.lines[edge.start * 3],
+        y: mesh.lines[edge.start * 3 + 1],
+      },
+      start: edge.start * 3,
+      len: edge.count,
+      edgeId: edge.edgeId,
+    });
+    const endIndex = (edge.start + edge.count - 1) * 3;
+    edgeStarts.push({
+      startPoint: { x: mesh.lines[endIndex], y: mesh.lines[endIndex + 1] },
+      start: endIndex,
+      len: -1 * edge.count,
+      edgeId: edge.edgeId,
+    });
+  });
+
+  const almostEqual = (p1, p2) =&gt; {
+    const x = Math.abs(p1.x - p2.x) &lt; tolerance;
+    const y = Math.abs(p1.y - p2.y) &lt; tolerance;
+    return x &amp;&amp; y;
+  };
+
+  const result = [];
+  let currentEdge = edgeStarts[0];
+  while (edgeStarts.length &gt; 0) {
+    // add currentEdge to result. Remember, it could be reverse direction if we matched
+    // an endpoint.
+    for (var i = 1; i &lt; Math.abs(currentEdge.len); i++) {
+      // skip start point
+      let offset = i * 3;
+      if (currentEdge.len &lt; 0) {
+        offset = -1 * offset;
+      }
+      const index = currentEdge.start + offset;
+      result.push({ x: mesh.lines[index], y: mesh.lines[index + 1] });
+    }
+
+    // Remove this edge and it&apos;s inverse from the lookup table.
+    edgeStarts = edgeStarts.filter((edge) =&gt; {
+      return edge.edgeId != currentEdge.edgeId;
+    });
+
+    // else find next edge which starts where current result ends.
+    const nextEgdes = edgeStarts.filter((edge) =&gt; {
+      return almostEqual(result[result.length - 1], edge.startPoint);
+    });
+
+    if (edgeStarts.length &gt; 0 &amp;&amp; nextEgdes.length != 1) {
+      // console.log(result);
+      // console.log(edgeStarts);
+      // console.log(nextEgdes);
+      throw new Error(
+        &quot;Geometry error when preparing for cutlayout. Part perimiter has an edge with: &quot; +
+          nextEgdes.length +
+          &quot; continuations&quot;
+      );
+    }
+    currentEdge = nextEgdes[0];
+  }
+  return result;
+}
+
+function moveFaceToCuttingPlane(geom, face) {
+  let pointOnSurface = face.pointOnSurface(0, 0);
+  let faceNormal = face.normalAt();
+
+  // Always use &quot;XY&quot; plane as the cutting surface
+  // TODO(tristan): there&apos;s an inversion here I don&apos;t fully understand, hence using the negative Z vector.
+  let cutPlaneNormal = new replicad.Vector([0, 0, -1]);
+
+  let rotationAxis = faceNormal.cross(cutPlaneNormal);
+  if (rotationAxis.Length == 0) {
+    // Face already parallel to cut plane, no rotation necessary.
+    return geom.clone().translate(0, 0, -1 * pointOnSurface.z);
+  }
+
+  let rotationDegrees =
+    (Math.acos(
+      faceNormal.dot(cutPlaneNormal) /
+        (cutPlaneNormal.Length * faceNormal.Length)
+    ) *
+      360) /
+    (2 * Math.PI);
+
+  return geom
+    .clone()
+    .rotate(rotationDegrees, pointOnSurface, rotationAxis)
+    .translate(0, 0, -1 * pointOnSurface.z);
+}
+
+function areaApprox(bounds) {
+  return (bounds.uMax - bounds.uMin) * (bounds.vMax - bounds.vMin);
+}
+
+// Checks if part is an assembly)
+function isAssembly(part) {
+  if (part.geometry.length &gt; 0) {
+    if (part.geometry[0].geometry) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+/** Cut assembly function that takes in a part to cut (library object), cutting parts (unique IDS), assembly id and index */
+/** Returns a new single cut part or an assembly of cut parts */
+function cutAssembly(partToCut, cuttingParts, assemblyID) {
+  try {
+    //If the partToCut is an assembly pass each part back into cutAssembly function to be cut separately
+    if (isAssembly(partToCut)) {
+      let assemblyToCut = partToCut.geometry;
+      let assemblyCut = [];
+      assemblyToCut.forEach((part) =&gt; {
+        // make new assembly from cut parts
+        assemblyCut.push(cutAssembly(part, cuttingParts, assemblyID));
+      });
+
+      let subID = generateUniqueID();
+      //returns new assembly that has been cut
+      library[subID] = {
+        //This feels like a hack, we shouldn&apos;t be using the library internally like this
+        geometry: assemblyCut,
+        tags: partToCut.tags,
+        bom: partToCut.bom,
+      };
+      return library[subID];
+    } else {
+      // if part to cut is a single part send to cutting function with cutting parts
+      var partCutCopy = partToCut.geometry[0];
+      cuttingParts.forEach((cuttingPart) =&gt; {
+        // for each cutting part cut the part
+        partCutCopy = recursiveCut(partCutCopy, toGeometry(cuttingPart));
+      });
+      // return new cut part
+      let newID = generateUniqueID();
+      library[newID] = {
+        geometry: [partCutCopy],
+        tags: partToCut.tags,
+        color: partToCut.color,
+        bom: partToCut.bom,
+        plane: partToCut.plane,
+      };
+
+      return library[newID];
+    }
+  } catch (e) {
+    throw new Error(&quot;Cut Assembly failed&quot;);
+  }
+}
+/** Recursive function that gets passed a solid to cut and a library object that cuts it */
+function recursiveCut(partToCut, cuttingPart) {
+  try {
+    let cutGeometry = partToCut;
+    // if cutting part is an assembly pass back into the function to be cut by each part in that assembly
+    if (isAssembly(cuttingPart)) {
+      for (let i = 0; i &lt; cuttingPart.geometry.length; i++) {
+        cutGeometry = recursiveCut(cutGeometry, cuttingPart.geometry[i]);
+      }
+      return cutGeometry;
+    } else {
+      // cut and return part
+      let cutPart;
+      cutPart = partToCut.cut(cuttingPart.geometry[0]);
+      return cutPart;
+    }
+  } catch (e) {
+    throw new Error(&quot;Recursive Cut failed&quot;);
+  }
+}
+
+/**
+ * A function which takes in an array of target geometries and forms them into an assembly
+ * Geometries will cut all geometries below them in the list to make sure that no parts intersect
+ * If the targetID is defined, the assembly will be stored in the library under that ID, otherwise it will be returned
+ */
+async function assembly(inputIDs, targetID = null) {
+  if (!Array.isArray(inputIDs) || inputIDs.length === 0) {
+    throw new Error(&quot;inputIDs must be a non-empty array&quot;);
+  }
+
+  await started;
+
+  let assembly = [];
+  let bomAssembly = [];
+
+  if (inputIDs.length &gt; 1) {
+    const all3D = inputIDs.every((inputID) =&gt; is3D(toGeometry(inputID)));
+    const all2D = inputIDs.every((inputID) =&gt; !is3D(toGeometry(inputID)));
+
+    if (all3D || all2D) {
+      for (let i = 0; i &lt; inputIDs.length; i++) {
+        const geometry = toGeometry(inputIDs[i]);
+        assembly.push(cutAssembly(geometry, inputIDs.slice(i + 1), targetID));
+        if (geometry.bom.length &gt; 0) {
+          bomAssembly.push(...geometry.bom);
+        }
+      }
+    } else {
+      throw new Error(
+        &quot;Assemblies must be composed from only sketches OR only solids&quot;
+      );
+    }
+  } else {
+    const geometry = toGeometry(inputIDs[0]);
+    assembly.push(geometry);
+    if (geometry.bom.length &gt; 0) {
+      bomAssembly.push(...geometry.bom);
+    }
+  }
+
+  const newPlane = new Plane().pivot(0, &quot;Y&quot;);
+  let generatedAssembly = {
+    geometry: assembly,
+    plane: newPlane,
+    tags: [],
+    bom: bomAssembly,
+  };
+
+  if (targetID != null) {
+    library[targetID] = generatedAssembly;
+  } else {
+    return generatedAssembly;
+  }
+
+  return true;
+}
+
+function fusion(targetID, inputIDs) {
+  return started.then(() =&gt; {
+    let fusedGeometry = [];
+    let bomAssembly = [];
+    inputIDs.forEach((inputID) =&gt; {
+      if (inputIDs.every((inputID) =&gt; is3D(library[inputID]))) {
+        fusedGeometry.push(digFuse(library[inputID]));
+      } else if (inputIDs.every((inputID) =&gt; !is3D(library[inputID]))) {
+        fusedGeometry.push(digFuse(library[inputID]));
+      } else {
+        throw new Error(
+          &quot;Fusion must be composed from only sketches OR only solids&quot;
+        );
+      }
+      if (library[inputID].bom.length &gt; 0) {
+        bomAssembly.push(...library[inputID].bom);
+      }
+    });
+    const newPlane = new Plane().pivot(0, &quot;Y&quot;);
+    library[targetID] = {
+      geometry: [chainFuse(fusedGeometry)],
+      tags: [],
+      bom: bomAssembly,
+      plane: newPlane,
+      color: &quot;#FF9065&quot;,
+    };
+    return true;
+  });
+}
+
+/**
+ * Function which takes in a geometry and returns the same geometry if it is cohesive or an assembly if the geometry is disjoint
+ */
+function disjointGeometryToAssembly(inputID) {
+  let input = toGeometry(inputID).geometry[0]; //This does not accept assemblies
+  let solidsArray = Array.from(
+    replicad.iterTopo(input.wrapped, &quot;solid&quot;),
+    (s) =&gt; new Solid(s)
+  );
+  console.log(&quot;solidsArray&quot;, solidsArray);
+  //If there is more than one solid in the geometry, return an assembly
+  if (solidsArray.length &gt; 1) {
+    let assemblyArray = [];
+    solidsArray.forEach((solid) =&gt; {
+      assemblyArray.push({
+        geometry: [solid],
+        tags: input.tags,
+        bom: input.bom,
+        color: input.color,
+        plane: input.plane,
+      });
+    });
+    return {
+      geometry: assemblyArray,
+      tags: input.tags,
+      bom: input.bom,
+      color: input.color,
+      plane: input.plane,
+    };
+    //If there is only one solid in the geometry, return the input
+  } else {
+    return toGeometry(inputID);
+  }
+}
+
+//Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
+// The action may return &apos;undefined&apos; to cause the leaf to be removed from the result.
+function actOnLeafs(assembly, action, plane) {
+  plane = plane || assembly.plane;
+  //This is a leaf
+  if (
+    assembly.geometry.length == 1 &amp;&amp;
+    assembly.geometry[0].geometry == undefined
+  ) {
+    return action(assembly);
+  }
+  //This is a branch
+  else {
+    let transformedAssembly = [];
+    assembly.geometry.forEach((subAssembly) =&gt; {
+      const result = actOnLeafs(subAssembly, action);
+      if (result != undefined) {
+        transformedAssembly.push(result);
+      }
+    });
+    return {
+      geometry: transformedAssembly,
+      tags: assembly.tags,
+      bom: assembly.bom,
+      plane: plane,
+    };
+  }
+}
+
+function flattenAssembly(assembly) {
+  var flattened = [];
+  //This is a leaf
+  if (
+    assembly.geometry.length == 1 &amp;&amp;
+    assembly.geometry[0].geometry == undefined
+  ) {
+    flattened.push({ geometry: assembly.geometry[0], color: assembly.color });
+    return flattened;
+  }
+  //This is a branch
+  else {
+    assembly.geometry.forEach((subAssembly) =&gt; {
+      flattened.push(...flattenAssembly(subAssembly));
+    });
+    return flattened;
+  }
+}
+
+function chainFuse(chain) {
+  try {
+    let fused = chain[0].clone();
+    for (let i = 1; i &lt; chain.length; i++) {
+      fused = fused.fuse(chain[i]);
+    }
+    return fused;
+  } catch (e) {
+    throw new Error(&quot;Fusion failed&quot;);
+  }
+}
+
+function digFuse(assembly) {
+  var flattened = [];
+
+  if (isAssembly(assembly)) {
+    assembly.geometry.forEach((subAssembly) =&gt; {
+      if (!isAssembly(subAssembly)) {
+        //if it&apos;s not an assembly hold on add it to the fusion list
+        flattened.push(subAssembly.geometry[0]);
+      } else {
+        // if it is an assembly keep digging
+        // add the fused things in
+        flattened.push(digFuse(subAssembly));
+      }
+    });
+    return chainFuse(flattened);
+  } else {
+    return assembly.geometry[0];
+  }
+}
+
+let colorOptions = {
+  Red: &quot;#FF9065&quot;,
+  Orange: &quot;#FFB458&quot;,
+  Yellow: &quot;#FFD600&quot;,
+  Olive: &quot;#C7DF66&quot;,
+  Teal: &quot;#71D1C2&quot;,
+  &quot;Light Blue&quot;: &quot;#75DBF2&quot;,
+  Green: &quot;#A3CE5B&quot;,
+  &quot;Lavender &quot;: &quot;#CCABED&quot;,
+  Brown: &quot;#CFAB7C&quot;,
+  Pink: &quot;#FFB09D&quot;,
+  Sand: &quot;#E2C66C&quot;,
+  Clay: &quot;#C4D3AC&quot;,
+  Blue: &quot;#91C8D5&quot;,
+  &quot;Light Green&quot;: &quot;#96E1BB&quot;,
+  Purple: &quot;#ACAFDD&quot;,
+  &quot;Light Purple&quot;: &quot;#DFB1E8&quot;,
+  Tan: &quot;#F5D3B6&quot;,
+  &quot;Mauve &quot;: &quot;#DBADA9&quot;,
+  Grey: &quot;#BABABA&quot;,
+  Black: &quot;#3C3C3C&quot;,
+  White: &quot;#FFFCF7&quot;,
+  &quot;Keep Out&quot;: &quot;#E0E0E0&quot;,
+};
+async function generateDefaultMesh(id) {
+  let defaultMesh = await text(id, &quot;No output to display&quot;, 28, &quot;ROBOTO&quot;);
+  return defaultMesh;
+}
+
+function resetView() {
+  return started.then(() =&gt; {
+    return [];
+  });
+}
+
+function getLargestBoundingBox(meshArray) {
+  let overallMin = [Infinity, Infinity, Infinity];
+  let overallMax = [-Infinity, -Infinity, -Infinity];
+
+  if (!Array.isArray(meshArray)) {
+    throw new Error(&quot;meshArray is not defined or not an array&quot;);
+  }
+
+  meshArray.forEach((mesh) =&gt; {
+    if (
+      !mesh.geometry ||
+      !mesh.geometry.boundingBox ||
+      !Array.isArray(mesh.geometry.boundingBox.bounds)
+    ) {
+      throw new Error(&quot;Invalid mesh geometry or boundingBox structure&quot;);
+    }
+
+    let boundingBox = mesh.geometry.boundingBox.bounds;
+    if (
+      boundingBox.length &lt; 2 ||
+      !Array.isArray(boundingBox[0]) ||
+      !Array.isArray(boundingBox[1])
+    ) {
+      throw new Error(&quot;boundingBox bounds are not properly defined&quot;);
+    }
+
+    let min = boundingBox[0];
+    let max = boundingBox[1];
+
+    // Update overall minimum coordinates
+    overallMin[0] = Math.min(overallMin[0], min[0]);
+    overallMin[1] = Math.min(overallMin[1], min[1]);
+    overallMin[2] = Math.min(overallMin[2], min[2]);
+
+    // Update overall maximum coordinates
+    overallMax[0] = Math.max(overallMax[0], max[0]);
+    overallMax[1] = Math.max(overallMax[1], max[1]);
+    overallMax[2] = Math.max(overallMax[2], max[2]);
+  });
+
+  // Create a new bounding box with the overall min and max coordinates
+  let newBoundingBox = [overallMin, overallMax];
+
+  // Calculate the width, height, and depth
+  let width = overallMax[0] - overallMin[0];
+  let height = overallMax[1] - overallMin[1];
+  let depth = overallMax[2] - overallMin[2];
+
+  // Return the dimensions as a 3-point vector
+  return { width, height, depth };
+
+  //return newBoundingBox;
+}
+
+function calculateZoom(boundingBox) {
+  try {
+    // Given example bounding box and zoom level
+    const exampleBoundingBox = {
+      width: 312.0005000624958,
+      height: 312.00074999364347,
+      depth: 432.0009977339615,
+    };
+    const exampleZoom = 0.5;
+
+    // Calculate the diagonal length of the given example bounding box
+    const exampleDiagonal = Math.sqrt(
+      Math.pow(exampleBoundingBox.width, 2) +
+        Math.pow(exampleBoundingBox.height, 2) +
+        Math.pow(exampleBoundingBox.depth, 2)
+    );
+
+    // Calculate the diagonal length of the input bounding box
+    const diagonal = Math.sqrt(
+      Math.pow(boundingBox.width, 2) +
+        Math.pow(boundingBox.height, 2) +
+        Math.pow(boundingBox.depth, 2)
+    );
+
+    // Calculate the zoom level based on the proportional relationship
+    const zoom = (exampleZoom * exampleDiagonal) / diagonal;
+    return zoom;
+  } catch (e) {
+    throw new Error(&quot;Error calculating zoom level&quot;);
+  }
+}
+
+function generateCameraPosition(meshArray) {
+  try {
+    // Get the largest bounding box from the mesh array
+    let largestBoundingBox = getLargestBoundingBox(meshArray);
+    let zoom = calculateZoom(largestBoundingBox);
+
+    return zoom;
+  } catch (e) {
+    throw new Error(e);
+  }
+}
+
+function generateDisplayMesh(id) {
+  return started.then(() =&gt; {
+    console.log(&quot;Generating display mesh for &quot; + id);
+    if (library[id] == undefined || id == undefined) {
+      console.log(&quot;ID undefined or not found in library&quot;);
+      //throw new Error(&quot;ID not found in library&quot;);
+      generateDefaultMesh(id).then((result) =&gt; {
+        console.log(result);
+      });
+    }
+    let meshArray = [];
+
+    //Flatten the assembly to remove hierarchy
+    const flattened = flattenAssembly(library[id]);
+
+    flattened.forEach((displayObject) =&gt; {
+      var cleanedGeometry = [];
+      if (displayObject.geometry.mesh == undefined) {
+        let sketchPlane = library[id].plane;
+        let sketches = displayObject.geometry.clone();
+        cleanedGeometry = sketches.sketchOnPlane(sketchPlane).extrude(0.0001);
+      } else {
+        cleanedGeometry = displayObject.geometry;
+      }
+      meshArray.push({
+        color: displayObject.color,
+        geometry: cleanedGeometry,
+      });
+    });
+    let cameraZoom;
+    try {
+      cameraZoom = generateCameraPosition(meshArray);
+    } catch (e) {
+      console.log(&quot;Error generating camera position&quot;);
+      cameraZoom = 1;
+    }
+    let finalMeshes = [];
+    //Iterate through the meshArray and create final meshes with faces, edges and color to pass to display
+    meshArray.forEach((meshgeometry) =&gt; {
+      try {
+        //Try extruding if there is no 3d shape
+        if (meshgeometry.geometry.mesh == undefined) {
+          const threeDShape = meshgeometry
+            .sketchOnPlane(sketchPlane)
+            .clone()
+            .extrude(0.0001);
+          return {
+            faces: threeDShape.mesh({ tolerance: 0.1, angularTolerance: 0.5 }),
+            edges: threeDShape.meshEdges({
+              tolerance: 0.1,
+              angularTolerance: 0.5,
+            }),
+          };
+        } else {
+          finalMeshes.push({
+            cameraZoom: cameraZoom,
+            faces: meshgeometry.geometry.mesh({
+              tolerance: 0.1,
+              angularTolerance: 0.5,
+            }),
+            edges: meshgeometry.geometry.meshEdges({
+              tolerance: 0.1,
+              angularTolerance: 0.5,
+            }),
+            color: meshgeometry.color,
+          });
+        }
+      } catch (e) {
+        throw new Error(&quot;Error generating display mesh&quot; + e);
+      }
+    });
+
+    return finalMeshes;
+  });
+}
+
+// comlink is great to expose your functions within the worker as a simple API
+// to your app.
+expose({
+  deleteFromLibrary,
+  importingSTEP,
+  importingSTL,
+  importingSVG,
+  createMesh,
+  circle,
+  color,
+  code,
+  regularPolygon,
+  rectangle,
+  generateDisplayMesh,
+  extrude,
+  fusion,
+  extractBomList,
+  generateThumbnail,
+  visExport,
+  downExport,
+  shrinkWrapSketches,
+  move,
+  rotate,
+  difference,
+  tag,
+  layout,
+  displayLayout,
+  output,
+  molecule,
+  bom,
+  extractTag,
+  intersect,
+  assembly,
+  loftShapes,
+  text,
+  resetView,
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
