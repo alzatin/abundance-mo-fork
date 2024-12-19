@@ -90,9 +90,24 @@ const InitialLog = ({ setNoUserBrowsing }) => {
 };
 
 // adds individual projects after API call
-const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
+const AddProject = ({
+  setYearShow,
+  nodes,
+  authorizedUserOcto,
+  projectToShow,
+}) => {
   const [browseType, setBrowseType] = useState("thumb");
-  const [orderType, setOrderType] = useState("byDateCreated");
+
+  let initialOrder =
+    projectToShow == "featured"
+      ? "byStars"
+      : projectToShow == "all"
+      ? "byName"
+      : projectToShow == "recents"
+      ? "byDateCreated"
+      : "byName";
+
+  const [orderType, setOrderType] = useState(initialOrder);
 
   return (
     <>
@@ -246,69 +261,34 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           GlobalVariables.currentRepo = node.node;
         }}
       >
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
-        >
-          {node.node.repoName}
-        </p>
+        <p className="project_name_list">{node.node.repoName}</p>
 
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "50%",
-          }}
-        >
-          {node.node.owner}
-        </p>
-        <h2 style={{ width: "20%", display: "block" }}>
+        <p className="project_name_list">{node.node.owner}</p>
+        <p style={{ width: "20%", display: "block" }}>
           {" "}
           {node.node.topics && node.node.topics.includes("abundance-tool")
             ? "\u{1F528} "
             : null}
-        </h2>
-        <p
+        </p>
+        <p className="project_name_list">{dateCreated}</p>
+
+        <div
           style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "70%",
+            width: "10%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
-          {node.node.forks}
-        </p>
-
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
-        >
-          {dateCreated}
-        </p>
-
-        <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>
-          <p style={{ fontSize: "1em" }}>{node.node.ranking}</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            style={{ transform: "scale(1)" }}
+            style={{ transform: "scale(.75)" }}
             width="16"
             height="16"
           >
             <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
           </svg>
+          <p className="project_name_list">{node.node.ranking}</p>
         </div>
       </div>
     );
@@ -432,7 +412,9 @@ const ShowProjects = ({
     };
     const repoSearchRequest = async () => {
       setStateLoaded([]); /*sets loading while fetching*/
-      pageDict[pageNumber] = lastKey;
+      //pageDict[pageNumber] = lastKey;
+      console.log("lastKey: ", lastKey);
+
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
         : "&lastKey";
@@ -445,6 +427,7 @@ const ShowProjects = ({
       }
 
       if (projectToShow == "all") {
+        console.log(lastKeyQuery);
         query = "attribute=searchField" + searchQuery + "&user" + lastKeyQuery;
       } else if (projectToShow == "owned") {
         query =
@@ -516,6 +499,7 @@ const ShowProjects = ({
         } else {
           setStateLoaded(result["repos"]);
           setLastKey(result["lastKey"]);
+          console.log("lastKey: ", lastKey);
         }
       })
       .catch((err) => {
@@ -678,27 +662,31 @@ const ShowProjects = ({
                   margin: "0px 10px 0px 10px",
                 }}
               >
-                <button
-                  onClick={() => {
-                    if (pageNumber > 0) {
-                      setPageNumber(pageNumber - 1);
-                    }
-                  }}
-                  className="page_back_button"
-                >
-                  {"\u2190"}
-                </button>
+                {lastKey ? (
+                  <button
+                    onClick={() => {
+                      if (pageNumber > 0) {
+                        setPageNumber(pageNumber - 1);
+                      }
+                    }}
+                    className="page_back_button"
+                  >
+                    {"\u2190"}
+                  </button>
+                ) : null}
 
-                <button
-                  className="page_forward_button"
-                  onClick={() => {
-                    if (lastKey != "") {
-                      setPageNumber(pageNumber + 1);
-                    }
-                  }}
-                >
-                  {"\u2192"}
-                </button>
+                {lastKey ? (
+                  <button
+                    className="page_forward_button"
+                    onClick={() => {
+                      if (lastKey != "") {
+                        setPageNumber(pageNumber + 1);
+                      }
+                    }}
+                  >
+                    {"\u2192"}
+                  </button>
+                ) : null}
               </div>
             ) : null}
 
@@ -764,6 +752,7 @@ const ShowProjects = ({
                 nodes,
                 authorizedUserOcto,
                 user,
+                projectToShow,
               }}
             />
           ) : (

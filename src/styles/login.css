@@ -418,7 +418,14 @@
   text-overflow: "ellipsis";
   display: "block";
   overflow: "hidden";
-  width: "90%";
+  width: 80%;
+}
+
+.project_name_list {
+  font-family: "Roboto", sans-serif;
+  color: var(--loginPopup-text);
+  width: 20%;
+  text-decoration: none;
 }
 
 .list_thumb_button {
@@ -494,6 +501,7 @@
 }
 
 .project_list {
+  padding: 0 10px 0 10px;
   text-wrap: nowrap;
   display: flex;
   background-color: var(--loginPopup-projectColor);
