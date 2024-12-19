@@ -7,19 +7,58 @@ function ShareDialog({
   dialogContent,
   activeAtom,
 }) {
+  /* Makes a POST request to the API to update the ranking of the current molecule */
+  const addRanking = () => {
+    const apiUpdateUrl =
+      "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
+    fetch(apiUpdateUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        owner: GlobalVariables.currentRepo.owner,
+        repoName: GlobalVariables.currentRepo.repoName,
+        attributeUpdates: { ranking: 1 },
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
   const handleExport = (exportType) => {
+    const exportID = GlobalVariables.generateUniqueID();
     GlobalVariables.cad
-      .visExport(activeAtom.uniqueID, activeAtom.uniqueID, exportType)
+      .visExport(
+        exportID,
+        GlobalVariables.topLevelMolecule.uniqueID,
+        exportType
+      )
       .then((result) => {
+        console.log("Exported geometry: ", result);
+        console.log(GlobalVariables.topLevelMolecule);
+        let resolution = 72;
+
         GlobalVariables.cad
-          .downExport(activeAtom.uniqueID, exportType)
+          .downExport(
+            exportID,
+            exportType,
+            resolution,
+            GlobalVariables.topLevelMolecule.unitsKey
+          )
           .then((result) => {
+            console.log("Downloaded export file: ", result);
             saveAs(
               result,
               GlobalVariables.currentMolecule.name +
                 "." +
                 exportType.toLowerCase()
             );
+
+            addRanking();
           })
           .catch("Error downloading export file");
       })
