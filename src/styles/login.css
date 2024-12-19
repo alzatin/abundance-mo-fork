@@ -411,6 +411,16 @@
   height: 400px;
 }
 
+.project_name {
+  font-size: "1.2em";
+  font-family: "Roboto", sans-serif;
+  color: var(--loginPopup-text);
+  text-overflow: "ellipsis";
+  display: "block";
+  overflow: "hidden";
+  width: "90%";
+}
+
 .list_thumb_button {
   padding: 0 3px;
   border: none;
@@ -476,6 +486,11 @@
   padding: 10px;
   font-size: 13px;
   justify-content: flex-start;
+}
+
+.project:hover {
+  box-shadow: 0 0 0 1px var(--loginPopup-project-border);
+  cursor: pointer;
 }
 
 .project_list {

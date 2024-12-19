@@ -185,30 +185,7 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           GlobalVariables.currentRepo = node;
         }}
       >
-        {node.topics && node.topics.includes("abundance-tool") ? (
-          <h2
-            style={{
-              float: "right",
-              position: "relative",
-              top: "-10px",
-              padding: "0",
-            }}
-          >
-            {" "}
-            {"\u{1F528} "}{" "}
-          </h2>
-        ) : null}
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
-        >
-          {node.repoName}
-        </p>
+        <p className="project_name">{node.repoName}</p>
         <img
           className="project_image"
           src={node.svgURL}
@@ -220,16 +197,37 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           }}
           alt={node.repoName}
         ></img>
-        <div style={{ display: "inline" }}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ transform: "scale(.7)" }}
-            width="16"
-            height="16"
-          >
-            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
-          </svg>
-          <p style={{ fontSize: ".7em", display: "inline" }}>{node.ranking}</p>
+        <div
+          style={{
+            height: "30px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ transform: "scale(.7)", alignSelf: "center" }}
+              width="16"
+              height="16"
+            >
+              <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+            </svg>
+            <p
+              style={{
+                fontSize: ".7em",
+                display: "inline",
+                alignSelf: "center",
+              }}
+            >
+              {node.ranking}
+            </p>
+          </div>
+          <div style={{ alignSelf: "center" }}>
+            {node.topics && node.topics.includes("abundance-tool") ? (
+              <p> {"\u{1F528} "} </p>
+            ) : null}
+          </div>
         </div>
       </div>
     );
@@ -386,6 +384,10 @@ const ShowProjects = ({
     error: "Error",
     noProjects: "No projects found",
   };
+
+  useEffect(() => {
+    setProjectsToShow("recents");
+  }, [GlobalVariables.currentUser]);
 
   const [projectsLoaded, setStateLoaded] = useState([]);
   const [lastKey, setLastKey] = useState("");
@@ -783,10 +785,6 @@ function LoginMode({
 }) {
   const pageDict = { 0: null };
 
-  const [projectToShow, setProjectsToShow] = useState((user) =>
-    GlobalVariables.currentUser ? "recents" : "featured"
-  );
-
   const [noUserBrowsing, setNoUserBrowsing] = useState(false);
 
   const {
@@ -797,9 +795,12 @@ function LoginMode({
     getAccessTokenSilently,
   } = useAuth0();
 
+  const [projectToShow, setProjectsToShow] = useState("featured");
+
   useEffect(() => {
     if (isAuthenticated) {
       console.log("isAuthenticated");
+
       const serverUrl =
         "https://n3i60kesu6.execute-api.us-east-2.amazonaws.com/prox";
 
