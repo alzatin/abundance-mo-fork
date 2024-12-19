@@ -488,6 +488,11 @@
   justify-content: flex-start;
 }
 
+.project:hover {
+  box-shadow: 0 0 0 1px var(--loginPopup-project-border);
+  cursor: pointer;
+}
+
 .project_list {
   text-wrap: nowrap;
   display: flex;

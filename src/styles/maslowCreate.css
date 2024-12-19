@@ -55,6 +55,7 @@
   --dialog-border: var(--abundance-color-brightPurple);
 
   --run-project-info: var(--abundance-color-lightPurple);
+  --loginPopup-project-border: var(--abundance-color-lightPurple);
 }
 
 .light-theme {

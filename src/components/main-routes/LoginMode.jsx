@@ -197,7 +197,13 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           }}
           alt={node.repoName}
         ></img>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            height: "30px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <div style={{ display: "flex", justifyContent: "flex-start" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -378,6 +384,10 @@ const ShowProjects = ({
     error: "Error",
     noProjects: "No projects found",
   };
+
+  useEffect(() => {
+    setProjectsToShow("recents");
+  }, [GlobalVariables.currentUser]);
 
   const [projectsLoaded, setStateLoaded] = useState([]);
   const [lastKey, setLastKey] = useState("");
@@ -775,10 +785,6 @@ function LoginMode({
 }) {
   const pageDict = { 0: null };
 
-  const [projectToShow, setProjectsToShow] = useState((user) =>
-    GlobalVariables.currentUser ? "recents" : "featured"
-  );
-
   const [noUserBrowsing, setNoUserBrowsing] = useState(false);
 
   const {
@@ -789,9 +795,12 @@ function LoginMode({
     getAccessTokenSilently,
   } = useAuth0();
 
+  const [projectToShow, setProjectsToShow] = useState("featured");
+
   useEffect(() => {
     if (isAuthenticated) {
       console.log("isAuthenticated");
+
       const serverUrl =
         "https://n3i60kesu6.execute-api.us-east-2.amazonaws.com/prox";
 
