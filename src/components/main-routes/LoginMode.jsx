@@ -261,57 +261,34 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           GlobalVariables.currentRepo = node.node;
         }}
       >
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
-        >
-          {node.node.repoName}
-        </p>
+        <p className="project_name_list">{node.node.repoName}</p>
 
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "50%",
-          }}
-        >
-          {node.node.owner}
-        </p>
-        <h2 style={{ width: "20%", display: "block" }}>
+        <p className="project_name_list">{node.node.owner}</p>
+        <p style={{ width: "20%", display: "block" }}>
           {" "}
           {node.node.topics && node.node.topics.includes("abundance-tool")
             ? "\u{1F528} "
             : null}
-        </h2>
-        <p
+        </p>
+        <p className="project_name_list">{dateCreated}</p>
+
+        <div
           style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
+            width: "10%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
-          {dateCreated}
-        </p>
-
-        <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>
-          <p style={{ fontSize: "1em" }}>{node.node.ranking}</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            style={{ transform: "scale(1)" }}
+            style={{ transform: "scale(.75)" }}
             width="16"
             height="16"
           >
             <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
           </svg>
+          <p className="project_name_list">{node.node.ranking}</p>
         </div>
       </div>
     );
