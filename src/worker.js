@@ -522,7 +522,6 @@ function extractBomList(inputID) {
 /** Visualize STL or STEP*/
 function visExport(targetID, inputID, fileType) {
   return started.then(() => {
-    console.log(library[inputID]);
     let geometryToExport = extractKeepOut(library[inputID]);
     let fusedGeometry = digFuse(geometryToExport);
     let displayColor =
