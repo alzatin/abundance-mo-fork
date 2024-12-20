@@ -39,7 +39,6 @@ function ShareDialog({
       )
       .then((result) => {
         let resolution = 72;
-
         GlobalVariables.cad
           .downExport(
             exportID,

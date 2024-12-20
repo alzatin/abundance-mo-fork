@@ -275,6 +275,29 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
     });
   };
 
+  /* Makes a POST request to the API to update the ranking of the current molecule */
+  const addRanking = (owner, repo) => {
+    const apiUpdateUrl =
+      "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
+    fetch(apiUpdateUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        owner: owner,
+        repoName: repo.repoName,
+        attributeUpdates: { ranking: 1 },
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function (authorizedUserOcto) {
     var owner = GlobalVariables.currentRepo.owner;
@@ -293,6 +316,7 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
           })
           .then(() => {
             //push fork to aws
+            addRanking(owner, repo);
             /*aws dynamo post*/
             const apiUrl =
               "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
