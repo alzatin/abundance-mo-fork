@@ -405,9 +405,8 @@
 }
 .project-item-div {
   overflow-y: scroll;
-  margin-top: 10px;
-  padding: 20px;
   width: 100%;
+  padding: 10px;
   height: 400px;
 }
 
@@ -476,6 +475,13 @@
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+}
+
+#featured-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 10px;
 }
 
 .basic-multi-select {
