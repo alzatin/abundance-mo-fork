@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import GlobalVariables from "../../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { Link } from "react-router-dom";
@@ -461,6 +461,8 @@ const ShowProjects = ({
   const [yearShow, setYearShow] = useState("2024");
   const [apiStatus, setApiStatus] = useState(loadingMessages.loading);
 
+  const controllerRef = useRef(new AbortController());
+
   useEffect(() => {
     octokit = new Octokit();
     var query;
@@ -499,6 +501,14 @@ const ShowProjects = ({
       setStateLoaded([]); /*sets loading while fetching*/
       //pageDict[pageNumber] = lastKey;
 
+      /* aborting previous request */
+      if (controllerRef.current) {
+        controllerRef.current.abort();
+      }
+
+      controllerRef.current = new AbortController();
+      const signal = controllerRef.current.signal;
+
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
         : "&lastKey";
@@ -523,7 +533,7 @@ const ShowProjects = ({
         // placeholder for featured projects
         const scanFeaturedApi =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryFeaturedProjects";
-        let awsRepos = await fetch(scanFeaturedApi);
+        let awsRepos = await fetch(scanFeaturedApi, { signal });
 
         return awsRepos.json();
       } else if (projectToShow == "liked") {
@@ -532,7 +542,7 @@ const ShowProjects = ({
         const scanUserApiUrl =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=" +
           user;
-        let awsLikeRepos = await fetch(scanUserApiUrl);
+        let awsLikeRepos = await fetch(scanUserApiUrl, { signal });
         let json = await awsLikeRepos.json();
         query = "";
         json[0]["likedProjects"].forEach((project) => {
@@ -541,7 +551,7 @@ const ShowProjects = ({
         const queryLikedApi =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryLikedProjects?" +
           query;
-        let awsRepos = await fetch(queryLikedApi);
+        let awsRepos = await fetch(queryLikedApi, { signal });
         return awsRepos.json();
       } else if (projectToShow == "recents") {
         query =
@@ -553,14 +563,14 @@ const ShowProjects = ({
         const scanRecentApi =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryRecentProjects?" +
           query;
-        let awsRepos = await fetch(scanRecentApi);
+        let awsRepos = await fetch(scanRecentApi, { signal });
         return awsRepos.json();
       }
       //API URL for the scan-search-abundance endpoint and abundance-projects table
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
-      let awsRepos = await fetch(scanApiUrl); //< return result.json();[repos]
+      let awsRepos = await fetch(scanApiUrl, { signal }); //< return result.json();[repos]
       //let awsRepos = await fetch(scanUserApiUrl);
       return awsRepos.json();
     };
@@ -586,9 +596,13 @@ const ShowProjects = ({
         }
       })
       .catch((err) => {
-        alert(
-          "Error loading projects from database. Please try again later. " + err
-        );
+        console.log(err);
+        if (err.name !== "AbortError") {
+          alert(
+            "Error loading projects from database. Please try again later. " +
+              err
+          );
+        }
       });
   }, [searchBarValue, pageNumber, projectToShow, yearShow]);
 
