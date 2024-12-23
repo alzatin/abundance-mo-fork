@@ -37,8 +37,14 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-      - name: jsDoc
-        run: npm run jsdoc
+      - name: jsdoc-action
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: ./src
+          output_dir: ./out
+          config_file: conf.json
+          template: minami
+          front_page: README.md
       - name: Build
         run: npm run build
       - name: Setup Pages
