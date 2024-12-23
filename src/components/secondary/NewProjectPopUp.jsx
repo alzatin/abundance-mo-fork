@@ -150,6 +150,7 @@ const NewProjectPopUp = ({ setExportPopUp, authorizedUserOcto, exporting }) => {
           dateCreated: result.data.created_at,
         };
 
+        /* Post new project to the aws database */
         const apiUrl =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
         fetch(apiUrl, {
@@ -160,6 +161,22 @@ const NewProjectPopUp = ({ setExportPopUp, authorizedUserOcto, exporting }) => {
           },
         }).then((response) => {
           GlobalVariables.currentRepo = newProjectBody;
+        });
+
+        /* add to user table */
+        /*add item to your liked projects on aws*/
+        const apiUpdateUserUrl =
+          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE";
+        fetch(apiUpdateUserUrl, {
+          method: "POST",
+          body: JSON.stringify({
+            user: GlobalVariables.currentUser,
+            attributeUpdates: { numProjectsOwned: 1 },
+            updateType: "SET",
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
         });
 
         //Create the project file
