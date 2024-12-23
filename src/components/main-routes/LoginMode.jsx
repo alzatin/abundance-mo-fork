@@ -113,11 +113,12 @@ const AddProject = ({
   let highestRankingToolNode = null;
 
   if (projectToShow == "featured" && nodes.length > 0) {
-    const filteredNodes = nodes.filter(
-      (node) => !node.topics.includes("abundance-tool")
-    );
+    const filteredNodes = nodes.filter((node) => {
+      return !node.topics.includes("abundance-tool");
+    });
     const sortedNodes = filteredNodes.sort((a, b) => b.ranking - a.ranking);
     highestRankingNode = sortedNodes[0];
+
     const toolNodes = nodes.filter((node) =>
       node.topics.includes("abundance-tool")
     );
@@ -203,10 +204,14 @@ const AddProject = ({
           <div id="featured-div">
             <div
               id="left-featured-div"
-              style={{ width: "50%" }}
+              style={{ width: "50%", display: "flex" }}
               className="project"
             >
-              <p className="project_name">{highestRankingNode.repoName}</p>
+              <div>
+                <h3 className="project_name">Featured Project: </h3>
+                <p className="project_name">{highestRankingNode.repoName}</p>
+                <p className="project_name">{highestRankingNode.owner}</p>
+              </div>
               <img
                 className="project_image"
                 src={highestRankingNode.svgURL}
@@ -221,10 +226,16 @@ const AddProject = ({
             </div>
             <div
               id="right-featured-div"
-              style={{ width: "50%" }}
+              style={{ width: "50%", display: "flex" }}
               className="project"
             >
-              <p className="project_name">{highestRankingToolNode.repoName}</p>
+              <div>
+                <h3 className="project_name">Featured Tool</h3>
+                <p className="project_name">
+                  {highestRankingToolNode.repoName}
+                </p>
+                <p className="project_name">{highestRankingToolNode.owner}</p>
+              </div>
               <img
                 className="project_image"
                 src={highestRankingToolNode.svgURL}
