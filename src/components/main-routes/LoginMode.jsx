@@ -592,7 +592,6 @@ const ShowProjects = ({
         } else {
           setStateLoaded(result["repos"]);
           setLastKey(result["lastKey"]);
-          console.log("lastKey: ", lastKey);
         }
       })
       .catch((err) => {

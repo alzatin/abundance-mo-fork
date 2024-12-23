@@ -204,11 +204,48 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
       /*add item to your liked projects on aws*/
       const apiUpdateUserUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE";
+      let searchField = (
+        GlobalVariables.currentRepo.name +
+        " " +
+        GlobalVariables.currentRepo.owner
+      ).toLowerCase();
+      let likedNodeBody = {
+        owner: GlobalVariables.currentRepo.owner,
+        ranking: GlobalVariables.currentRepo.stargazers_count,
+        description: GlobalVariables.currentRepo.description,
+        searchField: searchField,
+        repoName: GlobalVariables.currentRepo.name,
+        forks: 0,
+        topMoleculeID: GlobalVariables.topLevelMolecule.uniqueID,
+        topics: [],
+        readme:
+          "https://raw.githubusercontent.com/" +
+          GlobalVariables.currentUser +
+          "/" +
+          GlobalVariables.currentRepo.name +
+          "/master/README.md?sanitize=true",
+        contentURL:
+          "https://raw.githubusercontent.com/" +
+          GlobalVariables.currentUser +
+          "/" +
+          GlobalVariables.currentRepo.name +
+          "/master/project.abundance?sanitize=true",
+        githubMoleculesUsed: [],
+        parentRepo: owner + "/" + repo,
+        svgURL:
+          "https://raw.githubusercontent.com/" +
+          GlobalVariables.currentUser +
+          "/" +
+          GlobalVariables.currentRepo.name +
+          "/master/project.svg?sanitize=true",
+        dateCreated: GlobalVariables.currentRepo.created_at,
+        html_url: GlobalVariables.currentRepo.html_url,
+      };
       fetch(apiUpdateUserUrl, {
         method: "POST",
         body: JSON.stringify({
           user: GlobalVariables.currentUser,
-          attributeUpdates: { likedProjects: [`${owner}/${repoName}`] },
+          attributeUpdates: { likedProjects: [likedNodeBody] },
           updateType: "SET",
         }),
         headers: {
