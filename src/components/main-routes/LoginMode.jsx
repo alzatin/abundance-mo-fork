@@ -104,10 +104,27 @@ const AddProject = ({
       : projectToShow == "all"
       ? "byName"
       : projectToShow == "recents"
-      ? "byDateCreated"
+      ? "byDateModified"
       : "byName";
 
   const [orderType, setOrderType] = useState(initialOrder);
+  //looking for highest ranking project and tool
+  let highestRankingNode = null;
+  let highestRankingToolNode = null;
+
+  if (projectToShow == "featured" && nodes.length > 0) {
+    const filteredNodes = nodes.filter((node) => {
+      return !node.topics.includes("abundance-tool");
+    });
+    const sortedNodes = filteredNodes.sort((a, b) => b.ranking - a.ranking);
+    highestRankingNode = sortedNodes[0];
+
+    const toolNodes = nodes.filter((node) =>
+      node.topics.includes("abundance-tool")
+    );
+    const sortedToolNodes = toolNodes.sort((a, b) => b.ranking - a.ranking);
+    highestRankingToolNode = sortedToolNodes[0];
+  }
 
   return (
     <>
@@ -172,14 +189,75 @@ const AddProject = ({
             <option key={"date_order"} value={"byDateCreated"}>
               Date Created
             </option>
+            <option key={"dateModified_order"} value={"byDateModified"}>
+              Date Modified
+            </option>
           </select>
         </label>
       </div>
-      {nodes.length > 0 ? (
-        <ProjectDiv {...{ nodes, browseType, orderType, authorizedUserOcto }} />
-      ) : (
-        <p>No projects match your search</p>
-      )}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "425px" }}
+      >
+        {projectToShow == "featured" &&
+        highestRankingNode &&
+        highestRankingToolNode ? (
+          <div id="featured-div">
+            <div
+              id="left-featured-div"
+              style={{ width: "50%", display: "flex" }}
+              className="project"
+            >
+              <div>
+                <h3 className="project_name">Featured Project: </h3>
+                <p className="project_name">{highestRankingNode.repoName}</p>
+                <p className="project_name">{highestRankingNode.owner}</p>
+              </div>
+              <img
+                className="project_image"
+                src={highestRankingNode.svgURL}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src =
+                    import.meta.env.VITE_APP_PATH_FOR_PICS +
+                    "/imgs/defaultThumbnail.svg";
+                }}
+                alt={highestRankingNode.repoName}
+              ></img>
+            </div>
+            <div
+              id="right-featured-div"
+              style={{ width: "50%", display: "flex" }}
+              className="project"
+            >
+              <div>
+                <h3 className="project_name">Featured Tool</h3>
+                <p className="project_name">
+                  {highestRankingToolNode.repoName}
+                </p>
+                <p className="project_name">{highestRankingToolNode.owner}</p>
+              </div>
+              <img
+                className="project_image"
+                src={highestRankingToolNode.svgURL}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src =
+                    import.meta.env.VITE_APP_PATH_FOR_PICS +
+                    "/imgs/defaultThumbnail.svg";
+                }}
+                alt={highestRankingToolNode.repoName}
+              ></img>
+            </div>
+          </div>
+        ) : null}
+        {nodes.length > 0 ? (
+          <ProjectDiv
+            {...{ nodes, browseType, orderType, authorizedUserOcto }}
+          />
+        ) : (
+          <p>No projects match your search</p>
+        )}
+      </div>
     </>
   );
 };
@@ -314,6 +392,13 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
         ? 1
         : 0;
     },
+    byDateModified: function (a, b) {
+      return new Date(a.dateModified) > new Date(b.dateModified)
+        ? -1
+        : new Date(a.dateModified) < new Date(b.dateModified)
+        ? 1
+        : 0;
+    },
   };
   const dummyNode = {
     forks: "Forks",
@@ -413,7 +498,6 @@ const ShowProjects = ({
     const repoSearchRequest = async () => {
       setStateLoaded([]); /*sets loading while fetching*/
       //pageDict[pageNumber] = lastKey;
-      console.log("lastKey: ", lastKey);
 
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
@@ -427,7 +511,6 @@ const ShowProjects = ({
       }
 
       if (projectToShow == "all") {
-        console.log(lastKeyQuery);
         query = "attribute=searchField" + searchQuery + "&user" + lastKeyQuery;
       } else if (projectToShow == "owned") {
         query =
