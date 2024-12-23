@@ -44,7 +44,7 @@ jobs:
           output_dir: ./docs
           config_file: jsdoc.conf.json
           template: minami
-          front_page: docs.md
+          front_page: DOCS.md
       - name: Build
         run: npm run build
       - name: Setup Pages
