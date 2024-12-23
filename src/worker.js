@@ -554,10 +554,9 @@ function visExport(targetID, inputID, fileType) {
 function downExport(ID, fileType, svgResolution, units) {
   return started.then(() => {
     let scaleUnit = units == "Inches" ? 1 : units == "MM" ? 25.4 : 1;
+    let scaling = svgResolution / scaleUnit;
     if (fileType == "SVG") {
-      let svg = library[ID].geometry[0]
-        .scale(svgResolution / scaleUnit)
-        .toSVG(svgResolution / scaleUnit);
+      let svg = library[ID].geometry[0].clone().scale(scaling).toSVG(scaling);
       var blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
 
       return blob;

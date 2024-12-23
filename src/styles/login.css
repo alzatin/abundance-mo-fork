@@ -405,10 +405,26 @@
 }
 .project-item-div {
   overflow-y: scroll;
-  margin-top: 10px;
-  padding: 20px;
   width: 100%;
+  padding: 10px;
   height: 400px;
+}
+
+.project_name {
+  font-size: "1.2em";
+  font-family: "Roboto", sans-serif;
+  color: var(--loginPopup-text);
+  text-overflow: "ellipsis";
+  display: "block";
+  overflow: "hidden";
+  width: 80%;
+}
+
+.project_name_list {
+  font-family: "Roboto", sans-serif;
+  color: var(--loginPopup-text);
+  width: 20%;
+  text-decoration: none;
 }
 
 .list_thumb_button {
@@ -461,6 +477,13 @@
   cursor: pointer;
 }
 
+#featured-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
 .basic-multi-select {
   margin: 0px 0px 5px 0px;
   width: 100%;
@@ -478,7 +501,13 @@
   justify-content: flex-start;
 }
 
+.project:hover {
+  box-shadow: 0 0 0 1px var(--loginPopup-project-border);
+  cursor: pointer;
+}
+
 .project_list {
+  padding: 0 10px 0 10px;
   text-wrap: nowrap;
   display: flex;
   background-color: var(--loginPopup-projectColor);

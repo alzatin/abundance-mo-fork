@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import GlobalVariables from "../../js/globalvariables.js";
 import { Octokit } from "https://esm.sh/octokit@2.0.19";
 import { Link } from "react-router-dom";
@@ -90,9 +90,41 @@ const InitialLog = ({ setNoUserBrowsing }) => {
 };
 
 // adds individual projects after API call
-const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
+const AddProject = ({
+  setYearShow,
+  nodes,
+  authorizedUserOcto,
+  projectToShow,
+}) => {
   const [browseType, setBrowseType] = useState("thumb");
-  const [orderType, setOrderType] = useState("byDateCreated");
+
+  let initialOrder =
+    projectToShow == "featured"
+      ? "byStars"
+      : projectToShow == "all"
+      ? "byName"
+      : projectToShow == "recents"
+      ? "byDateModified"
+      : "byName";
+
+  const [orderType, setOrderType] = useState(initialOrder);
+  //looking for highest ranking project and tool
+  let highestRankingNode = null;
+  let highestRankingToolNode = null;
+
+  if (projectToShow == "featured" && nodes.length > 0) {
+    const filteredNodes = nodes.filter((node) => {
+      return !node.topics.includes("abundance-tool");
+    });
+    const sortedNodes = filteredNodes.sort((a, b) => b.ranking - a.ranking);
+    highestRankingNode = sortedNodes[0];
+
+    const toolNodes = nodes.filter((node) =>
+      node.topics.includes("abundance-tool")
+    );
+    const sortedToolNodes = toolNodes.sort((a, b) => b.ranking - a.ranking);
+    highestRankingToolNode = sortedToolNodes[0];
+  }
 
   return (
     <>
@@ -157,14 +189,75 @@ const AddProject = ({ setYearShow, nodes, authorizedUserOcto }) => {
             <option key={"date_order"} value={"byDateCreated"}>
               Date Created
             </option>
+            <option key={"dateModified_order"} value={"byDateModified"}>
+              Date Modified
+            </option>
           </select>
         </label>
       </div>
-      {nodes.length > 0 ? (
-        <ProjectDiv {...{ nodes, browseType, orderType, authorizedUserOcto }} />
-      ) : (
-        <p>No projects match your search</p>
-      )}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "425px" }}
+      >
+        {projectToShow == "featured" &&
+        highestRankingNode &&
+        highestRankingToolNode ? (
+          <div id="featured-div">
+            <div
+              id="left-featured-div"
+              style={{ width: "50%", display: "flex" }}
+              className="project"
+            >
+              <div>
+                <h3 className="project_name">Featured Project: </h3>
+                <p className="project_name">{highestRankingNode.repoName}</p>
+                <p className="project_name">{highestRankingNode.owner}</p>
+              </div>
+              <img
+                className="project_image"
+                src={highestRankingNode.svgURL}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src =
+                    import.meta.env.VITE_APP_PATH_FOR_PICS +
+                    "/imgs/defaultThumbnail.svg";
+                }}
+                alt={highestRankingNode.repoName}
+              ></img>
+            </div>
+            <div
+              id="right-featured-div"
+              style={{ width: "50%", display: "flex" }}
+              className="project"
+            >
+              <div>
+                <h3 className="project_name">Featured Tool</h3>
+                <p className="project_name">
+                  {highestRankingToolNode.repoName}
+                </p>
+                <p className="project_name">{highestRankingToolNode.owner}</p>
+              </div>
+              <img
+                className="project_image"
+                src={highestRankingToolNode.svgURL}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src =
+                    import.meta.env.VITE_APP_PATH_FOR_PICS +
+                    "/imgs/defaultThumbnail.svg";
+                }}
+                alt={highestRankingToolNode.repoName}
+              ></img>
+            </div>
+          </div>
+        ) : null}
+        {nodes.length > 0 ? (
+          <ProjectDiv
+            {...{ nodes, browseType, orderType, authorizedUserOcto }}
+          />
+        ) : (
+          <p>No projects match your search</p>
+        )}
+      </div>
     </>
   );
 };
@@ -185,30 +278,7 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           GlobalVariables.currentRepo = node;
         }}
       >
-        {node.topics && node.topics.includes("abundance-tool") ? (
-          <h2
-            style={{
-              float: "right",
-              position: "relative",
-              top: "-10px",
-              padding: "0",
-            }}
-          >
-            {" "}
-            {"\u{1F528} "}{" "}
-          </h2>
-        ) : null}
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
-        >
-          {node.repoName}
-        </p>
+        <p className="project_name">{node.repoName}</p>
         <img
           className="project_image"
           src={node.svgURL}
@@ -220,16 +290,37 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           }}
           alt={node.repoName}
         ></img>
-        <div style={{ display: "inline" }}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ transform: "scale(.7)" }}
-            width="16"
-            height="16"
-          >
-            <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
-          </svg>
-          <p style={{ fontSize: ".7em", display: "inline" }}>{node.ranking}</p>
+        <div
+          style={{
+            height: "30px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ transform: "scale(.7)", alignSelf: "center" }}
+              width="16"
+              height="16"
+            >
+              <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
+            </svg>
+            <p
+              style={{
+                fontSize: ".7em",
+                display: "inline",
+                alignSelf: "center",
+              }}
+            >
+              {node.ranking}
+            </p>
+          </div>
+          <div style={{ alignSelf: "center" }}>
+            {node.topics && node.topics.includes("abundance-tool") ? (
+              <p> {"\u{1F528} "} </p>
+            ) : null}
+          </div>
         </div>
       </div>
     );
@@ -248,69 +339,34 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
           GlobalVariables.currentRepo = node.node;
         }}
       >
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
-        >
-          {node.node.repoName}
-        </p>
+        <p className="project_name_list">{node.node.repoName}</p>
 
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "50%",
-          }}
-        >
-          {node.node.owner}
-        </p>
-        <h2 style={{ width: "20%", display: "block" }}>
+        <p className="project_name_list">{node.node.owner}</p>
+        <p style={{ width: "20%", display: "block" }}>
           {" "}
           {node.node.topics && node.node.topics.includes("abundance-tool")
             ? "\u{1F528} "
             : null}
-        </h2>
-        <p
+        </p>
+        <p className="project_name_list">{dateCreated}</p>
+
+        <div
           style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "70%",
+            width: "10%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
-          {node.node.forks}
-        </p>
-
-        <p
-          style={{
-            fontSize: "1em",
-            textOverflow: "ellipsis",
-            display: "block",
-            overflow: "hidden",
-            width: "80%",
-          }}
-        >
-          {dateCreated}
-        </p>
-
-        <div style={{ width: "10%", display: "flex", flexDirection: "row" }}>
-          <p style={{ fontSize: "1em" }}>{node.node.ranking}</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            style={{ transform: "scale(1)" }}
+            style={{ transform: "scale(.75)" }}
             width="16"
             height="16"
           >
             <path d="M8 .2l4.9 15.2L0 6h16L3.1 15.4z" />
           </svg>
+          <p className="project_name_list">{node.node.ranking}</p>
         </div>
       </div>
     );
@@ -333,6 +389,13 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
       return new Date(a.dateCreated) > new Date(b.dateCreated)
         ? -1
         : new Date(a.dateCreated) < new Date(b.dateCreated)
+        ? 1
+        : 0;
+    },
+    byDateModified: function (a, b) {
+      return new Date(a.dateModified) > new Date(b.dateModified)
+        ? -1
+        : new Date(a.dateModified) < new Date(b.dateModified)
         ? 1
         : 0;
     },
@@ -387,12 +450,18 @@ const ShowProjects = ({
     noProjects: "No projects found",
   };
 
+  useEffect(() => {
+    setProjectsToShow("recents");
+  }, [GlobalVariables.currentUser]);
+
   const [projectsLoaded, setStateLoaded] = useState([]);
   const [lastKey, setLastKey] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
   const [searchBarValue, setSearchBarValue] = useState("");
   const [yearShow, setYearShow] = useState("2024");
   const [apiStatus, setApiStatus] = useState(loadingMessages.loading);
+
+  const controllerRef = useRef(new AbortController());
 
   useEffect(() => {
     octokit = new Octokit();
@@ -430,7 +499,16 @@ const ShowProjects = ({
     };
     const repoSearchRequest = async () => {
       setStateLoaded([]); /*sets loading while fetching*/
-      pageDict[pageNumber] = lastKey;
+      //pageDict[pageNumber] = lastKey;
+
+      /* aborting previous request */
+      if (controllerRef.current) {
+        controllerRef.current.abort();
+      }
+
+      controllerRef.current = new AbortController();
+      const signal = controllerRef.current.signal;
+
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
         : "&lastKey";
@@ -455,7 +533,7 @@ const ShowProjects = ({
         // placeholder for featured projects
         const scanFeaturedApi =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryFeaturedProjects";
-        let awsRepos = await fetch(scanFeaturedApi);
+        let awsRepos = await fetch(scanFeaturedApi, { signal });
 
         return awsRepos.json();
       } else if (projectToShow == "liked") {
@@ -464,7 +542,7 @@ const ShowProjects = ({
         const scanUserApiUrl =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=" +
           user;
-        let awsLikeRepos = await fetch(scanUserApiUrl);
+        let awsLikeRepos = await fetch(scanUserApiUrl, { signal });
         let json = await awsLikeRepos.json();
         query = "";
         json[0]["likedProjects"].forEach((project) => {
@@ -473,7 +551,7 @@ const ShowProjects = ({
         const queryLikedApi =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryLikedProjects?" +
           query;
-        let awsRepos = await fetch(queryLikedApi);
+        let awsRepos = await fetch(queryLikedApi, { signal });
         return awsRepos.json();
       } else if (projectToShow == "recents") {
         query =
@@ -485,14 +563,14 @@ const ShowProjects = ({
         const scanRecentApi =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryRecentProjects?" +
           query;
-        let awsRepos = await fetch(scanRecentApi);
+        let awsRepos = await fetch(scanRecentApi, { signal });
         return awsRepos.json();
       }
       //API URL for the scan-search-abundance endpoint and abundance-projects table
       const scanApiUrl =
         "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/scan-search-abundance?" +
         query;
-      let awsRepos = await fetch(scanApiUrl); //< return result.json();[repos]
+      let awsRepos = await fetch(scanApiUrl, { signal }); //< return result.json();[repos]
       //let awsRepos = await fetch(scanUserApiUrl);
       return awsRepos.json();
     };
@@ -514,12 +592,17 @@ const ShowProjects = ({
         } else {
           setStateLoaded(result["repos"]);
           setLastKey(result["lastKey"]);
+          console.log("lastKey: ", lastKey);
         }
       })
       .catch((err) => {
-        alert(
-          "Error loading projects from database. Please try again later. " + err
-        );
+        console.log(err);
+        if (err.name !== "AbortError") {
+          alert(
+            "Error loading projects from database. Please try again later. " +
+              err
+          );
+        }
       });
   }, [searchBarValue, pageNumber, projectToShow, yearShow]);
 
@@ -676,27 +759,31 @@ const ShowProjects = ({
                   margin: "0px 10px 0px 10px",
                 }}
               >
-                <button
-                  onClick={() => {
-                    if (pageNumber > 0) {
-                      setPageNumber(pageNumber - 1);
-                    }
-                  }}
-                  className="page_back_button"
-                >
-                  {"\u2190"}
-                </button>
+                {lastKey ? (
+                  <button
+                    onClick={() => {
+                      if (pageNumber > 0) {
+                        setPageNumber(pageNumber - 1);
+                      }
+                    }}
+                    className="page_back_button"
+                  >
+                    {"\u2190"}
+                  </button>
+                ) : null}
 
-                <button
-                  className="page_forward_button"
-                  onClick={() => {
-                    if (lastKey != "") {
-                      setPageNumber(pageNumber + 1);
-                    }
-                  }}
-                >
-                  {"\u2192"}
-                </button>
+                {lastKey ? (
+                  <button
+                    className="page_forward_button"
+                    onClick={() => {
+                      if (lastKey != "") {
+                        setPageNumber(pageNumber + 1);
+                      }
+                    }}
+                  >
+                    {"\u2192"}
+                  </button>
+                ) : null}
               </div>
             ) : null}
 
@@ -762,6 +849,7 @@ const ShowProjects = ({
                 nodes,
                 authorizedUserOcto,
                 user,
+                projectToShow,
               }}
             />
           ) : (
@@ -783,10 +871,6 @@ function LoginMode({
 }) {
   const pageDict = { 0: null };
 
-  const [projectToShow, setProjectsToShow] = useState((user) =>
-    GlobalVariables.currentUser ? "recents" : "featured"
-  );
-
   const [noUserBrowsing, setNoUserBrowsing] = useState(false);
 
   const {
@@ -797,9 +881,12 @@ function LoginMode({
     getAccessTokenSilently,
   } = useAuth0();
 
+  const [projectToShow, setProjectsToShow] = useState("featured");
+
   useEffect(() => {
     if (isAuthenticated) {
       console.log("isAuthenticated");
+
       const serverUrl =
         "https://n3i60kesu6.execute-api.us-east-2.amazonaws.com/prox";
 
