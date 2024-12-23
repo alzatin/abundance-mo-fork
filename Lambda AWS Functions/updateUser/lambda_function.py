@@ -18,6 +18,14 @@ def lambda_handler(event: any, context: any):
     updateType = event["updateType"]
     newDate = datetime.datetime.now().strftime('%m/%d/%Y')
 
+    # Check if user exists in the table
+    response = table.get_item(Key={"user": user})
+    if 'Item' not in response:
+        # Add user to the table if not exists
+        table.put_item(Item={"user": user, "dateModified": newDate,
+                       "likedProjects": [], "numProjectsOwned": 0})
+        response = table.get_item(Key={"user": user})
+
     # Construct update expression
     updateExpressions = []
     expressionAttributeValues = {}
