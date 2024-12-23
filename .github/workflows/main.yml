@@ -41,10 +41,10 @@ jobs:
         uses: andstor/jsdoc-action@v1
         with:
           source_dir: ./src
-          output_dir: ./out
+          output_dir: ./docs
           config_file: jsdoc.conf.json
           template: minami
-          front_page: README.md
+          front_page: docs.md
       - name: Build
         run: npm run build
       - name: Setup Pages
