@@ -30,7 +30,12 @@ def lambda_handler(event: any, context: any):
                 response = table.get_item(Key={"user": user},
                                           ProjectionExpression="likedProjects")
                 likedProjects = response['Item']['likedProjects']
-                indexOfLikedProject = likedProjects.index(value[0])
+                indexOfLikedProject = next(
+                    (index for index, project in enumerate(likedProjects)
+                     if isinstance(project.get('owner'), str) and isinstance(project.get('repoName'), str)
+                        and project['owner'] == value[0]['owner'] and project['repoName'] == value[0]['repoName']),
+                    -1
+                )
                 print(indexOfLikedProject)
                 try:
                     print(f'REMOVE likedProjects[{indexOfLikedProject}]')

@@ -162,7 +162,6 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
         const isLiked = awsUserJson.repos.some(
           (project) => project.owner == owner && project.repoName == repoName
         );
-
         if (isLiked) {
           starred = true;
           document.getElementById("Star-button").style.backgroundColor = "gray";
@@ -302,7 +301,9 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
       method: "POST",
       body: JSON.stringify({
         user: GlobalVariables.currentUser,
-        attributeUpdates: { likedProjects: [`${owner}/${repoName}`] },
+        attributeUpdates: {
+          likedProjects: [{ owner: owner, repoName: repoName }],
+        },
         updateType: "REMOVE",
       }),
       headers: {
@@ -313,6 +314,9 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
       console.log("unliked");
       //reenable button after api call so user can unlike
       document.getElementById("Star-button").disabled = false;
+
+      document.getElementById("Star-button").style.backgroundColor =
+        "var(--abundance-color-hightlightOffWhite)";
     });
   };
 
