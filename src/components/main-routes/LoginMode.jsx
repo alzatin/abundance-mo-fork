@@ -382,9 +382,9 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
         : 0;
     },
     byDateModified: function (a, b) {
-      return new Date(a.byDateModified) > new Date(b.byDateModified)
+      return new Date(a.dateModified) > new Date(b.dateModified)
         ? -1
-        : new Date(a.byDateModified) < new Date(b.byDateModified)
+        : new Date(a.dateModified) < new Date(b.dateModified)
         ? 1
         : 0;
     },
