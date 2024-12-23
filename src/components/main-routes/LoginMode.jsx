@@ -463,9 +463,7 @@ const ShowProjects = ({
 
   const controllerRef = useRef(new AbortController());
 
-  /** forkProject takes care of making the octokit request for the authenticated user to make a copy of a not owned repo */
   const forkProject = async function (authorizedUserOcto, owner, repo) {
-    // if authenticated and it is not your project, make a clone of the project and return to create mode
     authorizedUserOcto
       .request("GET /repos/{owner}/{repo}", {
         owner: owner,
