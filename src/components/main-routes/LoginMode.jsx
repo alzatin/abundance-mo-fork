@@ -104,7 +104,7 @@ const AddProject = ({
       : projectToShow == "all"
       ? "byName"
       : projectToShow == "recents"
-      ? "byDateCreated"
+      ? "byDateModified"
       : "byName";
 
   const [orderType, setOrderType] = useState(initialOrder);
@@ -188,6 +188,9 @@ const AddProject = ({
             </option>
             <option key={"date_order"} value={"byDateCreated"}>
               Date Created
+            </option>
+            <option key={"dateModified_order"} value={"byDateModified"}>
+              Date Modified
             </option>
           </select>
         </label>
@@ -376,6 +379,13 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
       return new Date(a.dateCreated) > new Date(b.dateCreated)
         ? -1
         : new Date(a.dateCreated) < new Date(b.dateCreated)
+        ? 1
+        : 0;
+    },
+    byDateModified: function (a, b) {
+      return new Date(a.byDateModified) > new Date(b.byDateModified)
+        ? -1
+        : new Date(a.byDateModified) < new Date(b.byDateModified)
         ? 1
         : 0;
     },
