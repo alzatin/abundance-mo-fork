@@ -143,19 +143,24 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
       var repoName = GlobalVariables.currentRepo.repoName;
 
       const fetchUserData = async () => {
+        /*get liked repos from user table*/
         const queryUserApiUrl =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=" +
-          GlobalVariables.currentUser;
+          GlobalVariables.currentUser +
+          "&liked=true";
 
         let awsUser = await fetch(queryUserApiUrl);
         let awsUserJson = await awsUser.json();
+
+        console.log(awsUserJson);
 
         return awsUserJson;
       };
 
       fetchUserData().then((awsUserJson) => {
-        const isLiked = awsUserJson[0].likedProjects.some(
-          (project) => project == owner + "/" + repoName
+        console.log(awsUserJson);
+        const isLiked = awsUserJson.repos.some(
+          (project) => project.owner == owner && project.repoName == repoName
         );
 
         if (isLiked) {

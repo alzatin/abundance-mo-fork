@@ -569,7 +569,6 @@ const ShowProjects = ({
 
     repoSearchRequest(projectToShow)
       .then((result) => {
-        console.log(result);
         setStateLoaded([]);
         setApiStatus(loadingMessages.loading);
         if (result["repos"].length == 0 && projectToShow == "owned") {
