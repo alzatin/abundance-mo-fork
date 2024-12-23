@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
       - name: Esdoc
-        run: ./node_modules/.bin/esdoc
+        run: esdoc -c esdoc.json
       - name: Build
         run: npm run build
       - name: Setup Pages

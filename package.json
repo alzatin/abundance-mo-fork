@@ -46,6 +46,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "4.2.1",
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
     "gh-pages": "^6.2.0",
     "vite": "^5.1.6",
     "vite-plugin-pages": "^0.32.3"
