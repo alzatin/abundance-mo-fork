@@ -108,12 +108,11 @@ const AddProject = ({
       : "byName";
 
   const [orderType, setOrderType] = useState(initialOrder);
-
   //looking for highest ranking project and tool
   let highestRankingNode = null;
   let highestRankingToolNode = null;
 
-  if (nodes.length > 0) {
+  if (projectToShow == "featured" && nodes.length > 0) {
     const filteredNodes = nodes.filter(
       (node) => !node.topics.includes("abundance-tool")
     );
@@ -488,7 +487,6 @@ const ShowProjects = ({
     const repoSearchRequest = async () => {
       setStateLoaded([]); /*sets loading while fetching*/
       //pageDict[pageNumber] = lastKey;
-      console.log("lastKey: ", lastKey);
 
       let lastKeyQuery = lastKey
         ? "&lastKey=" + lastKey.repoName + "~" + lastKey.owner
@@ -502,7 +500,6 @@ const ShowProjects = ({
       }
 
       if (projectToShow == "all") {
-        console.log(lastKeyQuery);
         query = "attribute=searchField" + searchQuery + "&user" + lastKeyQuery;
       } else if (projectToShow == "owned") {
         query =
