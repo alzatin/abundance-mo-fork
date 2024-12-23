@@ -538,21 +538,13 @@ const ShowProjects = ({
         return awsRepos.json();
       } else if (projectToShow == "liked") {
         // placeholder for liked projects
-        //API URL for the scan-search-abundance endpoint and abundance-projects table
         const scanUserApiUrl =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=" +
-          user;
+          user +
+          "&liked=true";
         let awsLikeRepos = await fetch(scanUserApiUrl, { signal });
-        let json = await awsLikeRepos.json();
-        query = "";
-        json[0]["likedProjects"].forEach((project) => {
-          query += "likedProjects=" + project + "&";
-        });
-        const queryLikedApi =
-          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryLikedProjects?" +
-          query;
-        let awsRepos = await fetch(queryLikedApi, { signal });
-        return awsRepos.json();
+
+        return awsLikeRepos.json();
       } else if (projectToShow == "recents") {
         query =
           "attribute=searchField" +
@@ -577,6 +569,7 @@ const ShowProjects = ({
 
     repoSearchRequest(projectToShow)
       .then((result) => {
+        console.log(result);
         setStateLoaded([]);
         setApiStatus(loadingMessages.loading);
         if (result["repos"].length == 0 && projectToShow == "owned") {

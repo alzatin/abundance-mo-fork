@@ -231,7 +231,6 @@ function RunNavigation({ authorizedUserOcto, tryLogin, activeAtom }) {
           GlobalVariables.currentRepo.name +
           "/master/project.abundance?sanitize=true",
         githubMoleculesUsed: [],
-        parentRepo: owner + "/" + repo,
         svgURL:
           "https://raw.githubusercontent.com/" +
           GlobalVariables.currentUser +
