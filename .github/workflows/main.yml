@@ -33,7 +33,7 @@ jobs:
           output_dir: ./docs
           config_file: jsdoc.conf.json
           template: minami
-          front_page: DOCS.md
+          front_page: ./DOCS.md
       - name: Commit Docs
         run: |
           git config --local user.email "alzatin@gmail.com"
