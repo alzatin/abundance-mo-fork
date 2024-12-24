@@ -67,14 +67,14 @@ function CreateMode({
    * @type {object?}
    */
   var shortCuts = {
-    a: "Assembly",
+    a: "Join",
     b: "Loft", //>
     c: "Copy",
     d: "Difference",
     e: "Extrude",
     g: "GitHub", // Not working yet
     i: "Input",
-    j: "Translate",
+    j: "Move",
     r: "Rotate",
     u: "Rectangle",
     l: "Circle",
