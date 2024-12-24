@@ -463,39 +463,79 @@ const ShowProjects = ({
 
   const controllerRef = useRef(new AbortController());
 
+  const forkProject = async function (authorizedUserOcto, owner, repo) {
+    authorizedUserOcto
+      .request("GET /repos/{owner}/{repo}", {
+        owner: owner,
+        repo: repo,
+      })
+      .then((result) => {
+        authorizedUserOcto.rest.repos
+          .createFork({
+            owner: owner,
+            repo: repo,
+          })
+          .then(() => {
+            //push fork to aws
+            const apiUrl =
+              "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
+            let searchField = (
+              result.data.name +
+              " " +
+              GlobalVariables.currentUser
+            ).toLowerCase();
+            console.log(result);
+            let forkedNodeBody = {
+              owner: GlobalVariables.currentUser,
+              ranking: result.data.stargazers_count,
+              description: result.data.description,
+              searchField: searchField,
+              repoName: result.data.name,
+              forks: 0,
+              topMoleculeID: result.data.id,
+              topics: [],
+              readme:
+                "https://raw.githubusercontent.com/" +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
+                "/master/README.md?sanitize=true",
+              contentURL:
+                "https://raw.githubusercontent.com/" +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
+                "/master/project.abundance?sanitize=true",
+              githubMoleculesUsed: [],
+              parentRepo: owner + "/" + repo,
+              svgURL:
+                "https://raw.githubusercontent.com/" +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
+                "/master/project.svg?sanitize=true",
+              dateCreated: result.data.created_at,
+              html_url: result.data.html_url,
+            };
+            fetch(apiUrl, {
+              method: "POST",
+              body: JSON.stringify(forkedNodeBody),
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+              },
+            });
+          });
+      });
+  };
+
   useEffect(() => {
     octokit = new Octokit();
     var query;
 
+    /* Function to fork a dummy project if user has no projects */
     const forkDummyProject = async function (authorizedUserOcto) {
-      console.log("forking dummy project");
-      /*var owner = "alzatin";
-      var repo = "My-first-Abundance-project";
-      // if authenticated and it is not your project, make a clone of the project and return to create mode
-      authorizedUserOcto
-        .request("GET /repos/{owner}/{repo}", {
-          owner: owner,
-          repo: repo,
-        })
-        .then((result) => {
-          authorizedUserOcto.rest.repos
-            .createFork({
-              owner: owner,
-              repo: repo,
-            })
-            .then(() => {
-              var activeUser = GlobalVariables.currentUser;
-              // return to create mode
-              authorizedUserOcto
-                .request("GET /repos/{owner}/{repo}", {
-                  owner: activeUser,
-                  repo: repo,
-                })
-                .then((result) => {
-                  GlobalVariables.currentRepo = result.data;
-                });
-            });
-        });*/
+      console.log("User has no projects, forking dummy project");
+      await forkProject(authorizedUserOcto, "alzatin", "my-first-project");
     };
     const repoSearchRequest = async () => {
       setStateLoaded([]); /*sets loading while fetching*/
@@ -538,21 +578,13 @@ const ShowProjects = ({
         return awsRepos.json();
       } else if (projectToShow == "liked") {
         // placeholder for liked projects
-        //API URL for the scan-search-abundance endpoint and abundance-projects table
         const scanUserApiUrl =
           "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/USER-TABLE?user=" +
-          user;
+          user +
+          "&liked=true";
         let awsLikeRepos = await fetch(scanUserApiUrl, { signal });
-        let json = await awsLikeRepos.json();
-        query = "";
-        json[0]["likedProjects"].forEach((project) => {
-          query += "likedProjects=" + project + "&";
-        });
-        const queryLikedApi =
-          "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/queryLikedProjects?" +
-          query;
-        let awsRepos = await fetch(queryLikedApi, { signal });
-        return awsRepos.json();
+
+        return awsLikeRepos.json();
       } else if (projectToShow == "recents") {
         query =
           "attribute=searchField" +
@@ -579,7 +611,10 @@ const ShowProjects = ({
       .then((result) => {
         setStateLoaded([]);
         setApiStatus(loadingMessages.loading);
-        if (result["repos"].length == 0 && projectToShow == "owned") {
+        if (
+          (result["repos"].length == 0 && projectToShow == "recents") ||
+          projectToShow == "owned"
+        ) {
           setApiStatus(loadingMessages.noProjects);
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
@@ -592,7 +627,6 @@ const ShowProjects = ({
         } else {
           setStateLoaded(result["repos"]);
           setLastKey(result["lastKey"]);
-          console.log("lastKey: ", lastKey);
         }
       })
       .catch((err) => {
