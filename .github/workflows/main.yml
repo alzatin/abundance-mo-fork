@@ -21,7 +21,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: ./src
+          output_dir: ./out
+          config_file: conf.json
+          template: jsdoc.conf.json
+          front_page: DOCS.md
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./out
+    # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
@@ -37,27 +57,10 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-      - name: jsdoc-action
-        uses: andstor/jsdoc-action@v1
-        with:
-          source_dir: ./src
-          output_dir: ./docs
-          config_file: jsdoc.conf.json
-          template: minami
-          front_page: DOCS.md
       - name: Build
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      - name: Commit report
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name alzatin
-          git config user.email alzatin@gmail.com
-          git add .
-          git commit -m "generated"
-          git push
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
