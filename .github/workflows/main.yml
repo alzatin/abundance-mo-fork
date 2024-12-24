@@ -34,10 +34,13 @@ jobs:
           config_file: jsdoc.conf.json
           template: minami
           front_page: ./DOCS.md
+      - name: Generate Markdown documentation
+        run: npm run generate-docs
       - name: Commit Docs
         run: |
           git config --local user.email "alzatin@gmail.com"
           git config --local user.name "alzatin"
+          git add DOCS.md
           git add .
           git commit -m "Generate Docs"
       - name: Push Docs
