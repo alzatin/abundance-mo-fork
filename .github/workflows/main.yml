@@ -49,13 +49,15 @@ jobs:
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
+      - name: Upload Docs
+        uses: actions/upload-artifact@v2
+        with:
+          path: ./docs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload dist folder
-          path: |
-            ./dist
-            ./docs
+          path: ./dist
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
