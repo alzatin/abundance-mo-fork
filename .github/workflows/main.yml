@@ -54,7 +54,8 @@ jobs:
         with:
           # Upload dist folder
           path: "./dist"
-          publish_dir: "./docs"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          publish_dir: "./docs"
