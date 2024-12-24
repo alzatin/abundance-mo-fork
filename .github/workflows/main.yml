@@ -26,7 +26,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Build
         uses: andstor/jsdoc-action@v1
         with:
@@ -35,12 +34,24 @@ jobs:
           config_file: jsdoc.conf.json
           template: minami
           front_page: DOCS.md
+      - name: Commit Docs
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Generate Docs"
+      - name: Push Docs
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          force: true
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./docs
     # Single deploy job since we're just deploying
   deploy:
     environment:
