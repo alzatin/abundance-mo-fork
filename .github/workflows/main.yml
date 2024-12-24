@@ -36,8 +36,8 @@ jobs:
           front_page: DOCS.md
       - name: Commit Docs
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "alzatin@gmail.com"
+          git config --local user.name "alzatin"
           git add .
           git commit -m "Generate Docs"
       - name: Push Docs
