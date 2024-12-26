@@ -37,7 +37,6 @@ export default class Code extends Atom {
       " \n\
       \n\
       \n\
-\n\
 //Inputs:[width, length, height];\n\
 \n\
 let shape = replicad.drawRectangle(5,7)\n\

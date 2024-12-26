@@ -25,8 +25,6 @@ export default function CodeWindow(props) {
 
   langs.javascript();
 
-  console.log("langNames:", langNames); // => "jsx" | "typescript" | "javascript" | "tsx"
-
   useEffect(() => {
     if (props.activeAtom != null) {
       setdocValue(props.activeAtom.code);
@@ -60,7 +58,7 @@ export default function CodeWindow(props) {
       <ReactCodeEditor
         width="100%"
         extensions={[
-          langs.tsx(),
+          langs.javascript(),
           linter(
             esLint(new eslint.Linter(), {
               rules: {
