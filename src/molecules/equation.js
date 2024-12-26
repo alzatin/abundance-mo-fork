@@ -148,28 +148,7 @@ export default class Equation extends Atom {
           return input.connectors.length > 0;
         };
 
-        /* Make an input for the equation itself */
-        inputParams["equation"] = {
-          value: this.currentEquation,
-          label: "Current Equation",
-          disabled: false,
-          onChange: (value) => {
-            if (this.currentEquation !== value) {
-              this.setEquation(value);
-              setInputChanged(this.currentEquation);
-            }
-
-            //;
-          },
-          order: -3,
-        };
-
-        /* Make an input for the equation itself */
-        inputParams["result"] = {
-          value: this.output.value,
-          label: "Result",
-          disabled: true,
-        };
+        /* Some input parameters (inlcuding equation and result) live in the parameter editor file so they can use the set, get functions */
 
         /* Makes inputs for Io's other than geometry */
         if (input.valueType !== "geometry") {
@@ -178,18 +157,12 @@ export default class Equation extends Atom {
             disabled: checkConnector(),
             onChange: (value) => {
               input.setValue(value);
-
+              setInputChanged(value);
               //this.sendToRender();
             },
             order: -2,
           };
         }
-        inputParams["Save Equation"] = button(
-          (get) => {
-            this.setEquation(get("equation"));
-          },
-          { order: -1 }
-        );
       });
       return inputParams;
     }
