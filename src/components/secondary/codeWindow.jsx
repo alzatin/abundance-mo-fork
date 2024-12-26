@@ -3,6 +3,16 @@ import { useEffect, useState } from "react";
 import ReactCodeEditor from "@uiw/react-codemirror";
 import { keymap } from "@codemirror/view";
 import { defaultKeymap } from "@codemirror/commands";
+import {
+  loadLanguage,
+  langNames,
+  langs,
+} from "@uiw/codemirror-extensions-langs";
+import { javascript, esLint } from "@codemirror/lang-javascript";
+import { linter, lintGutter } from "@codemirror/lint";
+
+// Uses linter.mjs
+import * as eslint from "eslint-linter-browserify";
 
 /*
  * CodeWindow component is a code editor window that allows the user to edit the code of the active code atom.
@@ -10,6 +20,12 @@ import { defaultKeymap } from "@codemirror/commands";
 export default function CodeWindow(props) {
   const [docvalue, setdocValue] = useState("");
   const extensions = [keymap.of(defaultKeymap)];
+
+  loadLanguage("javascript");
+
+  langs.javascript();
+
+  console.log("langNames:", langNames); // => "jsx" | "typescript" | "javascript" | "tsx"
 
   useEffect(() => {
     if (props.activeAtom != null) {
@@ -25,11 +41,36 @@ export default function CodeWindow(props) {
     codeWindow.classList.add("code-off");
   }
 
+  const config = {
+    parserOptions: {
+      ecmaVersion: 6,
+      ecmaFeatures: {
+        jsx: true,
+        globalReturn: true,
+      },
+    },
+    rules: {
+      semi: "error",
+      "callback-return": "off",
+    },
+  };
+
   return (
     <div id="code-window" className=" code-off login-page code-window-div">
       <ReactCodeEditor
         width="100%"
-        extensions={extensions}
+        extensions={[
+          langs.tsx(),
+          linter(
+            esLint(new eslint.Linter(), {
+              rules: {
+                semi: ["error", "never"],
+                "no-undef": ["warn"],
+              },
+            })
+          ),
+          lintGutter(),
+        ]}
         value={docvalue}
         onChange={(value) => {
           setdocValue(value);
