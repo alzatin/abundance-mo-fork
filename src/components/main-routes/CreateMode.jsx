@@ -118,6 +118,43 @@ function CreateMode({
       saveProject(setSaveState, "User Save");
     }
   };
+
+  function searchGithubMolecules(molecule) {
+    return new Promise((resolve, reject) => {
+      try {
+        const githubMoleculeUsedList = [];
+
+        function recursiveSearch(molecule) {
+          // Check if the molecule has nodes
+          if (
+            !molecule.nodesOnTheScreen ||
+            !Array.isArray(molecule.nodesOnTheScreen)
+          ) {
+            return;
+          }
+          // Iterate through each node in the molecule
+          molecule.nodesOnTheScreen.forEach((node) => {
+            if (node.atomType === "GitHubMolecule") {
+              // Add to the githubMoleculeUsedList if atomType is "Github molecule"
+              githubMoleculeUsedList.push(node.parentRepo);
+            } else if (node.atomType === "Molecule") {
+              // Recursively search inside the nodes of this molecule
+              recursiveSearch(node);
+            }
+          });
+        }
+
+        // Start the recursive search
+        recursiveSearch(molecule);
+
+        // Resolve the promise with the list of Github molecules
+        resolve(githubMoleculeUsedList);
+      } catch (error) {
+        // Reject the promise if an error occurs
+        reject(error);
+      }
+    });
+  }
   /**
    * Create a commit as part of the saving process.
    */
@@ -196,7 +233,11 @@ function CreateMode({
                         })
                         .then((response) => {
                           setState(80);
-
+                          searchGithubMolecules(
+                            GlobalVariables.topLevelMolecule
+                          ).then((githubMoleculeUsedList) => {
+                            console.log(githubMoleculeUsedList);
+                          });
                           /*aws dynamo update-item lambda, also updates dateModified on aws side*/
                           const apiUpdateUrl =
                             "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";

@@ -1002,6 +1002,7 @@ export default class Molecule extends Atom {
 
   sendToRender() {
     //Send code to JSxCAD to render
+    console.log(this);
     GlobalVariables.writeToDisplay(this.uniqueID);
   }
 }
