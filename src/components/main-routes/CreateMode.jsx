@@ -136,7 +136,10 @@ function CreateMode({
           molecule.nodesOnTheScreen.forEach((node) => {
             if (node.atomType === "GitHubMolecule") {
               // Add to the githubMoleculeUsedList if atomType is "Github molecule"
-              githubMoleculeUsedList.push(node.parentRepo);
+              githubMoleculeUsedList.push({
+                owner: node.parentRepo.owner,
+                repoName: node.parentRepo.repoName,
+              });
             } else if (node.atomType === "Molecule") {
               // Recursively search inside the nodes of this molecule
               recursiveSearch(node);
@@ -237,45 +240,48 @@ function CreateMode({
                             GlobalVariables.topLevelMolecule
                           ).then((githubMoleculeUsedList) => {
                             console.log(githubMoleculeUsedList);
-                          });
-                          /*aws dynamo update-item lambda, also updates dateModified on aws side*/
-                          const apiUpdateUrl =
-                            "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
-                          let topicString =
-                            GlobalVariables.currentRepo.topics.join(" ");
-                          let searchField = (
-                            repo +
-                            " " +
-                            owner +
-                            " " +
-                            GlobalVariables.currentRepo.description +
-                            " " +
-                            topicString
-                          ).toLowerCase();
 
-                          fetch(apiUpdateUrl, {
-                            method: "POST",
-                            body: JSON.stringify({
-                              owner: owner,
-                              repoName: repo,
-                              attributeUpdates: {
-                                ranking: 0,
-                                html_url: htmlURL,
-                                searchField: searchField,
-                                description:
-                                  GlobalVariables.currentRepo.description,
-                                topics: GlobalVariables.currentRepo.topics,
+                            /*aws dynamo update-item lambda, also updates dateModified on aws side*/
+                            const apiUpdateUrl =
+                              "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
+                            let topicString =
+                              GlobalVariables.currentRepo.topics.join(" ");
+                            let searchField = (
+                              repo +
+                              " " +
+                              owner +
+                              " " +
+                              GlobalVariables.currentRepo.description +
+                              " " +
+                              topicString
+                            ).toLowerCase();
+
+                            fetch(apiUpdateUrl, {
+                              method: "POST",
+                              body: JSON.stringify({
+                                owner: owner,
+                                repoName: repo,
+                                attributeUpdates: {
+                                  ranking: 0,
+                                  html_url: htmlURL,
+                                  searchField: searchField,
+                                  githubMoleculesUsed: githubMoleculeUsedList,
+                                  description:
+                                    GlobalVariables.currentRepo.description,
+                                  topics: GlobalVariables.currentRepo.topics,
+                                },
+                              }),
+                              headers: {
+                                "Content-type":
+                                  "application/json; charset=UTF-8",
                               },
-                            }),
-                            headers: {
-                              "Content-type": "application/json; charset=UTF-8",
-                            },
-                          }).then((response) => {
-                            console.log(response);
-                            console.warn(
-                              "Project saved on git and aws updated"
-                            );
-                            setState(100);
+                            }).then((response) => {
+                              console.log(response);
+                              console.warn(
+                                "Project saved on git and aws updated"
+                              );
+                              setState(100);
+                            });
                           });
                         });
                     });
