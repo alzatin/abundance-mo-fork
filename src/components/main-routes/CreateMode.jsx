@@ -239,8 +239,6 @@ function CreateMode({
                           searchGithubMolecules(
                             GlobalVariables.topLevelMolecule
                           ).then((githubMoleculeUsedList) => {
-                            console.log(githubMoleculeUsedList);
-
                             /*aws dynamo update-item lambda, also updates dateModified on aws side*/
                             const apiUpdateUrl =
                               "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
@@ -276,7 +274,6 @@ function CreateMode({
                                   "application/json; charset=UTF-8",
                               },
                             }).then((response) => {
-                              console.log(response);
                               console.warn(
                                 "Project saved on git and aws updated"
                               );
