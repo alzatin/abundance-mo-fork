@@ -104,7 +104,7 @@ function CreateMode({
     //Set autosave interval
     const myInterval = setInterval(() => {
       setSavePopUp(true);
-      saveProject(setSaveState);
+      saveProject(setSaveState, "Auto Save");
     }, 300000);
 
     //Clearing the interval
@@ -115,7 +115,7 @@ function CreateMode({
     if (e.metaKey && e.key == "s") {
       e.preventDefault();
       setSavePopUp(true);
-      saveProject(setSaveState);
+      saveProject(setSaveState, "User Save");
     }
   };
   /**
@@ -259,7 +259,7 @@ function CreateMode({
         })
         .then((result) => {
           activeAtom.updateFile(file, result.data.content.sha);
-          saveProject(setSaveState);
+          saveProject(setSaveState, "Upload Save");
         });
     };
     reader.readAsDataURL(file);
@@ -279,7 +279,7 @@ function CreateMode({
   /**
    * Saves project by making a commit to the Github repository.
    */
-  const saveProject = async (setState) => {
+  const saveProject = async (setState, typeSave) => {
     setState(5);
 
     let finalSVG;
@@ -350,7 +350,7 @@ function CreateMode({
         repo: GlobalVariables.currentRepo.repoName,
         changes: {
           files: filesObject,
-          commit: "Autosave",
+          commit: typeSave ? typeSave : "Auto Save",
         },
       },
       setState

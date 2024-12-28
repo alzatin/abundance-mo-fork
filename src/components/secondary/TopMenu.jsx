@@ -74,7 +74,7 @@ function TopMenu({
       id: "Save Project",
       buttonFunc: () => {
         setSavePopUp(true);
-        saveProject(setSaveState);
+        saveProject(setSaveState, "User Save");
       },
     },
     {
