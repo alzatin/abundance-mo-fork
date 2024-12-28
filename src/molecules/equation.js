@@ -115,24 +115,32 @@ export default class Equation extends Atom {
    * Evaluate the equation
    */
   evaluateEquation() {
-    //Substitute numbers into the string
-    var substitutedEquation = this.currentEquation;
-    this.name = this.currentEquation;
+    try {
+      // Substitute numbers into the string
+      var substitutedEquation = this.currentEquation;
+      this.name = this.currentEquation;
 
-    //Find all the letters in this equation
-    var re = /[a-zA-Z]/g;
-    const variables = this.currentEquation.match(re);
-    for (var variable in variables) {
-      for (var i = 0; i < this.inputs.length; i++) {
-        if (this.inputs[i].name == variables[variable]) {
-          substitutedEquation = substitutedEquation.replace(
-            this.inputs[i].name,
-            this.findIOValue(this.inputs[i].name)
-          );
+      // Find all the letters in this equation
+      var re = /[a-zA-Z]/g;
+      const variables = this.currentEquation.match(re);
+      for (var variable in variables) {
+        for (var i = 0; i < this.inputs.length; i++) {
+          if (this.inputs[i].name == variables[variable]) {
+            substitutedEquation = substitutedEquation.replace(
+              this.inputs[i].name,
+              this.findIOValue(this.inputs[i].name)
+            );
+          }
         }
       }
+
+      // Evaluate the substituted equation
+      return GlobalVariables.limitedEvaluate(substitutedEquation);
+    } catch (error) {
+      console.error("Error evaluating equation:", error);
+      this.setAlert(error);
+      return NaN;
     }
-    return GlobalVariables.limitedEvaluate(substitutedEquation);
   }
 
   /**
@@ -184,6 +192,7 @@ export default class Equation extends Atom {
 
         this.output.setValue(this.value);
         this.output.ready = true;
+        this.clearAlert();
       }
     } catch (err) {
       console.warn(err);
