@@ -20,6 +20,7 @@
     "@react-three/drei": "^9.115.0",
     "@react-three/fiber": "^8.15.16",
     "@uiw/codemirror-extensions-langs": "^4.23.7",
+    "@uiw/codemirror-theme-andromeda": "^4.23.7",
     "@uiw/react-codemirror": "^4.22.0",
     "any-nest": "^1.0.3",
     "circular-menu": "^1.0.6",

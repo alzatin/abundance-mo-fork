@@ -102,7 +102,7 @@
   flex: 1; /* expand to the maximum */
   height: 46%;
   width: 100%;
-  z-index: 5;
+  z-index: 1000;
   position: absolute;
 }
 

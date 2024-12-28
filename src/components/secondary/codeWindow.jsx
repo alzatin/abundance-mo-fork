@@ -10,6 +10,7 @@ import {
 } from "@uiw/codemirror-extensions-langs";
 import { javascript, esLint } from "@codemirror/lang-javascript";
 import { linter, lintGutter } from "@codemirror/lint";
+import { andromeda, andromedaInit } from "@uiw/codemirror-theme-andromeda";
 
 // Uses linter.mjs
 import * as eslint from "eslint-linter-browserify";
@@ -57,6 +58,7 @@ export default function CodeWindow(props) {
     <div id="code-window" className=" code-off login-page code-window-div">
       <ReactCodeEditor
         width="100%"
+        height="500px"
         extensions={[
           langs.javascript(),
           linter(
@@ -73,7 +75,7 @@ export default function CodeWindow(props) {
         onChange={(value) => {
           setdocValue(value);
         }}
-        theme={"dark"}
+        theme={andromeda}
       />
       <button
         type="button"
