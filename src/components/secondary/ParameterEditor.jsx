@@ -146,6 +146,13 @@ export default (function ParamsEditor({
     },
   };
 
+  useEffect(
+    () => () => {
+      store1.dispose();
+    },
+    [activeAtom]
+  );
+
   return (
     <>
       {" "}
