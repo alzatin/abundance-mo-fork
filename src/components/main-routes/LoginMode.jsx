@@ -604,11 +604,13 @@ const ShowProjects = ({
         query;
       let awsRepos = await fetch(scanApiUrl, { signal }); //< return result.json();[repos]
       //let awsRepos = await fetch(scanUserApiUrl);
+
       return awsRepos.json();
     };
 
     repoSearchRequest(projectToShow)
       .then((result) => {
+        console.log(result);
         setStateLoaded([]);
         setApiStatus(loadingMessages.loading);
         if (
