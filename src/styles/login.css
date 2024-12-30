@@ -294,6 +294,27 @@
   cursor: pointer;
 }
 
+.closeButton2 {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  padding: auto;
+  border: none;
+  width: 20px;
+  height: 20px;
+  background-color: var(--settingsPopup-closeButton);
+  font: 1em sans-serif;
+  cursor: pointer;
+  border-color: var(--settingsPopup-text);
+  border-radius: 50%;
+  color: var(--settingsPopup-text);
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+}
+
 .container {
   position: relative;
   z-index: 1;

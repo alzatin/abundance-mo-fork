@@ -42,15 +42,14 @@ const SettingsPopUp = ({ setSettingsPopUp, setShortCuts }) => {
   return (
     <div className="settingsDiv">
       <div className="form animate fadeInUp one">
-        <button
-          style={{ width: "3%", display: "block" }}
+        <a
           onClick={() => {
             setSettingsPopUp(false);
           }}
-          className="closeButton"
+          className="closeButton2"
         >
-          {" "}
-        </button>
+          {"\u00D7"}
+        </a>
         <h2 style={{ margin: "0 0 15px 0" }}>Project Preferences</h2>
         <div id="project-info">
           <div id="project-info-name">
