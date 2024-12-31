@@ -594,7 +594,8 @@ async function importingSTL(targetID, file) {
 
 async function importingSVG(targetID, svg, width) {
   const baseWidth = width + width * 0.05;
-  const baseShape = drawRectangle(baseWidth, baseWidth)
+  const baseShape = replicad
+    .drawRectangle(baseWidth, baseWidth)
     .sketchOnPlane()
     .extrude(1);
   const svgString = svg;
@@ -606,13 +607,25 @@ async function importingSVG(targetID, svg, width) {
     svgString: svgString,
     width: width,
   })*/
-  library[targetID] = {
-    geometry: [drawSVG(svgString, { width: width })],
-    tags: [],
-    color: "#FF9065",
-    bom: [],
-  };
-  return true;
+  try {
+    let drawnSVG = await drawSVG(svgString, { width: width });
+    let center = drawnSVG.boundingBox.center;
+
+    library[targetID] = {
+      geometry: [drawnSVG.clone().translate(-center[0], -center[1])],
+      tags: [],
+      color: "#FF9065",
+      bom: [],
+    };
+    console.log("SVG imported successfully");
+
+    return true;
+  } catch (error) {
+    //add alert  ----> Try tweaking your file here https://iconly.io/tools/svg-convert-stroke-to-fill "
+
+    console.error("Error importing SVG:", error);
+    throw error;
+  }
 }
 
 const prettyProjection = (shape) => {
@@ -1566,6 +1579,7 @@ function generateDisplayMesh(id) {
       });
     }
     let meshArray = [];
+    console.log(library[id]);
 
     //Flatten the assembly to remove hierarchy
     const flattened = flattenAssembly(library[id]);
