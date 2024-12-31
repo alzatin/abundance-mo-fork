@@ -614,6 +614,7 @@ async function importingSVG(targetID, svg, width) {
     library[targetID] = {
       geometry: [drawnSVG.clone().translate(-center[0], -center[1])],
       tags: [],
+      plane: new Plane().pivot(0, "Y"),
       color: "#FF9065",
       bom: [],
     };
