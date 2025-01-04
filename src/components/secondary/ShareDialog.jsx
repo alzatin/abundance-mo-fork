@@ -82,7 +82,8 @@ function ShareDialog({
               }
               target="_blank"
             >
-              {window.location.origin}/run/{GlobalVariables.currentRepo.owner}/
+              {window.location.origin}/Abundance/run/
+              {GlobalVariables.currentRepo.owner}/
               {GlobalVariables.currentRepo.repoName}
             </a>
           </div>
