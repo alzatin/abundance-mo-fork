@@ -102,7 +102,7 @@ const AddProject = ({
     projectToShow == "featured"
       ? "byStars"
       : projectToShow == "all"
-      ? "byName"
+      ? "byDateModified"
       : projectToShow == "recents"
       ? "byDateModified"
       : "byName";
