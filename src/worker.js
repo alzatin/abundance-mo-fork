@@ -1580,7 +1580,6 @@ function generateDisplayMesh(id) {
       });
     }
     let meshArray = [];
-    console.log(library[id]);
 
     //Flatten the assembly to remove hierarchy
     const flattened = flattenAssembly(library[id]);
