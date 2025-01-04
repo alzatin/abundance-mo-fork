@@ -852,29 +852,6 @@ const ShowProjects = ({
                   opacity: "0.5",
                 }}
               />
-              {projectToShow == "all" ? (
-                <label htmlFor="year-by">
-                  <img
-                    src={
-                      import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/sort.svg"
-                    }
-                    alt="year-show"
-                    style={{ width: "15px" }}
-                  />
-                  <select
-                    className="order_dropdown"
-                    id="year-by"
-                    defaultValue={currentYear}
-                    onChange={(e) => setYearShow(e.target.value)}
-                  >
-                    {years.map((year) => (
-                      <option key={`${year}_projects`} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              ) : null}
             </button>
           </div>
           {projectsLoaded.length > 0 ? (
