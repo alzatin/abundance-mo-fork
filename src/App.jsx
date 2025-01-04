@@ -53,6 +53,7 @@ export default function ReplicadApp() {
     console.log("useEffect  in top levelrunning");
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
+
       setOutdatedMesh(true);
       if (resetView) {
         cad
@@ -71,9 +72,12 @@ export default function ReplicadApp() {
           .then((m) => {
             setMesh(m);
             setOutdatedMesh(false);
+            const centeredText = document.querySelector(".loading");
+            centeredText.style.display = "none";
           })
           .catch((e) => {
             console.error("Can't display Mesh " + e);
+            activeAtom.setAlert("Can't display Mesh " + e);
           });
         // if something is connected to the output, set a wireframe mesh
         cad

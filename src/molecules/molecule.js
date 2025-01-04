@@ -547,6 +547,10 @@ export default class Molecule extends Atom {
 
     console.log("recompute molecule in molecule" + this.name);
     try {
+      this.processing = true;
+      const centeredText = document.querySelector(".loading");
+      centeredText.style.display = "flex";
+
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
         this.compileBom().then((result) => {
