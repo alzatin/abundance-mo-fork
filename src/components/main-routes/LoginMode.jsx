@@ -393,9 +393,9 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
         : 0;
     },
     byDateModified: function (a, b) {
-      return new Date(a.dateModified) > new Date(b.dateModified)
+      return a.dateModified > b.dateModified
         ? -1
-        : new Date(a.dateModified) < new Date(b.dateModified)
+        : a.dateModified < b.dateModified
         ? 1
         : 0;
     },
@@ -454,11 +454,14 @@ const ShowProjects = ({
     setProjectsToShow("recents");
   }, [GlobalVariables.currentUser]);
 
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
+
   const [projectsLoaded, setStateLoaded] = useState([]);
   const [lastKey, setLastKey] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
   const [searchBarValue, setSearchBarValue] = useState("");
-  const [yearShow, setYearShow] = useState("2024");
+  const [yearShow, setYearShow] = useState(currentYear);
   const [apiStatus, setApiStatus] = useState(loadingMessages.loading);
 
   const controllerRef = useRef(new AbortController());
@@ -861,18 +864,14 @@ const ShowProjects = ({
                   <select
                     className="order_dropdown"
                     id="year-by"
-                    defaultValue={2024}
+                    defaultValue={currentYear}
                     onChange={(e) => setYearShow(e.target.value)}
                   >
-                    <option key={"2024_projects"} value={"2024"}>
-                      2024
-                    </option>
-                    <option key={"2023_projects"} value={"2023"}>
-                      2023
-                    </option>
-                    <option key={"2022_projects"} value={"2022"}>
-                      2022
-                    </option>
+                    {years.map((year) => (
+                      <option key={`${year}_projects`} value={year}>
+                        {year}
+                      </option>
+                    ))}
                   </select>
                 </label>
               ) : null}
