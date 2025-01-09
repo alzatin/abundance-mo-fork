@@ -80,7 +80,7 @@ const InitialLog = ({ setNoUserBrowsing }) => {
                 "/imgs/abundance_lettering.png"
               }
               alt="logo"
-              style={{ width: "300px" }}
+              className="login-logo"
             />
           &lt;/div>
           &lt;p style={{ padding: "0 20px" }}>
@@ -169,15 +169,7 @@ const AddProject = ({
 
   return (
     &lt;>
-      &lt;div
-        style={{
-          flexDirection: "row",
-          height: "30px",
-          widht: "50%",
-          margin: "25px 0 10px 20px",
-          display: "flex",
-        }}
-      >
+      &lt;div id="sorting-button-div">
         &lt;button
           className="list_thumb_button"
           key="list-filter-button"
@@ -236,9 +228,7 @@ const AddProject = ({
           &lt;/select>
         &lt;/label>
       &lt;/div>
-      &lt;div
-        style={{ display: "flex", flexDirection: "column", height: "425px" }}
-      >
+      &lt;div className="project-items-div">
         {projectToShow == "featured" &amp;&amp;
         highestRankingNode &amp;&amp;
         highestRankingToolNode ? (
@@ -813,7 +803,7 @@ const ShowProjects = ({
         {GlobalVariables.currentUser ? UserNavDiv : noUserNavDiv}
         &lt;div className="right-login-div">
           &lt;span style={{ fontFamily: "Roboto" }}>
-            Welcome to Abundance {GlobalVariables.currentUser}
+            Welcome {GlobalVariables.currentUser}
           &lt;/span>
           &lt;div className="home-section">
             {projectToShow == "owned"
@@ -1008,10 +998,10 @@ function LoginMode({
               &lt;img
                 src={
                   import.meta.env.VITE_APP_PATH_FOR_PICS +
-                  "/imgs/abundance_lettering.png"
+                  "/imgs/abundance_.png"
                 }
                 alt="logo"
-                style={{ width: "300px" }}
+                className="login-logo"
               />
             &lt;/div>
 
@@ -1081,17 +1071,14 @@ function LoginMode({
         ) : null}
       &lt;/div>
       &lt;div className="top-banner" style={{ margin: "35px 0 0 30px" }}>
-        &lt;div
-          id="welcome-logo"
-          style={{ display: "flex", margin: "10px 10px", alignItems: "center" }}
-        >
+        &lt;div id="welcome-logo">
           &lt;img
             src={
               import.meta.env.VITE_APP_PATH_FOR_PICS +
               "/imgs/abundance_logo.png"
             }
             alt="logo"
-            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+            id="welcome-logo-img"
           />
           &lt;img
             src={
@@ -1099,9 +1086,97 @@ function LoginMode({
               "/imgs/abundance_lettering.png"
             }
             alt="logo"
+            id="welcome-logo-lettering"
             style={{ height: "20px", padding: "10px" }}
           />
         &lt;/div>
+
+        {isAuthenticated ? (
+          &lt;section id="mobile-nav" class="top-nav">
+            &lt;input id="menu-toggle" type="checkbox" />
+            &lt;label class="menu-button-container" for="menu-toggle">
+              &lt;div class="menu-button">&lt;/div>
+            &lt;/label>
+            &lt;button
+              className="closeButtonmobile"
+              onClick={() => {
+                logout({
+                  returnTo: import.meta.env.VITE_APP_DEV
+                    ? window.location.origin
+                    : "https://barboursmith.github.io/Abundance", // Redirect to home page or specified URL
+                });
+              }}
+            >
+              &lt;span> Log out &lt;/span>
+            &lt;/button>
+
+            &lt;div className="menu">
+              &lt;div
+                className="login-nav-item"
+                onClick={() => {
+                  setExportPopUp(true);
+                }}
+              >
+                &lt;p>New project&lt;/p>
+              &lt;/div>
+              &lt;div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "owned" ? " login-nav-item-clicked" : "")
+                }
+                onClick={(e) => {
+                  setProjectsToShow("owned");
+                }}
+              >
+                &lt;p>My Projects&lt;/p>
+              &lt;/div>
+              &lt;div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "recents" ? " login-nav-item-clicked" : "")
+                }
+                onClick={() => {
+                  setProjectsToShow("recents");
+                }}
+              >
+                &lt;p> Recent Projects&lt;/p>
+              &lt;/div>
+              &lt;div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "liked" ? " login-nav-item-clicked" : "")
+                }
+                onClick={() => {
+                  setProjectsToShow("liked");
+                }}
+              >
+                &lt;p> Liked Projects&lt;/p>
+              &lt;/div>
+              &lt;div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "featured" ? " login-nav-item-clicked" : "")
+                }
+                onClick={() => {
+                  setProjectsToShow("featured");
+                }}
+              >
+                &lt;p> Browse Featured Projects&lt;/p>
+              &lt;/div>
+              &lt;div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "all" ? " login-nav-item-clicked" : "")
+                }
+                onClick={() => {
+                  setProjectsToShow("all");
+                }}
+              >
+                &lt;p> Browse All Other Projects&lt;/p>
+              &lt;/div>
+            &lt;/div>
+          &lt;/section>
+        ) : null}
       &lt;/div>
       {popUpContent}
     &lt;/div>
@@ -1123,7 +1198,7 @@ export default LoginMode;
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Jan 09 2025 15:18:28 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Jan 09 2025 15:20:07 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
