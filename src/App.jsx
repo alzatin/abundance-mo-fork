@@ -23,6 +23,7 @@ import "./styles/maslowCreate.css";
 import "./styles//menuIcons.css";
 import "./styles//login.css";
 import "./styles//codemirror.css";
+import { use } from "react";
 /**
  * The octokit instance which allows authenticated interaction with GitHub.
  * @type {object}
@@ -39,6 +40,17 @@ export default function ReplicadApp() {
     cad.createMesh(size).then((m) => setMesh(m));
     cad.createMesh(size).then((m) => setWireMesh(m));
   }, [size]);
+
+  useEffect(() => {
+    lockOrientation("landscape-primary");
+
+    return () => {
+      // Unlock orientation on component unmount
+      if ("screen" in window && "orientation" in window.screen) {
+        screen.orientation.unlock();
+      }
+    };
+  }, []);
 
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
@@ -92,6 +104,21 @@ export default function ReplicadApp() {
     GlobalVariables.cad = cad;
   }, [activeAtom]);
 
+  function lockOrientation(orientation) {
+    if ("screen" in window && "orientation" in window.screen) {
+      const lockPromise = screen.orientation.lock(orientation);
+
+      if (lockPromise) {
+        lockPromise.catch((error) => {
+          console.error("Error locking orientation:", error);
+        });
+      } else {
+        console.warn("Screen Orientation API is not supported.");
+      }
+    } else {
+      console.warn("Screen Orientation API is not supported.");
+    }
+  }
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
