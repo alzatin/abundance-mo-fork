@@ -39,7 +39,7 @@ const InitialLog = ({ setNoUserBrowsing }) => {
                 "/imgs/abundance_lettering.png"
               }
               alt="logo"
-              style={{ width: "300px" }}
+              className="login-logo"
             />
           </div>
           <p style={{ padding: "0 20px" }}>
@@ -128,15 +128,7 @@ const AddProject = ({
 
   return (
     <>
-      <div
-        style={{
-          flexDirection: "row",
-          height: "30px",
-          widht: "50%",
-          margin: "25px 0 10px 20px",
-          display: "flex",
-        }}
-      >
+      <div id="sorting-button-div">
         <button
           className="list_thumb_button"
           key="list-filter-button"
@@ -195,9 +187,7 @@ const AddProject = ({
           </select>
         </label>
       </div>
-      <div
-        style={{ display: "flex", flexDirection: "column", height: "425px" }}
-      >
+      <div className="project-items-div">
         {projectToShow == "featured" &&
         highestRankingNode &&
         highestRankingToolNode ? (
@@ -772,7 +762,7 @@ const ShowProjects = ({
         {GlobalVariables.currentUser ? UserNavDiv : noUserNavDiv}
         <div className="right-login-div">
           <span style={{ fontFamily: "Roboto" }}>
-            Welcome to Abundance {GlobalVariables.currentUser}
+            Welcome {GlobalVariables.currentUser}
           </span>
           <div className="home-section">
             {projectToShow == "owned"
@@ -967,10 +957,10 @@ function LoginMode({
               <img
                 src={
                   import.meta.env.VITE_APP_PATH_FOR_PICS +
-                  "/imgs/abundance_lettering.png"
+                  "/imgs/abundance_.png"
                 }
                 alt="logo"
-                style={{ width: "300px" }}
+                className="login-logo"
               />
             </div>
 
@@ -1040,17 +1030,14 @@ function LoginMode({
         ) : null}
       </div>
       <div className="top-banner" style={{ margin: "35px 0 0 30px" }}>
-        <div
-          id="welcome-logo"
-          style={{ display: "flex", margin: "10px 10px", alignItems: "center" }}
-        >
+        <div id="welcome-logo">
           <img
             src={
               import.meta.env.VITE_APP_PATH_FOR_PICS +
               "/imgs/abundance_logo.png"
             }
             alt="logo"
-            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+            id="welcome-logo-img"
           />
           <img
             src={
@@ -1058,9 +1045,97 @@ function LoginMode({
               "/imgs/abundance_lettering.png"
             }
             alt="logo"
+            id="welcome-logo-lettering"
             style={{ height: "20px", padding: "10px" }}
           />
         </div>
+
+        {isAuthenticated ? (
+          <section id="mobile-nav" class="top-nav">
+            <input id="menu-toggle" type="checkbox" />
+            <label class="menu-button-container" for="menu-toggle">
+              <div class="menu-button"></div>
+            </label>
+            <button
+              className="closeButtonmobile"
+              onClick={() => {
+                logout({
+                  returnTo: import.meta.env.VITE_APP_DEV
+                    ? window.location.origin
+                    : "https://barboursmith.github.io/Abundance", // Redirect to home page or specified URL
+                });
+              }}
+            >
+              <span> Log out </span>
+            </button>
+
+            <div className="menu">
+              <div
+                className="login-nav-item"
+                onClick={() => {
+                  setExportPopUp(true);
+                }}
+              >
+                <p>New project</p>
+              </div>
+              <div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "owned" ? " login-nav-item-clicked" : "")
+                }
+                onClick={(e) => {
+                  setProjectsToShow("owned");
+                }}
+              >
+                <p>My Projects</p>
+              </div>
+              <div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "recents" ? " login-nav-item-clicked" : "")
+                }
+                onClick={() => {
+                  setProjectsToShow("recents");
+                }}
+              >
+                <p> Recent Projects</p>
+              </div>
+              <div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "liked" ? " login-nav-item-clicked" : "")
+                }
+                onClick={() => {
+                  setProjectsToShow("liked");
+                }}
+              >
+                <p> Liked Projects</p>
+              </div>
+              <div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "featured" ? " login-nav-item-clicked" : "")
+                }
+                onClick={() => {
+                  setProjectsToShow("featured");
+                }}
+              >
+                <p> Browse Featured Projects</p>
+              </div>
+              <div
+                className={
+                  "login-nav-item" +
+                  (projectToShow == "all" ? " login-nav-item-clicked" : "")
+                }
+                onClick={() => {
+                  setProjectsToShow("all");
+                }}
+              >
+                <p> Browse All Other Projects</p>
+              </div>
+            </div>
+          </section>
+        ) : null}
       </div>
       {popUpContent}
     </div>
