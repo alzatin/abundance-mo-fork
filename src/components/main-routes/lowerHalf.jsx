@@ -99,6 +99,15 @@ export default memo(function LowerHalf({
         </div>
         <div id="viewer_bar"></div>
       </div>
+      <div className={`centered-text hidden`}>
+        <div className="loading">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>
+      </div>
       <div id="bottom_bar"></div>
     </>
   );

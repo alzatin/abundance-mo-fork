@@ -23,6 +23,7 @@ import "./styles/maslowCreate.css";
 import "./styles//menuIcons.css";
 import "./styles//login.css";
 import "./styles//codemirror.css";
+import { use } from "react";
 /**
  * The octokit instance which allows authenticated interaction with GitHub.
  * @type {object}
@@ -40,6 +41,17 @@ export default function ReplicadApp() {
     cad.createMesh(size).then((m) => setWireMesh(m));
   }, [size]);
 
+  useEffect(() => {
+    lockOrientation("landscape-primary");
+
+    return () => {
+      // Unlock orientation on component unmount
+      if ("screen" in window && "orientation" in window.screen) {
+        screen.orientation.unlock();
+      }
+    };
+  }, []);
+
   const [isloggedIn, setIsLoggedIn] = useState(false);
   const [activeAtom, setActiveAtom] = useState(null);
   const [exportPopUp, setExportPopUp] = useState(false);
@@ -53,6 +65,7 @@ export default function ReplicadApp() {
     console.log("useEffect  in top levelrunning");
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
+
       setOutdatedMesh(true);
       if (resetView) {
         cad
@@ -71,9 +84,12 @@ export default function ReplicadApp() {
           .then((m) => {
             setMesh(m);
             setOutdatedMesh(false);
+            const centeredText = document.querySelector(".loading");
+            centeredText.style.display = "none";
           })
           .catch((e) => {
             console.error("Can't display Mesh " + e);
+            activeAtom.setAlert("Can't display Mesh " + e);
           });
         // if something is connected to the output, set a wireframe mesh
         cad
@@ -88,6 +104,21 @@ export default function ReplicadApp() {
     GlobalVariables.cad = cad;
   }, [activeAtom]);
 
+  function lockOrientation(orientation) {
+    if ("screen" in window && "orientation" in window.screen) {
+      const lockPromise = screen.orientation.lock(orientation);
+
+      if (lockPromise) {
+        lockPromise.catch((error) => {
+          console.error("Error locking orientation:", error);
+        });
+      } else {
+        console.warn("Screen Orientation API is not supported.");
+      }
+    } else {
+      console.warn("Screen Orientation API is not supported.");
+    }
+  }
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
