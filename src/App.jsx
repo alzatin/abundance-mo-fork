@@ -71,9 +71,12 @@ export default function ReplicadApp() {
           .then((m) => {
             setMesh(m);
             setOutdatedMesh(false);
+            const loadingDots = document.querySelector(".loading");
+            loadingDots.style.display = "none";
           })
           .catch((e) => {
             console.error("Can't display Mesh " + e);
+            activeAtom.setAlert("Can't display Mesh " + e);
           });
         // if something is connected to the output, set a wireframe mesh
         cad
