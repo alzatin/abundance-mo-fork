@@ -543,7 +543,7 @@ Sidebar navigation
 .run-navigation {
   position: absolute;
   width: 2vh;
-  top: 20%;
+  bottom: 10%;
   left: 2vh;
   z-index: 3;
 }
@@ -553,7 +553,7 @@ Sidebar navigation
   background-color: var(--run-navigation-button);
   width: 35px;
   height: 35px;
-  margin-bottom: 50px;
+  margin-bottom: 25px;
 }
 .run-navigation-button svg {
   position: relative;
@@ -662,7 +662,6 @@ Sidebar navigation
   .run-navigation {
     position: absolute;
     width: 60px;
-    top: 100px;
     left: 100px;
     z-index: 3;
   }
@@ -672,7 +671,7 @@ Sidebar navigation
     background-color: var(--run-navigation-button);
     width: 60px;
     height: 60px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
   }
   .run-navigation-button svg {
     scale: 0.7;
@@ -694,6 +693,7 @@ Sidebar navigation
   .info_run_div {
     line-height: 15px;
     font-size: 18px;
+    left: 8vh;
     border: 2px solid var(--run-project-info);
   }
 
