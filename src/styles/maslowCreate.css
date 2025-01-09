@@ -607,8 +607,8 @@ Sidebar navigation
 .info_run_div {
   padding: 10px 20px;
   position: absolute;
-  bottom: 10%;
-  left: 3vh;
+  bottom: 1vh;
+  left: 4vh;
   z-index: 4;
   color: var(--run-project-info);
   line-height: 5px;
