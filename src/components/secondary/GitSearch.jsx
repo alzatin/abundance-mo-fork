@@ -8,6 +8,8 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
   var [loadingGit, setLoadingGit] = useState(false);
   const [lastKey, setLastKey] = useState("");
   const [yearShow, setYearShow] = useState("2024");
+  const [isHovering, setIsHovering] = useState(false);
+  const [panelItem, setPanelItem] = useState({});
   const maslowTopic = useRef(null);
 
   /**
@@ -63,9 +65,6 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
   const handleChange = function (e) {
     searchBarValue = e.target.value;
   };
-
-  const [isHovering, setIsHovering] = useState(false);
-  const [panelItem, setPanelItem] = useState({});
 
   const handleMouseOver = (item, key) => {
     console.log(item);
