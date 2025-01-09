@@ -20,6 +20,7 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
     GlobalVariables.currentMolecule.loadGithubMoleculeByName(item);
     setSearchingGitHub(false);
     setGitRepos([]);
+    setIsHovering(false);
   }
   // conditional query for maslow projects
   const searchGitHub = function () {
