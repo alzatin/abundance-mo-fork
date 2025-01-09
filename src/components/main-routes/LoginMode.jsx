@@ -957,7 +957,7 @@ function LoginMode({
               <img
                 src={
                   import.meta.env.VITE_APP_PATH_FOR_PICS +
-                  "/imgs/abundance_.png"
+                  "/imgs/abundance_lettering.png"
                 }
                 alt="logo"
                 className="login-logo"
