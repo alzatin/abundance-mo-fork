@@ -489,17 +489,17 @@ Sidebar navigation
 
 .paramEditorDivRun {
   position: absolute;
-  top: 19%;
+  top: 11vh;
   right: 10px;
-  width: 280px;
+  width: 250px;
   z-index: 3;
 }
 
 .exportEditorDivRun {
   position: absolute;
-  top: 12%;
+  top: 6vh;
   right: 10px;
-  width: 280px;
+  width: 250px;
   z-index: 3;
 }
 
@@ -512,45 +512,51 @@ Sidebar navigation
 }
 .gridEditorDivRun {
   position: absolute;
-  top: 5%;
+  top: 1vh;
   right: 10px;
-  width: 280px;
+  width: 250px;
   z-index: 5;
 }
 .bomEditorDiv {
   position: absolute;
   top: 47%;
   left: 300px;
-  width: 280px;
+  width: 250px;
   z-index: 3;
 }
 .bomEditorDivRun {
   position: absolute;
   top: 5%;
   right: 310px;
-  width: 280px;
+  width: 250px;
   z-index: 2;
 }
 
-/* Run Navigation */
+/* Run Navigation Mobile */
 
 .run-navigation {
   position: absolute;
-  width: 60px;
-
-  top: 150px;
-  left: 100px;
+  width: 2vh;
+  top: 200px;
+  left: 2vh;
   z-index: 3;
 }
 .run-navigation-button {
   border: 2px solid var(--run-navigation-button-hover);
   border-radius: 50%;
   background-color: var(--run-navigation-button);
-  width: 60px;
-  height: 60px;
+  width: 35px;
+  height: 35px;
   margin-bottom: 50px;
 }
-
+.run-navigation-button svg {
+  scale: 1;
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
 .run-navigation-button:hover {
   cursor: pointer;
   border: 2px solid var(--run-navigation-button);
@@ -600,4 +606,76 @@ Sidebar navigation
   right: 20%;
   z-index: 4;
   color: var(--run-project-info);
+}
+
+@media (min-width: 768px) {
+  .paramEditorDivRun {
+    position: absolute;
+    top: 19%;
+    right: 10px;
+    width: 280px;
+    z-index: 3;
+  }
+  .exportEditorDivRun {
+    position: absolute;
+    top: 12%;
+    right: 10px;
+    width: 280px;
+    z-index: 3;
+  }
+
+  .gridEditorDiv {
+    position: absolute;
+    top: 47%;
+    left: 10px;
+    width: 280px;
+    z-index: 3;
+  }
+  .gridEditorDivRun {
+    position: absolute;
+    top: 5%;
+    right: 10px;
+    width: 280px;
+    z-index: 5;
+  }
+  .bomEditorDiv {
+    position: absolute;
+    top: 47%;
+    left: 300px;
+    width: 280px;
+    z-index: 3;
+  }
+  .bomEditorDivRun {
+    position: absolute;
+    top: 5%;
+    right: 310px;
+    width: 280px;
+    z-index: 2;
+  }
+  /* Run Navigation */
+
+  .run-navigation {
+    position: absolute;
+    width: 60px;
+
+    top: 150px;
+    left: 100px;
+    z-index: 3;
+  }
+  .run-navigation-button {
+    border: 2px solid var(--run-navigation-button-hover);
+    border-radius: 50%;
+    background-color: var(--run-navigation-button);
+    width: 60px;
+    height: 60px;
+    margin-bottom: 50px;
+  }
+  .run-navigation-button svg {
+    scale: 0.7;
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
 }
