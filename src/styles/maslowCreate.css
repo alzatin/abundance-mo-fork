@@ -67,6 +67,7 @@
  */
 
 body {
+  min-height: 100vh;
   margin: 0px;
   padding: 0px;
   font-family: "Work Sans", sans-serif;
@@ -686,5 +687,11 @@ Sidebar navigation
   80%,
   100% {
     opacity: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .loading {
+    height: 100vh;
   }
 }
