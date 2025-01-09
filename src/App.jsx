@@ -88,15 +88,6 @@ export default function ReplicadApp() {
     GlobalVariables.cad = cad;
   }, [activeAtom]);
 
-  useEffect(() => {
-    const currentOrientation = screen.orientation.type;
-    /*screen.orientation.lock("landscape-primary").catch((e) => {
-      console.error("Can't lock orientation " + e);
-    });*/
-
-    console.log("Current orientation:", currentOrientation); // Outputs like "portrait-primary"
-  });
-
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
