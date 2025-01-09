@@ -495,7 +495,7 @@ Sidebar navigation
 
 .paramEditorDivRun {
   position: absolute;
-  top: 11vh;
+  top: 110px;
   right: 10px;
   width: 250px;
   z-index: 3;
@@ -503,7 +503,7 @@ Sidebar navigation
 
 .exportEditorDivRun {
   position: absolute;
-  top: 6vh;
+  top: 60px;
   right: 10px;
   width: 250px;
   z-index: 3;
@@ -518,7 +518,7 @@ Sidebar navigation
 }
 .gridEditorDivRun {
   position: absolute;
-  top: 1vh;
+  top: 10px;
   right: 10px;
   width: 250px;
   z-index: 5;
@@ -612,6 +612,8 @@ Sidebar navigation
   right: 20%;
   z-index: 4;
   color: var(--run-project-info);
+  line-height: 5px;
+  font-size: 12px;
 }
 
 @media (min-width: 768px) {
@@ -663,8 +665,7 @@ Sidebar navigation
   .run-navigation {
     position: absolute;
     width: 60px;
-
-    top: 150px;
+    top: 100px;
     left: 100px;
     z-index: 3;
   }
@@ -691,5 +692,10 @@ Sidebar navigation
   .thumnail-logo {
     width: 25px;
     height: 25px;
+  }
+
+  .info_run_div {
+    line-height: 15px;
+    font-size: 18px;
   }
 }
