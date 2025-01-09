@@ -532,8 +532,8 @@ Sidebar navigation
 }
 .bomEditorDivRun {
   position: absolute;
-  top: 5%;
-  right: 310px;
+  top: 160px;
+  right: 10px;
   width: 250px;
   z-index: 2;
 }
@@ -543,7 +543,7 @@ Sidebar navigation
 .run-navigation {
   position: absolute;
   width: 2vh;
-  top: 200px;
+  top: 20%;
   left: 2vh;
   z-index: 3;
 }
