@@ -115,24 +115,32 @@ export default class Equation extends Atom {
    * Evaluate the equation
    */
   evaluateEquation() {
-    //Substitute numbers into the string
-    var substitutedEquation = this.currentEquation;
-    this.name = this.currentEquation;
+    try {
+      // Substitute numbers into the string
+      var substitutedEquation = this.currentEquation;
+      this.name = this.currentEquation;
 
-    //Find all the letters in this equation
-    var re = /[a-zA-Z]/g;
-    const variables = this.currentEquation.match(re);
-    for (var variable in variables) {
-      for (var i = 0; i < this.inputs.length; i++) {
-        if (this.inputs[i].name == variables[variable]) {
-          substitutedEquation = substitutedEquation.replace(
-            this.inputs[i].name,
-            this.findIOValue(this.inputs[i].name)
-          );
+      // Find all the letters in this equation
+      var re = /[a-zA-Z]/g;
+      const variables = this.currentEquation.match(re);
+      for (var variable in variables) {
+        for (var i = 0; i < this.inputs.length; i++) {
+          if (this.inputs[i].name == variables[variable]) {
+            substitutedEquation = substitutedEquation.replace(
+              this.inputs[i].name,
+              this.findIOValue(this.inputs[i].name)
+            );
+          }
         }
       }
+
+      // Evaluate the substituted equation
+      return GlobalVariables.limitedEvaluate(substitutedEquation);
+    } catch (error) {
+      console.error("Error evaluating equation:", error);
+      this.setAlert(error);
+      return NaN;
     }
-    return GlobalVariables.limitedEvaluate(substitutedEquation);
   }
 
   /**
@@ -148,28 +156,7 @@ export default class Equation extends Atom {
           return input.connectors.length > 0;
         };
 
-        /* Make an input for the equation itself */
-        inputParams["equation"] = {
-          value: this.currentEquation,
-          label: "Current Equation",
-          disabled: false,
-          onChange: (value) => {
-            if (this.currentEquation !== value) {
-              this.setEquation(value);
-              setInputChanged(this.currentEquation);
-            }
-
-            //;
-          },
-          order: -3,
-        };
-
-        /* Make an input for the equation itself */
-        inputParams["result"] = {
-          value: this.output.value,
-          label: "Result",
-          disabled: true,
-        };
+        /* Some input parameters (inlcuding equation and result) live in the parameter editor file so they can use the set, get functions */
 
         /* Makes inputs for Io's other than geometry */
         if (input.valueType !== "geometry") {
@@ -178,18 +165,12 @@ export default class Equation extends Atom {
             disabled: checkConnector(),
             onChange: (value) => {
               input.setValue(value);
-
+              setInputChanged(value);
               //this.sendToRender();
             },
             order: -2,
           };
         }
-        inputParams["Save Equation"] = button(
-          (get) => {
-            this.setEquation(get("equation"));
-          },
-          { order: -1 }
-        );
       });
       return inputParams;
     }
@@ -211,6 +192,7 @@ export default class Equation extends Atom {
 
         this.output.setValue(this.value);
         this.output.ready = true;
+        this.clearAlert();
       }
     } catch (err) {
       console.warn(err);

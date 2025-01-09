@@ -102,7 +102,7 @@ const AddProject = ({
     projectToShow == "featured"
       ? "byStars"
       : projectToShow == "all"
-      ? "byName"
+      ? "byDateModified"
       : projectToShow == "recents"
       ? "byDateModified"
       : "byName";
@@ -393,9 +393,9 @@ const ProjectDiv = ({ nodes, browseType, orderType }) => {
         : 0;
     },
     byDateModified: function (a, b) {
-      return new Date(a.dateModified) > new Date(b.dateModified)
+      return a.dateModified > b.dateModified
         ? -1
-        : new Date(a.dateModified) < new Date(b.dateModified)
+        : a.dateModified < b.dateModified
         ? 1
         : 0;
     },
@@ -454,48 +454,91 @@ const ShowProjects = ({
     setProjectsToShow("recents");
   }, [GlobalVariables.currentUser]);
 
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
+
   const [projectsLoaded, setStateLoaded] = useState([]);
   const [lastKey, setLastKey] = useState("");
   const [pageNumber, setPageNumber] = useState(0);
   const [searchBarValue, setSearchBarValue] = useState("");
-  const [yearShow, setYearShow] = useState("2024");
+  const [yearShow, setYearShow] = useState(currentYear);
   const [apiStatus, setApiStatus] = useState(loadingMessages.loading);
 
   const controllerRef = useRef(new AbortController());
+
+  const forkProject = async function (authorizedUserOcto, owner, repo) {
+    authorizedUserOcto
+      .request("GET /repos/{owner}/{repo}", {
+        owner: owner,
+        repo: repo,
+      })
+      .then((result) => {
+        authorizedUserOcto.rest.repos
+          .createFork({
+            owner: owner,
+            repo: repo,
+          })
+          .then(() => {
+            //push fork to aws
+            const apiUrl =
+              "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage//post-new-project";
+            let searchField = (
+              result.data.name +
+              " " +
+              GlobalVariables.currentUser
+            ).toLowerCase();
+            console.log(result);
+            let forkedNodeBody = {
+              owner: GlobalVariables.currentUser,
+              ranking: result.data.stargazers_count,
+              description: result.data.description,
+              searchField: searchField,
+              repoName: result.data.name,
+              forks: 0,
+              topMoleculeID: result.data.id,
+              topics: [],
+              readme:
+                "https://raw.githubusercontent.com/" +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
+                "/master/README.md?sanitize=true",
+              contentURL:
+                "https://raw.githubusercontent.com/" +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
+                "/master/project.abundance?sanitize=true",
+              githubMoleculesUsed: [],
+              parentRepo: owner + "/" + repo,
+              svgURL:
+                "https://raw.githubusercontent.com/" +
+                GlobalVariables.currentUser +
+                "/" +
+                result.data.name +
+                "/master/project.svg?sanitize=true",
+              dateCreated: result.data.created_at,
+              html_url: result.data.html_url,
+            };
+            fetch(apiUrl, {
+              method: "POST",
+              body: JSON.stringify(forkedNodeBody),
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+              },
+            });
+          });
+      });
+  };
 
   useEffect(() => {
     octokit = new Octokit();
     var query;
 
+    /* Function to fork a dummy project if user has no projects */
     const forkDummyProject = async function (authorizedUserOcto) {
-      console.log("forking dummy project");
-      /*var owner = "alzatin";
-      var repo = "My-first-Abundance-project";
-      // if authenticated and it is not your project, make a clone of the project and return to create mode
-      authorizedUserOcto
-        .request("GET /repos/{owner}/{repo}", {
-          owner: owner,
-          repo: repo,
-        })
-        .then((result) => {
-          authorizedUserOcto.rest.repos
-            .createFork({
-              owner: owner,
-              repo: repo,
-            })
-            .then(() => {
-              var activeUser = GlobalVariables.currentUser;
-              // return to create mode
-              authorizedUserOcto
-                .request("GET /repos/{owner}/{repo}", {
-                  owner: activeUser,
-                  repo: repo,
-                })
-                .then((result) => {
-                  GlobalVariables.currentRepo = result.data;
-                });
-            });
-        });*/
+      console.log("User has no projects, forking dummy project");
+      await forkProject(authorizedUserOcto, "alzatin", "my-first-project");
     };
     const repoSearchRequest = async () => {
       setStateLoaded([]); /*sets loading while fetching*/
@@ -564,14 +607,19 @@ const ShowProjects = ({
         query;
       let awsRepos = await fetch(scanApiUrl, { signal }); //< return result.json();[repos]
       //let awsRepos = await fetch(scanUserApiUrl);
+
       return awsRepos.json();
     };
 
     repoSearchRequest(projectToShow)
       .then((result) => {
+        console.log(result);
         setStateLoaded([]);
         setApiStatus(loadingMessages.loading);
-        if (result["repos"].length == 0 && projectToShow == "owned") {
+        if (
+          (result["repos"].length == 0 && projectToShow == "recents") ||
+          projectToShow == "owned"
+        ) {
           setApiStatus(loadingMessages.noProjects);
           forkDummyProject(authorizedUserOcto).then(() => {
             repoSearchRequest().then((result) => {
@@ -804,33 +852,6 @@ const ShowProjects = ({
                   opacity: "0.5",
                 }}
               />
-              {projectToShow == "all" ? (
-                <label htmlFor="year-by">
-                  <img
-                    src={
-                      import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/sort.svg"
-                    }
-                    alt="year-show"
-                    style={{ width: "15px" }}
-                  />
-                  <select
-                    className="order_dropdown"
-                    id="year-by"
-                    defaultValue={2024}
-                    onChange={(e) => setYearShow(e.target.value)}
-                  >
-                    <option key={"2024_projects"} value={"2024"}>
-                      2024
-                    </option>
-                    <option key={"2023_projects"} value={"2023"}>
-                      2023
-                    </option>
-                    <option key={"2022_projects"} value={"2022"}>
-                      2022
-                    </option>
-                  </select>
-                </label>
-              ) : null}
             </button>
           </div>
           {projectsLoaded.length > 0 ? (

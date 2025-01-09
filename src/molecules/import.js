@@ -86,9 +86,8 @@ export default class Import extends Atom {
   getAFile = async function () {
     const octokit = new Octokit();
     const filePath = this.fileName;
-
     const result = await octokit.rest.repos.getContent({
-      owner: GlobalVariables.currentUser,
+      owner: GlobalVariables.currentRepo.owner,
       repo: GlobalVariables.currentRepoName,
       path: filePath,
     });

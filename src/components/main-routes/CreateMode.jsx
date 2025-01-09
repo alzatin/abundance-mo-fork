@@ -67,14 +67,14 @@ function CreateMode({
    * @type {object?}
    */
   var shortCuts = {
-    a: "Assembly",
+    a: "Join",
     b: "Loft", //>
     c: "Copy",
     d: "Difference",
     e: "Extrude",
     g: "GitHub", // Not working yet
     i: "Input",
-    j: "Translate",
+    j: "Move",
     r: "Rotate",
     u: "Rectangle",
     l: "Circle",
@@ -104,7 +104,7 @@ function CreateMode({
     //Set autosave interval
     const myInterval = setInterval(() => {
       setSavePopUp(true);
-      saveProject(setSaveState);
+      saveProject(setSaveState, "Auto Save");
     }, 300000);
 
     //Clearing the interval
@@ -115,9 +115,49 @@ function CreateMode({
     if (e.metaKey && e.key == "s") {
       e.preventDefault();
       setSavePopUp(true);
-      saveProject(setSaveState);
+      saveProject(setSaveState, "User Save");
     }
   };
+
+  function searchGithubMolecules(molecule) {
+    return new Promise((resolve, reject) => {
+      try {
+        const githubMoleculeUsedList = [];
+
+        function recursiveSearch(molecule) {
+          // Check if the molecule has nodes
+          if (
+            !molecule.nodesOnTheScreen ||
+            !Array.isArray(molecule.nodesOnTheScreen)
+          ) {
+            return;
+          }
+          // Iterate through each node in the molecule
+          molecule.nodesOnTheScreen.forEach((node) => {
+            if (node.atomType === "GitHubMolecule") {
+              // Add to the githubMoleculeUsedList if atomType is "Github molecule"
+              githubMoleculeUsedList.push({
+                owner: node.parentRepo.owner,
+                repoName: node.parentRepo.repoName,
+              });
+            } else if (node.atomType === "Molecule") {
+              // Recursively search inside the nodes of this molecule
+              recursiveSearch(node);
+            }
+          });
+        }
+
+        // Start the recursive search
+        recursiveSearch(molecule);
+
+        // Resolve the promise with the list of Github molecules
+        resolve(githubMoleculeUsedList);
+      } catch (error) {
+        // Reject the promise if an error occurs
+        reject(error);
+      }
+    });
+  }
   /**
    * Create a commit as part of the saving process.
    */
@@ -196,45 +236,49 @@ function CreateMode({
                         })
                         .then((response) => {
                           setState(80);
+                          searchGithubMolecules(
+                            GlobalVariables.topLevelMolecule
+                          ).then((githubMoleculeUsedList) => {
+                            /*aws dynamo update-item lambda, also updates dateModified on aws side*/
+                            const apiUpdateUrl =
+                              "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
+                            let topicString =
+                              GlobalVariables.currentRepo.topics.join(" ");
+                            let searchField = (
+                              repo +
+                              " " +
+                              owner +
+                              " " +
+                              GlobalVariables.currentRepo.description +
+                              " " +
+                              topicString
+                            ).toLowerCase();
 
-                          /*aws dynamo update-item lambda, also updates dateModified on aws side*/
-                          const apiUpdateUrl =
-                            "https://hg5gsgv9te.execute-api.us-east-2.amazonaws.com/abundance-stage/update-item";
-                          let topicString =
-                            GlobalVariables.currentRepo.topics.join(" ");
-                          let searchField = (
-                            repo +
-                            " " +
-                            owner +
-                            " " +
-                            GlobalVariables.currentRepo.description +
-                            " " +
-                            topicString
-                          ).toLowerCase();
-
-                          fetch(apiUpdateUrl, {
-                            method: "POST",
-                            body: JSON.stringify({
-                              owner: owner,
-                              repoName: repo,
-                              attributeUpdates: {
-                                ranking: 0,
-                                html_url: htmlURL,
-                                searchField: searchField,
-                                description:
-                                  GlobalVariables.currentRepo.description,
-                                topics: GlobalVariables.currentRepo.topics,
+                            fetch(apiUpdateUrl, {
+                              method: "POST",
+                              body: JSON.stringify({
+                                owner: owner,
+                                repoName: repo,
+                                attributeUpdates: {
+                                  ranking: 0,
+                                  html_url: htmlURL,
+                                  searchField: searchField,
+                                  githubMoleculesUsed: githubMoleculeUsedList,
+                                  description:
+                                    GlobalVariables.currentRepo.description,
+                                  topics: GlobalVariables.currentRepo.topics,
+                                },
+                              }),
+                              headers: {
+                                "Content-type":
+                                  "application/json; charset=UTF-8",
                               },
-                            }),
-                            headers: {
-                              "Content-type": "application/json; charset=UTF-8",
-                            },
-                          }).then((response) => {
-                            console.log(response);
-                            console.warn(
-                              "Project saved on git and aws updated"
-                            );
-                            setState(100);
+                            }).then((response) => {
+                              console.warn(
+                                "Project saved on git and aws updated"
+                              );
+                              setState(100);
+                            });
                           });
                         });
                     });
@@ -259,7 +303,7 @@ function CreateMode({
         })
         .then((result) => {
           activeAtom.updateFile(file, result.data.content.sha);
-          saveProject(setSaveState);
+          saveProject(setSaveState, "Upload Save");
         });
     };
     reader.readAsDataURL(file);
@@ -279,7 +323,7 @@ function CreateMode({
   /**
    * Saves project by making a commit to the Github repository.
    */
-  const saveProject = async (setState) => {
+  const saveProject = async (setState, typeSave) => {
     setState(5);
 
     let finalSVG;
@@ -350,7 +394,7 @@ function CreateMode({
         repo: GlobalVariables.currentRepo.repoName,
         changes: {
           files: filesObject,
-          commit: "Autosave",
+          commit: typeSave ? typeSave : "Auto Save",
         },
       },
       setState

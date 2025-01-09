@@ -102,7 +102,7 @@
   flex: 1; /* expand to the maximum */
   height: 46%;
   width: 100%;
-  z-index: 5;
+  z-index: 1000;
   position: absolute;
 }
 
@@ -292,6 +292,27 @@
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+}
+
+.closeButton2 {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  padding: auto;
+  border: none;
+  width: 20px;
+  height: 20px;
+  background-color: var(--settingsPopup-closeButton);
+  font: 1em sans-serif;
+  cursor: pointer;
+  border-color: var(--settingsPopup-text);
+  border-radius: 50%;
+  color: var(--settingsPopup-text);
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .container {
@@ -571,18 +592,18 @@
   display: flex;
   align-items: center;
   position: absolute;
-  right: 1%;
+  right: 0.2%;
   top: 40%;
   border-radius: 5px;
-  width: 300px;
+  width: 200px;
 }
 .progress {
   background-color: var(--saveBar-background);
   border-radius: 20px;
   position: relative;
   margin: 5px 15px;
-  height: 30px;
-  width: 300px;
+  height: 20px;
+  width: 200px;
 }
 
 .progress-done {
