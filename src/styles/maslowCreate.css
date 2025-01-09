@@ -576,27 +576,26 @@ Sidebar navigation
   height: 30px;
 }
 
-/* Share Dialog */
+/* Share Dialog Mobile */
 
 .share-dialog {
   font-family: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace";
-  text-transform: uppercase;
+  font-size: 12px;
   position: fixed;
   color: var(--dialog-text);
   background-color: var(--dialog-background);
-  width: 600px;
-  border: 3px solid var(--dialog-border);
-  border-radius: 10px;
+  width: 80%;
+  border: 1px solid var(rgb(129, 127, 127));
+  border-radius: 2px;
   top: 30%;
   z-index: 4;
 }
 .share-dialog button {
   margin: 10px;
-  text-transform: uppercase;
-  background-color: var(--dialog-text);
-  border: 2px solid var(--dialog-border);
-  width: 100px;
-  border-radius: 3px;
+  padding: 5px;
+  background-color: var(--abundance-color-hightlightOffWhite);
+  width: 50px;
+  border-radius: 1px;
 }
 .share-dialog button:hover {
   background-color: var(--dialog-border);
@@ -696,5 +695,18 @@ Sidebar navigation
     line-height: 15px;
     font-size: 18px;
     border: 2px solid var(--run-project-info);
+  }
+
+  /* Share Dialog */
+
+  .share-dialog {
+    width: 600px;
+  }
+  .share-dialog button {
+    margin: 10px;
+    width: 100px;
+  }
+  .share-dialog button:hover {
+    background-color: var(--dialog-border);
   }
 }
