@@ -762,6 +762,10 @@
   transition: 1s ease 0.3s;
 }
 
+.login-logo {
+  width: 80%;
+}
+
 @media (max-width: 768px) {
   .form {
     width: 90%;
