@@ -90,9 +90,9 @@ export default function ReplicadApp() {
 
   useEffect(() => {
     const currentOrientation = screen.orientation.type;
-    screen.orientation.lock("landscape-primary").catch((e) => {
+    /*screen.orientation.lock("landscape-primary").catch((e) => {
       console.error("Can't lock orientation " + e);
-    });
+    });*/
 
     console.log("Current orientation:", currentOrientation); // Outputs like "portrait-primary"
   });
