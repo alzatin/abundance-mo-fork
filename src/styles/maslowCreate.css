@@ -605,11 +605,10 @@ Sidebar navigation
 
 /*info div for run repository*/
 .info_run_div {
-  border: 2px solid var(--run-project-info);
   padding: 10px 20px;
   position: absolute;
-  top: 80%;
-  right: 20%;
+  bottom: 10%;
+  left: 3vh;
   z-index: 4;
   color: var(--run-project-info);
   line-height: 5px;
@@ -697,5 +696,6 @@ Sidebar navigation
   .info_run_div {
     line-height: 15px;
     font-size: 18px;
+    border: 2px solid var(--run-project-info);
   }
 }
