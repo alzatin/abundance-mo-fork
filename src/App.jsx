@@ -50,6 +50,17 @@ export default function ReplicadApp() {
   );
 
   useEffect(() => {
+    lockOrientation("landscape-primary");
+
+    return () => {
+      // Unlock orientation on component unmount
+      if ("screen" in window && "orientation" in window.screen) {
+        screen.orientation.unlock();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     console.log("useEffect  in top levelrunning");
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
@@ -88,6 +99,21 @@ export default function ReplicadApp() {
     GlobalVariables.cad = cad;
   }, [activeAtom]);
 
+  function lockOrientation(orientation) {
+    if ("screen" in window && "orientation" in window.screen) {
+      const lockPromise = screen.orientation.lock(orientation);
+
+      if (lockPromise) {
+        lockPromise.catch((error) => {
+          console.error("Error locking orientation:", error);
+        });
+      } else {
+        console.warn("Screen Orientation API is not supported.");
+      }
+    } else {
+      console.warn("Screen Orientation API is not supported.");
+    }
+  }
   /**
    * Tries initial log in and saves octokit in authorizedUserOcto.
    */
