@@ -17,7 +17,7 @@ const Controls = React.memo(
         {axesParam && (
           <GizmoHelper
             alignment={"bottom-right"}
-            margin={[70, 100]}
+            margin={window.innerWidth < 768 ? [50, 50] : [70, 100]}
             onTarget={() => {
               return controlsRef?.current?.target;
             }}
@@ -25,7 +25,9 @@ const Controls = React.memo(
               controlsRef.current?.update();
             }}
           >
-            <GizmoViewport font="18px Inter var, HKGrotesk, sans-serif" />
+            <mesh scale={window.innerWidth < 768 ? 0.5 : 1}>
+              <GizmoViewport font="18px Inter var, HKGrotesk, sans-serif" />
+            </mesh>
           </GizmoHelper>
         )}
       </>

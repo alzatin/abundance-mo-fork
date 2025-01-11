@@ -119,6 +119,15 @@ function runMode({
 
   return (
     <>
+      <div id="headerBarRun">
+        <img
+          className="thumnail-logo"
+          src={
+            import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/abundance_logo.png"
+          }
+          alt="logo"
+        />
+      </div>
       <canvas
         style={{ display: "none" }}
         ref={canvasRef}
