@@ -1058,7 +1058,9 @@ function LoginMode({
               className="closeButtonmobile"
               onClick={() => {
                 logout({
-                  returnTo: import.meta.env.VITE_APP_DEV, // Redirect to home page or specified URL
+                  returnTo: import.meta.env.VITE_APP_PROD
+                    ? import.meta.env.VITE_APP_DEV
+                    : window.location.origin, // Redirect to home page or specified URL
                 });
               }}
             >
