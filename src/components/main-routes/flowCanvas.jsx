@@ -310,6 +310,7 @@ export default memo(function FlowCanvas({
         id="flow-canvas"
         tabIndex={0}
         onMouseMove={mouseMove}
+        onTouchMove={mouseMove}
         onMouseDown={onMouseDown}
         touchstart={onMouseDown}
         onMouseUp={onMouseUp}
