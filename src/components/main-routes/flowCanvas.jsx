@@ -311,7 +311,9 @@ export default memo(function FlowCanvas({
         tabIndex={0}
         onMouseMove={mouseMove}
         onMouseDown={onMouseDown}
+        touchstart={onMouseDown}
         onMouseUp={onMouseUp}
+        onTouchEnd={onMouseUp}
         onDoubleClick={onDoubleClick}
         onKeyUp={keyUp}
         onKeyDown={keyDown}
