@@ -128,6 +128,15 @@ function runMode({
           alt="logo"
         />
       </div>
+      <div className={`centered-text hidden`}>
+        <div className="loading">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>
+      </div>
       <canvas
         style={{ display: "none" }}
         ref={canvasRef}

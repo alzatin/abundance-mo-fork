@@ -553,11 +553,15 @@ export default class Molecule extends Atom {
 
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
         this.basicThreadValueProcessing();
+
         this.compileBom().then((result) => {
           this.compiledBom = result;
         });
         if (this.selected) {
           this.sendToRender();
+        } else {
+          const loadingDots = document.querySelector(".loading");
+          loadingDots.style.display = "none";
         }
       });
     } catch (err) {
@@ -582,6 +586,9 @@ export default class Molecule extends Atom {
   propagate() {
     try {
       this.updateValue();
+      const loadingDots = document.querySelector(".loading");
+      loadingDots.style.display = "none";
+      console.log("mesh set dots to none");
     } catch (err) {
       this.setAlert(err);
     }
