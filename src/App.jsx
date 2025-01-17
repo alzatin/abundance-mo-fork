@@ -73,7 +73,6 @@ export default function ReplicadApp() {
             setOutdatedMesh(false);
             const loadingDots = document.querySelector(".loading");
             loadingDots.style.display = "none";
-            console.log("mesh set dots to none");
           })
           .catch((e) => {
             console.error("Can't display Mesh " + e);
