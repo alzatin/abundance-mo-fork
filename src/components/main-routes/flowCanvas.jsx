@@ -30,6 +30,7 @@ export default memo(function FlowCanvas({
   const canvasRef = useRef(null);
   const circleMenu = useRef(null);
   const navigate = useNavigate();
+  let lastTouchMove = null;
 
   // On component mount create a new top level molecule before project load
   useEffect(() => {
@@ -77,6 +78,12 @@ export default memo(function FlowCanvas({
   };
 
   const mouseMove = (e) => {
+    if (e.touches) {
+      console.log("touch");
+      lastTouchMove = e;
+      e.clientX = e.touches[0].clientX;
+      e.clientY = e.touches[0].clientY;
+    }
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.mouseMove(e.clientX, e.clientY);
     });
@@ -182,6 +189,12 @@ export default memo(function FlowCanvas({
    * Called by mouse down
    */
   const onMouseDown = (event) => {
+    if (event.touches) {
+      console.log("touch");
+      event.clientX = event.touches[0].clientX;
+      event.clientY = event.touches[0].clientY;
+    }
+
     // if it's a right click show the circular menu
     var isRightMB;
     if ("which" in event) {
@@ -257,6 +270,12 @@ export default memo(function FlowCanvas({
    * Called by mouse up
    */
   const onMouseUp = (event) => {
+    if (lastTouchMove.touches) {
+      console.log("touch");
+      console.log(lastTouchMove.touches);
+      event.clientX = lastTouchMove.touches[0].clientX;
+      event.clientY = lastTouchMove.touches[0].clientY;
+    }
     //every time the mouse button goes up
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.clickUp(event.clientX, event.clientY);
@@ -269,6 +288,7 @@ export default memo(function FlowCanvas({
     const context = canvas.getContext("2d");
     let frameCount = 0;
     let animationFrameId;
+    console.log(canvas);
 
     //Our draw came here
     const render = () => {
@@ -310,8 +330,12 @@ export default memo(function FlowCanvas({
         id="flow-canvas"
         tabIndex={0}
         onMouseMove={mouseMove}
+        onTouchMove={mouseMove}
+        onTouchStart={onMouseDown}
         onMouseDown={onMouseDown}
         onMouseUp={onMouseUp}
+        onTouchEnd={onMouseUp}
+        onTouchCancel={onMouseUp}
         onDoubleClick={onDoubleClick}
         onKeyUp={keyUp}
         onKeyDown={keyDown}
