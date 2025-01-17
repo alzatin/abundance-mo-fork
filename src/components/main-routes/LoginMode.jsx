@@ -1019,9 +1019,7 @@ function LoginMode({
             className="closeButton"
             onClick={() => {
               logout({
-                returnTo: import.meta.env.VITE_APP_DEV
-                  ? window.location.origin
-                  : "https://barboursmith.github.io/Abundance", // Redirect to home page or specified URL
+                returnTo: import.meta.env.VITE_APP_DEV, // Redirect to home page or specified URL
               });
             }}
           >
@@ -1060,9 +1058,7 @@ function LoginMode({
               className="closeButtonmobile"
               onClick={() => {
                 logout({
-                  returnTo: import.meta.env.VITE_APP_DEV
-                    ? window.location.origin
-                    : "https://barboursmith.github.io/Abundance", // Redirect to home page or specified URL
+                  returnTo: import.meta.env.VITE_APP_DEV, // Redirect to home page or specified URL
                 });
               }}
             >
