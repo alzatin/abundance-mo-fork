@@ -19,13 +19,13 @@ const Auth0ProviderWithHistory = ({ children }) => {
       redirectUri={
         import.meta.env.VITE_APP_DEV
           ? window.location.origin
-          : "https://barboursmith.github.io/Abundance"
+          : import.meta.env.VITE_REDIRECT_URI
       }
       audience={audience}
       authorizationParams={{
         redirect_uri: import.meta.env.VITE_APP_DEV
           ? window.location.origin
-          : "https://barboursmith.github.io/Abundance",
+          : import.meta.env.VITE_REDIRECT_URI,
         audience: audience,
       }}
     >
