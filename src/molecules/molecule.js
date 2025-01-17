@@ -548,7 +548,6 @@ export default class Molecule extends Atom {
     console.log("recompute molecule in molecule" + this.name);
     try {
       this.processing = true;
-      console.log("recompute molecule in molecule" + "dots to flex");
       const centeredText = document.querySelector(".loading");
       centeredText.style.display = "flex";
 
@@ -563,7 +562,6 @@ export default class Molecule extends Atom {
         } else {
           const loadingDots = document.querySelector(".loading");
           loadingDots.style.display = "none";
-          console.log("mesh set dots to none");
         }
       });
     } catch (err) {
