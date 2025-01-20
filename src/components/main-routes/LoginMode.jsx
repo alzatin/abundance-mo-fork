@@ -477,7 +477,6 @@ const ShowProjects = ({
               " " +
               GlobalVariables.currentUser
             ).toLowerCase();
-            console.log(result);
             let forkedNodeBody = {
               owner: GlobalVariables.currentUser,
               ranking: result.data.stargazers_count,
@@ -603,7 +602,6 @@ const ShowProjects = ({
 
     repoSearchRequest(projectToShow)
       .then((result) => {
-        console.log(result);
         setStateLoaded([]);
         setApiStatus(loadingMessages.loading);
         if (
