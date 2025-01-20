@@ -545,7 +545,6 @@ export default class Molecule extends Atom {
   recomputeMolecule(outputID) {
     //super.updateValue();
 
-    console.log("recompute molecule in molecule" + this.name);
     try {
       this.processing = true;
       const centeredText = document.querySelector(".loading");
