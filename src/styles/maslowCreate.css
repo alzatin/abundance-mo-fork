@@ -423,7 +423,7 @@ Sidebar navigation
 }
 .menu-nav {
   position: absolute;
-  right: 80px;
+  /*right: 80px;*/
   top: -15px;
   list-style: none;
   width: 0;
@@ -460,7 +460,7 @@ Sidebar navigation
   width: 45px;
   height: 24px;
   top: 47%;
-  right: 70px;
+  right: 10vw;
   z-index: 2;
   font-size: 11px;
 }

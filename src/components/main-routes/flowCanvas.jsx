@@ -7,31 +7,13 @@ import { useNavigate } from "react-router-dom";
 
 function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
-  if (isMobile()) {
+  if (GlobalVariables.isMobile()) {
     flowCanvas.width = window.screen.width;
     flowCanvas.height = window.screen.height * 0.45;
   } else {
     flowCanvas.width = window.innerWidth;
     flowCanvas.height = window.innerHeight * 0.45;
   }
-}
-
-function isMobile() {
-  // Check for common mobile device indicators in the user agent string
-  if (
-    /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    )
-  ) {
-    return true;
-  }
-
-  // Check screen size (not entirely reliable)
-  if (window.innerWidth <= 768) {
-    return true;
-  }
-
-  return false;
 }
 
 window.addEventListener(
