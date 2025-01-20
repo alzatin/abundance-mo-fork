@@ -96,7 +96,7 @@ export default class Input extends Atom {
      * @type {number}
      */
     this.height = radiusInPixels;
-    this.width = this.height * 3;
+    this.width = this.height * 2.5;
     //Check if the name has been updated
     if (this.name != this.oldName) {
       this.updateParentName();
