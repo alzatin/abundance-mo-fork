@@ -1051,10 +1051,10 @@ function LoginMode({
         </div>
 
         {isAuthenticated ? (
-          <section id="mobile-nav" class="top-nav">
+          <section id="mobile-nav" className="top-nav">
             <input id="menu-toggle" type="checkbox" />
-            <label class="menu-button-container" for="menu-toggle">
-              <div class="menu-button"></div>
+            <label className="menu-button-container" for="menu-toggle">
+              <div className="menu-button"></div>
             </label>
             <button
               className="closeButtonmobile"
