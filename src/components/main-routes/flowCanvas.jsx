@@ -272,7 +272,7 @@ export default memo(function FlowCanvas({
    * Called by mouse up
    */
   const onMouseUp = (event) => {
-    if (lastTouchMove.touches) {
+    if (lastTouchMove) {
       event.clientX = lastTouchMove.touches[0].clientX;
       event.clientY = lastTouchMove.touches[0].clientY;
     }
