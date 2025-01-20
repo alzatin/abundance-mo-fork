@@ -79,7 +79,6 @@ export default memo(function FlowCanvas({
 
   const mouseMove = (e) => {
     if (e.touches) {
-      console.log("touch");
       lastTouchMove = e;
       e.clientX = e.touches[0].clientX;
       e.clientY = e.touches[0].clientY;
@@ -190,7 +189,6 @@ export default memo(function FlowCanvas({
    */
   const onMouseDown = (event) => {
     if (event.touches) {
-      console.log("touch");
       event.clientX = event.touches[0].clientX;
       event.clientY = event.touches[0].clientY;
     }
@@ -234,7 +232,6 @@ export default memo(function FlowCanvas({
 
       //Draw the selection box
       if (!clickHandledByMolecule && GlobalVariables.ctrlDown) {
-        console.log("click not HandledByMolecule trying to add box?");
         GlobalVariables.currentMolecule.placeAtom(
           {
             parentMolecule: GlobalVariables.currentMolecule,
@@ -271,8 +268,6 @@ export default memo(function FlowCanvas({
    */
   const onMouseUp = (event) => {
     if (lastTouchMove.touches) {
-      console.log("touch");
-      console.log(lastTouchMove.touches);
       event.clientX = lastTouchMove.touches[0].clientX;
       event.clientY = lastTouchMove.touches[0].clientY;
     }
@@ -288,8 +283,6 @@ export default memo(function FlowCanvas({
     const context = canvas.getContext("2d");
     let frameCount = 0;
     let animationFrameId;
-    console.log(canvas);
-
     //Our draw came here
     const render = () => {
       frameCount++;
