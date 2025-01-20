@@ -588,7 +588,6 @@ export default class Molecule extends Atom {
       this.updateValue();
       const loadingDots = document.querySelector(".loading");
       loadingDots.style.display = "none";
-      console.log("mesh set dots to none");
     } catch (err) {
       this.setAlert(err);
     }
@@ -1013,7 +1012,7 @@ export default class Molecule extends Atom {
 
   sendToRender() {
     //Send code to JSxCAD to render
-    console.log(this);
+    //console.log(this);
     GlobalVariables.writeToDisplay(this.uniqueID);
   }
 }
