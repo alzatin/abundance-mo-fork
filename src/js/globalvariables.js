@@ -338,6 +338,28 @@ class GlobalVariables {
   }
 
   /**
+   * A function to check if the user is on a mobile device.
+   * @return {boolean} True if the user is on a mobile device, false otherwise.
+   */
+  isMobile() {
+    // Check for common mobile device indicators in the user agent string
+    if (
+      /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      return true;
+    }
+
+    // Check screen size (not entirely reliable)
+    if (window.innerWidth <= 768) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * A function to generate a pixel value for 0-1 location on screen depending on screen width.
    * @param {number} width
    */

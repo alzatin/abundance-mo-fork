@@ -7,8 +7,13 @@ import { useNavigate } from "react-router-dom";
 
 function onWindowResize() {
   const flowCanvas = document.getElementById("flow-canvas");
-  flowCanvas.width = window.innerWidth;
-  flowCanvas.height = window.innerHeight * 0.45;
+  if (GlobalVariables.isMobile()) {
+    flowCanvas.width = window.screen.width;
+    flowCanvas.height = window.screen.height * 0.45;
+  } else {
+    flowCanvas.width = window.innerWidth;
+    flowCanvas.height = window.innerHeight * 0.45;
+  }
 }
 
 window.addEventListener(
@@ -30,6 +35,7 @@ export default memo(function FlowCanvas({
   const canvasRef = useRef(null);
   const circleMenu = useRef(null);
   const navigate = useNavigate();
+  let lastTouchMove = null;
 
   // On component mount create a new top level molecule before project load
   useEffect(() => {
@@ -77,6 +83,11 @@ export default memo(function FlowCanvas({
   };
 
   const mouseMove = (e) => {
+    if (e.touches) {
+      lastTouchMove = e;
+      e.clientX = e.touches[0].clientX;
+      e.clientY = e.touches[0].clientY;
+    }
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.mouseMove(e.clientX, e.clientY);
     });
@@ -182,6 +193,11 @@ export default memo(function FlowCanvas({
    * Called by mouse down
    */
   const onMouseDown = (event) => {
+    if (event.touches) {
+      event.clientX = event.touches[0].clientX;
+      event.clientY = event.touches[0].clientY;
+    }
+
     // if it's a right click show the circular menu
     var isRightMB;
     if ("which" in event) {
@@ -221,7 +237,6 @@ export default memo(function FlowCanvas({
 
       //Draw the selection box
       if (!clickHandledByMolecule && GlobalVariables.ctrlDown) {
-        console.log("click not HandledByMolecule trying to add box?");
         GlobalVariables.currentMolecule.placeAtom(
           {
             parentMolecule: GlobalVariables.currentMolecule,
@@ -257,6 +272,10 @@ export default memo(function FlowCanvas({
    * Called by mouse up
    */
   const onMouseUp = (event) => {
+    if (lastTouchMove) {
+      event.clientX = lastTouchMove.touches[0].clientX;
+      event.clientY = lastTouchMove.touches[0].clientY;
+    }
     //every time the mouse button goes up
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((molecule) => {
       molecule.clickUp(event.clientX, event.clientY);
@@ -269,7 +288,6 @@ export default memo(function FlowCanvas({
     const context = canvas.getContext("2d");
     let frameCount = 0;
     let animationFrameId;
-
     //Our draw came here
     const render = () => {
       frameCount++;
@@ -310,8 +328,12 @@ export default memo(function FlowCanvas({
         id="flow-canvas"
         tabIndex={0}
         onMouseMove={mouseMove}
+        onTouchMove={mouseMove}
+        onTouchStart={onMouseDown}
         onMouseDown={onMouseDown}
         onMouseUp={onMouseUp}
+        onTouchEnd={onMouseUp}
+        onTouchCancel={onMouseUp}
         onDoubleClick={onDoubleClick}
         onKeyUp={keyUp}
         onKeyDown={keyDown}

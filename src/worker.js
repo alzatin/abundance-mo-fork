@@ -27,9 +27,6 @@ const init = async () => {
 };
 const started = init();
 
-console.log("Replicad Module:");
-console.log(replicad);
-
 /**
  * A function which converts any input into Abundance style geometry. Input can be a library ID, an abundance object, or a single geometry object.
  * This is useful for allowing our functions to work within the Code atom or within the flow canvas.

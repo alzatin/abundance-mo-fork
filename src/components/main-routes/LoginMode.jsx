@@ -477,7 +477,6 @@ const ShowProjects = ({
               " " +
               GlobalVariables.currentUser
             ).toLowerCase();
-            console.log(result);
             let forkedNodeBody = {
               owner: GlobalVariables.currentUser,
               ranking: result.data.stargazers_count,
@@ -603,7 +602,6 @@ const ShowProjects = ({
 
     repoSearchRequest(projectToShow)
       .then((result) => {
-        console.log(result);
         setStateLoaded([]);
         setApiStatus(loadingMessages.loading);
         if (
@@ -1051,10 +1049,10 @@ function LoginMode({
         </div>
 
         {isAuthenticated ? (
-          <section id="mobile-nav" class="top-nav">
+          <section id="mobile-nav" className="top-nav">
             <input id="menu-toggle" type="checkbox" />
-            <label class="menu-button-container" for="menu-toggle">
-              <div class="menu-button"></div>
+            <label className="menu-button-container" htmlFor="menu-toggle">
+              <div className="menu-button"></div>
             </label>
             <button
               className="closeButtonmobile"

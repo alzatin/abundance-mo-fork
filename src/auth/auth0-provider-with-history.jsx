@@ -10,8 +10,6 @@ const Auth0ProviderWithHistory = ({ children }) => {
   const audience = import.meta.env.VITE_APP_AUTH0_AUDIENCE;
   const navigate = useNavigate();
 
-  console.log("Deployment Nov 25/24");
-
   return (
     <Auth0Provider
       domain={domain}
@@ -19,13 +17,13 @@ const Auth0ProviderWithHistory = ({ children }) => {
       redirectUri={
         import.meta.env.VITE_APP_DEV
           ? window.location.origin
-          : "https://barboursmith.github.io/Abundance"
+          : import.meta.env.VITE_REDIRECT_URI
       }
       audience={audience}
       authorizationParams={{
         redirect_uri: import.meta.env.VITE_APP_DEV
           ? window.location.origin
-          : "https://barboursmith.github.io/Abundance",
+          : import.meta.env.VITE_REDIRECT_URI,
         audience: audience,
       }}
     >

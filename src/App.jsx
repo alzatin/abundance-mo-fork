@@ -73,7 +73,6 @@ export default function ReplicadApp() {
             setOutdatedMesh(false);
             const loadingDots = document.querySelector(".loading");
             loadingDots.style.display = "none";
-            console.log("mesh set dots to none");
           })
           .catch((e) => {
             console.error("Can't display Mesh " + e);
@@ -130,7 +129,6 @@ export default function ReplicadApp() {
 
   // Loads project
   const loadProject = function (project) {
-    console.log(project);
     GlobalVariables.recentMoleculeRepresentation = [];
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.repoName;
@@ -147,7 +145,6 @@ export default function ReplicadApp() {
         repo: project.repoName,
       })
       .then((response) => {
-        console.log(response);
         //content will be base64 encoded
         let rawFile = JSON.parse(atob(response.data.content));
 

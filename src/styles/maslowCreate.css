@@ -423,14 +423,14 @@ Sidebar navigation
 }
 .menu-nav {
   position: absolute;
-  right: 80px;
+  /*right: 80px;*/
   top: -15px;
   list-style: none;
   width: 0;
   overflow: hidden;
-  max-width: 450px;
+  max-width: 250px;
   z-index: 9;
-  transform: translateX(170px);
+  transform: translateX(90px);
   transition: transform ease-in-out 0.1s;
   /* transition: width ease 0.2s; */
 }
@@ -460,7 +460,7 @@ Sidebar navigation
   width: 45px;
   height: 24px;
   top: 47%;
-  right: 70px;
+  right: 15%;
   z-index: 2;
   font-size: 11px;
 }
@@ -482,7 +482,7 @@ Sidebar navigation
   position: absolute;
   top: 53%;
   left: 10px;
-  width: 280px;
+  width: 250px;
   z-index: 3;
   overflow-x: auto;
   box-sizing: content-box;
@@ -513,7 +513,7 @@ Sidebar navigation
   position: absolute;
   top: 47%;
   left: 10px;
-  width: 280px;
+  width: 250px;
   z-index: 3;
 }
 .gridEditorDivRun {
@@ -689,6 +689,23 @@ Sidebar navigation
 }
 
 @media (min-width: 768px) {
+  .menu-nav {
+    position: absolute;
+    top: -15px;
+    list-style: none;
+    width: 0;
+    overflow: hidden;
+    right: 80px;
+    max-width: 450px;
+    z-index: 9;
+    transform: translateX(170px);
+    transition: transform ease-in-out 0.1s;
+    /* transition: width ease 0.2s; */
+  }
+  .paramEditorDiv {
+    width: 280px;
+    top: 57vh;
+  }
   .paramEditorDivRun {
     position: absolute;
     top: 19%;
@@ -760,6 +777,9 @@ Sidebar navigation
   /* The switch - the box around the slider */
   .switch_run {
     top: 20px;
+  }
+  .switch {
+    right: 70px;
   }
   .thumnail-logo {
     width: 25px;
