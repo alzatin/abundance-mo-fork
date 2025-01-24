@@ -2,7 +2,7 @@ import opencascade from "replicad-opencascadejs/src/replicad_single.js";
 import opencascadeWasm from "replicad-opencascadejs/src/replicad_single.wasm?url";
 import * as replicad from "replicad";
 import { expose, proxy } from "comlink";
-import { Plane, Solid } from "replicad";
+import { Plane, Solid, makeSphere } from "replicad";
 import shrinkWrap from "replicad-shrink-wrap";
 import { addSVG, drawSVG } from "replicad-decorate";
 import Fonts from "./js/fonts.js";
