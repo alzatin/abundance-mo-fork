@@ -590,11 +590,6 @@ async function importingSTL(targetID, file) {
   return true;
 }
 
-async function testSVG(inputs) {
-  let drawnSVG = await drawSVG(svgString, { width: width });
-  return true;
-}
-
 async function importingSVG(targetID, svg, width) {
   const baseWidth = width + width * 0.05;
   const baseShape = replicad
@@ -1684,5 +1679,4 @@ expose({
   loftShapes,
   text,
   resetView,
-  testSVG,
 });
