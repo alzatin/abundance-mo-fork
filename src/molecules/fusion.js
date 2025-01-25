@@ -19,12 +19,12 @@ export default class Join extends Atom {
      * This atom's name
      * @type {string}
      */
-    this.name = "Join";
+    this.name = "Fusion";
     /**
      * This atom's type
      * @type {string}
      */
-    this.atomType = "Join";
+    this.atomType = "Fusion";
     /**
      * A list of all of the inputs to this molecule. May be loaded when the molecule is created.
      * @type {array}
@@ -52,7 +52,7 @@ export default class Join extends Atom {
       });
     }
 
-    this.unionType = "Assembly";
+    this.unionType = "Fusion";
 
     this.unionIndex;
 
@@ -131,45 +131,16 @@ export default class Join extends Atom {
           inputValues.push(io.getValue());
         }
       });
-      if (this.unionType === "Fusion") {
-        GlobalVariables.cad
-          .fusion(this.uniqueID, inputValues)
-          .then(() => {
-            this.basicThreadValueProcessing();
-          })
-          .catch(this.alertingErrorHandler());
-      } else if (this.unionType === "Assembly") {
-        GlobalVariables.cad
-          .assembly(inputValues, this.uniqueID)
-          .then(() => {
-            this.basicThreadValueProcessing();
-          })
-          .catch(this.alertingErrorHandler());
-      }
+      GlobalVariables.cad
+        .fusion(this.uniqueID, inputValues)
+        .then(() => {
+          this.basicThreadValueProcessing();
+        })
+        .catch(this.alertingErrorHandler());
 
       //Delete or add ports as needed
       addOrDeletePorts(this);
     }
-  }
-
-  createLevaInputs() {
-    let inputParams = {};
-    const importOptions = ["Assembly", "Fusion"];
-
-    inputParams[this.uniqueID + "union_ops"] = {
-      value: this.unionIndex
-        ? importOptions[this.unionIndex]
-        : importOptions[0],
-      options: importOptions,
-      label: "Union Type",
-      onChange: (value) => {
-        this.unionIndex = importOptions.indexOf(value);
-        this.unionType = importOptions[this.unionIndex];
-        this.name = this.unionType;
-        this.updateValue();
-      },
-    };
-    return inputParams;
   }
 
   /**
