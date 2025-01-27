@@ -898,6 +898,11 @@ export default class Molecule extends Atom {
 
       let promise = null;
 
+      /* Fallback for deprecated join atom */
+      if (newAtomObj.atomType == "Join") {
+        newAtomObj.atomType = newAtomObj.unionType;
+      }
+
       for (var key in GlobalVariables.availableTypes) {
         if (
           GlobalVariables.availableTypes[key].atomType == newAtomObj.atomType
