@@ -42,7 +42,7 @@ export default class Export extends Atom {
      */
     this.type = null;
 
-    this.resolution = 72;
+    this.resolution = 96;
 
     this.addIO("input", "geometry", this, "geometry", "");
     this.addIO("input", "Resolution (dpi)", this, "number", 72);
