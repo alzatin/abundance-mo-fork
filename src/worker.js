@@ -1213,7 +1213,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
               plane: partToCut.plane,
             });
           });
-
+          // return new cut part
           let newID = generateUniqueID();
           library[newID] = {
             geometry: newAssembly,
@@ -1222,34 +1222,21 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
             bom: partToCut.bom,
             plane: partToCut.plane,
           };
-          console.log("new assembly with many solids", library[newID]);
-          return library[newID];
-        } else {
-          // return new cut part
-          let newID = generateUniqueID();
-          library[newID] = {
-            geometry: [partCutCopy],
-            tags: partToCut.tags,
-            color: partToCut.color,
-            bom: partToCut.bom,
-            plane: partToCut.plane,
-          };
 
           return library[newID];
         }
-      } else {
-        // return new cut part
-        let newID = generateUniqueID();
-        library[newID] = {
-          geometry: [partCutCopy],
-          tags: partToCut.tags,
-          color: partToCut.color,
-          bom: partToCut.bom,
-          plane: partToCut.plane,
-        };
-
-        return library[newID];
       }
+      // return new cut part
+      let newID = generateUniqueID();
+      library[newID] = {
+        geometry: [partCutCopy],
+        tags: partToCut.tags,
+        color: partToCut.color,
+        bom: partToCut.bom,
+        plane: partToCut.plane,
+      };
+
+      return library[newID];
     }
   } catch (e) {
     throw new Error("Cut Assembly failed");
