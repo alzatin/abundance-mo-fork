@@ -87,6 +87,7 @@ def lambda_handler(event: any, context: any):
             query_args = {
                 'IndexName': 'yyyy-dateCreated-index',
                 'KeyConditionExpression': Key('yyyy').eq(year),
+                'FilterExpression': ~(Attr('privateRepo').eq(True))
             }
             if exclusiveKey:
                 query_args['ExclusiveStartKey'] = exclusiveKey
