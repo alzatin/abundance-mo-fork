@@ -78,7 +78,7 @@ def lambda_handler(event: any, context: any):
 
         elif (searchAttribute and query):
             scan_args = {
-                'FilterExpression': Attr(searchAttribute).contains(query),
+                'FilterExpression': Attr(searchAttribute).contains(query) & ~(Attr('privateRepo').eq(True)),
             }
             response = table.scan(**scan_args)
             item_array.extend(response.get('Items', []))
