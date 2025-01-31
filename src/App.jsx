@@ -128,7 +128,7 @@ export default function ReplicadApp() {
   };
 
   // Loads project
-  const loadProject = function (project) {
+  const loadProject = function (project, authorizedUser) {
     GlobalVariables.recentMoleculeRepresentation = [];
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.repoName;
@@ -137,8 +137,11 @@ export default function ReplicadApp() {
     GlobalVariables.numberOfAtomsToLoad = 0;
     GlobalVariables.startTime = new Date().getTime();
 
-    var octokit = new Octokit();
-
+    if (authorizedUser) {
+      var octokit = authorizedUser;
+    } else {
+      var octokit = new Octokit();
+    }
     return octokit
       .request("GET /repos/{owner}/{repo}/contents/project.abundance", {
         owner: project.owner,

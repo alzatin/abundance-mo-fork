@@ -175,6 +175,7 @@ function CreateMode({
         })
         .then((response) => {
           let htmlURL = response.data.html_url;
+          const privateRepo = response.data.private;
           setState(40);
 
           base = response.data.default_branch;
@@ -261,6 +262,7 @@ function CreateMode({
                                 repoName: repo,
                                 attributeUpdates: {
                                   ranking: 0,
+                                  privateRepo: privateRepo,
                                   html_url: htmlURL,
                                   searchField: searchField,
                                   githubMoleculesUsed: githubMoleculeUsedList,
@@ -496,6 +498,7 @@ function CreateMode({
           <FlowCanvas
             {...{
               activeAtom,
+              authorizedUserOcto,
               loadProject,
               setActiveAtom,
               setSavePopUp,
