@@ -22,12 +22,13 @@ export const handler = async (event, context) => {
 
   /*Scans parameter to returns attributes owner, repoName, fork from all repositories in table*/
   const command = new ScanCommand({
-    ProjectionExpression: "#ow, #repoName, #forks, #lastFoundGit",
+    ProjectionExpression: "#ow, #repoName, #forks, #lastFoundGit, #privateRepo",
     ExpressionAttributeNames: {
       "#ow": "owner",
       "#repoName": "repoName",
       "#forks": "forks",
       "#lastFoundGit": "lastFoundGit",
+      "#privateRepo": "privateRepo",
     },
     TableName: tableName,
   });
@@ -52,14 +53,16 @@ export const handler = async (event, context) => {
 
   items = await scanExecute();
 
-  let promises = items.map((repo) => {
-    return checkGithub(
-      repo.owner,
-      repo.repoName,
-      repo.forks,
-      repo.lastFoundGit
-    );
-  });
+  let promises = items
+    .filter((repo) => !repo.privateRepo)
+    .map((repo) => {
+      return checkGithub(
+        repo.owner,
+        repo.repoName,
+        repo.forks,
+        repo.lastFoundGit
+      );
+    });
 
   await Promise.all(promises).then((results) => {
     const response = {
@@ -101,6 +104,7 @@ export const handler = async (event, context) => {
         repo: repoName,
       })
       .then((response) => {
+        console.log(response);
         return checkUpdate(
           owner,
           repoName,

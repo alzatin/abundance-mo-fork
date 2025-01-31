@@ -28,6 +28,7 @@ export default memo(function FlowCanvas({
   loadProject,
   setActiveAtom,
   shortCuts,
+  authorizedUserOcto,
 }) {
   /** State for github molecule search input */
   const [searchingGitHub, setSearchingGitHub] = useState(false);
@@ -60,9 +61,11 @@ export default memo(function FlowCanvas({
       });
       GlobalVariables.currentMolecule = GlobalVariables.topLevelMolecule;
 
-      loadProject(GlobalVariables.currentRepo).catch((error) => {
-        navigate("/");
-      });
+      loadProject(GlobalVariables.currentRepo, authorizedUserOcto).catch(
+        (error) => {
+          navigate("/");
+        }
+      );
     }
     GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
       atom.update();
