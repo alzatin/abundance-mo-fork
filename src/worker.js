@@ -480,7 +480,6 @@ function extractTag(targetID, inputID, TAG) {
     } else {
       throw new Error("Tag not found");
     }
-
     return true;
   });
 }
@@ -1195,6 +1194,39 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
         // for each cutting part cut the part
         partCutCopy = recursiveCut(partCutCopy, toGeometry(cuttingPart));
       });
+      /*   if the part is a compound return each solid as a new assembly */
+      function getSolids(compound) {
+        return Array.from(
+          replicad.iterTopo(compound.wrapped, "solid"),
+          (s) => new Solid(s)
+        );
+      }
+      if (partCutCopy.wrapped) {
+        let solids = getSolids(partCutCopy);
+        if (solids.length > 1) {
+          let newAssembly = [];
+          solids.forEach((solid) => {
+            newAssembly.push({
+              geometry: [solid],
+              tags: partToCut.tags,
+              color: partToCut.color,
+              bom: partToCut.bom,
+              plane: partToCut.plane,
+            });
+          });
+          // return new cut part
+          let newID = generateUniqueID();
+          library[newID] = {
+            geometry: newAssembly,
+            tags: partToCut.tags,
+            color: partToCut.color,
+            bom: partToCut.bom,
+            plane: partToCut.plane,
+          };
+
+          return library[newID];
+        }
+      }
       // return new cut part
       let newID = generateUniqueID();
       library[newID] = {
@@ -1317,41 +1349,6 @@ function fusion(targetID, inputIDs) {
     };
     return true;
   });
-}
-
-/**
- * Function which takes in a geometry and returns the same geometry if it is cohesive or an assembly if the geometry is disjoint
- */
-function disjointGeometryToAssembly(inputID) {
-  let input = toGeometry(inputID).geometry[0]; //This does not accept assemblies
-  let solidsArray = Array.from(
-    replicad.iterTopo(input.wrapped, "solid"),
-    (s) => new Solid(s)
-  );
-  console.log("solidsArray", solidsArray);
-  //If there is more than one solid in the geometry, return an assembly
-  if (solidsArray.length > 1) {
-    let assemblyArray = [];
-    solidsArray.forEach((solid) => {
-      assemblyArray.push({
-        geometry: [solid],
-        tags: input.tags,
-        bom: input.bom,
-        color: input.color,
-        plane: input.plane,
-      });
-    });
-    return {
-      geometry: assemblyArray,
-      tags: input.tags,
-      bom: input.bom,
-      color: input.color,
-      plane: input.plane,
-    };
-    //If there is only one solid in the geometry, return the input
-  } else {
-    return toGeometry(inputID);
-  }
 }
 
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
