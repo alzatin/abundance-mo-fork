@@ -479,7 +479,7 @@ function extractTag(targetID, inputID, TAG) {
     } else {
       throw new Error("Tag not found");
     }
-
+    console.log(library[targetID]);
     return true;
   });
 }
@@ -1194,17 +1194,62 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
         // for each cutting part cut the part
         partCutCopy = recursiveCut(partCutCopy, toGeometry(cuttingPart));
       });
-      // return new cut part
-      let newID = generateUniqueID();
-      library[newID] = {
-        geometry: [partCutCopy],
-        tags: partToCut.tags,
-        color: partToCut.color,
-        bom: partToCut.bom,
-        plane: partToCut.plane,
-      };
+      function getSolids(compound) {
+        return Array.from(
+          replicad.iterTopo(compound.wrapped, "solid"),
+          (s) => new Solid(s)
+        );
+      }
+      if (partCutCopy.wrapped) {
+        let solids = getSolids(partCutCopy);
+        if (solids.length > 1) {
+          let newAssembly = [];
+          solids.forEach((solid) => {
+            newAssembly.push({
+              geometry: [solid],
+              tags: partToCut.tags,
+              color: partToCut.color,
+              bom: partToCut.bom,
+              plane: partToCut.plane,
+            });
+          });
 
-      return library[newID];
+          let newID = generateUniqueID();
+          library[newID] = {
+            geometry: newAssembly,
+            tags: partToCut.tags,
+            color: partToCut.color,
+            bom: partToCut.bom,
+            plane: partToCut.plane,
+          };
+          console.log("new assembly with many solids", library[newID]);
+          return library[newID];
+        } else {
+          // return new cut part
+          let newID = generateUniqueID();
+          library[newID] = {
+            geometry: [partCutCopy],
+            tags: partToCut.tags,
+            color: partToCut.color,
+            bom: partToCut.bom,
+            plane: partToCut.plane,
+          };
+
+          return library[newID];
+        }
+      } else {
+        // return new cut part
+        let newID = generateUniqueID();
+        library[newID] = {
+          geometry: [partCutCopy],
+          tags: partToCut.tags,
+          color: partToCut.color,
+          bom: partToCut.bom,
+          plane: partToCut.plane,
+        };
+
+        return library[newID];
+      }
     }
   } catch (e) {
     throw new Error("Cut Assembly failed");
@@ -1281,6 +1326,7 @@ async function assembly(inputIDs, targetID = null) {
 
   if (targetID != null) {
     library[targetID] = generatedAssembly;
+    console.log(library[targetID]);
   } else {
     return generatedAssembly;
   }
