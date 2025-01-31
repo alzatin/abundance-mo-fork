@@ -1193,6 +1193,7 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
         // for each cutting part cut the part
         partCutCopy = recursiveCut(partCutCopy, toGeometry(cuttingPart));
       });
+      /*   if the part is a compound return each solid as a new assembly */
       function getSolids(compound) {
         return Array.from(
           replicad.iterTopo(compound.wrapped, "solid"),
