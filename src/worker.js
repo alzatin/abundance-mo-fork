@@ -22,6 +22,7 @@ const init = async () => {
 
   loaded = true;
   replicad.setOC(OC);
+  console.log(replicad);
 
   return true;
 };
