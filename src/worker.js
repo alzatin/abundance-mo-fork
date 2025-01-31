@@ -1312,7 +1312,6 @@ async function assembly(inputIDs, targetID = null) {
 
   if (targetID != null) {
     library[targetID] = generatedAssembly;
-    console.log(library[targetID]);
   } else {
     return generatedAssembly;
   }
