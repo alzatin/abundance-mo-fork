@@ -34,8 +34,8 @@ export default class Code extends Atom {
      * @type {string}
      */
     this.code = " \n\
-      Inputs:[inputShape, dist, height]\n\
-      This defines the molecules inputs and creates variables with the same names which can be referenced in the code\n\
+      //Inputs:[inputShape, dist, height]\n\
+      //This defines the molecules inputs and creates variables with the same names which can be referenced in the code\n\
       \n\
       //Takes the address and gets the shape from the library\n\
       let importedShape = library[inputShape]\n\
