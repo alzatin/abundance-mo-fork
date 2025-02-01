@@ -289,9 +289,13 @@ You can read the complete documentation at ----(Documentation pending)
 
 2.  Install dependencies:
 
-        npm install
+        npm install —legacy-peer-deps
 
-3.  Run webpack:
+3. Edit files for local development:
+
+        Follow the comments in .env to switch to local develpment mode and in is vite config change /Abundance to / 
+
+4.  Run webpack:
 
         npm start
 
