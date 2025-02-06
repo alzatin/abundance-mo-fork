@@ -88,10 +88,16 @@ export default function ReplicadApp() {
             });
         } else {
           /* reset mesh view if in output mode*/
+
           cad
             .resetView()
             .then((m) => {
               setWireMesh(m);
+              /* Creates an element to check with Puppeteer if the molecule is fully loaded*/
+              const invisibleDiv = document.createElement("div");
+              invisibleDiv.id = "molecule-fully-render-puppeteer";
+              invisibleDiv.style.display = "none";
+              document.body.appendChild(invisibleDiv);
             })
             .catch((e) => {
               console.error("reset view not working" + e);
