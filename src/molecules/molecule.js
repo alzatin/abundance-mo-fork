@@ -544,6 +544,7 @@ export default class Molecule extends Atom {
    */
   recomputeMolecule(outputID) {
     //super.updateValue();
+    console.log("recompute");
 
     try {
       this.processing = true;
@@ -558,10 +559,9 @@ export default class Molecule extends Atom {
         });
         if (this.selected) {
           this.sendToRender();
-        } else {
-          const loadingDots = document.querySelector(".loading");
-          loadingDots.style.display = "none";
         }
+        const loadingDots = document.querySelector(".loading");
+        loadingDots.style.display = "none";
       });
     } catch (err) {
       this.setAlert(err);
