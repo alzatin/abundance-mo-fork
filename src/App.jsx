@@ -78,17 +78,24 @@ export default function ReplicadApp() {
             activeAtom.setAlert("Can't display Mesh " + e);
           });
         // if something is connected to the output, set a wireframe mesh
-        if(GlobalVariables.currentMolecule.output.value != id){ //Don't display the mesh if the thing we are displaying is already the output
+        if (GlobalVariables.currentMolecule.output.value != id) {
+          //Don't display the mesh if the thing we are displaying is already the output
           cad
             .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
             .then((w) => setWireMesh(w))
             .catch((e) => {
               console.error("Can't comput Wireframe/No output " + e);
             });
-        }
-        else{
-          console.log("Not displaying mesh because it is the output");
-          setOutdatedMesh(true); //We don't want to display the mesh if it is the output
+        } else {
+          /* reset mesh view if in output mode*/
+          cad
+            .resetView()
+            .then((m) => {
+              setWireMesh(m);
+            })
+            .catch((e) => {
+              console.error("reset view not working" + e);
+            });
         }
       }
     };
