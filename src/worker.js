@@ -10,6 +10,7 @@ import { AnyNest, FloatPolygon } from "any-nest";
 import { re } from "mathjs";
 
 var library = {};
+let defaultColor = "#aad7f2"
 
 // This is the logic to load the web assembly code into replicad
 let loaded = false;
@@ -46,7 +47,7 @@ function toGeometry(input) {
     return {
       geometry: [input],
       tags: [],
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
   }
@@ -86,7 +87,7 @@ function circle(id, diameter) {
       geometry: [replicad.drawCircle(diameter / 2)],
       tags: [],
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     return true;
@@ -100,7 +101,7 @@ function rectangle(id, x, y) {
       geometry: [replicad.drawRectangle(x, y)],
       tags: [],
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     return true;
@@ -114,7 +115,7 @@ function regularPolygon(id, radius, numberOfSides) {
       geometry: [replicad.drawPolysides(radius, numberOfSides)],
       tags: [],
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     return true;
@@ -139,7 +140,7 @@ async function text(id, text, fontSize, fontFamily) {
       geometry: [textGeometry],
       tags: [],
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     return true;
@@ -169,7 +170,7 @@ function loftShapes(targetID, inputsIDs) {
       geometry: [startGeometry.loftWith([...arrayOfSketchedGeometry])],
       tags: [],
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     return true;
@@ -335,7 +336,7 @@ function shrinkWrapSketches(targetID, inputIDs) {
       library[targetID] = {
         geometry: [shrinkWrap(geometryToWrap, 50)],
         tags: [],
-        color: "#FF9065",
+        color: defaultColor,
         plane: newPlane,
         bom: BOM,
       };
@@ -571,7 +572,7 @@ async function importingSTEP(targetID, file) {
   library[targetID] = {
     geometry: [STEPresult],
     tags: [],
-    color: "#FF9065",
+    color: defaultColor,
     bom: [],
   };
   return true;
@@ -583,7 +584,7 @@ async function importingSTL(targetID, file) {
   library[targetID] = {
     geometry: [STLresult],
     tags: [],
-    color: "#FF9065",
+    color: defaultColor,
     bom: [],
   };
   return true;
@@ -612,7 +613,7 @@ async function importingSVG(targetID, svg, width) {
       geometry: [drawnSVG.clone().translate(-center[0], -center[1])],
       tags: [],
       plane: new Plane().pivot(0, "Y"),
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     console.log("SVG imported successfully");
@@ -1345,7 +1346,7 @@ function fusion(targetID, inputIDs) {
       tags: [],
       bom: bomAssembly,
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
     };
     return true;
   });
@@ -1432,6 +1433,7 @@ function digFuse(assembly) {
 }
 
 let colorOptions = {
+  "Default": defaultColor,
   Red: "#FF9065",
   Orange: "#FFB458",
   Yellow: "#FFD600",

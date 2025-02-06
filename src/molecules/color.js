@@ -40,6 +40,7 @@ export default class Color extends Atom {
      * @type {array}
      */
     this.colorOptions = {
+      Default: "#aad7f2",
       Red: "#FF9065",
       Orange: "#FFB458",
       Yellow: "#FFD600",
