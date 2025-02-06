@@ -1567,6 +1567,7 @@ function generateCameraPosition(meshArray) {
 function generateDisplayMesh(id) {
   return started.then(() => {
     console.log("Generating display mesh for " + id);
+    console.trace();
     if (library[id] == undefined || id == undefined) {
       console.log("ID undefined or not found in library");
       //throw new Error("ID not found in library");
