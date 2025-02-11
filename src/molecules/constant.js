@@ -58,9 +58,9 @@ export default class Constant extends Atom {
      */
     this.value = 10.0;
 
-    this.setValues(values);
-
-    this.addIO("output", "number", this, "number", 10.0);
+    this.setValues(values); //This will overwrite the default value if one is loaded
+    
+    this.addIO("output", "number", this, "number", this.value);
 
     this.decreaseToProcessCountByOne(); //Since there is nothing upstream this needs to be removed from the list here
   }
@@ -128,11 +128,30 @@ export default class Constant extends Atom {
     this.output.ready = true;
     this.processing = false;
   }
+
+  /**
+   * Starts propagation from this atom since it is not waiting for anything up stream.
+   */
+    beginPropagation(force = false) {
+      this.output.setValue(this.value);
+    }
+
   /**
    * Send the value of this atom to the 3D display. Used to display the number
    */
   sendToRender() {
     //Send code to jotcad to render
     GlobalVariables.writeToDisplay(this.uniqueID);
+  }
+
+  /**
+   * Serialize the value of this.value so that we can store it for next time
+   */
+  serialize(values) {
+    //Save the readme text to the serial stream
+    var valuesObj = super.serialize(values);
+    valuesObj.value = this.value;
+
+    return valuesObj;
   }
 }
