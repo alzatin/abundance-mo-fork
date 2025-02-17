@@ -552,7 +552,14 @@ export default class Molecule extends Atom {
       centeredText.style.display = "flex";
 
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
-        this.basicThreadValueProcessing();
+
+        //If we're currently inside this molecule, we don't want to pass the update to the next level until we leave
+        if (GlobalVariables.currentMolecule !== this) {
+          this.basicThreadValueProcessing();
+        }
+        else{
+          this.awaitingPropagationFlag = true;
+        }
 
         this.compileBom().then((result) => {
           this.compiledBom = result;
@@ -636,7 +643,7 @@ export default class Molecule extends Atom {
       });
       //Push any changes up to the next level if there are any changes waiting in the output
       if (GlobalVariables.currentMolecule.awaitingPropagationFlag == true) {
-        GlobalVariables.currentMolecule.propagate();
+        GlobalVariables.currentMolecule.basicThreadValueProcessing();
         GlobalVariables.currentMolecule.awaitingPropagationFlag = false;
       }
 
