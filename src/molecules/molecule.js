@@ -636,7 +636,6 @@ export default class Molecule extends Atom {
    * Replace the currently displayed molecule with the parent of this molecule...moves the user up one level.
    */
   goToParentMolecule() {
-    console.log("Go to parent mollecule called");
     //Go to the parent molecule if there is one
     if (!GlobalVariables.currentMolecule.topLevel) {
       GlobalVariables.currentMolecule.nodesOnTheScreen.forEach((atom) => {
