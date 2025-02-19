@@ -207,7 +207,6 @@ function is3D(inputs) {
 }
 
 function move(inputID, x, y, z, targetID = null) {
-  console.log("Input ID: ", inputID);
   return started.then(() => {
     if (is3D(library[inputID])) {
       let result = actOnLeafs(library[inputID], (leaf) => {
