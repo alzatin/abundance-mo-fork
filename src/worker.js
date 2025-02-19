@@ -206,10 +206,10 @@ function is3D(inputs) {
   }
 }
 
-function move(targetID, inputID, x, y, z) {
+function move(inputID, x, y, z, targetID = null) {
   return started.then(() => {
     if (is3D(library[inputID])) {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+      let result = actOnLeafs(library[inputID], (leaf) => {
         return {
           geometry: [leaf.geometry[0].clone().translate(x, y, z)],
           plane: leaf.plane,
@@ -218,8 +218,14 @@ function move(targetID, inputID, x, y, z) {
           bom: leaf.bom,
         };
       });
+      if (targetID) {
+        library[targetID] = result;
+        //library[inputID].plane.translate([0, 0, z]); //@Alzatin what is this line for?
+      } else {
+        return result;
+      }
     } else {
-      library[targetID] = actOnLeafs(
+      let result = actOnLeafs(
         library[inputID],
         (leaf) => {
           return {
@@ -230,8 +236,13 @@ function move(targetID, inputID, x, y, z) {
             bom: leaf.bom,
           };
         },
-        library[inputID].plane.translate([0, 0, z])
       );
+      if (targetID) {
+        library[targetID] = result;
+        //library[inputID].plane.translate([0, 0, z]); //@Alzatin what is this line for?
+      } else {
+        return result;
+      }
     }
     return true;
   });
@@ -392,6 +403,19 @@ async function Rotate(input, x, y, z) {
 }
 
 /**
+ * A wrapper for the move function to allow it to be Move and used in the Code atom
+ */
+async function Move(input, x, y, z) {
+  try {
+    const movedGeometry = await move(input, x, y, z);
+    return movedGeometry;
+  } catch (error) {
+    console.error("Error moving geometry:", error);
+    throw error;
+  }
+}
+
+/**
  * A wrapper for the assembly function to allow it to be Assembly and used in the Code atom
  */
 async function Assembly(inputs) {
@@ -407,8 +431,8 @@ async function Assembly(inputs) {
 // Runs the user entered code in the worker thread and returns the result.
 async function code(targetID, code, argumentsArray) {
   await started;
-  let keys1 = ["Rotate", "Assembly"];
-  let inputValues = [Rotate, Assembly];
+  let keys1 = ["Rotate", "Move", "Assembly"];
+  let inputValues = [Rotate, Move, Assembly];
   for (const [key, value] of Object.entries(argumentsArray)) {
     keys1.push(`${key}`);
     inputValues.push(value);
