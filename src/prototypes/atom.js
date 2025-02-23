@@ -79,7 +79,7 @@ export default class Atom {
      */
     this.name = "name0";
     /**
-     * This atom's parent, usually the molecule which contains this atom
+     * This atom's parent, usually the molecule which contains this atom...how is this different from this.parent?
      * @type {object}
      */
     this.parentMolecule = null;
