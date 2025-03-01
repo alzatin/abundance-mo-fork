@@ -79,15 +79,17 @@ function runMode({
     GlobalVariables.c = canvasRef.current.getContext("2d");
 
     /** Only run loadproject() if the project is different from what is already loaded and clear screen */
-    if (
-      !GlobalVariables.loadedRepo ||
-      GlobalVariables.currentRepo.repoName !==
-        GlobalVariables.loadedRepo.repoName
-    ) {
-      GlobalVariables.writeToDisplay(
-        GlobalVariables.currentRepo.topMoleculeID,
-        true
-      );
+    if (GlobalVariables.currentRepo) {
+      if (
+        !GlobalVariables.loadedRepo ||
+        GlobalVariables.currentRepo.repoName !==
+          GlobalVariables.loadedRepo.repoName
+      ) {
+        GlobalVariables.writeToDisplay(
+          GlobalVariables.currentRepo.topMoleculeID,
+          true
+        );
+      }
     }
 
     var octokit = new Octokit();
