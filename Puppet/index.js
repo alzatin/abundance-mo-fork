@@ -16,7 +16,7 @@ const projects_to_test = require("./projects_to_test.js");
     await loadPuppeterAndExec("http://localhost:4444", project, "Test");
 
     await loadPuppeterAndExec(
-      "https://barboursmith.github.io/Abundance/",
+      "https://barboursmith.github.io/Abundance",
       project,
       "Deployed"
     );
