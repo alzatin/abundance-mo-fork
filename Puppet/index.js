@@ -75,5 +75,6 @@ async function loadPuppeterAndExec(url, projectName, photoLabel) {
     path: `Puppet/images/${projectName}-${photoLabel}.png`,
   });
   console.log(`Puppet/images/${projectName}-${photoLabel}.png`);
+
   await browser.close();
 }
