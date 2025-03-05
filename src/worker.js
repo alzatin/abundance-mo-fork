@@ -10,7 +10,7 @@ import { AnyNest, FloatPolygon } from "any-nest";
 import { re } from "mathjs";
 
 var library = {};
-let defaultColor = "#aad7f2"
+let defaultColor = "#aad7f2";
 
 // This is the logic to load the web assembly code into replicad
 let loaded = false;
@@ -225,18 +225,15 @@ function move(inputID, x, y, z, targetID = null) {
         return result;
       }
     } else {
-      let result = actOnLeafs(
-        library[inputID],
-        (leaf) => {
-          return {
-            geometry: [leaf.geometry[0].clone().translate([x, y])],
-            tags: leaf.tags,
-            plane: leaf.plane.translate([0, 0, z]),
-            color: leaf.color,
-            bom: leaf.bom,
-          };
-        },
-      );
+      let result = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [leaf.geometry[0].clone().translate([x, y])],
+          tags: leaf.tags,
+          plane: leaf.plane.translate([0, 0, z]),
+          color: leaf.color,
+          bom: leaf.bom,
+        };
+      });
       if (targetID) {
         library[targetID] = result;
         //library[inputID].plane.translate([0, 0, z]); //@Alzatin what is this line for?
@@ -1457,7 +1454,7 @@ function digFuse(assembly) {
 }
 
 let colorOptions = {
-  "Default": defaultColor,
+  Default: defaultColor,
   Red: "#FF9065",
   Orange: "#FFB458",
   Yellow: "#FFD600",
