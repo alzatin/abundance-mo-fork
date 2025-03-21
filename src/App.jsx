@@ -51,7 +51,6 @@ export default function ReplicadApp() {
 
   /* Creates an element to check with Puppeteer if the molecule is fully loaded*/
   const createPuppeteerDiv = () => {
-    console.log("creating puppeter flag div");
     const invisibleDiv = document.createElement("div");
     invisibleDiv.id = "molecule-fully-render-puppeteer";
     invisibleDiv.style.display = "none";
