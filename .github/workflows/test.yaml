@@ -33,7 +33,7 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
-      - name: Start
-        run: npm start
+      - name: build
+        run: npm build
       - name: Run Tests
         run: npm test
