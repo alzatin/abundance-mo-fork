@@ -35,10 +35,13 @@ async function loadPuppeterAndExec(url, projectName, photoLabel) {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
-  // Navigate the page to a URL.
-  //await page.goto("https://barboursmith.github.io/Abundance/");
-  await page.goto(url + "/run/" + projectUser + "/" + projectName);
 
+  //await page.goto("https://barboursmith.github.io/Abundance/");
+  // Navigate the page to a URL.
+  await page.goto(url + "/run/" + projectUser + "/" + projectName, {
+    waitUntil: "networkidle2",
+    timeout: 0, // Disable timeout
+  });
   // Set screen size.
   await page.setViewport({ width: 1080, height: 1024 });
 
