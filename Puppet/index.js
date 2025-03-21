@@ -32,6 +32,7 @@ const currentDate = new Date().toISOString().split("T")[0];
 async function loadPuppeterAndExec(url, projectName, photoLabel) {
   const browser = await puppeteer.launch({
     headless: false,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
   // Navigate the page to a URL.
