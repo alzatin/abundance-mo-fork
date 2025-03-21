@@ -7,18 +7,24 @@ const projectUser = "moatmaslow";
 
 const puppeteer = require("puppeteer");
 const projects_to_test = require("./projects_to_test.js");
+// Get the current date
+const currentDate = new Date().toISOString().split("T")[0];
 
 // Launch the browser and open a new blank page
 //for each project in projects to test lauch puppeteer
 
 (async () => {
   for (const project of projects_to_test) {
-    await loadPuppeterAndExec("http://localhost:4444", project, "Test");
+    await loadPuppeterAndExec(
+      "http://localhost:4444",
+      project,
+      "Test-" + currentDate
+    );
 
     await loadPuppeterAndExec(
       "https://barboursmith.github.io/Abundance",
       project,
-      "Deployed"
+      "Deployed-" + currentDate
     );
   }
 })();

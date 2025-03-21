@@ -34,17 +34,21 @@
     <script>
       const container = document.getElementById("comparison-container");
 
+      // Get current date and time
+      var now = new Date();
+      var datetime = now.toLocaleString();
+
       projects_to_test.forEach((project) => {
         const projectContainer = document.createElement("div");
         projectContainer.className = "project-container";
 
         const testDiv = document.createElement("div");
         testDiv.className = "image-wrapper";
-        testDiv.innerHTML = `<p>Test</p><img src="images/${project}-Test.png" alt="Test Image">`;
+        testDiv.innerHTML = `<p>Test-${datetime}</p><img src="images/${project}-Test.png" alt="Test Image">`;
 
         const deployedDiv = document.createElement("div");
         deployedDiv.className = "image-wrapper";
-        deployedDiv.innerHTML = `<p>Deployed</p><img src="images/${project}-Deployed.png" alt="Deployed Image">`;
+        deployedDiv.innerHTML = `<p>Deployed-${datetime}</p><img src="images/${project}-Deployed.png" alt="Deployed Image">`;
 
         projectContainer.appendChild(testDiv);
         projectContainer.appendChild(deployedDiv);
