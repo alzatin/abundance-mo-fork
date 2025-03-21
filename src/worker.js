@@ -124,27 +124,30 @@ function regularPolygon(id, radius, numberOfSides) {
 async function text(id, text, fontSize, fontFamily) {
   await replicad
     .loadFont(Fonts[fontFamily])
-    .then(() => console.log("Font loaded"))
-    .catch((err) => console.error("Error loading font: ", err));
+    .then(() => {
+      console.log("Font loaded");
+      return started.then(() => {
+        const newPlane = new Plane().pivot(0, "Y");
 
-  return started.then(() => {
-    const newPlane = new Plane().pivot(0, "Y");
-
-    const textGeometry = replicad.drawText(text, {
-      startX: 0,
-      startY: 0,
-      fontSize: fontSize,
-      font: fontFamily,
+        const textGeometry = replicad.drawText(text, {
+          startX: 0,
+          startY: 0,
+          fontSize: fontSize,
+          font: fontFamily,
+        });
+        library[id] = {
+          geometry: [textGeometry],
+          tags: [],
+          plane: newPlane,
+          color: defaultColor,
+          bom: [],
+        };
+        return true;
+      });
+    })
+    .catch((err) => {
+      throw new Error("Error loading font: ", err);
     });
-    library[id] = {
-      geometry: [textGeometry],
-      tags: [],
-      plane: newPlane,
-      color: defaultColor,
-      bom: [],
-    };
-    return true;
-  });
 }
 
 function loftShapes(targetID, inputsIDs) {
@@ -1590,7 +1593,6 @@ function generateCameraPosition(meshArray) {
 function generateDisplayMesh(id) {
   return started.then(() => {
     console.log("Generating display mesh for " + id);
-    console.trace();
     if (library[id] == undefined || id == undefined) {
       console.log("ID undefined or not found in library");
       //throw new Error("ID not found in library");

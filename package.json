@@ -46,8 +46,7 @@
     "save-dev": "^0.0.1-security",
     "showdown": "^2.1.0",
     "three": "^0.161.0",
-    "uuid": "^9.0.1",
-    "webfontloader": "^1.6.28"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "4.2.1",
