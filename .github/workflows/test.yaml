@@ -34,8 +34,6 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
       - name: Start
-        run: |
-          npm start &
-          curl -i localhost:4444
+        run: npm start
       - name: Run Tests
         run: npm test
