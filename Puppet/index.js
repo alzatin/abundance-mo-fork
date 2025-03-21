@@ -75,7 +75,8 @@ async function loadPuppeterAndExec(url, projectName, photoLabel) {
   await page.waitForFunction(
     (selector) => !!document.querySelector(selector),
     {},
-    selector
+    selector,
+    { timeout: 60000 }
   );
 
   await page.screenshot({
