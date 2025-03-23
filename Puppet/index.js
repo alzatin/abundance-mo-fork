@@ -78,6 +78,7 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
     );
   } finally {
     if (browser) {
+      console.log(`Closing browser for project ${projectName}`);
       await browser.close();
     }
   }
