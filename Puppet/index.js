@@ -34,6 +34,9 @@ const currentDate = new Date().toISOString().split("T")[0];
 })();
 
 async function loadPuppeteerAndExec(url, projectName, photoLabel) {
+  console.log(
+    `Loading Puppeteer for project ${projectName} with label ${photoLabel}`
+  );
   let browser;
   try {
     browser = await puppeteer.launch({
