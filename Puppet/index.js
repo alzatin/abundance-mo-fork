@@ -11,81 +11,65 @@ const projects_to_test = require("./projects_to_test.js");
 const currentDate = new Date().toISOString().split("T")[0];
 
 // Launch the browser and open a new blank page
-//for each project in projects to test lauch puppeteer
+//for each project in projects to test launch puppeteer
 
 (async () => {
   for (const project of projects_to_test) {
-    /* await loadPuppeterAndExec(
-      "http://localhost:4444",
-      project,
-      "Test-" + currentDate
-    );*/
+    try {
+      /* await loadPuppeteerAndExec(
+        "http://localhost:4444",
+        project,
+        "Test-" + currentDate
+      );*/
 
-    await loadPuppeterAndExec(
-      "https://barboursmith.github.io/Abundance",
-      project,
-      "Deployed-" + currentDate
-    );
+      await loadPuppeteerAndExec(
+        "https://barboursmith.github.io/Abundance",
+        project,
+        "Deployed-" + currentDate
+      );
+    } catch (error) {
+      console.error(`Error processing project ${project}:`, error);
+    }
   }
 })();
 
-async function loadPuppeterAndExec(url, projectName, photoLabel) {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  const page = await browser.newPage();
+async function loadPuppeteerAndExec(url, projectName, photoLabel) {
+  let browser;
+  try {
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    const page = await browser.newPage();
 
-  //await page.goto("https://barboursmith.github.io/Abundance/");
-  // Navigate the page to a URL.
-  await page.goto(url + "/run/" + projectUser + "/" + projectName, {
-    waitUntil: "networkidle2",
-    timeout: 0, // Disable timeout
-  });
-  // Set screen size.
-  await page.setViewport({ width: 1080, height: 1024 });
+    // Navigate the page to a URL.
+    await page.goto(url + "/run/" + projectUser + "/" + projectName, {
+      waitUntil: "networkidle2",
+      timeout: 0, // Disable timeout
+    });
 
-  /*//  Authentication workflow - when not in run mode
-  Wait and click on login button.
-  await page.waitForSelector("#loginButton");
-  await page.click("#loginButton");
-  // Wait and click on login button.
-  await page.waitForSelector(
-    "body > div > main > section > div > div > div > div > form > button"
-  );
-  await page.click(
-    "body > div > main > section > div > div > div > div > form > button"
-  );
-  await page.waitForSelector('input[id="login_field"]');
-  await page.waitForSelector('input[id="password"]');
-  await page.waitForSelector(
-    "#login > div.auth-form-body.mt-3 > form > div > input.btn.btn-primary.btn-block.js-sign-in-button"
-  );
+    // Set screen size.
+    await page.setViewport({ width: 1080, height: 1024 });
 
-  if (envUserValue) {
-    await page.type('input[id="login_field"]', String(envUserValue));
-  } else {
-    console.warn("No GITHUB_USER environment variable set.");
+    const selector = "#molecule-fully-render-puppeteer";
+    await page.waitForFunction(
+      (selector) => !!document.querySelector(selector),
+      { timeout: 120000 }, // Increase timeout to 2 minutes
+      selector
+    );
+
+    await page.screenshot({
+      path: `Puppet/images/${projectName}-${photoLabel}.png`,
+    });
+    console.log(`Puppet/images/${projectName}-${photoLabel}.png`);
+  } catch (error) {
+    console.error(
+      `Error in loadPuppeteerAndExec for project ${projectName}:`,
+      error
+    );
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
-  await page.type('input[id="password"]', String(envPassValue));
-  await page.click(
-    "#login > div.auth-form-body.mt-3 > form > div > input.btn.btn-primary.btn-block.js-sign-in-button"
-  );
-  await page.waitForSelector(".project-item-div");
-  await page.click(`#${projectName}`);*/
-
-  const selector = "#molecule-fully-render-puppeteer";
-  await page.waitForFunction(
-    (selector) => !!document.querySelector(selector),
-    {},
-    selector,
-    { timeout: 60000 }
-  );
-
-  await page.screenshot({
-    path: `Puppet/images/${projectName}-${photoLabel}.png`,
-  });
-  console.log(`Puppet/images/${projectName}-${photoLabel}.png`);
-
-  await browser.close();
 }
