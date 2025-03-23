@@ -22,11 +22,11 @@ const currentDate = new Date().toISOString().split("T")[0];
         "Test-" + currentDate
       );
 
-      await loadPuppeteerAndExec(
+      /*await loadPuppeteerAndExec(
         "https://barboursmith.github.io/Abundance",
         project,
         "Deployed-" + currentDate
-      );
+      );*/
     } catch (error) {
       console.error(`Error processing project ${project}:`, error);
     }
@@ -71,6 +71,21 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
       path: `Puppet/images/${projectName}-${photoLabel}.png`,
     });
     console.log(`Puppet/images/${projectName}-${photoLabel}.png`);
+
+    await page.goto(
+      "https://barboursmith.github.io/Abundance" +
+        "/run/" +
+        projectUser +
+        "/" +
+        projectName,
+      {
+        waitUntil: "networkidle2",
+        timeout: 0, // Disable timeout
+      }
+    );
+    console.log(
+      `Navigated to https://barboursmith.github.io/Abundance/run/${projectUser}/${projectName}`
+    );
   } catch (error) {
     console.error(
       `Error in loadPuppeteerAndExec for project ${projectName}:`,
