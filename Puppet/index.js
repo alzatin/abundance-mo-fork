@@ -50,7 +50,7 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
       waitUntil: "networkidle2",
       timeout: 0, // Disable timeout
     });
-
+    console.log(`Navigated to ${url}/run/${projectUser}/${projectName}`);
     // Set screen size.
     await page.setViewport({ width: 1080, height: 1024 });
 
@@ -64,6 +64,7 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
       { timeout: 120000 }, // Increase timeout to 2 minutes
       selector
     );
+    console.log(`Element ${selector} is now visible.`);
 
     await page.screenshot({
       path: `Puppet/images/${projectName}-${photoLabel}.png`,
