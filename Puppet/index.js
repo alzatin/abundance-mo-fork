@@ -27,12 +27,11 @@ const currentDate = new Date().toISOString().split("T")[0];
         project,
         "Deployed-" + currentDate
       );
-
-      await loadMainHtml();
     } catch (error) {
       console.error(`Error processing project ${project}:`, error);
     }
   }
+  // await loadMainHtml();
 })();
 
 async function loadMainHtml() {
@@ -43,7 +42,7 @@ async function loadMainHtml() {
   const path = require("path");
   try {
     const page = await browser.newPage();
-    await page.goto(`file:${path.join(__dirname, "main.html")}`);
+    await page.goto(`file:${path.join(__dirname, "test.html")}`);
     // Set screen size.
     await page.setViewport({ width: 1080, height: 1024 });
 
