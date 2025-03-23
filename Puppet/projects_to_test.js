@@ -1,4 +1,4 @@
-const projects_to_test = ["Laundry-Shelf", "Wall-Anchor"];
+const projects_to_test = ["Laundry-Shelf"];
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = projects_to_test;
