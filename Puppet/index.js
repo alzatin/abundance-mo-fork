@@ -15,11 +15,11 @@ const currentDate = new Date().toISOString().split("T")[0];
 
 (async () => {
   for (const project of projects_to_test) {
-    await loadPuppeterAndExec(
+    /* await loadPuppeterAndExec(
       "http://localhost:4444",
       project,
       "Test-" + currentDate
-    );
+    );*/
 
     await loadPuppeterAndExec(
       "https://barboursmith.github.io/Abundance",
