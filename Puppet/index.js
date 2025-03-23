@@ -52,11 +52,15 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
     await page.setViewport({ width: 1080, height: 1024 });
 
     const selector = "#molecule-fully-render-puppeteer";
-    await page.waitForFunction(
+    await page.waitForSelector("#molecule-fully-render-puppeteer", {
+      visible: true,
+      timeout: 120000,
+    });
+    /* await page.waitForFunction(
       (selector) => !!document.querySelector(selector),
-      { timeout: 120000 }, // Increase timeout to 2 minutes
+      { timeout: 180000 }, // Increase timeout to 3 minutes
       selector
-    );
+    );*/
 
     await page.screenshot({
       path: `Puppet/images/${projectName}-${photoLabel}.png`,
