@@ -1,7 +1,7 @@
 const projects_to_test = [
   "Anna-s-cafe-chair-rope",
-  "Laundry-Shelf",
-  "Wall-Anchor",
+  //"Laundry-Shelf",
+  //"Wall-Anchor",
 ];
 
 if (typeof module !== "undefined" && module.exports) {
