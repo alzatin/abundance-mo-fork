@@ -31,6 +31,7 @@ const currentDate = new Date().toISOString().split("T")[0];
       console.error(`Error processing project ${project}:`, error);
     }
   }
+  console.log("All projects processed.");
 })();
 
 async function loadPuppeteerAndExec(url, projectName, photoLabel) {
