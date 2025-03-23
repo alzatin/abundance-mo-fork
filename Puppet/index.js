@@ -22,6 +22,8 @@ const currentDate = new Date().toISOString().split("T")[0];
         "Test-" + currentDate
       );*/
 
+      console.log(`Processing project: ${project}`);
+
       await loadPuppeteerAndExec(
         "https://barboursmith.github.io/Abundance",
         project,
@@ -35,6 +37,7 @@ const currentDate = new Date().toISOString().split("T")[0];
 })();
 
 async function loadMainHtml() {
+  console.log("Loading main HTML for screenshot...");
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
