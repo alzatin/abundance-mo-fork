@@ -33,7 +33,7 @@ const currentDate = new Date().toISOString().split("T")[0];
       console.error(`Error processing project ${project}:`, error);
     }
   }
-  await loadMainHtml();
+  //loadMainHtml();
 })();
 
 async function loadMainHtml() {
