@@ -27,11 +27,32 @@ const currentDate = new Date().toISOString().split("T")[0];
         project,
         "Deployed-" + currentDate
       );
+
+      await loadMainHtml();
     } catch (error) {
       console.error(`Error processing project ${project}:`, error);
     }
   }
 })();
+
+async function loadMainHtml() {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+  try {
+    const page = await browser.newPage();
+    await page.goto("/main.html");
+    // Set screen size.
+    await page.setViewport({ width: 1080, height: 1024 });
+
+    await page.screenshot({
+      path: `Puppet/images/main.png`,
+    });
+  } catch (error) {
+    console.error("Error loading main HTML:", error);
+  }
+}
 
 async function loadPuppeteerAndExec(url, projectName, photoLabel) {
   let browser;
