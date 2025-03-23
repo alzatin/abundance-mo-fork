@@ -40,9 +40,10 @@ async function loadMainHtml() {
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+  const path = require("path");
   try {
     const page = await browser.newPage();
-    await page.goto("/main.html");
+    await page.goto(`file:${path.join(__dirname, "main.html")}`);
     // Set screen size.
     await page.setViewport({ width: 1080, height: 1024 });
 
