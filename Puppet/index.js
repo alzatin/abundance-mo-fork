@@ -77,11 +77,7 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
         "/run/" +
         projectUser +
         "/" +
-        projectName,
-      {
-        waitUntil: "networkidle2",
-        timeout: 0, // Disable timeout
-      }
+        projectName
     );
     console.log(
       `Navigated to https://barboursmith.github.io/Abundance/run/${projectUser}/${projectName}`
