@@ -82,6 +82,10 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
     console.log(
       `Navigated to https://barboursmith.github.io/Abundance/run/${projectUser}/${projectName}`
     );
+    await page.screenshot({
+      path: `Puppet/images/${projectName}-Deployed.png`,
+    });
+    console.log(`Puppet/images/${projectName}-Deployed}.png`);
   } catch (error) {
     console.error(
       `Error in loadPuppeteerAndExec for project ${projectName}:`,
