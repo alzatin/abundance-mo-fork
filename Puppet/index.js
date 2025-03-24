@@ -16,11 +16,7 @@ const currentDate = new Date().toISOString().split("T")[0];
 (async () => {
   for (const project of projects_to_test) {
     try {
-      await loadPuppeteerAndExec(
-        "http://localhost:4444",
-        project,
-        "Test-" + currentDate
-      );
+      await loadPuppeteerAndExec(project, currentDate);
 
       /*await loadPuppeteerAndExec(
         "https://barboursmith.github.io/Abundance",
@@ -34,10 +30,7 @@ const currentDate = new Date().toISOString().split("T")[0];
   console.log("All projects processed:!");
 })();
 
-async function loadPuppeteerAndExec(url, projectName, photoLabel) {
-  console.log(
-    `Loading Puppeteer for project ${projectName} with label ${photoLabel}`
-  );
+async function loadPuppeteerAndExec(projectName, date) {
   let browser;
   try {
     browser = await puppeteer.launch({
@@ -46,15 +39,16 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
     });
     const page = await browser.newPage();
 
-    // Navigate the page to a URL.
-    await page.goto(url + "/run/" + projectUser + "/" + projectName, {
-      waitUntil: "networkidle2",
-      timeout: 0, // Disable timeout
-    });
-    console.log(`Navigated to ${url}/run/${projectUser}/${projectName}`);
+    // Navigate the page to a localhost URL.
+    await page.goto(
+      "http://localhost:4444" + "/run/" + projectUser + "/" + projectName,
+      {
+        waitUntil: "networkidle2",
+        timeout: 0, // Disable timeout
+      }
+    );
     // Set screen size.
     await page.setViewport({ width: 1080, height: 1024 });
-
     const selector = "body";
     /*await page.waitForSelector("#molecule-fully-render-puppeteer", {
       visible: true,
@@ -65,12 +59,10 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
       { timeout: 120000 }, // Increase timeout to 2 minutes
       selector
     );
-    console.log(`Element ${selector} is now visible.`);
-
     await page.screenshot({
-      path: `Puppet/images/${projectName}-${photoLabel}.png`,
+      path: `Puppet/images/${projectName}-Test-${date}.png`,
     });
-    console.log(`Puppet/images/${projectName}-${photoLabel}.png`);
+    console.log(`Screenshot: Puppet/images/${projectName}-Test-${date}.png`);
 
     await page.goto(
       "https://barboursmith.github.io/Abundance" +
@@ -79,13 +71,18 @@ async function loadPuppeteerAndExec(url, projectName, photoLabel) {
         "/" +
         projectName
     );
-    console.log(
-      `Navigated to https://barboursmith.github.io/Abundance/run/${projectUser}/${projectName}`
+    await page.waitForFunction(
+      (selector) => !!document.querySelector(selector),
+      { timeout: 120000 }, // Increase timeout to 2 minutes
+      selector
     );
     await page.screenshot({
-      path: `Puppet/images/${projectName}-Deployed.png`,
+      path: `Puppet/images/${projectName}-Deployed-${date}.png`,
     });
-    console.log(`Puppet/images/${projectName}-Deployed}.png`);
+
+    console.log(
+      `Screenshot: Puppet/images/${projectName}-Deployed-${date}.png`
+    );
   } catch (error) {
     console.error(
       `Error in loadPuppeteerAndExec for project ${projectName}:`,
