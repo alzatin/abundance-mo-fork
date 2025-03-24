@@ -16,16 +16,9 @@ const currentDate = new Date().toISOString().split("T")[0];
 (async () => {
   try {
     await loadPuppeteerAndExec(currentDate);
-
-    /*await loadPuppeteerAndExec(
-        "https://barboursmith.github.io/Abundance",
-        project,
-        "Deployed-" + currentDate
-      );*/
   } catch (error) {
     console.error(`Error processing projects`);
   }
-
   console.log("All projects processed:!");
 })();
 
@@ -42,12 +35,9 @@ async function loadPuppeteerAndExec(date) {
       console.log(projectName);
       // Navigate the page to a localhost URL.
       await page.goto(
-        "http://localhost:4444" + "/run/" + projectUser + "/" + projectName,
-        {
-          waitUntil: "networkidle2",
-          timeout: 0, // Disable timeout
-        }
+        "http://localhost:4444" + "/run/" + projectUser + "/" + projectName
       );
+      console.log("navigated to: " + projectName);
       // Set screen size.
       await page.setViewport({ width: 1080, height: 1024 });
       const selector = "#molecule-fully-render-puppeteer";
