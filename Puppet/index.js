@@ -60,7 +60,7 @@ async function loadPuppeteerAndExec(projectName, date) {
       selector
     );
     await page.screenshot({
-      path: `Puppet/images/${projectName}-Test-${date}.png `,
+      path: `Puppet/images/${projectName}-Test-${date}.png`,
     });
     console.log(`Screenshot: Puppet/images/${projectName}-Test-${date}.png`);
 
