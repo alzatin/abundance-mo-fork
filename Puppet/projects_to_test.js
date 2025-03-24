@@ -1,5 +1,5 @@
 const projects_to_test = [
-  //"Anna-s-cafe-chair-rope",
+  "Anna-s-cafe-chair-rope",
   "Laundry-Shelf",
   "Wall-Anchor",
 ];
