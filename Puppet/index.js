@@ -49,7 +49,7 @@ async function loadPuppeteerAndExec(projectName, date) {
     );
     // Set screen size.
     await page.setViewport({ width: 1080, height: 1024 });
-    const selector = "body";
+    const selector = "#molecule-fully-render-puppeteer";
     /*await page.waitForSelector("#molecule-fully-render-puppeteer", {
       visible: true,
       timeout: 120000,
