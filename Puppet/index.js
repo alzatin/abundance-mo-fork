@@ -91,7 +91,7 @@ async function loadPuppeteerAndExec(date) {
     );
   } finally {
     if (browser) {
-      console.log(`Closing browser for project ${projectName} `);
+      console.log(`Closing browser for project ${projectName}`);
       await browser.close();
     }
   }
