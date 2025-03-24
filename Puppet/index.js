@@ -14,75 +14,76 @@ const currentDate = new Date().toISOString().split("T")[0];
 //for each project in projects to test launch puppeteer
 
 (async () => {
-  for (const project of projects_to_test) {
-    try {
-      await loadPuppeteerAndExec(project, currentDate);
+  try {
+    await loadPuppeteerAndExec(currentDate);
 
-      /*await loadPuppeteerAndExec(
+    /*await loadPuppeteerAndExec(
         "https://barboursmith.github.io/Abundance",
         project,
         "Deployed-" + currentDate
       );*/
-    } catch (error) {
-      console.error(`Error processing project ${project}:`, error);
-    }
+  } catch (error) {
+    console.error(`Error processing project ${project}:`, error);
   }
+
   console.log("All projects processed:!");
 })();
 
-async function loadPuppeteerAndExec(projectName, date) {
+async function loadPuppeteerAndExec(date) {
   let browser;
   try {
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    const page = await browser.newPage();
+    for (const projectName of projects_to_test) {
+      browser = await puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
+      const page = await browser.newPage();
 
-    // Navigate the page to a localhost URL.
-    await page.goto(
-      "http://localhost:4444" + "/run/" + projectUser + "/" + projectName,
-      {
-        waitUntil: "networkidle2",
-        timeout: 0, // Disable timeout
-      }
-    );
-    // Set screen size.
-    await page.setViewport({ width: 1080, height: 1024 });
-    const selector = "#molecule-fully-render-puppeteer";
-    /*await page.waitForSelector("#molecule-fully-render-puppeteer", {
+      // Navigate the page to a localhost URL.
+      await page.goto(
+        "http://localhost:4444" + "/run/" + projectUser + "/" + projectName,
+        {
+          waitUntil: "networkidle2",
+          timeout: 0, // Disable timeout
+        }
+      );
+      // Set screen size.
+      await page.setViewport({ width: 1080, height: 1024 });
+      const selector = "#molecule-fully-render-puppeteer";
+      /*await page.waitForSelector("#molecule-fully-render-puppeteer", {
       visible: true,
       timeout: 120000,
     });*/
-    await page.waitForFunction(
-      (selector) => !!document.querySelector(selector),
-      { timeout: 120000 }, // Increase timeout to 2 minutes
-      selector
-    );
-    await page.screenshot({
-      path: `Puppet/images/${projectName}-Test-${date}.png`,
-    });
-    console.log(`Screenshot: Puppet/images/${projectName}-Test-${date}.png`);
+      await page.waitForFunction(
+        (selector) => !!document.querySelector(selector),
+        { timeout: 120000 }, // Increase timeout to 2 minutes
+        selector
+      );
+      await page.screenshot({
+        path: `Puppet/images/${projectName}-Test-${date}.png`,
+      });
+      console.log(`Screenshot: Puppet/images/${projectName}-Test-${date}.png`);
 
-    await page.goto(
-      "https://barboursmith.github.io/Abundance" +
-        "/run/" +
-        projectUser +
-        "/" +
-        projectName
-    );
-    await page.waitForFunction(
-      (selector) => !!document.querySelector(selector),
-      { timeout: 120000 }, // Increase timeout to 2 minutes
-      selector
-    );
-    await page.screenshot({
-      path: `Puppet/images/${projectName}-Deployed-${date}.png`,
-    });
+      await page.goto(
+        "https://barboursmith.github.io/Abundance" +
+          "/run/" +
+          projectUser +
+          "/" +
+          projectName
+      );
+      await page.waitForFunction(
+        (selector) => !!document.querySelector(selector),
+        { timeout: 120000 }, // Increase timeout to 2 minutes
+        selector
+      );
+      await page.screenshot({
+        path: `Puppet/images/${projectName}-Deployed-${date}.png`,
+      });
 
-    console.log(
-      `Screenshot: Puppet/images/${projectName}-Deployed-${date}.png`
-    );
+      console.log(
+        `Screenshot: Puppet/images/${projectName}-Deployed-${date}.png`
+      );
+    }
   } catch (error) {
     console.error(
       `Error in loadPuppeteerAndExec for project ${projectName}:`,
