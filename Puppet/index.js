@@ -25,7 +25,7 @@ const currentDate = new Date().toISOString().split("T")[0];
     console.error(`Error processing projects`);
   } finally {
     if (browser) {
-      console.log(`Closing browser for project ${projectName}`);
+      console.log(`Closing browser `);
       await browser.close();
     }
   }
