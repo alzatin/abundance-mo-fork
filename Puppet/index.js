@@ -32,13 +32,13 @@ const currentDate = new Date().toISOString().split("T")[0];
 async function loadPuppeteerAndExec(date) {
   let browser;
   try {
-    for (const projectName of projects_to_test) {
-      browser = await puppeteer.launch({
-        headless: true,
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      });
-      const page = await browser.newPage();
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    const page = await browser.newPage();
 
+    for (const projectName of projects_to_test) {
       // Navigate the page to a localhost URL.
       await page.goto(
         "http://localhost:4444" + "/run/" + projectUser + "/" + projectName,
