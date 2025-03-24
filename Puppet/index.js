@@ -62,7 +62,7 @@ async function loadPuppeteerAndExec(date) {
       await page.screenshot({
         path: `Puppet/images/${projectName}-Test-${date}.png`,
       });
-      console.log(`Screenshot: Puppet/images/${projectName}-Test-${date}.png`);
+      console.log(`Screenshot: Puppet/images/${projectName}-Test-${date}.png `);
 
       await page.goto(
         "https://barboursmith.github.io/Abundance" +
