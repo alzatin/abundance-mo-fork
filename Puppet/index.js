@@ -23,7 +23,7 @@ const currentDate = new Date().toISOString().split("T")[0];
         "Deployed-" + currentDate
       );*/
   } catch (error) {
-    console.error(`Error processing project ${project}:`, error);
+    console.error(`Error processing projects`);
   }
 
   console.log("All projects processed:!");
