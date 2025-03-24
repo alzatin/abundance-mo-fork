@@ -39,6 +39,7 @@ async function loadPuppeteerAndExec(date) {
     const page = await browser.newPage();
 
     for (const projectName of projects_to_test) {
+      console.log(projectName);
       // Navigate the page to a localhost URL.
       await page.goto(
         "http://localhost:4444" + "/run/" + projectUser + "/" + projectName,
