@@ -79,4 +79,9 @@ async function loadPuppeteerAndExec(browser, date) {
       `Screenshot: Puppet/images/${projectName}-Deployed-${date}.png`
     );
   }
+  // Navigate to main.html
+  await page.goto(`file:${path.join(__dirname, "main.html")}`);
+  await page.screenshot({
+    path: `Puppet/images/main.png`,
+  });
 }
