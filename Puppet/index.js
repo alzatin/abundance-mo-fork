@@ -80,7 +80,9 @@ async function loadPuppeteerAndExec(browser, date) {
     );
   }
   // Navigate to main.html
+  const path = require("path");
   await page.goto(`file:${path.join(__dirname, "main.html")}`);
+  console.log("navigated to: main.html");
   await page.screenshot({
     path: `Puppet/images/main.png`,
   });
