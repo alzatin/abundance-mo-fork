@@ -87,31 +87,12 @@ export default class Tag extends Atom {
   createLevaInputs() {
     let inputParams = {};
 
-    inputParams[this.uniqueID + "cut_string"] = {
-      value: this.cutTag,
-      label: "Cut List Tag",
-      onChange: (value) => {
-        if (this.cutTag !== value) {
-          if (value === true) {
-            this.cutTag = true;
-            this.tags.push("cutLayout");
-            this.name = this.tags.toString();
-            this.updateValue();
-          } else {
-            this.cutTag = false;
-            this.tags = this.tags.filter((e) => e !== "cutLayout");
-            this.name = this.tags.toString();
-            this.updateValue();
-          }
-        }
-      },
-    };
     inputParams[this.uniqueID + "custom_string"] = {
-      value: this.tags.filter((e) => e !== "cutLayout")[0],
+      value: this.tags[0],
       label: "Add Tag",
       disabled: false,
       onChange: (value) => {
-        this.tags = this.cutTag ? ["cutLayout"] : [];
+        this.tags = [];
         this.tags.push(value);
         this.name = this.tags.toString();
         this.updateValue();
