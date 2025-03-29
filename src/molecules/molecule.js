@@ -544,21 +544,31 @@ export default class Molecule extends Atom {
    */
   recomputeMolecule(outputID) {
     //super.updateValue();
+    console.log("recompute");
 
-    console.log("recompute molecule in molecule" + this.name);
     try {
       this.processing = true;
       const centeredText = document.querySelector(".loading");
       centeredText.style.display = "flex";
 
       GlobalVariables.cad.molecule(this.uniqueID, outputID).then(() => {
-        this.basicThreadValueProcessing();
+
+        //If we're currently inside this molecule, we don't want to pass the update to the next level until we leave
+        if (GlobalVariables.currentMolecule !== this) {
+          this.basicThreadValueProcessing();
+        }
+        else{
+          this.awaitingPropagationFlag = true;
+        }
+
         this.compileBom().then((result) => {
           this.compiledBom = result;
         });
         if (this.selected) {
           this.sendToRender();
         }
+        const loadingDots = document.querySelector(".loading");
+        loadingDots.style.display = "none";
       });
     } catch (err) {
       this.setAlert(err);
@@ -582,6 +592,8 @@ export default class Molecule extends Atom {
   propagate() {
     try {
       this.updateValue();
+      const loadingDots = document.querySelector(".loading");
+      loadingDots.style.display = "none";
     } catch (err) {
       this.setAlert(err);
     }
@@ -631,7 +643,7 @@ export default class Molecule extends Atom {
       });
       //Push any changes up to the next level if there are any changes waiting in the output
       if (GlobalVariables.currentMolecule.awaitingPropagationFlag == true) {
-        GlobalVariables.currentMolecule.propagate();
+        GlobalVariables.currentMolecule.basicThreadValueProcessing();
         GlobalVariables.currentMolecule.awaitingPropagationFlag = false;
       }
 
@@ -893,6 +905,11 @@ export default class Molecule extends Atom {
 
       let promise = null;
 
+      /* Fallback for deprecated join atom */
+      if (newAtomObj.atomType == "Join") {
+        newAtomObj.atomType = newAtomObj.unionType;
+      }
+
       for (var key in GlobalVariables.availableTypes) {
         if (
           GlobalVariables.availableTypes[key].atomType == newAtomObj.atomType
@@ -1006,7 +1023,7 @@ export default class Molecule extends Atom {
 
   sendToRender() {
     //Send code to JSxCAD to render
-    console.log(this);
+    //console.log(this);
     GlobalVariables.writeToDisplay(this.uniqueID);
   }
 }

@@ -47,7 +47,7 @@ export default class Atom {
      * This atom's radius as displayed on the screen is 1/72 width
      * @type {number}
      */
-    this.radius = 1 / 75;
+    this.radius = 1 / 50;
     /**
      * This atom's default color (ie when not selected or processing)
      * @type {string}
@@ -79,7 +79,7 @@ export default class Atom {
      */
     this.name = "name0";
     /**
-     * This atom's parent, usually the molecule which contains this atom
+     * This atom's parent, usually the molecule which contains this atom...how is this different from this.parent?
      * @type {object}
      */
     this.parentMolecule = null;
@@ -661,7 +661,6 @@ export default class Atom {
   sendToRender() {
     //Send code to JSxCAD to render
     try {
-      console.log(this);
       GlobalVariables.writeToDisplay(this.uniqueID);
     } catch (err) {
       this.setAlert(err);

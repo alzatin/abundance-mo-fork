@@ -62,12 +62,14 @@ function CreateMode({
 
   const { loginWithRedirect } = useAuth0();
 
+  const lastSaveData = useRef({}); // The object saved last time the project was saved...used for comparison
+
   /**
    * Object containing letters and values used for keyboard shortcuts
    * @type {object?}
    */
   var shortCuts = {
-    a: "Join",
+    a: "Assembly",
     b: "Loft", //>
     c: "Copy",
     d: "Difference",
@@ -175,6 +177,7 @@ function CreateMode({
         })
         .then((response) => {
           let htmlURL = response.data.html_url;
+          const privateRepo = response.data.private;
           setState(40);
 
           base = response.data.default_branch;
@@ -261,6 +264,7 @@ function CreateMode({
                                 repoName: repo,
                                 attributeUpdates: {
                                   ranking: 0,
+                                  privateRepo: privateRepo,
                                   html_url: htmlURL,
                                   searchField: searchField,
                                   githubMoleculesUsed: githubMoleculeUsedList,
@@ -324,7 +328,17 @@ function CreateMode({
    * Saves project by making a commit to the Github repository.
    */
   const saveProject = async (setState, typeSave) => {
-    setState(5);
+    //We only want to save if something has actually changed since the last save
+    var jsonRepOfProject = GlobalVariables.topLevelMolecule.serialize();
+
+    //Don't save again if nothing has changed
+    if (JSON.stringify(jsonRepOfProject) == JSON.stringify(lastSaveData.current)) {
+      return;
+    }
+
+    lastSaveData.current = jsonRepOfProject; //Save the data so we can compare it next time
+
+    setState(5); //Set the state to 5% to show the progress bar
 
     let finalSVG;
     finalSVG = await GlobalVariables.topLevelMolecule
@@ -496,6 +510,7 @@ function CreateMode({
           <FlowCanvas
             {...{
               activeAtom,
+              authorizedUserOcto,
               loadProject,
               setActiveAtom,
               setSavePopUp,

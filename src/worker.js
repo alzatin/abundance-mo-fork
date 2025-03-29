@@ -10,6 +10,7 @@ import { AnyNest, FloatPolygon } from "any-nest";
 import { re } from "mathjs";
 
 var library = {};
+let defaultColor = "#aad7f2";
 
 // This is the logic to load the web assembly code into replicad
 let loaded = false;
@@ -22,13 +23,11 @@ const init = async () => {
 
   loaded = true;
   replicad.setOC(OC);
+  console.log(replicad);
 
   return true;
 };
 const started = init();
-
-console.log("Replicad Module:");
-console.log(replicad);
 
 /**
  * A function which converts any input into Abundance style geometry. Input can be a library ID, an abundance object, or a single geometry object.
@@ -48,7 +47,7 @@ function toGeometry(input) {
     return {
       geometry: [input],
       tags: [],
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
   }
@@ -88,7 +87,7 @@ function circle(id, diameter) {
       geometry: [replicad.drawCircle(diameter / 2)],
       tags: [],
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     return true;
@@ -102,7 +101,7 @@ function rectangle(id, x, y) {
       geometry: [replicad.drawRectangle(x, y)],
       tags: [],
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     return true;
@@ -116,7 +115,7 @@ function regularPolygon(id, radius, numberOfSides) {
       geometry: [replicad.drawPolysides(radius, numberOfSides)],
       tags: [],
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     return true;
@@ -125,27 +124,30 @@ function regularPolygon(id, radius, numberOfSides) {
 async function text(id, text, fontSize, fontFamily) {
   await replicad
     .loadFont(Fonts[fontFamily])
-    .then(() => console.log("Font loaded"))
-    .catch((err) => console.error("Error loading font: ", err));
+    .then(() => {
+      console.log("Font loaded");
+      return started.then(() => {
+        const newPlane = new Plane().pivot(0, "Y");
 
-  return started.then(() => {
-    const newPlane = new Plane().pivot(0, "Y");
-
-    const textGeometry = replicad.drawText(text, {
-      startX: 0,
-      startY: 0,
-      fontSize: fontSize,
-      font: fontFamily,
+        const textGeometry = replicad.drawText(text, {
+          startX: 0,
+          startY: 0,
+          fontSize: fontSize,
+          font: fontFamily,
+        });
+        library[id] = {
+          geometry: [textGeometry],
+          tags: [],
+          plane: newPlane,
+          color: defaultColor,
+          bom: [],
+        };
+        return true;
+      });
+    })
+    .catch((err) => {
+      throw new Error("Error loading font: ", err);
     });
-    library[id] = {
-      geometry: [textGeometry],
-      tags: [],
-      plane: newPlane,
-      color: "#FF9065",
-      bom: [],
-    };
-    return true;
-  });
 }
 
 function loftShapes(targetID, inputsIDs) {
@@ -171,7 +173,7 @@ function loftShapes(targetID, inputsIDs) {
       geometry: [startGeometry.loftWith([...arrayOfSketchedGeometry])],
       tags: [],
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     return true;
@@ -207,10 +209,10 @@ function is3D(inputs) {
   }
 }
 
-function move(targetID, inputID, x, y, z) {
+function move(inputID, x, y, z, targetID = null) {
   return started.then(() => {
     if (is3D(library[inputID])) {
-      library[targetID] = actOnLeafs(library[inputID], (leaf) => {
+      let result = actOnLeafs(library[inputID], (leaf) => {
         return {
           geometry: [leaf.geometry[0].clone().translate(x, y, z)],
           plane: leaf.plane,
@@ -219,20 +221,28 @@ function move(targetID, inputID, x, y, z) {
           bom: leaf.bom,
         };
       });
+      if (targetID) {
+        library[targetID] = result;
+        //library[inputID].plane.translate([0, 0, z]); //@Alzatin what is this line for?
+      } else {
+        return result;
+      }
     } else {
-      library[targetID] = actOnLeafs(
-        library[inputID],
-        (leaf) => {
-          return {
-            geometry: [leaf.geometry[0].clone().translate([x, y])],
-            tags: leaf.tags,
-            plane: leaf.plane.translate([0, 0, z]),
-            color: leaf.color,
-            bom: leaf.bom,
-          };
-        },
-        library[inputID].plane.translate([0, 0, z])
-      );
+      let result = actOnLeafs(library[inputID], (leaf) => {
+        return {
+          geometry: [leaf.geometry[0].clone().translate([x, y])],
+          tags: leaf.tags,
+          plane: leaf.plane.translate([0, 0, z]),
+          color: leaf.color,
+          bom: leaf.bom,
+        };
+      });
+      if (targetID) {
+        library[targetID] = result;
+        //library[inputID].plane.translate([0, 0, z]); //@Alzatin what is this line for?
+      } else {
+        return result;
+      }
     }
     return true;
   });
@@ -337,7 +347,7 @@ function shrinkWrapSketches(targetID, inputIDs) {
       library[targetID] = {
         geometry: [shrinkWrap(geometryToWrap, 50)],
         tags: [],
-        color: "#FF9065",
+        color: defaultColor,
         plane: newPlane,
         bom: BOM,
       };
@@ -393,6 +403,19 @@ async function Rotate(input, x, y, z) {
 }
 
 /**
+ * A wrapper for the move function to allow it to be Move and used in the Code atom
+ */
+async function Move(input, x, y, z) {
+  try {
+    const movedGeometry = await move(input, x, y, z);
+    return movedGeometry;
+  } catch (error) {
+    console.error("Error moving geometry:", error);
+    throw error;
+  }
+}
+
+/**
  * A wrapper for the assembly function to allow it to be Assembly and used in the Code atom
  */
 async function Assembly(inputs) {
@@ -408,8 +431,8 @@ async function Assembly(inputs) {
 // Runs the user entered code in the worker thread and returns the result.
 async function code(targetID, code, argumentsArray) {
   await started;
-  let keys1 = ["Rotate", "Assembly"];
-  let inputValues = [Rotate, Assembly];
+  let keys1 = ["Rotate", "Move", "Assembly"];
+  let inputValues = [Rotate, Move, Assembly];
   for (const [key, value] of Object.entries(argumentsArray)) {
     keys1.push(`${key}`);
     inputValues.push(value);
@@ -482,7 +505,6 @@ function extractTag(targetID, inputID, TAG) {
     } else {
       throw new Error("Tag not found");
     }
-
     return true;
   });
 }
@@ -574,7 +596,7 @@ async function importingSTEP(targetID, file) {
   library[targetID] = {
     geometry: [STEPresult],
     tags: [],
-    color: "#FF9065",
+    color: defaultColor,
     bom: [],
   };
   return true;
@@ -586,7 +608,7 @@ async function importingSTL(targetID, file) {
   library[targetID] = {
     geometry: [STLresult],
     tags: [],
-    color: "#FF9065",
+    color: defaultColor,
     bom: [],
   };
   return true;
@@ -615,7 +637,7 @@ async function importingSVG(targetID, svg, width) {
       geometry: [drawnSVG.clone().translate(-center[0], -center[1])],
       tags: [],
       plane: new Plane().pivot(0, "Y"),
-      color: "#FF9065",
+      color: defaultColor,
       bom: [],
     };
     console.log("SVG imported successfully");
@@ -1197,6 +1219,39 @@ function cutAssembly(partToCut, cuttingParts, assemblyID) {
         // for each cutting part cut the part
         partCutCopy = recursiveCut(partCutCopy, toGeometry(cuttingPart));
       });
+      /*   if the part is a compound return each solid as a new assembly */
+      function getSolids(compound) {
+        return Array.from(
+          replicad.iterTopo(compound.wrapped, "solid"),
+          (s) => new Solid(s)
+        );
+      }
+      if (partCutCopy.wrapped) {
+        let solids = getSolids(partCutCopy);
+        if (solids.length > 1) {
+          let newAssembly = [];
+          solids.forEach((solid) => {
+            newAssembly.push({
+              geometry: [solid],
+              tags: partToCut.tags,
+              color: partToCut.color,
+              bom: partToCut.bom,
+              plane: partToCut.plane,
+            });
+          });
+          // return new cut part
+          let newID = generateUniqueID();
+          library[newID] = {
+            geometry: newAssembly,
+            tags: partToCut.tags,
+            color: partToCut.color,
+            bom: partToCut.bom,
+            plane: partToCut.plane,
+          };
+
+          return library[newID];
+        }
+      }
       // return new cut part
       let newID = generateUniqueID();
       library[newID] = {
@@ -1315,45 +1370,10 @@ function fusion(targetID, inputIDs) {
       tags: [],
       bom: bomAssembly,
       plane: newPlane,
-      color: "#FF9065",
+      color: defaultColor,
     };
     return true;
   });
-}
-
-/**
- * Function which takes in a geometry and returns the same geometry if it is cohesive or an assembly if the geometry is disjoint
- */
-function disjointGeometryToAssembly(inputID) {
-  let input = toGeometry(inputID).geometry[0]; //This does not accept assemblies
-  let solidsArray = Array.from(
-    replicad.iterTopo(input.wrapped, "solid"),
-    (s) => new Solid(s)
-  );
-  console.log("solidsArray", solidsArray);
-  //If there is more than one solid in the geometry, return an assembly
-  if (solidsArray.length > 1) {
-    let assemblyArray = [];
-    solidsArray.forEach((solid) => {
-      assemblyArray.push({
-        geometry: [solid],
-        tags: input.tags,
-        bom: input.bom,
-        color: input.color,
-        plane: input.plane,
-      });
-    });
-    return {
-      geometry: assemblyArray,
-      tags: input.tags,
-      bom: input.bom,
-      color: input.color,
-      plane: input.plane,
-    };
-    //If there is only one solid in the geometry, return the input
-  } else {
-    return toGeometry(inputID);
-  }
 }
 
 //Action is a function which takes in a leaf and returns a new leaf which has had the action applied to it
@@ -1437,6 +1457,7 @@ function digFuse(assembly) {
 }
 
 let colorOptions = {
+  Default: defaultColor,
   Red: "#FF9065",
   Orange: "#FFB458",
   Yellow: "#FFD600",

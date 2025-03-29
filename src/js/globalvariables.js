@@ -1,5 +1,5 @@
 import { create, all } from "mathjs";
-import Join from "../molecules/join.js";
+import Assembly from "../molecules/assembly.js";
 import Circle from "../molecules/circle.js";
 import Color from "../molecules/color.js";
 import CutLayout from "../molecules/cutlayout.js";
@@ -10,6 +10,7 @@ import Move from "../molecules/move.js";
 import Tag from "../molecules/tag.js";
 import RegularPolygon from "../molecules/regularPolygon.js";
 import Extrude from "../molecules/extrude.js";
+import Fusion from "../molecules/fusion.js";
 //import Nest              from '../molecules/nest.js'
 import Intersection from "../molecules/intersection.js";
 import Difference from "../molecules/difference.js";
@@ -66,9 +67,14 @@ class GlobalVariables {
         atomType: "Difference",
         atomCategory: "Interactions",
       },
-      union: {
-        creator: Join,
-        atomType: "Join",
+      assembly: {
+        creator: Assembly,
+        atomType: "Assembly",
+        atomCategory: "Interactions",
+      },
+      fusion: {
+        creator: Fusion,
+        atomType: "Fusion",
         atomCategory: "Interactions",
       },
       group: { creator: Group, atomType: "Group", atomCategory: "None" },
@@ -335,6 +341,28 @@ class GlobalVariables {
       Math.max(0, Math.min(this.canvas.current.width, xPixels)),
       Math.max(0, Math.min(this.canvas.current.height, yPixels)),
     ];
+  }
+
+  /**
+   * A function to check if the user is on a mobile device.
+   * @return {boolean} True if the user is on a mobile device, false otherwise.
+   */
+  isMobile() {
+    // Check for common mobile device indicators in the user agent string
+    if (
+      /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      return true;
+    }
+
+    // Check screen size (not entirely reliable)
+    if (window.innerWidth <= 768) {
+      return true;
+    }
+
+    return false;
   }
 
   /**

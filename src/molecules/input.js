@@ -39,6 +39,8 @@ export default class Input extends Atom {
      */
     this.height;
 
+    this.width;
+
     this.type = "number";
     /**
      * This atom's old name, used during name changes
@@ -94,6 +96,7 @@ export default class Input extends Atom {
      * @type {number}
      */
     this.height = radiusInPixels;
+    this.width = this.height * 2.5;
     //Check if the name has been updated
     if (this.name != this.oldName) {
       this.updateParentName();
@@ -130,9 +133,9 @@ export default class Input extends Atom {
     }
     GlobalVariables.c.beginPath();
     GlobalVariables.c.moveTo(0, yInPixels + this.height / 2);
-    GlobalVariables.c.lineTo(55, yInPixels + this.height / 2);
-    GlobalVariables.c.lineTo(xInPixels + radiusInPixels, yInPixels);
-    GlobalVariables.c.lineTo(55, yInPixels - this.height / 2);
+    GlobalVariables.c.lineTo(this.width, yInPixels + this.height / 2);
+    GlobalVariables.c.lineTo(this.width + radiusInPixels, yInPixels);
+    GlobalVariables.c.lineTo(this.width, yInPixels - this.height / 2);
     GlobalVariables.c.lineTo(0, yInPixels - this.height / 2);
     GlobalVariables.c.lineWidth = 1;
     GlobalVariables.c.fill();

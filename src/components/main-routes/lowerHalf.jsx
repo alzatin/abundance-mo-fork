@@ -15,10 +15,17 @@ function useWindowSize() {
     // Handler to call on window resize
     function handleResize() {
       // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
+      if (globalvariables.isMobile()) {
+        setWindowSize({
+          width: window.screen.width,
+          height: window.screen.height,
+        });
+      } else {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      }
     }
     // Add event listener
     window.addEventListener("resize", handleResize);
@@ -98,6 +105,15 @@ export default memo(function LowerHalf({
           <div className="dots"></div>
         </div>
         <div id="viewer_bar"></div>
+        <div className={`centered-text hidden`}>
+          <div className="loading">
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+          </div>
+        </div>
       </div>
       <div className={`centered-text hidden`}>
         <div className="loading">

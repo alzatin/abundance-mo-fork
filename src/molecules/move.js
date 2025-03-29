@@ -84,7 +84,7 @@ export default class Move extends Atom {
       var y = this.findIOValue("yDist");
       var z = this.findIOValue("zDist");
       GlobalVariables.cad
-        .move(this.uniqueID, inputID, x, y, z)
+        .move(inputID, x, y, z, this.uniqueID)
         .then(() => {
           this.basicThreadValueProcessing();
         })

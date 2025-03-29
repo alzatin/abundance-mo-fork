@@ -61,8 +61,15 @@ export default function ReplicadApp() {
     GlobalVariables.displayShortcuts
   );
 
+  /* Creates an element to check with Puppeteer if the molecule is fully loaded*/
+  const createPuppeteerDiv = () => {
+    const invisibleDiv = document.createElement("div");
+    invisibleDiv.id = "molecule-fully-render-puppeteer";
+    invisibleDiv.style.display = "none";
+    document.body.appendChild(invisibleDiv);
+  };
+
   useEffect(() => {
-    console.log("useEffect  in top levelrunning");
     GlobalVariables.writeToDisplay = (id, resetView = false) => {
       console.log("write to display running " + id);
 
@@ -84,20 +91,41 @@ export default function ReplicadApp() {
           .then((m) => {
             setMesh(m);
             setOutdatedMesh(false);
-            const centeredText = document.querySelector(".loading");
-            centeredText.style.display = "none";
+            const loadingDots = document.querySelector(".loading");
+            loadingDots.style.display = "none";
           })
           .catch((e) => {
             console.error("Can't display Mesh " + e);
             activeAtom.setAlert("Can't display Mesh " + e);
           });
-        // if something is connected to the output, set a wireframe mesh
-        cad
-          .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
-          .then((w) => setWireMesh(w))
-          .catch((e) => {
-            console.error("Can't comput Wireframe/No output " + e);
-          });
+        /*Set wireMesh*/
+
+        //Exception: Don't display the mesh if the thing we are displaying is already the output
+        if (GlobalVariables.currentMolecule.output.value != id) {
+          cad
+            .generateDisplayMesh(GlobalVariables.currentMolecule.output.value)
+            .then((w) => {
+              setWireMesh(w);
+              createPuppeteerDiv();
+            })
+            .catch((e) => {
+              createPuppeteerDiv();
+              console.error("Can't comput Wireframe/No output " + e);
+            });
+        } else {
+          /* reset mesh view if in output mode*/
+
+          cad
+            .resetView()
+            .then((m) => {
+              setWireMesh(m);
+              createPuppeteerDiv();
+            })
+            .catch((e) => {
+              createPuppeteerDiv();
+              console.error("reset view not working" + e);
+            });
+        }
       }
     };
 
@@ -156,8 +184,7 @@ export default function ReplicadApp() {
   };
 
   // Loads project
-  const loadProject = function (project) {
-    console.log(project);
+  const loadProject = function (project, authorizedUser) {
     GlobalVariables.recentMoleculeRepresentation = [];
     GlobalVariables.loadedRepo = project;
     GlobalVariables.currentRepoName = project.repoName;
@@ -166,15 +193,17 @@ export default function ReplicadApp() {
     GlobalVariables.numberOfAtomsToLoad = 0;
     GlobalVariables.startTime = new Date().getTime();
 
-    var octokit = new Octokit();
-
+    if (authorizedUser) {
+      var octokit = authorizedUser;
+    } else {
+      var octokit = new Octokit();
+    }
     return octokit
       .request("GET /repos/{owner}/{repo}/contents/project.abundance", {
         owner: project.owner,
         repo: project.repoName,
       })
       .then((response) => {
-        console.log(response);
         //content will be base64 encoded
         let rawFile = JSON.parse(atob(response.data.content));
 

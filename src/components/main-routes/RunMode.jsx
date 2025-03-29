@@ -78,6 +78,20 @@ function runMode({
     GlobalVariables.canvas = canvasRef;
     GlobalVariables.c = canvasRef.current.getContext("2d");
 
+    /** Only run loadproject() if the project is different from what is already loaded and clear screen */
+    if (GlobalVariables.currentRepo) {
+      if (
+        !GlobalVariables.loadedRepo ||
+        GlobalVariables.currentRepo.repoName !==
+          GlobalVariables.loadedRepo.repoName
+      ) {
+        GlobalVariables.writeToDisplay(
+          GlobalVariables.currentRepo.topMoleculeID,
+          true
+        );
+      }
+    }
+
     var octokit = new Octokit();
     octokit
       .request("GET /repos/{owner}/{repo}", {
@@ -119,6 +133,24 @@ function runMode({
 
   return (
     <>
+      <div id="headerBarRun">
+        <img
+          className="thumnail-logo"
+          src={
+            import.meta.env.VITE_APP_PATH_FOR_PICS + "/imgs/abundance_logo.png"
+          }
+          alt="logo"
+        />
+      </div>
+      <div className={`centered-text hidden`}>
+        <div className="loading">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>
+      </div>
       <canvas
         style={{ display: "none" }}
         ref={canvasRef}

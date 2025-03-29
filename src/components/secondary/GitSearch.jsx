@@ -21,6 +21,7 @@ function GitSearch({ searchingGitHub, setSearchingGitHub }) {
     setSearchingGitHub(false);
     setIsHovering(false);
     setGitRepos([]);
+    setIsHovering(false);
   }
   // conditional query for maslow projects
   const searchGitHub = function () {

@@ -78,7 +78,7 @@ def lambda_handler(event: any, context: any):
 
         elif (searchAttribute and query):
             scan_args = {
-                'FilterExpression': Attr(searchAttribute).contains(query),
+                'FilterExpression': Attr(searchAttribute).contains(query) & ~(Attr('privateRepo').eq(True)),
             }
             response = table.scan(**scan_args)
             item_array.extend(response.get('Items', []))
@@ -87,6 +87,7 @@ def lambda_handler(event: any, context: any):
             query_args = {
                 'IndexName': 'yyyy-dateCreated-index',
                 'KeyConditionExpression': Key('yyyy').eq(year),
+                'FilterExpression': ~(Attr('privateRepo').eq(True))
             }
             if exclusiveKey:
                 query_args['ExclusiveStartKey'] = exclusiveKey
