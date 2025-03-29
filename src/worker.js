@@ -811,10 +811,8 @@ function displayLayout(targetID, inputID, positions, TAG, layoutConfig) {
 function rotateForLayout(targetID, inputID, TAG, layoutConfig) {
   var THICKNESS_TOLLERANCE = 0.001;
 
-  let taggedGeometry = extractTags(library[inputID], TAG);
-  if (!taggedGeometry) {
-    throw new Error("No Upstream Geometries Tagged for Cut");
-  }
+  let geometryToLayout = library[inputID];
+
   let localId = 0;
   let shapesForLayout = [];
 
@@ -824,7 +822,7 @@ function rotateForLayout(targetID, inputID, TAG, layoutConfig) {
   // console.log(splitGeometry);
 
   // Rotate all shapes to be most cuttable.
-  library[targetID] = actOnLeafs(taggedGeometry, (leaf) => {
+  library[targetID] = actOnLeafs(geometryToLayout, (leaf) => {
     // For each face, consider it as the underside of the shape on the CNC bed.
     // In order to be considered, a face must be...
     //  1) a flat PLANE, not a cylander, or sphere or other curved face type.
@@ -937,51 +935,48 @@ function rotateForLayout(targetID, inputID, TAG, layoutConfig) {
  * Apply the transformations to the geometry to apply the layout
  */
 function applyLayout(targetID, inputID, positions, TAG, layoutConfig) {
-  library[targetID] = actOnLeafs(
-    extractTags(library[targetID], TAG),
-    (leaf) => {
-      let transform, index;
-      for (var i = 0; i < positions.length; i++) {
-        let candidates = positions[i].filter(
-          (transform) => transform.id == leaf.id
-        );
-        if (candidates.length == 1) {
-          transform = candidates[0];
-          index = i;
-          break;
-        } else if (candidates.length > 1) {
-          console.warn("Found more than one transformation for same id");
-        }
+  library[targetID] = actOnLeafs(library[targetID], (leaf) => {
+    let transform, index;
+    for (var i = 0; i < positions.length; i++) {
+      let candidates = positions[i].filter(
+        (transform) => transform.id == leaf.id
+      );
+      if (candidates.length == 1) {
+        transform = candidates[0];
+        index = i;
+        break;
+      } else if (candidates.length > 1) {
+        console.warn("Found more than one transformation for same id");
       }
-      if (transform == undefined) {
-        console.log("didn't find transform for id: " + leaf.id);
-        return undefined;
-      }
-      // apply rotation first. All rotations are around (0, 0, 0)
-      // Additionally, shift by sheet-index * sheet height so that multiple
-      // sheet layouts are spaced out from one another.
-      let newGeom = leaf.geometry[0]
-        .clone()
-        .rotate(
-          transform.rotate,
-          new replicad.Vector([0, 0, 0]),
-          new replicad.Vector([0, 0, 1])
-        )
-        .translate(
-          transform.translate.x,
-          transform.translate.y + i * layoutConfig.height,
-          0
-        );
-
-      return {
-        geometry: [newGeom],
-        tags: leaf.tags,
-        color: leaf.color,
-        plane: leaf.plane,
-        bom: leaf.bom,
-      };
     }
-  );
+    if (transform == undefined) {
+      console.log("didn't find transform for id: " + leaf.id);
+      return undefined;
+    }
+    // apply rotation first. All rotations are around (0, 0, 0)
+    // Additionally, shift by sheet-index * sheet height so that multiple
+    // sheet layouts are spaced out from one another.
+    let newGeom = leaf.geometry[0]
+      .clone()
+      .rotate(
+        transform.rotate,
+        new replicad.Vector([0, 0, 0]),
+        new replicad.Vector([0, 0, 1])
+      )
+      .translate(
+        transform.translate.x,
+        transform.translate.y + i * layoutConfig.height,
+        0
+      );
+
+    return {
+      geometry: [newGeom],
+      tags: leaf.tags,
+      color: leaf.color,
+      plane: leaf.plane,
+      bom: leaf.bom,
+    };
+  });
 }
 
 /**
@@ -996,7 +991,6 @@ function computePositions(
   const populationSize = 5;
   const nestingEngine = new AnyNest();
   const tolerance = 0.1;
-
   // include tolerance * 2 to ensure padding is the minimum spacing between parts.
   const configWithDefaults = nestingEngine.config({
     spacing: layoutConfig.partPadding + tolerance * 2,
