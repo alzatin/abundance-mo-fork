@@ -760,13 +760,12 @@ function extractKeepOut(inputGeometry) {
 function layout(
   targetID,
   inputID,
-  TAG,
   progressCallback,
   placementsCallback,
   layoutConfig
 ) {
   return started.then(() => {
-    var shapesForLayout = rotateForLayout(targetID, inputID, TAG, layoutConfig);
+    var shapesForLayout = rotateForLayout(targetID, inputID, layoutConfig);
 
     let positionsPromise = computePositions(
       shapesForLayout,
@@ -790,7 +789,7 @@ function layout(
       }
 
       //This does the actual layout of the parts. We want to break this out into it's own function which can be passed a list of positions
-      applyLayout(targetID, inputID, positions, TAG, layoutConfig);
+      applyLayout(targetID, inputID, positions, layoutConfig);
       return warning;
     });
   });
@@ -799,16 +798,16 @@ function layout(
 /**
  * Lay the input geometry flat and apply the transformations to display it
  */
-function displayLayout(targetID, inputID, positions, TAG, layoutConfig) {
+function displayLayout(targetID, inputID, positions, layoutConfig) {
   rotateForLayout(targetID, inputID, TAG, layoutConfig);
 
-  applyLayout(targetID, inputID, positions, TAG, layoutConfig);
+  applyLayout(targetID, inputID, positions, layoutConfig);
 }
 
 /**
  * Rotate shapes to be placed on their most cuttable face (basically lay them flat)
  */
-function rotateForLayout(targetID, inputID, TAG, layoutConfig) {
+function rotateForLayout(targetID, inputID, layoutConfig) {
   var THICKNESS_TOLLERANCE = 0.001;
 
   let geometryToLayout = library[inputID];
@@ -934,7 +933,7 @@ function rotateForLayout(targetID, inputID, TAG, layoutConfig) {
 /**
  * Apply the transformations to the geometry to apply the layout
  */
-function applyLayout(targetID, inputID, positions, TAG, layoutConfig) {
+function applyLayout(targetID, inputID, positions, layoutConfig) {
   library[targetID] = actOnLeafs(library[targetID], (leaf) => {
     let transform, index;
     for (var i = 0; i < positions.length; i++) {
