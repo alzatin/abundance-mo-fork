@@ -212,34 +212,40 @@ function is3D(inputs) {
 function move(inputID, x, y, z, targetID = null) {
   return started.then(() => {
     if (is3D(library[inputID])) {
-      let result = actOnLeafs(library[inputID], (leaf) => {
-        return {
-          geometry: [leaf.geometry[0].clone().translate(x, y, z)],
-          plane: leaf.plane,
-          tags: leaf.tags,
-          color: leaf.color,
-          bom: leaf.bom,
-        };
-      });
+      let result = actOnLeafs(
+        library[inputID],
+        (leaf) => {
+          return {
+            geometry: [leaf.geometry[0].clone().translate(x, y, z)],
+            plane: leaf.plane,
+            tags: leaf.tags,
+            color: leaf.color,
+            bom: leaf.bom,
+          };
+        },
+        library[inputID].plane
+      );
       if (targetID) {
         library[targetID] = result;
-        //library[inputID].plane.translate([0, 0, z]); //@Alzatin what is this line for?
       } else {
         return result;
       }
     } else {
-      let result = actOnLeafs(library[inputID], (leaf) => {
-        return {
-          geometry: [leaf.geometry[0].clone().translate([x, y])],
-          tags: leaf.tags,
-          plane: leaf.plane.translate([0, 0, z]),
-          color: leaf.color,
-          bom: leaf.bom,
-        };
-      });
+      let result = actOnLeafs(
+        library[inputID],
+        (leaf) => {
+          return {
+            geometry: [leaf.geometry[0].clone().translate([x, y])],
+            tags: leaf.tags,
+            plane: leaf.plane.translate([0, 0, z]),
+            color: leaf.color,
+            bom: leaf.bom,
+          };
+        },
+        library[inputID].plane.translate([0, 0, z])
+      );
       if (targetID) {
         library[targetID] = result;
-        //library[inputID].plane.translate([0, 0, z]); //@Alzatin what is this line for?
       } else {
         return result;
       }
@@ -1586,6 +1592,7 @@ function generateCameraPosition(meshArray) {
 function generateDisplayMesh(id) {
   return started.then(() => {
     console.log("Generating display mesh for " + id);
+
     if (library[id] == undefined || id == undefined) {
       console.log("ID undefined or not found in library");
       //throw new Error("ID not found in library");
