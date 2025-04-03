@@ -91,8 +91,6 @@ export default class Tag extends Atom {
       onChange: (value) => {
         this.tags = [];
         this.tags.push(value); // Add the new tag to the array
-        GlobalVariables.topLevelMolecule.tagDictionary[this.uniqueID] =
-          this.tags; // Update the tag dictionary with the new tag*/
         this.name = this.tags.toString();
         this.updateValue();
       },
@@ -110,7 +108,6 @@ export default class Tag extends Atom {
       this.processing = true;
       var inputID = this.findIOValue("geometry");
       var tags = this.tags;
-      //this.addTagsToAvailableTags();
       GlobalVariables.cad
         .tag(this.uniqueID, inputID, tags)
         .then(() => {

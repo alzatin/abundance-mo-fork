@@ -96,14 +96,6 @@ export default class Molecule extends Atom {
 
     this.partToExport = null;
 
-    /**
-     * List of all available tags in project.
-     * @type {array}
-     */
-    this.projectAvailableTags = [];
-
-    this.tagDictionary = {}; //This will hold all of the tags available in the project for easy access
-
     this.setValues(values);
 
     this.color;
